@@ -1,4 +1,3 @@
-
 import { Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { Stars, Cloud } from '@react-three/drei';
@@ -13,7 +12,6 @@ const BackgroundExperience = () => {
           position-z={-10}
           opacity={0.3}
           speed={0.1}
-          width={20}
           depth={1.5}
           segments={20}
         />
@@ -22,7 +20,6 @@ const BackgroundExperience = () => {
           position-x={-10}
           opacity={0.2}
           speed={0.1}
-          width={15}
           depth={2}
           segments={15}
         />
@@ -31,7 +28,6 @@ const BackgroundExperience = () => {
           position-x={10}
           opacity={0.2}
           speed={0.1}
-          width={15}
           depth={2}
           segments={15}
         />

@@ -2,7 +2,8 @@
 import { useState, useEffect, useMemo } from "react";
 import { World1, World2, World3 } from "@/worlds";
 import WorldContainer from "@/components/WorldContainer";
-import { ExperienceProvider, useExperience } from "@/hooks/useExperience";
+import { ExperienceProvider } from "@/context/ExperienceContext";
+import { useExperience } from "@/hooks/useExperience";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
