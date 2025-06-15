@@ -22,7 +22,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
       torusKnot?.radialSegments ?? 32,
       torusKnot?.p ?? 2,
       torusKnot?.q ?? 3,
-  ] as const, [torusKnot]);
+  ] as [number, number, number, number, number, number], [torusKnot]);
 
   useFrame((state, delta) => {
     if (ref.current && !isLocked) {
