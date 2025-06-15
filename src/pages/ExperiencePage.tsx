@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import WorldContainer from "@/components/WorldContainer";
@@ -19,6 +20,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import SceneControls from "@/components/scene/SceneControls";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button";
+import { Sun, Moon, Copy } from 'lucide-react';
 
 const ExperienceContent = () => {
   const {
@@ -169,14 +172,28 @@ const ExperienceContent = () => {
 
   const SceneSettingsPanel = (
     <div className="bg-background text-foreground h-full flex flex-col">
-      <div className="p-6 pb-2">
-        <h2 className="text-xl font-bold">Customize Scene</h2>
-        <p className="text-sm text-muted-foreground">
-          Tweak the live parameters of the scene. Your changes can be copied.
-        </p>
+      <div className="p-4 border-b border-border">
+        <div className="flex justify-between items-center">
+          <div className="space-y-1">
+            <h2 className="text-lg font-semibold">Customize Scene</h2>
+            <p className="text-sm text-muted-foreground">
+              Live adjustments for the world.
+            </p>
+          </div>
+          <div className="flex items-center">
+            <Button variant="ghost" size="icon" onClick={toggleTheme}>
+              {theme === 'day' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
+              <span className="sr-only">Toggle theme ({theme === 'day' ? 'dark' : 'light'})</span>
+            </Button>
+            <Button variant="ghost" size="icon" onClick={handleCopyCode}>
+              <Copy className="h-4 w-4" />
+              <span className="sr-only">Copy scene configuration</span>
+            </Button>
+          </div>
+        </div>
       </div>
       <ScrollArea className="flex-1">
-        <div className="p-6 pt-2">
+        <div className="p-4">
           <SceneControls sceneConfig={editableSceneConfig} onUpdate={setEditableSceneConfig} />
         </div>
       </ScrollArea>

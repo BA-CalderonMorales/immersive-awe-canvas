@@ -54,3 +54,10 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* lil-gui overrides for better integration */
+.lil-gui .controller.color .widget input[type="text"] {
+    /* Adjust width to prevent it from being cut off */
+    width: 75px !important;
+    text-align: center;
+}
