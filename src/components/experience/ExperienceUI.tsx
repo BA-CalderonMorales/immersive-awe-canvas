@@ -17,6 +17,7 @@ import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
 import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search } from "lucide-react";
 import { logEvent } from "@/lib/logger";
+import { useMobile } from "@/hooks/use-mobile";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -51,6 +52,7 @@ const ExperienceUI = ({
   isSettingsOpen,
   onToggleSettings,
 }: ExperienceUIProps) => {
+  const isMobile = useMobile();
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
   const uiStyle = { color: uiColor };
 
@@ -245,9 +247,11 @@ const ExperienceUI = ({
         </Tooltip>
       </div>
 
-      <div style={uiStyle} className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-          Press SPACE to change time of day
-      </div>
+      {!isMobile && (
+        <div style={uiStyle} className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+            Press SPACE to change time of day
+        </div>
+      )}
     </TooltipProvider>
   );
 };

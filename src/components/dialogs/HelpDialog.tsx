@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import {
   Dialog,
@@ -38,11 +39,11 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogContent className={cn(
-        "sm:max-w-[425px] flex flex-col h-[85vh] max-h-[600px]",
+        "w-[95vw] h-[90svh] rounded-lg sm:max-w-[425px] sm:h-[85vh] max-h-[700px] flex flex-col",
         showIssueForm && "sm:max-w-2xl transition-all duration-300 ease-in-out"
       )}>
         {showIssueForm ? (
-          <IssueReportForm onBack={() => setShowIssueForm(false)} />
+          <IssueReportForm onBack={() => setShowIssueForm(false)} appVersion={appVersion} />
         ) : (
           <>
             <DialogHeader>

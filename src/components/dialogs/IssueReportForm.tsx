@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -25,7 +25,9 @@ import {
 } from "@/components/ui/select";
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
+import { AlertTriangle, UploadCloud } from "lucide-react";
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ALLOWED_IMAGE_TYPES = ["image/png"];
@@ -62,9 +64,12 @@ type IssueFormValues = z.infer<typeof issueFormSchema>;
 
 interface IssueReportFormProps {
   onBack: () => void;
+  appVersion: string;
 }
 
-const IssueReportForm = ({ onBack }: IssueReportFormProps) => {
+const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const form = useForm<IssueFormValues>({
     resolver: zodResolver(issueFormSchema),
     defaultValues: {
@@ -74,13 +79,52 @@ const IssueReportForm = ({ onBack }: IssueReportFormProps) => {
   });
 
   const canContact = form.watch("canContact");
+  const attachmentValue = form.watch("attachment");
 
-  function onSubmit(data: IssueFormValues) {
+  async function onSubmit(data: IssueFormValues) {
+    setIsSubmitting(true);
+    toast.info("Submitting your issue...");
+
+    console.log("App Version:", appVersion);
     console.log("Issue Report Submitted:", data);
-    toast.info("Thank you for your feedback!", {
-      description: "This form is for demonstration. Issue submission to GitHub is coming soon.",
-    });
+
+    // This is a placeholder for the future GitHub API call.
+    // I will implement the real submission logic in the next step.
+    setTimeout(() => {
+      toast.success("Thank you for your feedback!", {
+        description: "This form is for demonstration. Issue submission to GitHub is coming soon.",
+      });
+      setIsSubmitting(false);
+      onBack();
+    }, 1500);
   }
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      form.setValue("attachment", files, { shouldValidate: true });
+    }
+  };
 
   return (
     <>
@@ -94,6 +138,14 @@ const IssueReportForm = ({ onBack }: IssueReportFormProps) => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 overflow-hidden flex flex-col">
           <ScrollArea className="-mx-6 px-6 flex-1">
             <div className="space-y-6 py-4 pr-6">
+              <Alert variant="destructive" className="mb-6">
+                <AlertTriangle className="h-4 w-4" />
+                <AlertTitle>Warning: Public Submission</AlertTitle>
+                <AlertDescription>
+                  Please do not include private or sensitive information. All submitted issues are publicly visible on GitHub.
+                </AlertDescription>
+              </Alert>
+              
               <FormField
                 control={form.control}
                 name="issueLocation"
@@ -247,18 +299,43 @@ const IssueReportForm = ({ onBack }: IssueReportFormProps) => {
               <FormField
                 control={form.control}
                 name="attachment"
-                render={({ field: { value, onChange, ...fieldProps } }) => (
+                render={({ field: { onChange, ...fieldProps } }) => (
                   <FormItem>
                     <FormLabel>Attach Screenshot (Optional)</FormLabel>
-                    <FormDescription>A single .png file, max 1MB.</FormDescription>
-                    <FormControl>
-                      <Input
-                        {...fieldProps}
-                        type="file"
-                        accept=".png"
-                        onChange={(event) => onChange(event.target.files)}
-                      />
-                    </FormControl>
+                    <FormDescription>A single .png file, max 1MB. Drag & drop or click to upload.</FormDescription>
+                     <div
+                        onDrop={handleDrop}
+                        onDragOver={handleDragOver}
+                        onDragEnter={handleDragEnter}
+                        onDragLeave={handleDragLeave}
+                        className={cn(
+                          "relative flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer hover:bg-muted/50 transition-colors",
+                          isDragging ? "border-primary bg-primary/10" : "border-input"
+                        )}
+                      >
+                      <FormControl>
+                        <Input
+                          {...fieldProps}
+                          type="file"
+                          accept=".png"
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          onChange={(event) => onChange(event.target.files)}
+                        />
+                      </FormControl>
+                      <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center pointer-events-none">
+                        {attachmentValue?.[0] ? (
+                          <p className="font-semibold text-primary break-all px-2">{attachmentValue[0].name}</p>
+                        ) : (
+                          <>
+                            <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
+                            <p className="mb-2 text-sm text-muted-foreground">
+                              <span className="font-semibold">Click to upload</span> or drag and drop
+                            </p>
+                            <p className="text-xs text-muted-foreground">PNG (MAX. 1MB)</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -266,8 +343,10 @@ const IssueReportForm = ({ onBack }: IssueReportFormProps) => {
             </div>
           </ScrollArea>
           <DialogFooter className="pt-4 border-t mt-auto">
-            <Button type="button" variant="outline" onClick={onBack}>Back</Button>
-            <Button type="submit">Submit Issue</Button>
+            <Button type="button" variant="outline" onClick={onBack} disabled={isSubmitting}>Back</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? "Submitting..." : "Submit Issue"}
+            </Button>
           </DialogFooter>
         </form>
       </Form>
