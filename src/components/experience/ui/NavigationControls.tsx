@@ -1,0 +1,56 @@
+
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowLeft, ArrowRight } from "lucide-react";
+
+interface NavigationControlsProps {
+  uiColor: string;
+  onChangeWorld: (direction: 'next' | 'prev') => void;
+  isTransitioning: boolean;
+}
+
+const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning }: NavigationControlsProps) => {
+  const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
+  const uiStyle = { color: uiColor };
+
+  return (
+    <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            style={uiStyle}
+            onClick={() => onChangeWorld('prev')}
+            className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
+            size="icon"
+            aria-label="Previous World"
+            disabled={isTransitioning}
+          >
+            <ArrowLeft />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Previous World (P)</p>
+        </TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            style={uiStyle}
+            onClick={() => onChangeWorld('next')}
+            className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
+            size="icon"
+            aria-label="Next World"
+            disabled={isTransitioning}
+          >
+            <ArrowRight />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Next World (N)</p>
+        </TooltipContent>
+      </Tooltip>
+    </>
+  );
+};
+
+export default NavigationControls;
