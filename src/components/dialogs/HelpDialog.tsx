@@ -31,7 +31,8 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
             <li><b>Look around:</b> Click and drag with your mouse.</li>
             <li><b>Pan camera:</b> Use the Arrow keys or WASD keys.</li>
             <li><b>Toggle Day/Night:</b> Press the SPACE key.</li>
-            <li><b>Cycle worlds:</b> Use the arrow buttons on the sides of the screen or press 'N' for next and 'P' for previous.</li>
+            <li><b>Cycle worlds:</b> Use the arrow buttons on the sides or press 'N' for next and 'P' for previous.</li>
+            <li><b>Search worlds:</b> Press Ctrl+K (or Cmd+K) to open the search palette.</li>
           </ul>
 
           <h3 className="font-semibold flex items-center"><LifeBuoy className="mr-2 h-4 w-4" />Features & Bugs</h3>
@@ -41,14 +42,16 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
               <ul className="list-disc list-inside space-y-1 pl-4">
                 <li>Dynamic 3D scenes with react-three-fiber</li>
                 <li>World switching (including keyboard navigation)</li>
-                <li>Day/Night theme toggling</li>
+                <li>Day/Night theme toggling with per-world UI colors</li>
                 <li>Live scene customization panel</li>
-                <li>Searchable world list</li>
+                <li>Copyable scene configuration</li>
+                <li>Searchable world list with keyboard shortcut</li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-1">Fixed Bugs</h4>
               <ul className="list-disc list-inside space-y-1 pl-4">
+                <li>UI visibility issues on various world backgrounds</li>
                 <li>Corrected broken theme in toast notifications</li>
                 <li>Adjusted "Echoing Void" night theme for better visibility</li>
               </ul>

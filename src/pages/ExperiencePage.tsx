@@ -1,12 +1,8 @@
-
 import { useState, useEffect, useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import { useWorlds } from "@/hooks/useWorlds";
 import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
-import { Loader2 } from "lucide-react";
 import DynamicWorld from "@/components/scene/DynamicWorld";
 import { isSceneConfig } from "@/lib/typeguards";
 import { SceneConfig } from "@/types/scene";
@@ -16,34 +12,26 @@ import HelpDialog from "@/components/dialogs/HelpDialog";
 import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 import KeyboardControls from "@/components/controls/KeyboardControls";
 import { useNavigate } from "react-router-dom";
-
-type World = Database['public']['Tables']['worlds']['Row'];
-
-const fetchWorlds = async (): Promise<World[]> => {
-  const { data, error } = await supabase.from('worlds').select('*').order('id', { ascending: true });
-  if (error) throw new Error(error.message);
-  return data || [];
-};
+import LoadingOverlay from "@/components/experience/LoadingOverlay";
 
 const ExperienceContent = () => {
-  const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
+  const {
+    worlds,
+    isLoading,
+    isError,
+    worldData,
+    currentWorldIndex,
+    isTransitioning,
+    changeWorld,
+    jumpToWorld,
+  } = useWorlds();
+  
   const { theme, toggleTheme } = useExperience();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
-
-  const { data: worlds, isLoading, isError } = useQuery<World[]>({
-    queryKey: ['worlds'],
-    queryFn: fetchWorlds,
-  });
-
-  const worldData = useMemo(() => {
-    if (!worlds || worlds.length === 0) return null;
-    return worlds[currentWorldIndex];
-  }, [worlds, currentWorldIndex]);
   
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
@@ -54,37 +42,9 @@ const ExperienceContent = () => {
     }
   }, [worldData, currentWorldId]);
 
-  const changeWorld = useMemo(() => (direction: 'next' | 'prev') => {
-    if (isTransitioning || !worlds || worlds.length === 0) return;
-    
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentWorldIndex((prevIndex) => {
-        if (!worlds) return 0;
-        const newIndex = direction === 'next'
-          ? (prevIndex + 1) % worlds.length
-          : (prevIndex - 1 + worlds.length) % worlds.length;
-        return newIndex;
-      });
-      setIsTransitioning(false);
-    }, 1000);
-  }, [isTransitioning, worlds]);
-
-  const jumpToWorld = (index: number) => {
-    if (isTransitioning || !worlds || worlds.length === 0 || index === currentWorldIndex) {
-      return;
-    }
-    
-    setIsTransitioning(true);
-    setTimeout(() => {
-      setCurrentWorldIndex(index);
-      setIsTransitioning(false);
-    }, 1000);
-  };
-
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isHelpOpen) return;
+      if (isHelpOpen || isSearchOpen) return;
 
       switch (event.code) {
         case 'Space':
@@ -96,16 +56,27 @@ const ExperienceContent = () => {
            changeWorld('next');
            break;
         case 'KeyP':
-           event.preventDefault();
-           changeWorld('prev');
+           if (event.ctrlKey || event.metaKey) {
+             event.preventDefault();
+             setIsSearchOpen(o => !o);
+           } else {
+             event.preventDefault();
+             changeWorld('prev');
+           }
            break;
+        case 'KeyK':
+          if (event.ctrlKey || event.metaKey) {
+            event.preventDefault();
+            setIsSearchOpen(o => !o);
+          }
+          break;
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toggleTheme, changeWorld, isHelpOpen]);
+  }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen]);
 
   const handleGoHome = () => {
     navigate('/');
@@ -124,38 +95,31 @@ const ExperienceContent = () => {
       });
   };
 
+  const uiColor = useMemo(() => {
+    if (!worldData) return 'white';
+    // Use the world-specific color if available, otherwise fallback to white
+    const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
+    return color || 'white';
+  }, [worldData, theme]);
+
   if (isLoading) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-black text-white">
-        <Loader2 className="w-8 h-8 animate-spin" />
-        <p className="ml-4 text-lg">Summoning Worlds...</p>
-      </div>
-    );
+    return <LoadingOverlay message="Summoning Worlds..." />;
   }
 
-  if (isError || !worldData) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-black text-white">
-        <p className="text-lg text-red-500">Could not connect to the multiverse.</p>
-      </div>
-    );
+  if (isError) {
+    return <LoadingOverlay message="Could not connect to the multiverse." />;
   }
   
+  if (!worldData) {
+    return <LoadingOverlay message="No worlds found." />;
+  }
+
   if (!editableSceneConfig) {
-    return (
-      <div className="w-full h-full flex items-center justify-center bg-black text-white">
-        <Loader2 className="w-8 h-8 animate-spin" />
-        <p className="ml-4 text-lg">Initializing Scene...</p>
-      </div>
-    );
+    return <LoadingOverlay message="Initializing Scene..." />;
   }
 
   if (!isSceneConfig(worldData.scene_config)) {
-     return (
-      <div className="w-full h-full flex items-center justify-center bg-black text-white">
-        <p className="text-lg text-red-500">World data is incomplete or corrupted.</p>
-      </div>
-    );
+     return <LoadingOverlay message="World data is incomplete or corrupted." />;
   }
 
   return (
@@ -182,6 +146,7 @@ const ExperienceContent = () => {
         onShowHelp={() => setIsHelpOpen(true)}
         onGoHome={handleGoHome}
         onShowSearch={() => setIsSearchOpen(true)}
+        uiColor={uiColor}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog

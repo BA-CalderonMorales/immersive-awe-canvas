@@ -16,6 +16,8 @@ export type Database = {
           id: number
           name: string
           scene_config: Json | null
+          ui_day_color: string | null
+          ui_night_color: string | null
         }
         Insert: {
           created_at?: string
@@ -23,6 +25,8 @@ export type Database = {
           id?: number
           name: string
           scene_config?: Json | null
+          ui_day_color?: string | null
+          ui_night_color?: string | null
         }
         Update: {
           created_at?: string
@@ -30,6 +34,8 @@ export type Database = {
           id?: number
           name?: string
           scene_config?: Json | null
+          ui_day_color?: string | null
+          ui_night_color?: string | null
         }
         Relationships: []
       }

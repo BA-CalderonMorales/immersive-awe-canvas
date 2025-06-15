@@ -11,20 +11,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Initial project setup with Vite, React, TypeScript, and Supabase.
 - Dynamic 3D scenes with `react-three-fiber`.
-- World switching functionality.
-- Day/Night theme toggling for scenes.
+- World switching functionality with improved transitions.
+- Day/Night theme toggling for scenes, with per-world UI color settings (`ui_day_color`, `ui_night_color`) for high-contrast UI.
 - Scene customization panel using `lil-gui`.
 - Ability to copy scene configuration.
-- UI improvements for better contrast and usability.
-- Keyboard controls (Arrow keys & WASD) for camera panning.
-- Detailed help dialog with controls and bug reporting link.
+- UI improvements, including an animated loading overlay.
+- Keyboard controls (Arrows, WASD, Space, N/P) and a search shortcut (Ctrl/Cmd + K).
+- A detailed help dialog and a searchable world list.
+- New `useWorlds` custom hook to encapsulate world state management.
 
 ### Changed
-- Refactored `ExperiencePage` into smaller, more manageable components.
-- Improved UI element contrast across different scene backgrounds.
-- Replaced help toast notification with a more comprehensive help dialog.
+- Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
+- UI elements now use world-specific colors from the database, removing `mix-blend-mode` for more reliable visibility.
+- Replaced help toast notification with a more comprehensive and up-to-date help dialog.
 
 ### Fixed
+- Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
 - Corrected a broken theme implementation in the toast notification component.
 - Adjusted "Echoing Void" night theme for better visibility.
 
