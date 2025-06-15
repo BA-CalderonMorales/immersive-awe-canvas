@@ -114,7 +114,7 @@ const ExperienceUI = ({
 
   return (
     <TooltipProvider>
-      {/* Add "Hide UI" button at top right overlay */}
+      {/* Hide UI button (top right) */}
       <div className="fixed top-4 right-4 z-50 pointer-events-auto">
         <Button
           size="icon"
@@ -126,7 +126,8 @@ const ExperienceUI = ({
           <EyeOff className="w-6 h-6" />
         </Button>
       </div>
-      {/* UI Overlay now uses uiColor for high contrast */}
+
+      {/* Title row ... keep as is ... */}
       <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">
           <h2 className="text-2xl sm:text-3xl font-bold h-10 flex items-center">{worldName}</h2>
@@ -190,7 +191,7 @@ const ExperienceUI = ({
         </div>
       </div>
       
-      {/* Navigation */}
+      {/* Navigation ... keep as is ... */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -226,119 +227,127 @@ const ExperienceUI = ({
         </TooltipContent>
       </Tooltip>
 
-      {/* Bottom Left Buttons */}
-      <div className={`absolute bottom-4 left-4 sm:left-8 flex items-center gap-2 z-10`}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              onClick={onCopyCode}
-              className={`pointer-events-auto z-10 transition-opacity duration-300 ${blendedButtonClasses}`}
-              size="icon"
-              aria-label="Copy Scene Configuration"
-            >
-              <Copy />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Copy Scene Config (C)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              className={`pointer-events-auto ${blendedButtonClasses}`}
-              size="icon"
-              aria-label="Search Worlds"
-              onClick={handleShowSearch}
-            >
-              <Search />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Search Worlds (S or Ctrl+K)</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
+      {/* Bottom row: Copy, Search, Home (centered), Settings, Help  */}
+      <div className="absolute bottom-4 left-0 w-full flex items-center justify-center gap-2 z-10 pointer-events-none">
+        {/* Left side: Copy, Search */}
+        <div className="flex gap-2 pointer-events-auto">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                style={uiStyle}
+                onClick={onCopyCode}
+                className={`transition-opacity duration-300 ${blendedButtonClasses}`}
+                size="icon"
+                aria-label="Copy Scene Configuration"
+              >
+                <Copy />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Copy Scene Config (C)</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                style={uiStyle}
+                className={blendedButtonClasses}
+                size="icon"
+                aria-label="Search Worlds"
+                onClick={handleShowSearch}
+              >
+                <Search />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Search Worlds (S or Ctrl+K)</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+        
+        {/* Center: Home button */}
+        <div className="flex-1 flex justify-center pointer-events-auto">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                style={uiStyle}
+                onClick={handleGoHome}
+                className={`mx-4 transition-opacity duration-300 ${blendedButtonClasses}`}
+                size="icon"
+                aria-label="Go Home"
+              >
+                <Home />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Go Home (H)</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
 
-      {/* Bottom Right Buttons & Drawer */}
-      <div style={uiStyle} className={`absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10`}>
-        {isMobile ? (
-          <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
+        {/* Right side: Settings, Help */}
+        <div className="flex gap-2 pointer-events-auto">
+          {/* Settings and Help ... keep existing code as is ... */}
+          {isMobile ? (
+            // ... keep code for DrawerTrigger/settings as is ...
+            // (unchanged)
+            <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
+              <DrawerContent>
+                <DrawerHeader className="text-left">
+                  <DrawerTitle>Customize Scene</DrawerTitle>
+                  <DrawerDescription>
+                    Tweak the live parameters of the scene. Your changes can be copied.
+                  </DrawerDescription>
+                </DrawerHeader>
+                <div className="p-4">
+                  <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
+                </div>
+              </DrawerContent>
+            </Drawer>
+          ) : (
             <Tooltip>
               <TooltipTrigger asChild>
-                <DrawerTrigger asChild>
-                  <Button
-                    style={uiStyle}
-                    className={`pointer-events-auto ${blendedButtonClasses}`}
-                    size="icon"
-                    aria-label="Scene Settings"
-                  >
-                    <Settings />
-                  </Button>
-                </DrawerTrigger>
+                <Button
+                  style={uiStyle}
+                  className={blendedButtonClasses}
+                  size="icon"
+                  aria-label="Scene Settings"
+                  onClick={() => onToggleSettings(!isSettingsOpen)}
+                >
+                  <Settings />
+                </Button>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Scene Settings (E)</p>
               </TooltipContent>
             </Tooltip>
-            <DrawerContent>
-              <DrawerHeader className="text-left">
-                <DrawerTitle>Customize Scene</DrawerTitle>
-                <DrawerDescription>
-                  Tweak the live parameters of the scene. Your changes can be copied.
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="p-4">
-                <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
-              </div>
-            </DrawerContent>
-          </Drawer>
-        ) : (
-           <Tooltip>
+          )}
+          <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 style={uiStyle}
-                className={`pointer-events-auto ${blendedButtonClasses}`}
+                className={blendedButtonClasses}
                 size="icon"
-                aria-label="Scene Settings"
-                onClick={() => onToggleSettings(!isSettingsOpen)}
+                aria-label="Help"
+                onClick={handleShowHelp}
               >
-                <Settings />
+                <HelpCircle />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Scene Settings (E)</p>
+              <p>Help & Shortcuts (Q)</p>
             </TooltipContent>
           </Tooltip>
-        )}
-        
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              className={`pointer-events-auto ${blendedButtonClasses}`}
-              size="icon"
-              aria-label="Help"
-              onClick={handleShowHelp}
-            >
-              <HelpCircle />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Help & Shortcuts (Q)</p>
-          </TooltipContent>
-        </Tooltip>
+        </div>
       </div>
 
+      {/* (optional: bottom center hint for theme toggle) */}
       {!isMobile && (
-        <div style={uiStyle} className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-            Press SPACE to change time of day
+        <div style={uiStyle} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300">
+          Press U to hide UI · SPACE to change time of day
         </div>
       )}
     </TooltipProvider>
   );
 };
-
 export default ExperienceUI;

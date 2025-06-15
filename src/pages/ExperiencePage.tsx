@@ -19,6 +19,8 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import SceneControls from "@/components/scene/SceneControls";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import TransitionSplash from "@/components/TransitionSplash";
+import WorldTransition from "@/components/transition/WorldTransition";
 
 const ExperienceContent = () => {
   const {
@@ -61,6 +63,10 @@ const ExperienceContent = () => {
         logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
       });
   }, [editableSceneConfig]);
+
+  // NEW: State for Entry and World transitions (distinct)
+  const [showEntryTransition, setShowEntryTransition] = useState(true);
+  const [showWorldTransition, setShowWorldTransition] = useState(false);
 
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
@@ -141,6 +147,7 @@ const ExperienceContent = () => {
   }, [worldData, theme]);
 
   if (isLoading) {
+    // On real loading (not transitions), show overlay
     return <LoadingOverlay message="Summoning Worlds..." />;
   }
 
@@ -192,6 +199,17 @@ const ExperienceContent = () => {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
+      {/* ENTRY transition: covers all, only at app load */}
+      <TransitionSplash
+        show={showEntryTransition}
+        theme={theme}
+        type="app-entry"
+      />
+      {/* WORLD SWITCH transition: covers scene area only */}
+      <WorldTransition
+        show={showWorldTransition && !showEntryTransition}
+        theme={theme}
+      />
       {isMobile ? (
         <div className="w-full h-full">{World3D}</div>
       ) : (
