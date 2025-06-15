@@ -1,18 +1,16 @@
 
-import { Vector3 } from 'three';
-
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
   color?: string;
-  position?: [number, number, number] | Vector3;
+  position?: [number, number, number];
   groundColor?: string;
   ref?: string;
 };
 
 export type BackgroundConfig = {
   type: 'sky' | 'stars' | 'fog' | 'sparkles';
-  sunPosition?: [number, number, number] | Vector3;
+  sunPosition?: [number, number, number];
   radius?: number;
   depth?: number;
   count?: number;
@@ -29,7 +27,7 @@ export type BackgroundConfig = {
 
 export type ExtraConfig = {
     type: 'cloud';
-    position: [number, number, number] | Vector3;
+    position: [number, number, number];
     speed: number;
     opacity: number;
     segments?: number;
