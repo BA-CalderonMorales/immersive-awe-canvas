@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { MeshDistortMaterial } from '@react-three/drei';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
-import * as THREE from 'three';
+import { MathUtils } from 'three';
 
 interface DistortionSphereObjectProps {
   color: string;
@@ -11,7 +11,7 @@ interface DistortionSphereObjectProps {
 }
 
 const DistortionSphereObject = ({ color, materialConfig }: DistortionSphereObjectProps) => {
-  const materialRef = useRef<THREE.MeshDistortMaterial>(null!);
+  const materialRef = useRef<any>(null!);
   const { mouse } = useThree();
 
   useFrame(() => {
@@ -19,8 +19,8 @@ const DistortionSphereObject = ({ color, materialConfig }: DistortionSphereObjec
       // Distortion and speed change with mouse position
       const distortValue = Math.abs(mouse.x) * 0.6 + 0.3;
       const speedValue = Math.abs(mouse.y) * 3 + 1;
-      materialRef.current.distort = THREE.MathUtils.lerp(materialRef.current.distort, distortValue, 0.05);
-      materialRef.current.speed = THREE.MathUtils.lerp(materialRef.current.speed, speedValue, 0.05);
+      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, distortValue, 0.05);
+      materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, speedValue, 0.05);
     }
   });
 
