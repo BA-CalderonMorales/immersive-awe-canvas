@@ -1,11 +1,15 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
-export const logEvent = async (
-  eventType: string,
-  eventSource?: string,
-  metadata?: Record<string, any>
-) => {
+export const logEvent = async ({
+  eventType,
+  eventSource,
+  metadata,
+}: {
+  eventType: string;
+  eventSource?: string;
+  metadata?: Record<string, any>;
+}) => {
   try {
     const { error } = await supabase.from('logs').insert([
       {

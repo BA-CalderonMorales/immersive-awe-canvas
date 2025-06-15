@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -89,24 +90,50 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
   async function onSubmit(data: IssueFormValues) {
     setIsSubmitting(true);
     toast.info("Submitting your issue...");
-    await logEvent('issue_form_submission_started', 'IssueReportForm', { appVersion });
+    await logEvent({
+      eventType: 'issue_form_submission_started',
+      eventSource: 'IssueReportForm',
+      metadata: { appVersion }
+    });
 
     try {
       // NOTE: Attachment upload is not implemented as part of this flow.
       // The edge function currently does not handle file uploads.
       const { attachment, ...issueData } = data;
 
+      await logEvent({
+        eventType: 'issue_form_submission_invoking_function',
+        eventSource: 'IssueReportForm',
+        metadata: {
+          issueData: {
+            ...issueData,
+            email: issueData.email ? 'REDACTED' : '', // Avoid logging PII
+          },
+          appVersion,
+        }
+      });
+
       const { data: functionResponse, error } = await supabase.functions.invoke('create-github-issue', {
         body: { issueData, appVersion },
       });
 
       if (error) {
-        throw new Error(error.message);
+        await logEvent({
+          eventType: 'issue_form_submission_function_error',
+          eventSource: 'IssueReportForm',
+          metadata: { error: error.message, appVersion }
+        });
+        throw new Error(`Edge function error: ${error.message}`);
       }
 
       const responseData = functionResponse;
 
       if (responseData.error) {
+        await logEvent({
+          eventType: 'issue_form_submission_github_error',
+          eventSource: 'IssueReportForm',
+          metadata: { error: responseData.error, details: responseData.details, appVersion }
+        });
         throw new Error(responseData.error, { cause: responseData.details });
       }
 
@@ -118,7 +145,11 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
         },
       });
 
-      await logEvent('issue_form_submission_success', 'IssueReportForm', { issueUrl: responseData.issue.html_url });
+      await logEvent({
+        eventType: 'issue_form_submission_success',
+        eventSource: 'IssueReportForm',
+        metadata: { issueUrl: responseData.issue.html_url }
+      });
       onBack();
 
     } catch (error: any) {
@@ -126,7 +157,11 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
       toast.error("Submission Failed", {
         description: error.message || "Could not submit your issue. Please try again.",
       });
-      await logEvent('issue_form_submission_failed', 'IssueReportForm', { error: error.message, cause: error.cause });
+      await logEvent({
+        eventType: 'issue_form_submission_failed',
+        eventSource: 'IssueReportForm',
+        metadata: { error: error.message, cause: error.cause }
+      });
     } finally {
       setIsSubmitting(false);
     }
