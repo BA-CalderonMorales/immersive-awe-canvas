@@ -289,9 +289,24 @@ const ExperienceUI = ({
         <div className="flex gap-2 pointer-events-auto">
           {/* Settings and Help ... keep existing code as is ... */}
           {isMobile ? (
-            // ... keep code for DrawerTrigger/settings as is ...
-            // (unchanged)
             <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DrawerTrigger asChild>
+                    <Button
+                      style={uiStyle}
+                      className={blendedButtonClasses}
+                      size="icon"
+                      aria-label="Scene Settings"
+                    >
+                      <Settings />
+                    </Button>
+                  </DrawerTrigger>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>Scene Settings (E)</p>
+                </TooltipContent>
+              </Tooltip>
               <DrawerContent>
                 <DrawerHeader className="text-left">
                   <DrawerTitle>Customize Scene</DrawerTitle>

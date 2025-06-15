@@ -29,7 +29,7 @@ export default function TransitionSplash({
   const containerClass = `
     fixed inset-0 z-[9999] flex items-center justify-center 
     ${type === "app-entry"
-      ? "animate-professional-fadein"
+      ? "animate-app-entry"
       : "animate-world-fadein"}
     transition-none
   `;

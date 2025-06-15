@@ -77,11 +77,11 @@
   .animate-spin-slow {
     animation: spin 3s linear infinite;
   }
-  .animate-professional-fadein {
-    animation: professional-fadein 1.2s cubic-bezier(0.47,0,0.75,0.72);
+  .animate-app-entry {
+    animation: app-entry-animation 2.5s cubic-bezier(0.47, 0, 0.75, 0.72);
   }
-  .animate-world-fadein {
-    animation: world-fadein 0.55s cubic-bezier(0.57,0.2,0.43,1.05);
+  .animate-dip-to-color {
+    animation: dip-to-color 1s ease-in-out;
   }
   .animate-bounce-slow {
     animation: bounce 1.6s infinite alternate cubic-bezier(0.68,-0.55,0.27,1.55);
@@ -90,26 +90,35 @@
     animation: scale-in-center 0.7s cubic-bezier(0.68,-0.55,0.27,1.55);
   }
 
-  @keyframes professional-fadein {
+  @keyframes app-entry-animation {
     0% {
       opacity: 0;
-      transform: scale(1.12) translateY(16px);
+      transform: scale(1.05);
     }
-    100% {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-    }
-  }
-  @keyframes world-fadein {
-    0% {
-      opacity: 0.0;
-      transform: scale(0.98);
-    }
-    100% {
+    25% {
       opacity: 1;
       transform: scale(1);
     }
+    75% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0.95);
+    }
   }
+
+  @keyframes dip-to-color {
+    0%,
+    100% {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+
   @keyframes bounce {
     from, 30% {
       transform: translateY(0);

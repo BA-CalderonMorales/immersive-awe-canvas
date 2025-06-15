@@ -42,6 +42,7 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 <summary><b>Features</b></summary>
 
 -   **World Hopping:** Navigate through a collection of unique 3D worlds.
+-   **Cinematic Transitions:** Experience seamless, unintrusive transitions between worlds for a fluid viewing experience.
 -   **Dynamic Day/Night Cycle:** Press the `SPACE` bar to toggle between day and night themes within each world.
 -   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile.
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.

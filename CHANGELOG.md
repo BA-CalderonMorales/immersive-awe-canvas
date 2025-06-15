@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced the loading spinner with a more thematic "summoning" animation.
 - Disabled issue reporting and "like" features, replacing them with informational tooltips/messages.
 - Scene settings UI now opens on the side on desktop, resizing the canvas, while remaining a drawer on mobile.
+- Overhauled app entry and world-switching transitions to be more subtle and cinematic.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
@@ -45,7 +46,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Version display in help dialog now correctly uses the project's local timezone.
 - Resolved CORS issue in the `create-github-issue` edge function.
 - Fixed a rendering issue in the issue report form where content could be clipped by the scrollbar.
+- Restored the missing settings button on mobile devices.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
-
