@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { ExperienceProvider } from "@/context/ExperienceContext";
@@ -38,7 +37,7 @@ const HomePageContent = () => {
       className="relative w-full h-full cursor-pointer group" 
       onClick={handleStartJourney}
     >
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 transition-transform duration-1000 ease-out group-hover:scale-105">
         <BackgroundScene theme={theme} />
       </div>
       <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-colors duration-1000 

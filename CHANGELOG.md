@@ -22,12 +22,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New `useWorlds` custom hook to encapsulate world state management.
 - GitHub issue reporting system via Supabase Edge Function.
 - Automated cron job to clean up old logs.
+- Interactive parallax effect on the home page.
+- Interactive 3D objects in scenes that respond to mouse movement.
+- Additional clouds in the home page's night theme for enhanced atmosphere.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
 - UI elements now use world-specific colors from the database, removing `mix-blend-mode` for more reliable visibility.
 - Replaced help toast notification with a more comprehensive and up-to-date help dialog.
 - Issue reporting is now a "fire-and-forget" operation to improve UI responsiveness.
+- Replaced the loading spinner with a more thematic "summoning" animation.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
