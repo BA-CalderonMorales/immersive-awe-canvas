@@ -18,8 +18,8 @@ const HomePage = () => {
             An interactive journey through unknown realms.
           </p>
           <div className="mt-8 animate-fade-in [animation-delay:1s]">
-            <Button asChild size="lg" className="text-lg pointer-events-auto">
-              <Link to="/experience">Enter The Void</Link>
+            <Button asChild size="lg" className="text-lg pointer-events-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.8)]">
+              <Link to="/experience">Begin Your Journey</Link>
             </Button>
           </div>
         </div>
