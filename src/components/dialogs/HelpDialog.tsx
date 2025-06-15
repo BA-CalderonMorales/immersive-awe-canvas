@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Github, LifeBuoy, Move } from "lucide-react";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { appVersion } from "@/lib/version";
 
 interface HelpDialogProps {
@@ -83,7 +83,6 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
             </AccordionItem>
           </Accordion>
         </ScrollArea>
-        <ScrollBar />
         <DialogFooter className="pt-4 flex-col sm:flex-row sm:justify-between items-center border-t mt-4">
           <p className="text-xs text-muted-foreground mb-2 sm:mb-0">Version: {appVersion}</p>
           <a href="https://github.com/lovable-labs/av-dx/issues" target="_blank" rel="noopener noreferrer">
