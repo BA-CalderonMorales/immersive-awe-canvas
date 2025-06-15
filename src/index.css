@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -55,9 +54,40 @@
   }
 }
 
-/* lil-gui overrides for better integration */
+/* Scrollbar for settings (mobile), search and help modals */
+@layer components {
+  /* Modal scrollbar style */
+  .modal-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: var(--tw-prose-invert) #313131;
+  }
+  .modal-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    background: rgba(35,46,52,0.15);
+    border-radius: 6px;
+  }
+  .modal-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(90, 120, 180, 0.25);
+    border-radius: 6px;
+  }
+}
+
+/* Slow spin for splash emoji */
+@layer utilities {
+  .animate-spin-slow {
+    animation: spin 3s linear infinite;
+  }
+}
+
+/* Responsive anime for home text */
+@media (max-width: 768px) {
+  h1, .homeTitle {
+    font-size: 2rem!important;
+  }
+}
+
+/* lil-gui override (unchanged) */
 .lil-gui .controller.color .widget input[type="text"] {
-    /* Adjust width to prevent it from being cut off */
     width: 75px !important;
     text-align: center;
 }

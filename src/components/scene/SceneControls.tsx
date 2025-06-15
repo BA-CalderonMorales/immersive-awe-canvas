@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SceneControlsProps {
   sceneConfig: SceneConfig;
@@ -12,6 +13,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   const guiRef = useRef<GUI | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useExperience();
+  const isMobile = useIsMobile();
 
   // Helper for deep cloning and updating to avoid state mutation issues
   const updateConfig = (updater: (config: SceneConfig) => void) => {
@@ -125,7 +127,15 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     };
   }, [sceneConfig, theme, onUpdate]); // Re-create GUI when config or theme changes
 
-  return <div ref={containerRef} className="[&_.lil-gui]:static [&_.lil-gui.root]:w-full" />;
+  return (
+    <div
+      className={`w-full h-full ${
+        isMobile ? "max-h-[72vh] overflow-y-auto modal-scrollbar" : ""
+      }`}
+    >
+      <div ref={containerRef} className="[&_.lil-gui]:static [&_.lil-gui.root]:w-full" />
+    </div>
+  );
 };
 
 export default SceneControls;
