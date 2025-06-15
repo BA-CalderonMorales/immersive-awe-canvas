@@ -1,4 +1,3 @@
-
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { Stars, Cloud, Text } from '@react-three/drei';
@@ -92,28 +91,26 @@ const SceneContent = ({ theme, isLeaving }: { theme: 'day' | 'night', isLeaving:
             <Text
               font="/fonts/Inter-Bold.ttf"
               fontSize={viewport.width / 8}
-              color={textColor}
               anchorX="center"
               anchorY="middle"
               outlineWidth={0.01}
               outlineColor={theme === 'day' ? '#FFFFFF' : '#000000'}
-              toneMapped={false}
             >
               The Journey Awaits
+              <meshBasicMaterial attach="material" color={textColor} toneMapped={false} />
             </Text>
         </group>
         <group ref={subtextRef} position-y={-viewport.width / 14}>
             <Text
               font="/fonts/Inter-Regular.ttf"
               fontSize={viewport.width / 35}
-              color={new THREE.Color(textColor).multiplyScalar(0.8)}
               anchorX="center"
               anchorY="middle"
               maxWidth={10}
               textAlign="center"
-              toneMapped={false}
             >
               Click anywhere or press Enter to begin
+              <meshBasicMaterial attach="material" color={new THREE.Color(textColor).multiplyScalar(0.8)} toneMapped={false} />
             </Text>
         </group>
 
