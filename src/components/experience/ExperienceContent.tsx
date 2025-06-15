@@ -73,6 +73,22 @@ const ExperienceContent = () => {
       });
   }, [editableSceneConfig]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Escape' && isSettingsOpen) {
+        event.preventDefault();
+        setIsSettingsOpen(false);
+        logEvent({ eventType: 'keyboard_shortcut', eventSource: 'close_settings' });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSettingsOpen]);
+
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,

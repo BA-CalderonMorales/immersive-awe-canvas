@@ -39,6 +39,15 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 </details>
 
 <details>
+<summary><b>Support the Project</b></summary>
+
+If you find this project useful and want to support future development, consider buying me a coffee!
+
+<a href="https://www.buymeacoffee.com/brandoncalderonmorales" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
+
+</details>
+
+<details>
 <summary><b>Features</b></summary>
 
 -   **World Hopping:** Navigate through a collection of unique 3D worlds.
@@ -50,7 +59,7 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
     -   `Space`: Toggle Theme
     -   `S`: Search
     -   `H`: Help
-    -   `E`: Settings
+    -   `E`: Settings / `Esc`: Close settings
     -   `G`: Home
     -   `V`: Hide/Show UI
 -   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile. Now with more controls for materials!
