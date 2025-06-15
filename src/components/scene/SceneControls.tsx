@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
@@ -53,6 +54,20 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         if (material.transparent !== undefined) materialFolder.add(material, 'transparent').onChange(value => updateConfig(c => { c[theme].material.transparent = value; }));
         if (material.opacity !== undefined) materialFolder.add(material, 'opacity', 0, 1).onChange(value => updateConfig(c => { c[theme].material.opacity = value; }));
         materialFolder.open();
+    }
+
+    if (sceneConfig.type === 'TorusKnot') {
+      const torusKnot = themeConfig.torusKnot;
+      if (torusKnot) {
+        const torusKnotFolder = mainObjectFolder.addFolder('Geometry');
+        if (torusKnot.p !== undefined) torusKnotFolder.add(torusKnot, 'p', 1, 20).step(1).onChange(value => updateConfig(c => { c[theme].torusKnot!.p = value; }));
+        if (torusKnot.q !== undefined) torusKnotFolder.add(torusKnot, 'q', 1, 20).step(1).onChange(value => updateConfig(c => { c[theme].torusKnot!.q = value; }));
+        if (torusKnot.radius !== undefined) torusKnotFolder.add(torusKnot, 'radius', 0.1, 5).onChange(value => updateConfig(c => { c[theme].torusKnot!.radius = value; }));
+        if (torusKnot.tube !== undefined) torusKnotFolder.add(torusKnot, 'tube', 0.1, 2).onChange(value => updateConfig(c => { c[theme].torusKnot!.tube = value; }));
+        if (torusKnot.tubularSegments !== undefined) torusKnotFolder.add(torusKnot, 'tubularSegments', 3, 512).step(1).onChange(value => updateConfig(c => { c[theme].torusKnot!.tubularSegments = value; }));
+        if (torusKnot.radialSegments !== undefined) torusKnotFolder.add(torusKnot, 'radialSegments', 3, 64).step(1).onChange(value => updateConfig(c => { c[theme].torusKnot!.radialSegments = value; }));
+        torusKnotFolder.open();
+      }
     }
     mainObjectFolder.open();
     
@@ -142,3 +157,4 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
 };
 
 export default SceneControls;
+

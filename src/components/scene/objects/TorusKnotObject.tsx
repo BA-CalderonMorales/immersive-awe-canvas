@@ -21,7 +21,7 @@ const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
       torusKnot?.radialSegments ?? 32,
       torusKnot?.p ?? 2,
       torusKnot?.q ?? 3,
-  ] as const, [torusKnot]);
+  ], [torusKnot]);
 
   useFrame((state, delta) => {
     if (ref.current) {
@@ -46,3 +46,4 @@ const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
   );
 };
 export default TorusKnotObject;
+
