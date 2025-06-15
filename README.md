@@ -45,6 +45,14 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 -   **Diverse Worlds:** Explore scenes featuring various 3D objects like Torus Knots, Morphing Spheres, and the new Wavy Grid.
 -   **Cinematic Transitions:** Experience seamless, unintrusive transitions between worlds for a fluid viewing experience.
 -   **Dynamic Day/Night Cycle:** Press the `SPACE` bar to toggle between day and night themes within each world.
+-   **Keyboard Shortcuts:** Navigate and control the experience with your keyboard.
+    -   `N` / `P`: Next / Previous World
+    -   `Space`: Toggle Theme
+    -   `S`: Search
+    -   `H`: Help
+    -   `E`: Settings
+    -   `G`: Home
+    -   `V`: Hide/Show UI
 -   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile. Now with more controls for materials!
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.
 -   **Supabase Integration:** World data is fetched from a Supabase backend.

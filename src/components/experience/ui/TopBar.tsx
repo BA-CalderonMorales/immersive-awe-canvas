@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EyeOff, Sun, Moon, Home, Heart, Link } from "lucide-react";
@@ -60,7 +59,7 @@ const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, 
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Hide UI (H)</p>
+            <p>Hide UI (V)</p>
           </TooltipContent>
         </Tooltip>
         <Tooltip>

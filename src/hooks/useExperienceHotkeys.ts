@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { logEvent } from "@/lib/logger";
 
@@ -51,7 +50,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
           event.preventDefault();
           callbacks.openSearch();
           break;
-        case 'KeyQ':
+        case 'KeyH':
           event.preventDefault();
           callbacks.openHelp();
           logEvent({ eventType: 'keyboard_shortcut', eventSource: 'open_help' });
@@ -65,7 +64,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
           event.preventDefault();
           callbacks.copyCode();
           break;
-        case 'KeyH':
+        case 'KeyV':
           event.preventDefault();
           callbacks.toggleUi();
           break;

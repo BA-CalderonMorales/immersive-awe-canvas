@@ -28,7 +28,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
           </div>
         </TooltipTrigger>
         <TooltipContent side="bottom" className="pointer-events-none">
-          <p>Show UI (Press H)</p>
+          <p>Show UI (Press V)</p>
         </TooltipContent>
       </Tooltip>
       <div
@@ -40,10 +40,10 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         <p>N / P : Next/Prev World</p>
         <p>Space : Toggle Theme</p>
         <p>S     : Search</p>
-        <p>Q     : Help</p>
+        <p>H     : Help</p>
         <p>E     : Settings</p>
         <p>G     : Home</p>
-        <p>H     : Hide/Show UI</p>
+        <p>V     : Hide/Show UI</p>
       </div>
     </>
   );

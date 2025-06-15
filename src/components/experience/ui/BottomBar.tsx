@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -141,7 +140,7 @@ const BottomBar = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Help & Shortcuts (Q)</p>
+            <p>Help & Shortcuts (H)</p>
           </TooltipContent>
         </Tooltip>
       </div>
