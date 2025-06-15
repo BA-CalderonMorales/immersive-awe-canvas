@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee } from "lucide-react";
@@ -16,17 +15,15 @@ import {
 
 interface TopBarProps {
   worldName: string;
-  isLiked: boolean;
   uiColor: string;
   onToggleUiHidden: () => void;
   onToggleTheme: () => void;
   theme: 'day' | 'night';
   onGoHome: () => void;
   isTransitioning: boolean;
-  onToggleLike: () => void;
 }
 
-const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, onToggleLike }: TopBarProps) => {
+const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning }: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
   const uiStyle = { color: uiColor };
 
@@ -40,10 +37,9 @@ const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, 
               style={uiStyle}
               className={`transition-colors duration-300 ${blendedButtonClasses}`}
               size="icon"
-              aria-label="Like this world"
-              onClick={onToggleLike}
+              aria-label="Like this project"
             >
-              <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
+              <Heart className="fill-current" />
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>

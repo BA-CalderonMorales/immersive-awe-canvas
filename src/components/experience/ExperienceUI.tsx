@@ -1,4 +1,3 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
@@ -23,8 +22,6 @@ interface ExperienceUIProps {
   onShowSearch: () => void;
   isSettingsOpen: boolean;
   onToggleSettings: (isOpen: boolean) => void;
-  isLiked: boolean;
-  onToggleLike: () => void;
   isUiHidden: boolean;
   onToggleUiHidden: () => void;
   showUiHint?: boolean;
@@ -45,8 +42,6 @@ const ExperienceUI = ({
   onShowSearch,
   isSettingsOpen,
   onToggleSettings,
-  isLiked,
-  onToggleLike,
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
@@ -95,14 +90,12 @@ const ExperienceUI = ({
     <TooltipProvider>
       <TopBar 
         worldName={worldName}
-        isLiked={isLiked}
         uiColor={uiColor}
         onToggleUiHidden={onToggleUiHidden}
         onToggleTheme={handleToggleTheme}
         theme={theme}
         onGoHome={handleGoHome}
         isTransitioning={isTransitioning}
-        onToggleLike={onToggleLike}
       />
       
       <NavigationControls 
