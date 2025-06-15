@@ -7,6 +7,7 @@ import {
   CommandGroup,
   CommandItem,
 } from "@/components/ui/command";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { Database } from "@/integrations/supabase/types";
 import { Globe } from "lucide-react";
 
@@ -22,6 +23,10 @@ interface WorldSearchDialogProps {
 const WorldSearchDialog = ({ isOpen, onOpenChange, worlds, onSelectWorld }: WorldSearchDialogProps) => {
   return (
     <CommandDialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogTitle className="sr-only">Search Worlds</DialogTitle>
+      <DialogDescription className="sr-only">
+        Search for a world by name and jump to it directly.
+      </DialogDescription>
       <CommandInput placeholder="Search for a world..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>

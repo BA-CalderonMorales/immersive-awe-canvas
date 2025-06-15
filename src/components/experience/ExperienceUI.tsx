@@ -39,23 +39,20 @@ const ExperienceUI = ({
   onGoHome,
   onShowSearch,
 }: ExperienceUIProps) => {
-  const themedButtonClasses = theme === 'day' 
-    ? 'text-neutral-900 bg-black/5 hover:bg-black/10' 
-    : 'text-white bg-white/20 hover:bg-white/40';
-
-  const titleClasses = theme === 'day' ? 'text-neutral-900' : 'text-white';
+  // All on-canvas UI will use mix-blend-difference for high contrast.
+  const blendedButtonClasses = "border-0 bg-white/20 hover:bg-white/40";
 
   return (
     <>
-      {/* UI Overlay */}
-      <div className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      {/* UI Overlay using mix-blend-difference for visibility */}
+      <div className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 text-white mix-blend-difference ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s]">
-          <h2 className={`text-2xl sm:text-3xl font-bold ${titleClasses}`}>{worldName}</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold">{worldName}</h2>
         </div>
         <div className="flex items-center gap-2 pointer-events-auto">
           <Button
             onClick={onToggleTheme}
-            className={`border-0 ${themedButtonClasses}`}
+            className={blendedButtonClasses}
             size="icon"
             aria-label="Toggle Theme"
           >
@@ -63,7 +60,7 @@ const ExperienceUI = ({
           </Button>
           <Button
             onClick={onGoHome}
-            className={`border-0 ${themedButtonClasses}`}
+            className={blendedButtonClasses}
             size="icon"
             aria-label="Go Home"
           >
@@ -75,7 +72,7 @@ const ExperienceUI = ({
       {/* Navigation */}
       <Button
         onClick={() => onChangeWorld('prev')}
-        className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+        className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
         size="icon"
         aria-label="Previous World"
         disabled={isTransitioning}
@@ -84,7 +81,7 @@ const ExperienceUI = ({
       </Button>
       <Button
         onClick={() => onChangeWorld('next')}
-        className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+        className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
         size="icon"
         aria-label="Next World"
         disabled={isTransitioning}
@@ -95,7 +92,7 @@ const ExperienceUI = ({
       {/* Bottom Left Buttons */}
       <Button
         onClick={onCopyCode}
-        className="absolute bottom-4 left-4 sm:left-8 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference"
+        className={`absolute bottom-4 left-4 sm:left-8 text-white pointer-events-auto z-10 transition-opacity duration-300 mix-blend-difference ${blendedButtonClasses}`}
         size="icon"
         aria-label="Copy Scene Configuration"
       >
@@ -103,9 +100,9 @@ const ExperienceUI = ({
       </Button>
 
       {/* Bottom Right Buttons & Drawer */}
-      <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10">
+      <div className={`absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10 text-white mix-blend-difference`}>
         <Button
-          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
+          className={`pointer-events-auto ${blendedButtonClasses}`}
           size="icon"
           aria-label="Search Worlds"
           onClick={onShowSearch}
@@ -115,7 +112,7 @@ const ExperienceUI = ({
         <Drawer shouldScaleBackground={false}>
           <DrawerTrigger asChild>
             <Button
-              className={`border-0 pointer-events-auto ${themedButtonClasses}`}
+              className={`pointer-events-auto ${blendedButtonClasses}`}
               size="icon"
               aria-label="Scene Settings"
             >
@@ -136,7 +133,7 @@ const ExperienceUI = ({
         </Drawer>
         
         <Button
-          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
+          className={`pointer-events-auto ${blendedButtonClasses}`}
           size="icon"
           aria-label="Help"
           onClick={onShowHelp}
