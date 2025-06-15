@@ -16,17 +16,17 @@ const TorusKnotObject = ({ color, materialConfig }: TorusKnotObjectProps) => {
 
   useFrame((state, delta) => {
     if (ref.current) {
-      const x = (mouse.x * viewport.width) / 2.5;
-      const y = (mouse.y * viewport.height) / 2.5;
+      // More responsive mouse following
+      const x = (mouse.x * viewport.width) / 2;
+      const y = (mouse.y * viewport.height) / 2;
+      ref.current.lookAt(x, y, 1);
 
-      // Rotate towards mouse
-      const targetRotation = new THREE.Quaternion().setFromEuler(
-        new THREE.Euler(y * 0.1, x * 0.1, 0, 'XYZ')
-      );
-      ref.current.quaternion.slerp(targetRotation, 0.05);
-      
       // Gentle constant rotation
       ref.current.rotation.z += delta * 0.1;
+
+      // Add a subtle pulse
+      const pulse = Math.sin(state.clock.getElapsedTime() * 1.5) * 0.05 + 1;
+      ref.current.scale.set(pulse, pulse, pulse);
     }
   });
 

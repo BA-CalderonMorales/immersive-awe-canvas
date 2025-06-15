@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -16,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
-import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search, Heart } from "lucide-react";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -35,6 +34,8 @@ interface ExperienceUIProps {
   onShowSearch: () => void;
   isSettingsOpen: boolean;
   onToggleSettings: (isOpen: boolean) => void;
+  isLiked: boolean;
+  onToggleLike: () => void;
 }
 
 const ExperienceUI = ({
@@ -52,6 +53,8 @@ const ExperienceUI = ({
   onShowSearch,
   isSettingsOpen,
   onToggleSettings,
+  isLiked,
+  onToggleLike,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
@@ -81,6 +84,10 @@ const ExperienceUI = ({
     onShowHelp();
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
   }
+
+  const handleToggleLike = () => {
+    onToggleLike();
+  };
 
   return (
     <TooltipProvider>
@@ -193,6 +200,22 @@ const ExperienceUI = ({
           </TooltipTrigger>
           <TooltipContent>
             <p>Search Worlds (S or Ctrl+K)</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              style={uiStyle}
+              onClick={handleToggleLike}
+              className={`pointer-events-auto z-10 transition-colors duration-300 ${blendedButtonClasses}`}
+              size="icon"
+              aria-label="Like this world"
+            >
+              <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{isLiked ? 'Unlike this world' : 'Like this world'}</p>
           </TooltipContent>
         </Tooltip>
       </div>

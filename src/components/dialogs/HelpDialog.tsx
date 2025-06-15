@@ -54,11 +54,11 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
             </DialogHeader>
             <ScrollArea className="flex-1 -mx-6 px-6 pr-4">
               <Accordion type="multiple" defaultValue={['controls']} className="w-full">
-                <AccordionItem value="controls" className="border-b-0">
+                <AccordionItem value="controls">
                   <AccordionTrigger>
                     <span className="font-semibold flex items-center"><Move className="mr-2 h-4 w-4" />Controls</span>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="border-t-0 pt-4">
                     <ul className="list-disc list-inside space-y-2 pl-4 text-sm">
                       <li><b>Look around:</b> Click and drag with your mouse.</li>
                       <li><b>Pan camera:</b> Use the Arrow keys or WASD keys.</li>
@@ -73,7 +73,7 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
                   <AccordionTrigger>
                     <span className="font-semibold flex items-center"><LifeBuoy className="mr-2 h-4 w-4" />Features & Bugs</span>
                   </AccordionTrigger>
-                  <AccordionContent>
+                  <AccordionContent className="border-t-0 pt-4">
                     <div className="text-sm text-muted-foreground space-y-4">
                       <div>
                         <h4 className="font-semibold text-foreground mb-1">Recent Features</h4>

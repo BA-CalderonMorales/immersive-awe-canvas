@@ -13,12 +13,21 @@ interface WobbleFieldObjectProps {
 const WobbleFieldObject = ({ color, materialConfig }: WobbleFieldObjectProps) => {
   const materialRef = useRef<any>(null!);
   const { mouse } = useThree();
+  const lastMouse = useRef({ x: 0 });
 
   useFrame(() => {
     if (materialRef.current) {
+      // Make wobble speed react to mouse speed
+      const mouseSpeed = Math.abs(mouse.x - lastMouse.current.x);
+      lastMouse.current.x = mouse.x;
+
       // Wobble factor increases with distance from center
-      const wobbleFactor = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.5 + 0.2;
+      const wobbleFactor = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.5 + 0.1;
       materialRef.current.factor = MathUtils.lerp(materialRef.current.factor, wobbleFactor, 0.1);
+
+      // Speed up animation when mouse moves faster
+      const speedFactor = mouseSpeed * 60 + 1;
+      materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, speedFactor, 0.1);
     }
   });
 

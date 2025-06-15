@@ -14,12 +14,16 @@ const DistortionSphereObject = ({ color, materialConfig }: DistortionSphereObjec
   const materialRef = useRef<any>(null!);
   const { mouse } = useThree();
 
-  useFrame(() => {
+  useFrame((state) => {
     if (materialRef.current) {
-      // Distortion and speed change with mouse position
-      const distortValue = Math.abs(mouse.x) * 0.6 + 0.3;
+      // Base distortion on distance from center
+      const distortValue = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.4;
+      // Add a time-based wave for continuous motion
+      const timeDistort = Math.sin(state.clock.getElapsedTime() * 1.5) * 0.1;
+
+      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.2 + distortValue + timeDistort, 0.05);
+
       const speedValue = Math.abs(mouse.y) * 3 + 1;
-      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, distortValue, 0.05);
       materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, speedValue, 0.05);
     }
   });

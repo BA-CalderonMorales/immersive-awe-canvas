@@ -14,6 +14,7 @@ import KeyboardControls from "@/components/controls/KeyboardControls";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "@/components/experience/LoadingOverlay";
 import { logEvent } from "@/lib/logger";
+import { useLikes } from "@/hooks/useLikes";
 
 const ExperienceContent = () => {
   const {
@@ -28,6 +29,7 @@ const ExperienceContent = () => {
   } = useWorlds();
   
   const { theme, toggleTheme } = useExperience();
+  const { isLiked, toggleLike } = useLikes();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -171,6 +173,8 @@ const ExperienceContent = () => {
         uiColor={uiColor}
         isSettingsOpen={isSettingsOpen}
         onToggleSettings={setIsSettingsOpen}
+        isLiked={isLiked(worldData.id)}
+        onToggleLike={() => toggleLike(worldData.id, worldData.name)}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog
