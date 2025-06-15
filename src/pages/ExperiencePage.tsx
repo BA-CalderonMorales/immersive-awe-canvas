@@ -13,6 +13,7 @@ import { SceneConfig } from "@/types/scene";
 import { toast } from "sonner";
 import ExperienceUI from "@/components/experience/ExperienceUI";
 import HelpDialog from "@/components/dialogs/HelpDialog";
+import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 import KeyboardControls from "@/components/controls/KeyboardControls";
 import { useNavigate } from "react-router-dom";
 
@@ -31,6 +32,7 @@ const ExperienceContent = () => {
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
@@ -67,6 +69,18 @@ const ExperienceContent = () => {
       setIsTransitioning(false);
     }, 1000);
   }, [isTransitioning, worlds]);
+
+  const jumpToWorld = (index: number) => {
+    if (isTransitioning || !worlds || worlds.length === 0 || index === currentWorldIndex) {
+      return;
+    }
+    
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setCurrentWorldIndex(index);
+      setIsTransitioning(false);
+    }, 1000);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -167,8 +181,15 @@ const ExperienceContent = () => {
         onUpdateSceneConfig={setEditableSceneConfig}
         onShowHelp={() => setIsHelpOpen(true)}
         onGoHome={handleGoHome}
+        onShowSearch={() => setIsSearchOpen(true)}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
+      <WorldSearchDialog
+        isOpen={isSearchOpen}
+        onOpenChange={setIsSearchOpen}
+        worlds={worlds}
+        onSelectWorld={jumpToWorld}
+      />
     </div>
   );
 };

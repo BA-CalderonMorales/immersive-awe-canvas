@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
-import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search } from "lucide-react";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -23,6 +23,7 @@ interface ExperienceUIProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   onGoHome: () => void;
+  onShowSearch: () => void;
 }
 
 const ExperienceUI = ({
@@ -36,6 +37,7 @@ const ExperienceUI = ({
   onUpdateSceneConfig,
   onShowHelp,
   onGoHome,
+  onShowSearch,
 }: ExperienceUIProps) => {
   const themedButtonClasses = theme === 'day' 
     ? 'text-neutral-900 bg-black/5 hover:bg-black/10' 
@@ -102,6 +104,14 @@ const ExperienceUI = ({
 
       {/* Bottom Right Buttons & Drawer */}
       <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10">
+        <Button
+          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
+          size="icon"
+          aria-label="Search Worlds"
+          onClick={onShowSearch}
+        >
+          <Search />
+        </Button>
         <Drawer shouldScaleBackground={false}>
           <DrawerTrigger asChild>
             <Button
