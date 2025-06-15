@@ -39,6 +39,21 @@ const ExperienceContent = () => {
     navigate('/');
   }, [navigate]);
 
+  const handleCopyCode = useCallback(() => {
+    if (!editableSceneConfig) return;
+    const codeString = JSON.stringify(editableSceneConfig, null, 2);
+    navigator.clipboard.writeText(codeString)
+      .then(() => {
+        toast.success("Scene configuration copied to clipboard!");
+        logEvent('action', 'copy_code_success');
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+        toast.error("Failed to copy configuration.");
+        logEvent('action', 'copy_code_failure', { error: (err as Error).message });
+      });
+  }, [editableSceneConfig]);
+
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
       if (isSceneConfig(worldData.scene_config)) {
@@ -101,21 +116,6 @@ const ExperienceContent = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen, handleGoHome, handleCopyCode, isSettingsOpen]);
-
-  const handleCopyCode = useCallback(() => {
-    if (!editableSceneConfig) return;
-    const codeString = JSON.stringify(editableSceneConfig, null, 2);
-    navigator.clipboard.writeText(codeString)
-      .then(() => {
-        toast.success("Scene configuration copied to clipboard!");
-        logEvent('action', 'copy_code_success');
-      })
-      .catch(err => {
-        console.error('Failed to copy text: ', err);
-        toast.error("Failed to copy configuration.");
-        logEvent('action', 'copy_code_failure', { error: (err as Error).message });
-      });
-  }, [editableSceneConfig]);
 
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
