@@ -11,6 +11,7 @@ interface SceneControlsProps {
 
 const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   const guiRef = useRef<GUI | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const { theme } = useExperience();
 
   // Helper for deep cloning and updating to avoid state mutation issues
@@ -21,11 +22,13 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   };
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     // Destroy previous GUI if it exists
     if (guiRef.current) {
       guiRef.current.destroy();
     }
-    const gui = new GUI();
+    const gui = new GUI({ container: containerRef.current });
     guiRef.current = gui;
 
     const themeConfig = sceneConfig[theme];
@@ -72,7 +75,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     };
   }, [sceneConfig, theme]); // Re-create GUI when config or theme changes
 
-  return null; // This component does not render anything itself
+  return <div ref={containerRef} className="[&_.lil-gui]:static [&_.lil-gui.root]:w-full" />;
 };
 
 export default SceneControls;

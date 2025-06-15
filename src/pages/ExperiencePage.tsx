@@ -7,11 +7,20 @@ import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Sun, Moon, Loader2, Copy } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Loader2, Copy, Settings, HelpCircle } from "lucide-react";
 import DynamicWorld from "@/components/scene/DynamicWorld";
 import { isSceneConfig } from "@/lib/typeguards";
 import { SceneConfig } from "@/types/scene";
 import { toast } from "sonner";
+import SceneControls from "@/components/scene/SceneControls";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -126,7 +135,7 @@ const ExperienceContent = () => {
         className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
       >
         <WorldContainer>
-          <DynamicWorld sceneConfig={editableSceneConfig} setSceneConfig={setEditableSceneConfig} />
+          <DynamicWorld sceneConfig={editableSceneConfig} />
         </WorldContainer>
       </div>
 
@@ -165,7 +174,7 @@ const ExperienceContent = () => {
         <ArrowRight />
       </Button>
 
-      {/* Copy Code Button */}
+      {/* Bottom Left Buttons */}
       <Button
         onClick={handleCopyCode}
         className="absolute bottom-4 left-4 sm:left-8 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300"
@@ -174,6 +183,41 @@ const ExperienceContent = () => {
       >
         <Copy />
       </Button>
+
+      {/* Bottom Right Buttons & Drawer */}
+      <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10">
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button
+              className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
+              size="icon"
+              aria-label="Scene Settings"
+            >
+              <Settings />
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent>
+            <DrawerHeader className="text-left">
+              <DrawerTitle>Customize Scene</DrawerTitle>
+              <DrawerDescription>
+                Tweak the live parameters of the scene. Your changes can be copied.
+              </DrawerDescription>
+            </DrawerHeader>
+            <div className="p-4">
+              <SceneControls sceneConfig={editableSceneConfig} onUpdate={setEditableSceneConfig} />
+            </div>
+          </DrawerContent>
+        </Drawer>
+        
+        <Button
+          className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
+          size="icon"
+          aria-label="Help"
+          onClick={() => toast.info("How to interact", { description: "Use your mouse to look around. Press SPACE to toggle day/night. Use the controls to customize the scene." })}
+        >
+          <HelpCircle />
+        </Button>
+      </div>
 
       <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
           Press SPACE to change time of day
