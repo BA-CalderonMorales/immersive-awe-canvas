@@ -3,12 +3,18 @@ import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
 const HomePageContent = () => {
   const navigate = useNavigate();
   const { theme, toggleTheme } = useExperience();
   const [isLeaving, setIsLeaving] = useState(false);
+
+  const handleStartJourney = useCallback(() => {
+    if (isLeaving) return;
+    setIsLeaving(true);
+    setTimeout(() => navigate("/experience"), 500); // Match fade-out duration
+  }, [isLeaving, navigate]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -16,17 +22,16 @@ const HomePageContent = () => {
         event.preventDefault();
         toggleTheme();
       }
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        handleStartJourney();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toggleTheme]);
-
-  const handleStartJourney = () => {
-    setIsLeaving(true);
-    setTimeout(() => navigate("/experience"), 500); // Match fade-out duration
-  };
+  }, [toggleTheme, handleStartJourney]);
 
   return (
     <div 
@@ -45,7 +50,7 @@ const HomePageContent = () => {
             The Journey Awaits
           </h1>
           <p className={`mt-8 text-lg text-white/80 mix-blend-difference transition-opacity duration-500 group-hover:opacity-100 opacity-80 ${isLeaving ? 'animate-fade-out' : 'animate-fade-in [animation-delay:0.5s]'}`}>
-            Click anywhere to begin
+            Click anywhere or press Enter to begin
           </p>
         </div>
       </div>
