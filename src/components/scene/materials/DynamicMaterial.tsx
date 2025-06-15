@@ -1,6 +1,8 @@
+
 import { MaterialConfig } from '@/types/scene';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import { useMatcapTexture } from '@react-three/drei';
 
 interface DynamicMaterialProps {
     materialConfig: MaterialConfig;
@@ -20,6 +22,14 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     threeTone.minFilter = THREE.NearestFilter;
     threeTone.magFilter = THREE.NearestFilter;
     threeTone.needsUpdate = true;
+
+    const MATCAP_TEXTURES = {
+        chrome: '3B3C3F_DAD9D5_92908A_A3A099',
+        purple: '7877EE_D87CF2_A178F0_C57BEF',
+        gold: 'D8C9A3_8C7C49_A79A71_998A5A',
+    };
+    
+    const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
     const commonProps = {
         color: color,
@@ -48,6 +58,8 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
                 {...commonProps}
                 gradientMap={materialConfig.gradientMap === 'five' ? fiveTone : threeTone}
             />;
+        case 'matcap':
+            return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
         case 'lambert':
             return <meshLambertMaterial {...commonProps} />;
         case 'phong':

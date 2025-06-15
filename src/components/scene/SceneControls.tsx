@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
@@ -46,7 +47,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         const materialFolder = mainObjectFolder.addFolder('Material');
         
         if (material.materialType !== undefined) {
-            materialFolder.add(material, 'materialType', ['standard', 'physical', 'toon', 'lambert', 'phong', 'normal', 'basic']).onChange(value => {
+            materialFolder.add(material, 'materialType', ['standard', 'physical', 'toon', 'lambert', 'phong', 'normal', 'basic', 'matcap']).onChange(value => {
                 updateConfig(c => { c[theme].material.materialType = value; });
             });
         }
@@ -87,6 +88,14 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
                 });
             }
             toonFolder.open();
+        }
+
+        if (material.materialType === 'matcap') {
+            const matcapFolder = materialFolder.addFolder('Matcap Properties');
+            matcapFolder.add(material, 'matcapTexture', ['chrome', 'purple', 'gold']).onChange(value => {
+                updateConfig(c => { c[theme].material.matcapTexture = value; });
+            });
+            matcapFolder.open();
         }
 
         if (material.speed !== undefined) materialFolder.add(material, 'speed', 0, 10).onChange(value => updateConfig(c => { c[theme].material.speed = value; }));
@@ -146,7 +155,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const backgroundConf = themeConfig.background;
     const bgFolder = gui.addFolder('Background');
     
-    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles']).name('Type').onChange(value => {
+    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles', 'color']).name('Type').onChange(value => {
         updateConfig(c => { c[theme].background.type = value; });
     });
 
@@ -174,6 +183,8 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
         if (backgroundConf.near !== undefined) bgFolder.add(backgroundConf, 'near', 0, 100).onChange(v => updateConfig(c => {c[theme].background.near = v}));
         if (backgroundConf.far !== undefined) bgFolder.add(backgroundConf, 'far', 0, 200).onChange(v => updateConfig(c => {c[theme].background.far = v}));
+    } else if (backgroundConf.type === 'color') {
+        if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
     }
 
     bgFolder.open();

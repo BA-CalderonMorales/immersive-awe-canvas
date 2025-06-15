@@ -17,10 +17,12 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
         {children}
       </Suspense>
       <OrbitControls
-        enableZoom={false}
+        enableZoom={true}
         enablePan={false}
         autoRotate={!isLocked}
         autoRotateSpeed={0.5}
+        minDistance={2}
+        maxDistance={10}
       />
       <EffectComposer>
         <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} height={300} intensity={0.7} />

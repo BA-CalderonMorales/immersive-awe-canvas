@@ -8,7 +8,7 @@ export type LightConfig = {
 };
 
 export type BackgroundConfig = {
-  type: 'sky' | 'stars' | 'fog' | 'sparkles';
+  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color';
   sunPosition?: [number, number, number];
   radius?: number;
   depth?: number;
@@ -34,7 +34,7 @@ export type ExtraConfig = {
 }
 
 export type MaterialConfig = {
-    materialType?: 'standard' | 'physical' | 'toon' | 'lambert' | 'phong' | 'normal' | 'basic';
+    materialType?: 'standard' | 'physical' | 'toon' | 'lambert' | 'phong' | 'normal' | 'basic' | 'matcap';
     wireframe?: boolean;
     // Common properties
     roughness?: number;
@@ -57,6 +57,8 @@ export type MaterialConfig = {
     shininess?: number;
     // Toon material properties
     gradientMap?: 'three' | 'five';
+    // Matcap material properties
+    matcapTexture?: 'chrome' | 'purple' | 'gold';
 }
 
 export type TorusKnotConfig = {

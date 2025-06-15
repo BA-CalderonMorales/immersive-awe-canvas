@@ -13,6 +13,8 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
     case 'sparkles':
         // @ts-ignore
         return <Sparkles {...background} />;
+    case 'color':
+        return <color attach="background" args={[background.color || '#000000']} />;
     case 'fog':
         const hasClouds = extras?.some(e => e.type === 'cloud');
         return (
