@@ -3,6 +3,7 @@ import { SceneConfig, SceneThemeConfig } from '@/types/scene';
 import TorusKnotObject from './objects/TorusKnotObject';
 import WobbleFieldObject from './objects/WobbleFieldObject';
 import DistortionSphereObject from './objects/DistortionSphereObject';
+import MorphingIcosahedronObject from './objects/MorphingIcosahedronObject';
 
 interface DynamicObjectProps {
   type: SceneConfig['type'];
@@ -18,6 +19,8 @@ const DynamicObject = ({ type, themeConfig }: DynamicObjectProps) => {
       return <WobbleFieldObject color={mainObjectColor} materialConfig={material} />;
     case 'DistortionSphere':
       return <DistortionSphereObject color={mainObjectColor} materialConfig={material} />;
+    case 'MorphingIcosahedron':
+      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} />;
     default:
       return null;
   }

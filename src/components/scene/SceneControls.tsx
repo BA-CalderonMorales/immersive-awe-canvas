@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
@@ -52,18 +51,69 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     }
     mainObjectFolder.open();
     
+    // Lights Folder
+    const lightsFolder = gui.addFolder('Lights');
+    themeConfig.lights.forEach((light, index) => {
+      const lightFolder = lightsFolder.addFolder(`Light ${index + 1} (${light.type})`);
+      if (light.intensity !== undefined) {
+        lightFolder.add(light, 'intensity', 0, 5).onChange(value => {
+          updateConfig(c => { c[theme].lights[index].intensity = value; });
+        });
+      }
+      if (light.color !== undefined) {
+        lightFolder.addColor(light, 'color').onChange(value => {
+          updateConfig(c => { c[theme].lights[index].color = value; });
+        });
+      }
+      if (light.position) {
+        const posFolder = lightFolder.addFolder('Position');
+        posFolder.add(light.position, '0', -200, 200).name('x').onChange(v => updateConfig(c => { c[theme].lights[index].position![0] = v; }));
+        posFolder.add(light.position, '1', -200, 200).name('y').onChange(v => updateConfig(c => { c[theme].lights[index].position![1] = v; }));
+        posFolder.add(light.position, '2', -200, 200).name('z').onChange(v => updateConfig(c => { c[theme].lights[index].position![2] = v; }));
+        posFolder.open();
+      }
+      if (light.groundColor !== undefined) {
+        lightFolder.addColor(light, 'groundColor').name('Ground Color').onChange(value => {
+          updateConfig(c => { c[theme].lights[index].groundColor = value; });
+        });
+      }
+      lightFolder.open();
+    });
+    lightsFolder.open();
+    
     // Background Folder
     const backgroundConf = themeConfig.background;
     const bgFolder = gui.addFolder('Background');
-    if (backgroundConf.sunPosition) {
-      const sunPosFolder = bgFolder.addFolder('Sun Position');
-      sunPosFolder.add(backgroundConf.sunPosition, '0', -200, 200).name('x').onChange(v => updateConfig(c => {c[theme].background.sunPosition![0] = v}));
-      sunPosFolder.add(backgroundConf.sunPosition, '1', -200, 200).name('y').onChange(v => updateConfig(c => {c[theme].background.sunPosition![1] = v}));
-      sunPosFolder.add(backgroundConf.sunPosition, '2', -200, 200).name('z').onChange(v => updateConfig(c => {c[theme].background.sunPosition![2] = v}));
+    
+    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles']).name('Type').onChange(value => {
+        updateConfig(c => { c[theme].background.type = value; });
+    });
+
+    if (backgroundConf.type === 'sky' && backgroundConf.sunPosition) {
+        const sunPosFolder = bgFolder.addFolder('Sun Position');
+        sunPosFolder.add(backgroundConf.sunPosition, '0', -200, 200).name('x').onChange(v => updateConfig(c => {c[theme].background.sunPosition![0] = v}));
+        sunPosFolder.add(backgroundConf.sunPosition, '1', -200, 200).name('y').onChange(v => updateConfig(c => {c[theme].background.sunPosition![1] = v}));
+        sunPosFolder.add(backgroundConf.sunPosition, '2', -200, 200).name('z').onChange(v => updateConfig(c => {c[theme].background.sunPosition![2] = v}));
+        sunPosFolder.open();
+    } else if (backgroundConf.type === 'stars') {
+        if (backgroundConf.radius !== undefined) bgFolder.add(backgroundConf, 'radius', 10, 2000).onChange(v => updateConfig(c => {c[theme].background.radius = v}));
+        if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 10000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
+        if (backgroundConf.saturation !== undefined) bgFolder.add(backgroundConf, 'saturation', 0, 2).onChange(v => updateConfig(c => {c[theme].background.saturation = v}));
+        if (backgroundConf.factor !== undefined) bgFolder.add(backgroundConf, 'factor', 0, 20).onChange(v => updateConfig(c => {c[theme].background.factor = v}));
+        if (backgroundConf.speed !== undefined) bgFolder.add(backgroundConf, 'speed', 0, 5).onChange(v => updateConfig(c => {c[theme].background.speed = v}));
+        if (backgroundConf.fade !== undefined) bgFolder.add(backgroundConf, 'fade').onChange(v => updateConfig(c => {c[theme].background.fade = v}));
+    } else if (backgroundConf.type === 'sparkles') {
+        if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 10000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
+        if (backgroundConf.speed !== undefined) bgFolder.add(backgroundConf, 'speed', 0, 5).onChange(v => updateConfig(c => {c[theme].background.speed = v}));
+        if (backgroundConf.opacity !== undefined) bgFolder.add(backgroundConf, 'opacity', 0, 1).onChange(v => updateConfig(c => {c[theme].background.opacity = v}));
+        if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
+        if (backgroundConf.size !== undefined) bgFolder.add(backgroundConf, 'size', 0, 20).onChange(v => updateConfig(c => {c[theme].background.size = v}));
+        if (backgroundConf.scale !== undefined) bgFolder.add(backgroundConf, 'scale', 0, 50).onChange(v => updateConfig(c => {c[theme].background.scale = v}));
+    } else if (backgroundConf.type === 'fog') {
+        if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
+        if (backgroundConf.near !== undefined) bgFolder.add(backgroundConf, 'near', 0, 100).onChange(v => updateConfig(c => {c[theme].background.near = v}));
+        if (backgroundConf.far !== undefined) bgFolder.add(backgroundConf, 'far', 0, 200).onChange(v => updateConfig(c => {c[theme].background.far = v}));
     }
-    if (backgroundConf.saturation !== undefined) bgFolder.add(backgroundConf, 'saturation', 0, 2).onChange(v => updateConfig(c => {c[theme].background.saturation = v}));
-    if (backgroundConf.radius !== undefined) bgFolder.add(backgroundConf, 'radius', 10, 2000).onChange(v => updateConfig(c => {c[theme].background.radius = v}));
-    if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 10000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
 
     bgFolder.open();
 
@@ -73,7 +123,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         guiRef.current = null;
       }
     };
-  }, [sceneConfig, theme]); // Re-create GUI when config or theme changes
+  }, [sceneConfig, theme, onUpdate]); // Re-create GUI when config or theme changes
 
   return <div ref={containerRef} className="[&_.lil-gui]:static [&_.lil-gui.root]:w-full" />;
 };
