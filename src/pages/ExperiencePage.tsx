@@ -45,12 +45,12 @@ const ExperienceContent = () => {
     navigator.clipboard.writeText(codeString)
       .then(() => {
         toast.success("Scene configuration copied to clipboard!");
-        logEvent('action', 'copy_code_success');
+        logEvent({ eventType: 'action', eventSource: 'copy_code_success' });
       })
       .catch(err => {
         console.error('Failed to copy text: ', err);
         toast.error("Failed to copy configuration.");
-        logEvent('action', 'copy_code_failure', { error: (err as Error).message });
+        logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
       });
   }, [editableSceneConfig]);
 
@@ -71,7 +71,7 @@ const ExperienceContent = () => {
         case 'Space':
           event.preventDefault();
           toggleTheme();
-          logEvent('keyboard_shortcut', 'toggle_theme');
+          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_theme' });
           break;
         case 'KeyN':
            event.preventDefault();
@@ -98,12 +98,12 @@ const ExperienceContent = () => {
         case 'KeyQ':
           event.preventDefault();
           setIsHelpOpen(true);
-          logEvent('keyboard_shortcut', 'open_help');
+          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'open_help' });
           break;
         case 'KeyE':
           event.preventDefault();
           setIsSettingsOpen(o => !o);
-          logEvent('keyboard_shortcut', 'toggle_settings');
+          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_settings' });
           break;
         case 'KeyC':
           event.preventDefault();

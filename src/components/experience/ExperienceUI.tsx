@@ -59,27 +59,27 @@ const ExperienceUI = ({
 
   const handleToggleTheme = () => {
     onToggleTheme();
-    logEvent('button_click', 'toggle_theme', { to_theme: theme === 'day' ? 'night' : 'day' });
+    logEvent({ eventType: 'button_click', eventSource: 'toggle_theme', metadata: { to_theme: theme === 'day' ? 'night' : 'day' } });
   }
 
   const handleGoHome = () => {
     onGoHome();
-    logEvent('button_click', 'go_home');
+    logEvent({ eventType: 'button_click', eventSource: 'go_home' });
   }
 
   const handleChangeWorld = (direction: 'next' | 'prev') => {
     onChangeWorld(direction);
-    logEvent('button_click', 'change_world', { direction });
+    logEvent({ eventType: 'button_click', eventSource: 'change_world', metadata: { direction } });
   }
   
   const handleShowSearch = () => {
     onShowSearch();
-    logEvent('button_click', 'show_search');
+    logEvent({ eventType: 'button_click', eventSource: 'show_search' });
   }
   
   const handleShowHelp = () => {
     onShowHelp();
-    logEvent('button_click', 'show_help');
+    logEvent({ eventType: 'button_click', eventSource: 'show_help' });
   }
 
   return (
