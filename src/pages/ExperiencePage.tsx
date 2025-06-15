@@ -186,7 +186,7 @@ const ExperienceContent = () => {
 
       {/* Bottom Right Buttons & Drawer */}
       <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10">
-        <Drawer>
+        <Drawer shouldScaleBackground={false}>
           <DrawerTrigger asChild>
             <Button
               className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
