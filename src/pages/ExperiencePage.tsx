@@ -3,20 +3,15 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
-import { World1, World2, World3 } from "@/worlds";
 import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Sun, Moon, Loader2 } from "lucide-react";
+import DynamicWorld from "@/components/scene/DynamicWorld";
+import { isSceneConfig } from "@/lib/typeguards";
 
 type World = Database['public']['Tables']['worlds']['Row'];
-
-const worldComponentMap: { [key: string]: React.ComponentType } = {
-  World1,
-  World2,
-  World3,
-};
 
 const fetchWorlds = async (): Promise<World[]> => {
   const { data, error } = await supabase.from('worlds').select('*').order('id', { ascending: true });
@@ -29,7 +24,7 @@ const ExperienceContent = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { theme, toggleTheme } = useExperience();
 
-  const { data: worlds, isLoading, isError } = useQuery({
+  const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
   });
@@ -59,14 +54,8 @@ const ExperienceContent = () => {
         return newIndex;
       });
       setIsTransitioning(false);
-    }, 300);
+    }, 500); // Increased transition time for a smoother effect
   };
-
-  const WorldComponent = useMemo(() => {
-    if (!worlds || worlds.length === 0) return null;
-    const key = worlds[currentWorldIndex].component_key;
-    return worldComponentMap[key];
-  }, [worlds, currentWorldIndex]);
 
   const worldData = useMemo(() => {
     if (!worlds || worlds.length === 0) return null;
@@ -82,10 +71,18 @@ const ExperienceContent = () => {
     );
   }
 
-  if (isError || !worldData || !WorldComponent) {
+  if (isError || !worldData) {
     return (
       <div className="w-full h-full flex items-center justify-center bg-black text-white">
         <p className="text-lg text-red-500">Could not connect to the multiverse.</p>
+      </div>
+    );
+  }
+  
+  if (!isSceneConfig(worldData.scene_config)) {
+     return (
+      <div className="w-full h-full flex items-center justify-center bg-black text-white">
+        <p className="text-lg text-red-500">World data is incomplete or corrupted.</p>
       </div>
     );
   }
@@ -94,16 +91,16 @@ const ExperienceContent = () => {
     <div className="w-full h-full relative overflow-hidden bg-black">
       <div
         key={currentWorldIndex}
-        className={`w-full h-full absolute inset-0 ${isTransitioning ? 'animate-fade-out' : 'animate-fade-in'}`}
+        className={`w-full h-full absolute inset-0 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
       >
         <WorldContainer>
-          <WorldComponent />
+          <DynamicWorld sceneConfig={worldData.scene_config} />
         </WorldContainer>
       </div>
 
       {/* UI Overlay */}
-      <div className="absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10">
-        <div key={currentWorldIndex} className="animate-fade-in [animation-delay:0.3s]">
+      <div className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+        <div key={currentWorldIndex} className="animate-fade-in [animation-delay:0.5s]">
           <h2 className="text-2xl sm:text-3xl font-bold text-white mix-blend-difference">{worldData.name}</h2>
         </div>
         <Button
@@ -119,7 +116,7 @@ const ExperienceContent = () => {
       {/* Navigation */}
       <Button
         onClick={() => changeWorld('prev')}
-        className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10"
+        className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
         size="icon"
         aria-label="Previous World"
         disabled={isTransitioning}
@@ -128,7 +125,7 @@ const ExperienceContent = () => {
       </Button>
       <Button
         onClick={() => changeWorld('next')}
-        className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10"
+        className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
         size="icon"
         aria-label="Next World"
         disabled={isTransitioning}
@@ -136,7 +133,7 @@ const ExperienceContent = () => {
         <ArrowRight />
       </Button>
 
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s]">
+      <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
           Press SPACE to change time of day
       </div>
     </div>
@@ -144,6 +141,11 @@ const ExperienceContent = () => {
 };
 
 const ExperiencePage = () => {
+  useEffect(() => {
+    // Ensure body opacity is reset when the page loads
+    document.body.style.opacity = '1';
+  }, []);
+
   return (
     <ExperienceProvider>
       <ExperienceContent />

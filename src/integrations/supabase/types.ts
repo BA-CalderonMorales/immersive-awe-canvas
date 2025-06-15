@@ -16,6 +16,7 @@ export type Database = {
           description: string | null
           id: number
           name: string
+          scene_config: Json | null
         }
         Insert: {
           component_key: string
@@ -23,6 +24,7 @@ export type Database = {
           description?: string | null
           id?: number
           name: string
+          scene_config?: Json | null
         }
         Update: {
           component_key?: string
@@ -30,6 +32,7 @@ export type Database = {
           description?: string | null
           id?: number
           name?: string
+          scene_config?: Json | null
         }
         Relationships: []
       }
