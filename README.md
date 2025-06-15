@@ -1,4 +1,3 @@
-
 # Immersive Awe Canvas
 
 A creative coding playground for crafting beautiful, interactive 3D worlds right in your browser.
@@ -12,22 +11,27 @@ This project is a web-based application that allows users to explore and customi
 <details>
 <summary><b>Quick Start</b></summary>
 
-To run this project locally, you'll need [Node.js](https://nodejs.org/) and `npm` installed.
-
 1.  **Clone the repository:**
-    ```sh
-    git clone <YOUR_GIT_URL>
-    cd <YOUR_PROJECT_NAME>
+    ```bash
+    git clone https://github.com/BA-CalderonMorales/immersive-awe-canvas.git
     ```
-
-2.  **Install dependencies:**
-    ```sh
+2.  **Navigate to the project directory:**
+    ```bash
+    cd immersive-awe-canvas
+    ```
+3.  **Install dependencies:**
+    ```bash
     npm install
     ```
+    > **Note:** If you encounter an `ERESOLVE` error during `npm install` related to `vite` and `lovable-tagger`, it's because `lovable-tagger` currently requires an older version of `vite`. You can proceed by running:
+    > ```bash
+    > npm install --legacy-peer-deps
+    > ```
+    > This will install dependencies, but be aware that `lovable-tagger` might not be fully compatible with the newer `vite` version.
 
-3.  **Run the development server:**
-    ```sh
-    npm run dev
+4.  **Start the development server:**
+    ```bash
+    npm start
     ```
 This will start the application, and you can view it in your browser at the local address provided.
 </details>
