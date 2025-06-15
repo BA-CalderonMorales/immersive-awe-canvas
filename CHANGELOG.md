@@ -1,4 +1,3 @@
-
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -27,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Additional clouds in the home page's night theme for enhanced atmosphere.
 - Resizable side panel for scene settings on desktop for a better editing experience.
 - Disclaimer for issue reporting and like functionality, directing users to LinkedIn pending implementation of user authentication.
+- Added new `WavyGrid` object type for more diverse scenes.
+- Added more material controls to the scene editor (emissive color, transparency, opacity).
+- Added a shortcut list display when the main UI is hidden for a minimalistic view.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.

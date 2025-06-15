@@ -99,7 +99,7 @@ const ExperienceUI = ({
   };
 
   if (isUiHidden) {
-    // Show only the "Show UI" button overlay for easy recovery.
+    // Show only the "Show UI" button and a list of shortcuts.
     return (
       <TooltipProvider>
         <Tooltip open={showUiHint}>
@@ -120,6 +120,18 @@ const ExperienceUI = ({
             <p>Show UI (Press U)</p>
           </TooltipContent>
         </Tooltip>
+        <div
+          style={uiStyle}
+          className="fixed bottom-4 left-4 z-50 pointer-events-none text-xs space-y-1 font-mono"
+        >
+          <p className="font-semibold underline">Shortcuts</p>
+          <p>N / P : Next/Prev World</p>
+          <p>Space : Toggle Theme</p>
+          <p>S     : Search</p>
+          <p>Q     : Help</p>
+          <p>E     : Settings</p>
+          <p>H     : Home</p>
+        </div>
       </TooltipProvider>
     );
   }

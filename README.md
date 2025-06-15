@@ -42,9 +42,10 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 <summary><b>Features</b></summary>
 
 -   **World Hopping:** Navigate through a collection of unique 3D worlds.
+-   **Diverse Worlds:** Explore scenes featuring various 3D objects like Torus Knots, Morphing Spheres, and the new Wavy Grid.
 -   **Cinematic Transitions:** Experience seamless, unintrusive transitions between worlds for a fluid viewing experience.
 -   **Dynamic Day/Night Cycle:** Press the `SPACE` bar to toggle between day and night themes within each world.
--   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile.
+-   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile. Now with more controls for materials!
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.
 -   **Supabase Integration:** World data is fetched from a Supabase backend.
 -   **Responsive UI:** The interface is designed to work across different screen sizes.
@@ -54,7 +55,7 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 <summary><b>Bugs & TODOs</b></summary>
 
 -   [ ] Implement user authentication to enable features like issue reporting and liking worlds.
--   [ ] Add more worlds with diverse objects and backgrounds.
+-   [ ] Add more worlds with diverse objects and backgrounds. (New object types added, more worlds to come!)
 -   [ ] Implement a "save scene" feature for users.
 -   [ ] Improve performance on lower-end devices.
 -   [ ] Add more interactive elements to the scenes.
