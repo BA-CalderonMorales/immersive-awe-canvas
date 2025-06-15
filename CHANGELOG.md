@@ -16,13 +16,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scene customization panel using `lil-gui`.
 - Ability to copy scene configuration.
 - UI improvements for better contrast and usability.
+- Keyboard controls (Arrow keys & WASD) for camera panning.
+- Detailed help dialog with controls and bug reporting link.
 
 ### Changed
 - Refactored `ExperiencePage` into smaller, more manageable components.
 - Improved UI element contrast across different scene backgrounds.
+- Replaced help toast notification with a more comprehensive help dialog.
 
 ### Fixed
 - Corrected a broken theme implementation in the toast notification component.
+- Adjusted "Echoing Void" night theme for better visibility.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.

@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,6 +12,8 @@ import { isSceneConfig } from "@/lib/typeguards";
 import { SceneConfig } from "@/types/scene";
 import { toast } from "sonner";
 import ExperienceUI from "@/components/experience/ExperienceUI";
+import HelpDialog from "@/components/dialogs/HelpDialog";
+import KeyboardControls from "@/components/controls/KeyboardControls";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -26,6 +29,7 @@ const ExperienceContent = () => {
   const { theme, toggleTheme } = useExperience();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
@@ -128,6 +132,7 @@ const ExperienceContent = () => {
         className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
       >
         <WorldContainer>
+          <KeyboardControls />
           <DynamicWorld sceneConfig={editableSceneConfig} />
         </WorldContainer>
       </div>
@@ -141,8 +146,9 @@ const ExperienceContent = () => {
         onChangeWorld={changeWorld}
         onCopyCode={handleCopyCode}
         onUpdateSceneConfig={setEditableSceneConfig}
-        onShowHelp={() => toast.info("How to interact", { description: "Use your mouse to look around. Press SPACE to toggle day/night. Use the controls to customize the scene." })}
+        onShowHelp={() => setIsHelpOpen(true)}
       />
+      <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
     </div>
   );
 };
