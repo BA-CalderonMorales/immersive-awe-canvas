@@ -1,5 +1,5 @@
 
-import { Sky, Stars, Sparkles, Cloud } from '@react-three/drei';
+import { Sky, Stars, Sparkles, Cloud, Environment } from '@react-three/drei';
 import { BackgroundConfig, ExtraConfig } from '@/types/scene';
 
 const DynamicBackground = ({ background, extras }: { background: BackgroundConfig, extras?: ExtraConfig[] }) => {
@@ -36,6 +36,9 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
             })}
           </>
         );
+    case 'environment':
+        // @ts-ignore
+        return <Environment preset={background.preset} background blur={background.blur} />;
     default:
       return null;
   }

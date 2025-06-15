@@ -1,7 +1,6 @@
-
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
-import { SceneConfig } from '@/types/scene';
+import { SceneConfig, EnvironmentPreset } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -155,11 +154,28 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const backgroundConf = themeConfig.background;
     const bgFolder = gui.addFolder('Background');
     
-    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles', 'color']).name('Type').onChange(value => {
-        updateConfig(c => { c[theme].background.type = value; });
+    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles', 'color', 'environment']).name('Type').onChange(value => {
+        updateConfig(c => {
+            const bg = c[theme].background;
+            bg.type = value as BackgroundConfig['type'];
+            if (value === 'environment') {
+                if (bg.preset === undefined) bg.preset = 'night';
+                if (bg.blur === undefined) bg.blur = 0.5;
+            }
+        });
     });
 
-    if (backgroundConf.type === 'sky' && backgroundConf.sunPosition) {
+    if (backgroundConf.type === 'environment') {
+        const presets: EnvironmentPreset[] = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
+        if (backgroundConf.preset === undefined) {
+             updateConfig(c => {c[theme].background.preset = 'night'});
+        }
+        bgFolder.add(backgroundConf, 'preset', presets).onChange(v => updateConfig(c => {c[theme].background.preset = v as EnvironmentPreset}));
+        if (backgroundConf.blur === undefined) {
+            updateConfig(c => {c[theme].background.blur = 0.5});
+        }
+        bgFolder.add(backgroundConf, 'blur', 0, 1).onChange(v => updateConfig(c => {c[theme].background.blur = v}));
+    } else if (backgroundConf.type === 'sky' && backgroundConf.sunPosition) {
         const sunPosFolder = bgFolder.addFolder('Sun Position');
         sunPosFolder.add(backgroundConf.sunPosition, '0', -200, 200).name('x').onChange(v => updateConfig(c => {c[theme].background.sunPosition![0] = v}));
         sunPosFolder.add(backgroundConf.sunPosition, '1', -200, 200).name('y').onChange(v => updateConfig(c => {c[theme].background.sunPosition![1] = v}));

@@ -7,8 +7,10 @@ export type LightConfig = {
   ref?: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
 };
 
+export type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby';
+
 export type BackgroundConfig = {
-  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color';
+  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment';
   sunPosition?: [number, number, number];
   radius?: number;
   depth?: number;
@@ -23,6 +25,8 @@ export type BackgroundConfig = {
   scale?: number;
   size?: number;
   opacity?: number;
+  preset?: EnvironmentPreset;
+  blur?: number;
 };
 
 export type ExtraConfig = {
