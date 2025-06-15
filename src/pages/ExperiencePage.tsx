@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
@@ -33,6 +33,10 @@ const ExperienceContent = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const navigate = useNavigate();
   
+  const handleGoHome = useCallback(() => {
+    navigate('/');
+  }, [navigate]);
+
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
       if (isSceneConfig(worldData.scene_config)) {
@@ -80,10 +84,6 @@ const ExperienceContent = () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen, handleGoHome]);
-
-  const handleGoHome = () => {
-    navigate('/');
-  };
 
   const handleCopyCode = () => {
     if (!editableSceneConfig) return;
