@@ -130,7 +130,7 @@ const ExperienceContent = () => {
             setIsSearchOpen(o => !o);
           }
           break;
-        case 'KeyH':
+        case 'KeyG':
           event.preventDefault();
           handleGoHome();
           break;
@@ -152,7 +152,7 @@ const ExperienceContent = () => {
           event.preventDefault();
           handleCopyCode();
           break;
-        case 'KeyU':
+        case 'KeyH':
           event.preventDefault();
           setIsUiHidden((o) => !o);
           break;

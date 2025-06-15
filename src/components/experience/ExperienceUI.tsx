@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -117,12 +116,11 @@ const ExperienceUI = ({
             </div>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="pointer-events-none">
-            <p>Show UI (Press U)</p>
+            <p>Show UI (Press H)</p>
           </TooltipContent>
         </Tooltip>
         <div
-          style={uiStyle}
-          className="fixed bottom-4 left-4 z-50 pointer-events-none text-xs space-y-1 font-mono"
+          className="fixed bottom-4 left-4 z-50 pointer-events-none text-xs space-y-1 font-mono bg-black/40 text-slate-200 p-3 rounded-md shadow-lg backdrop-blur-sm"
         >
           <p className="font-semibold underline">Shortcuts</p>
           <p>N / P : Next/Prev World</p>
@@ -130,7 +128,8 @@ const ExperienceUI = ({
           <p>S     : Search</p>
           <p>Q     : Help</p>
           <p>E     : Settings</p>
-          <p>H     : Home</p>
+          <p>G     : Home</p>
+          <p>H     : Hide/Show UI</p>
         </div>
       </TooltipProvider>
     );
@@ -138,20 +137,7 @@ const ExperienceUI = ({
 
   return (
     <TooltipProvider>
-      {/* Hide UI button (top right) */}
-      <div className="fixed top-4 right-4 z-50 pointer-events-auto">
-        <Button
-          size="icon"
-          aria-label="Hide UI"
-          onClick={onToggleUiHidden}
-          className="bg-black/30 hover:bg-black/50 text-white shadow-md"
-          style={uiStyle}
-        >
-          <EyeOff className="w-6 h-6" />
-        </Button>
-      </div>
-
-      {/* Title row ... keep as is ... */}
+      {/* Title row */}
       <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">
           <h2 className="text-2xl sm:text-3xl font-bold h-10 flex items-center">{worldName}</h2>
@@ -169,7 +155,7 @@ const ExperienceUI = ({
             </TooltipTrigger>
             <TooltipContent className="max-w-xs">
                <div className="text-center">
-                <p className="mb-2">Liking is disabled pending user authentication.</p>
+                <p className="mb-2">Liking worlds is coming soon!</p>
                 <Button asChild size="sm">
                   <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
                     <Link className="mr-2" /> Contact on LinkedIn
@@ -180,6 +166,22 @@ const ExperienceUI = ({
           </Tooltip>
         </div>
         <div className="flex items-center gap-2 pointer-events-auto">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                size="icon"
+                aria-label="Hide UI"
+                onClick={onToggleUiHidden}
+                className={blendedButtonClasses}
+                style={uiStyle}
+              >
+                <EyeOff className="w-6 h-6" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Hide UI (H)</p>
+            </TooltipContent>
+          </Tooltip>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -209,13 +211,13 @@ const ExperienceUI = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Go Home (H)</p>
+              <p>Go Home (G)</p>
             </TooltipContent>
           </Tooltip>
         </div>
       </div>
       
-      {/* Navigation ... keep as is ... */}
+      {/* Navigation */}
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
@@ -251,8 +253,8 @@ const ExperienceUI = ({
         </TooltipContent>
       </Tooltip>
 
-      {/* Bottom row: Copy, Search, Home (centered), Settings, Help  */}
-      <div className="absolute bottom-4 left-0 w-full flex items-center justify-center gap-2 z-10 pointer-events-none">
+      {/* Bottom row: Controls */}
+      <div className="absolute bottom-4 left-0 w-full flex items-center justify-between z-10 pointer-events-none px-4 sm:px-8">
         {/* Left side: Copy, Search */}
         <div className="flex gap-2 pointer-events-auto">
           <Tooltip>
@@ -289,29 +291,8 @@ const ExperienceUI = ({
           </Tooltip>
         </div>
         
-        {/* Center: Home button */}
-        <div className="flex-1 flex justify-center pointer-events-auto">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                style={uiStyle}
-                onClick={handleGoHome}
-                className={`mx-4 transition-opacity duration-300 ${blendedButtonClasses}`}
-                size="icon"
-                aria-label="Go Home"
-              >
-                <Home />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Go Home (H)</p>
-            </TooltipContent>
-          </Tooltip>
-        </div>
-
         {/* Right side: Settings, Help */}
         <div className="flex gap-2 pointer-events-auto">
-          {/* Settings and Help ... keep existing code as is ... */}
           {isMobile ? (
             <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
               <Tooltip>
@@ -380,10 +361,9 @@ const ExperienceUI = ({
         </div>
       </div>
 
-      {/* (optional: bottom center hint for theme toggle) */}
       {!isMobile && (
-        <div style={uiStyle} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300">
-          Press U to hide UI · SPACE to change time of day
+        <div style={uiStyle} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none">
+          Press SPACE to change time of day
         </div>
       )}
     </TooltipProvider>
