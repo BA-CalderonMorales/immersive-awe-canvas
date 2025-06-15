@@ -12,14 +12,14 @@ const HomePage = () => {
       <div className="absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center">
         <div className="text-center">
           <h1 className="text-5xl md:text-7xl font-bold text-white mix-blend-difference animate-fade-in">
-            The Void Awaits
+            Echoes of Existence
           </h1>
           <p className="text-lg md:text-xl text-white mix-blend-difference mt-4 animate-fade-in [animation-delay:0.5s]">
-            An interactive journey through unknown realms.
+            Every world a question, every journey an answer.
           </p>
           <div className="mt-8 animate-fade-in [animation-delay:1s]">
             <Button asChild size="lg" className="text-lg pointer-events-auto bg-transparent border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 transform hover:scale-105 shadow-[0_0_15px_rgba(255,255,255,0.8)]">
-              <Link to="/experience">Begin Your Journey</Link>
+              <Link to="/experience">Cross the Threshold</Link>
             </Button>
           </div>
         </div>

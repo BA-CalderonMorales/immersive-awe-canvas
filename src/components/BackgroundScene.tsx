@@ -12,7 +12,6 @@ const BackgroundExperience = () => {
           position-z={-10}
           opacity={0.3}
           speed={0.1}
-          depth={1.5}
           segments={20}
         />
         <Cloud
@@ -20,7 +19,6 @@ const BackgroundExperience = () => {
           position-x={-10}
           opacity={0.2}
           speed={0.1}
-          depth={2}
           segments={15}
         />
         <Cloud
@@ -28,7 +26,6 @@ const BackgroundExperience = () => {
           position-x={10}
           opacity={0.2}
           speed={0.1}
-          depth={2}
           segments={15}
         />
       </Suspense>
