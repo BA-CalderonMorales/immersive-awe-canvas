@@ -11,7 +11,6 @@ export type Database = {
     Tables: {
       worlds: {
         Row: {
-          component_key: string
           created_at: string
           description: string | null
           id: number
@@ -19,7 +18,6 @@ export type Database = {
           scene_config: Json | null
         }
         Insert: {
-          component_key: string
           created_at?: string
           description?: string | null
           id?: number
@@ -27,7 +25,6 @@ export type Database = {
           scene_config?: Json | null
         }
         Update: {
-          component_key?: string
           created_at?: string
           description?: string | null
           id?: number
