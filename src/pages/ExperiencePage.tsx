@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -35,6 +34,7 @@ const ExperienceContent = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { theme, toggleTheme } = useExperience();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
+  const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
@@ -47,11 +47,13 @@ const ExperienceContent = () => {
   }, [worlds, currentWorldIndex]);
   
   useEffect(() => {
-    if (worldData && isSceneConfig(worldData.scene_config)) {
-      // Deep copy to avoid mutating the cached data from react-query
-      setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
+    if (worldData && worldData.id !== currentWorldId) {
+      if (isSceneConfig(worldData.scene_config)) {
+        setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
+        setCurrentWorldId(worldData.id);
+      }
     }
-  }, [worldData]);
+  }, [worldData, currentWorldId]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -78,7 +80,7 @@ const ExperienceContent = () => {
         return newIndex;
       });
       setIsTransitioning(false);
-    }, 1000); // Increased transition time for a smoother effect
+    }, 1000);
   };
 
   const handleCopyCode = () => {
