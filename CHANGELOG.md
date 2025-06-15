@@ -1,4 +1,3 @@
-
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -46,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced tooltip on scene settings info icon with a more detailed modal.
 - Updated "Genesis Torus" world to use a new, more dynamic scene configuration.
 - Updated help dialog, hidden UI view, and README with a complete and reorganized list of user controls and keyboard shortcuts.
+- Updated "Distortion Sphere" world with new default scene settings.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
