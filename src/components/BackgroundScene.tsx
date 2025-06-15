@@ -1,4 +1,3 @@
-
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { Stars, Cloud, Text } from '@react-three/drei';
@@ -61,8 +60,10 @@ const SceneContent = ({ theme, isLeaving }: { theme: 'day' | 'night', isLeaving:
     // Leaving animation
     if (isLeaving) {
       camera.position.z = THREE.MathUtils.lerp(camera.position.z, camera.position.z - 10, 0.025);
-      camera.fov = THREE.MathUtils.lerp(camera.fov, 100, 0.025);
-      camera.updateProjectionMatrix();
+      if (camera instanceof THREE.PerspectiveCamera) {
+        camera.fov = THREE.MathUtils.lerp(camera.fov, 100, 0.025);
+        camera.updateProjectionMatrix();
+      }
 
       if (textRef.current) textRef.current.visible = false;
       if (subtextRef.current) subtextRef.current.visible = false;
@@ -118,7 +119,7 @@ const SceneContent = ({ theme, isLeaving }: { theme: 'day' | 'night', isLeaving:
       <directionalLight position={[0, 5, 5]} intensity={theme === 'day' ? 1 : 0.5} color="white" />
 
       {theme === 'night' && (
-        <EffectComposer disableNormalPass>
+        <EffectComposer>
           <Bloom mipmapBlur luminanceThreshold={0.2} luminanceSmoothing={0.9} height={600} intensity={1.5} />
         </EffectComposer>
       )}
