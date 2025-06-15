@@ -68,6 +68,20 @@ const ExperienceContent = () => {
   const [showEntryTransition, setShowEntryTransition] = useState(true);
   const [showWorldTransition, setShowWorldTransition] = useState(false);
 
+  const handleEntryTransitionEnd = () => {
+    setShowEntryTransition(false);
+  };
+
+  const handleWorldTransitionEnd = () => {
+    setShowWorldTransition(false);
+  };
+
+  useEffect(() => {
+    if (isTransitioning) {
+      setShowWorldTransition(true);
+    }
+  }, [isTransitioning]);
+
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
       if (isSceneConfig(worldData.scene_config)) {
@@ -204,11 +218,13 @@ const ExperienceContent = () => {
         show={showEntryTransition}
         theme={theme}
         type="app-entry"
+        onAnimationEnd={handleEntryTransitionEnd}
       />
       {/* WORLD SWITCH transition: covers scene area only */}
       <WorldTransition
         show={showWorldTransition && !showEntryTransition}
         theme={theme}
+        onDone={handleWorldTransitionEnd}
       />
       {isMobile ? (
         <div className="w-full h-full">{World3D}</div>
