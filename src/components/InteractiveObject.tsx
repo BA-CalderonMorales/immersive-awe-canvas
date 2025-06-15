@@ -1,7 +1,6 @@
 
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Torus } from '@react-three/drei';
 import * as THREE from 'three';
 
 const InteractiveObject = () => {
@@ -22,9 +21,10 @@ const InteractiveObject = () => {
   });
 
   return (
-    <Torus ref={meshRef} args={[1.2, 0.05, 32, 200]}>
+    <mesh ref={meshRef}>
+      <torusGeometry args={[1.2, 0.05, 32, 200]} />
       <meshStandardMaterial color="#00ffff" wireframe emissive="#00ffff" emissiveIntensity={2} />
-    </Torus>
+    </mesh>
   );
 };
 
