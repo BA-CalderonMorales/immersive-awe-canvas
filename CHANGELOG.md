@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added more material controls to the scene editor (emissive color, transparency, opacity).
 - Added a shortcut list display when the main UI is hidden for a minimalistic view.
 - Informational modal in scene settings panel with usage tips.
+- Added zoom controls via mouse wheel/pinch and set zoom limits.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -44,6 +45,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scene lock (`.` key) now freezes all scene animations, including camera rotation, for a complete pause.
 - Replaced tooltip on scene settings info icon with a more detailed modal.
 - Updated "Genesis Torus" world to use a new, more dynamic scene configuration.
+- Updated help dialog, hidden UI view, and README with a complete and reorganized list of user controls and keyboard shortcuts.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.

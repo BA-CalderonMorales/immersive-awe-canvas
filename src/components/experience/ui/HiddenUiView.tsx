@@ -37,13 +37,15 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         }`}
       >
         <p className="font-semibold underline">Shortcuts</p>
-        <p>N / P : Next/Prev World</p>
-        <p>Space : Toggle Theme</p>
-        <p>S     : Search</p>
-        <p>H     : Help</p>
-        <p>E     : Settings</p>
-        <p>G     : Home</p>
-        <p>V     : Hide/Show UI</p>
+        <p>N/P&nbsp;&nbsp;: Cycle World</p>
+        <p>SPC&nbsp;&nbsp;: Theme</p>
+        <p>.&nbsp;&nbsp;&nbsp;&nbsp;: Freeze</p>
+        <p>V&nbsp;&nbsp;&nbsp;&nbsp;: Toggle UI</p>
+        <p>E&nbsp;&nbsp;&nbsp;&nbsp;: Settings</p>
+        <p>S&nbsp;&nbsp;&nbsp;&nbsp;: Search</p>
+        <p>H&nbsp;&nbsp;&nbsp;&nbsp;: Help</p>
+        <p>G&nbsp;&nbsp;&nbsp;&nbsp;: Home</p>
+        <p>C&nbsp;&nbsp;&nbsp;&nbsp;: Copy</p>
       </div>
     </>
   );

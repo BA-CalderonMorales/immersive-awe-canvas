@@ -53,17 +53,19 @@ If you find this project useful and want to support future development, consider
 -   **World Hopping:** Navigate through a collection of unique 3D worlds.
 -   **Diverse Worlds:** Explore scenes featuring various 3D objects like Torus Knots, Morphing Spheres, and the new Wavy Grid.
 -   **Cinematic Transitions:** Experience seamless, unintrusive transitions between worlds for a fluid viewing experience.
--   **Dynamic Day/Night Cycle:** Press the `SPACE` bar to toggle between day and night themes within each world.
--   **Freeze Scene:** Press the `.` (period) key to pause and resume all scene animations, including camera rotation and object movement.
+-   **Dynamic Day/Night Cycle:** Toggle between day and night themes within each world.
+-   **Freeze Scene:** Pause and resume all scene animations, including camera rotation and object movement.
+-   **Mouse Controls:** Click and drag to look, scroll/pinch to zoom. Double-click to freeze the scene.
 -   **Keyboard Shortcuts:** Navigate and control the experience with your keyboard.
     -   `N` / `P`: Next / Previous World
     -   `Space`: Toggle Theme
-    -   `S`: Search
-    -   `H`: Help
-    -   `E`: Settings / `Esc`: Close settings
-    -   `G`: Home
-    -   `V`: Hide/Show UI
     -   `.` (Period): Freeze/Unfreeze scene animation
+    -   `V`: Hide/Show UI
+    -   `E`: Toggle Settings Panel / `Esc`: Close settings
+    -   `S` or `Ctrl/Cmd+K`: Search
+    -   `H`: Open Help Dialog
+    -   `G`: Go to Home Page
+    -   `C`: Copy Scene Configuration
 -   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile. Now with more controls for materials!
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.
 -   **Supabase Integration:** World data is fetched from a Supabase backend.

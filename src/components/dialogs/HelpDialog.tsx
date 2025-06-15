@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import {
   Dialog,
@@ -61,11 +60,16 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
                   <AccordionContent className="border-t-0 pt-4">
                     <ul className="list-disc list-inside space-y-2 pl-4 text-sm">
                       <li><b>Look around:</b> Click and drag with your mouse.</li>
-                      <li><b>Pan camera:</b> Use the Arrow keys or WASD keys.</li>
-                      <li><b>Go Home:</b> Press 'H'.</li>
+                      <li><b>Zoom:</b> Scroll with mouse wheel or pinch on touchpads.</li>
+                      <li><b>Freeze Scene:</b> Double-click the scene or press '.' (period).</li>
                       <li><b>Toggle Day/Night:</b> Press the SPACE key.</li>
-                      <li><b>Cycle worlds:</b> Use the arrow buttons on the sides or press 'N' for next and 'P' for previous.</li>
-                      <li><b>Search worlds:</b> Press 'S' or Ctrl+K (or Cmd+K) to open the search palette.</li>
+                      <li><b>Cycle worlds:</b> Use arrow buttons or press 'N' for next and 'P' for previous.</li>
+                      <li><b>Search worlds:</b> Press 'S' or Ctrl+K (or Cmd+K).</li>
+                      <li><b>Show/Hide UI:</b> Press 'V'.</li>
+                      <li><b>Toggle Settings:</b> Press 'E'.</li>
+                      <li><b>Copy Scene Config:</b> Press 'C'.</li>
+                      <li><b>Go Home:</b> Press 'G'.</li>
+                      <li><b>This Help Dialog:</b> Press 'H'.</li>
                     </ul>
                   </AccordionContent>
                 </AccordionItem>
