@@ -5,21 +5,12 @@ import type { Database } from "@/integrations/supabase/types";
 import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Sun, Moon, Loader2, Copy, Settings, HelpCircle } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import DynamicWorld from "@/components/scene/DynamicWorld";
 import { isSceneConfig } from "@/lib/typeguards";
 import { SceneConfig } from "@/types/scene";
 import { toast } from "sonner";
-import SceneControls from "@/components/scene/SceneControls";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
+import ExperienceUI from "@/components/experience/ExperienceUI";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -141,89 +132,17 @@ const ExperienceContent = () => {
         </WorldContainer>
       </div>
 
-      {/* UI Overlay */}
-      <div className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <div key={currentWorldIndex} className="animate-fade-in [animation-delay:0.5s]">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mix-blend-difference">{worldData.name}</h2>
-        </div>
-        <Button
-          onClick={toggleTheme}
-          className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
-          size="icon"
-          aria-label="Toggle Theme"
-        >
-          {theme === 'day' ? <Moon /> : <Sun />}
-        </Button>
-      </div>
-      
-      {/* Navigation */}
-      <Button
-        onClick={() => changeWorld('prev')}
-        className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-        size="icon"
-        aria-label="Previous World"
-        disabled={isTransitioning}
-      >
-        <ArrowLeft />
-      </Button>
-      <Button
-        onClick={() => changeWorld('next')}
-        className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
-        size="icon"
-        aria-label="Next World"
-        disabled={isTransitioning}
-      >
-        <ArrowRight />
-      </Button>
-
-      {/* Bottom Left Buttons */}
-      <Button
-        onClick={handleCopyCode}
-        className="absolute bottom-4 left-4 sm:left-8 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300"
-        size="icon"
-        aria-label="Copy Scene Configuration"
-      >
-        <Copy />
-      </Button>
-
-      {/* Bottom Right Buttons & Drawer */}
-      <div className="absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10">
-        <Drawer shouldScaleBackground={false}>
-          <DrawerTrigger asChild>
-            <Button
-              className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
-              size="icon"
-              aria-label="Scene Settings"
-            >
-              <Settings />
-            </Button>
-          </DrawerTrigger>
-          <DrawerContent>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Customize Scene</DrawerTitle>
-              <DrawerDescription>
-                Tweak the live parameters of the scene. Your changes can be copied.
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4">
-              <SceneControls sceneConfig={editableSceneConfig} onUpdate={setEditableSceneConfig} />
-            </div>
-          </DrawerContent>
-        </Drawer>
-        
-        <Button
-          className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto"
-          size="icon"
-          aria-label="Help"
-          onClick={() => toast.info("How to interact", { description: "Use your mouse to look around. Press SPACE to toggle day/night. Use the controls to customize the scene." })}
-        >
-          <HelpCircle />
-        </Button>
-      </div>
-
-      <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-          Press SPACE to change time of day
-      </div>
+      <ExperienceUI
+        worldName={worldData.name}
+        theme={theme}
+        isTransitioning={isTransitioning}
+        editableSceneConfig={editableSceneConfig}
+        onToggleTheme={toggleTheme}
+        onChangeWorld={changeWorld}
+        onCopyCode={handleCopyCode}
+        onUpdateSceneConfig={setEditableSceneConfig}
+        onShowHelp={() => toast.info("How to interact", { description: "Use your mouse to look around. Press SPACE to toggle day/night. Use the controls to customize the scene." })}
+      />
     </div>
   );
 };
