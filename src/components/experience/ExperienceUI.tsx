@@ -35,16 +35,22 @@ const ExperienceUI = ({
   onUpdateSceneConfig,
   onShowHelp,
 }: ExperienceUIProps) => {
+  const themedButtonClasses = theme === 'day' 
+    ? 'text-neutral-900 bg-black/5 hover:bg-black/10' 
+    : 'text-white bg-white/20 hover:bg-white/40';
+
+  const titleClasses = theme === 'day' ? 'text-neutral-900' : 'text-white';
+
   return (
     <>
       {/* UI Overlay */}
       <div className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s]">
-          <h2 className="text-2xl sm:text-3xl font-bold text-white mix-blend-difference">{worldName}</h2>
+          <h2 className={`text-2xl sm:text-3xl font-bold ${titleClasses}`}>{worldName}</h2>
         </div>
         <Button
           onClick={onToggleTheme}
-          className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto mix-blend-difference"
+          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
           size="icon"
           aria-label="Toggle Theme"
         >
@@ -87,7 +93,7 @@ const ExperienceUI = ({
         <Drawer shouldScaleBackground={false}>
           <DrawerTrigger asChild>
             <Button
-              className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto mix-blend-difference"
+              className={`border-0 pointer-events-auto ${themedButtonClasses}`}
               size="icon"
               aria-label="Scene Settings"
             >
@@ -108,7 +114,7 @@ const ExperienceUI = ({
         </Drawer>
         
         <Button
-          className="text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto mix-blend-difference"
+          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
           size="icon"
           aria-label="Help"
           onClick={onShowHelp}
@@ -125,3 +131,4 @@ const ExperienceUI = ({
 };
 
 export default ExperienceUI;
+

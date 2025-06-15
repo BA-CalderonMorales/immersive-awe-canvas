@@ -1,9 +1,26 @@
 
 import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
+import { ExperienceProvider } from "@/context/ExperienceContext";
+import { useExperience } from "@/hooks/useExperience";
+import { useEffect } from "react";
 
-const HomePage = () => {
+const HomePageContent = () => {
   const navigate = useNavigate();
+  const { toggleTheme } = useExperience();
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Space') {
+        event.preventDefault();
+        toggleTheme();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [toggleTheme]);
 
   const handleStartJourney = () => {
     // Add a subtle fade-out effect on the body before navigating
@@ -34,8 +51,20 @@ const HomePage = () => {
           </p>
         </div>
       </div>
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s]">
+          Press SPACE to change time of day
+      </div>
     </div>
   );
 };
+
+
+const HomePage = () => {
+  return (
+    <ExperienceProvider>
+      <HomePageContent />
+    </ExperienceProvider>
+  )
+}
 
 export default HomePage;
