@@ -1,3 +1,4 @@
+
 import { Suspense, useMemo, useRef } from 'react';
 import { Canvas, useThree, useFrame } from '@react-three/fiber';
 import { Stars, Cloud, Text } from '@react-three/drei';
@@ -96,6 +97,7 @@ const SceneContent = ({ theme, isLeaving }: { theme: 'day' | 'night', isLeaving:
               anchorY="middle"
               outlineWidth={0.01}
               outlineColor={theme === 'day' ? '#FFFFFF' : '#000000'}
+              toneMapped={false}
             >
               The Journey Awaits
             </Text>
@@ -109,6 +111,7 @@ const SceneContent = ({ theme, isLeaving }: { theme: 'day' | 'night', isLeaving:
               anchorY="middle"
               maxWidth={10}
               textAlign="center"
+              toneMapped={false}
             >
               Click anywhere or press Enter to begin
             </Text>
