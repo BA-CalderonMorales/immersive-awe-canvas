@@ -15,6 +15,10 @@ import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "@/components/experience/LoadingOverlay";
 import { logEvent } from "@/lib/logger";
 import { useLikes } from "@/hooks/useLikes";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
+import SceneControls from "@/components/scene/SceneControls";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const ExperienceContent = () => {
   const {
@@ -36,6 +40,7 @@ const ExperienceContent = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   
   const handleGoHome = useCallback(() => {
     navigate('/');
@@ -61,9 +66,13 @@ const ExperienceContent = () => {
       if (isSceneConfig(worldData.scene_config)) {
         setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
         setCurrentWorldId(worldData.id);
+        // Close settings panel on world change for a cleaner transition
+        if (isSettingsOpen) {
+          setIsSettingsOpen(false);
+        }
       }
     }
-  }, [worldData, currentWorldId]);
+  }, [worldData, currentWorldId, isSettingsOpen]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -146,9 +155,8 @@ const ExperienceContent = () => {
      return <LoadingOverlay message="World data is incomplete or corrupted." />;
   }
 
-  return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
-      <div
+  const World3D = (
+     <div
         key={currentWorldIndex}
         className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
       >
@@ -157,6 +165,43 @@ const ExperienceContent = () => {
           <DynamicWorld sceneConfig={editableSceneConfig} />
         </WorldContainer>
       </div>
+  );
+
+  const SceneSettingsPanel = (
+    <div className="bg-background text-foreground h-full flex flex-col">
+      <div className="p-6 pb-2">
+        <h2 className="text-xl font-bold">Customize Scene</h2>
+        <p className="text-sm text-muted-foreground">
+          Tweak the live parameters of the scene. Your changes can be copied.
+        </p>
+      </div>
+      <ScrollArea className="flex-1">
+        <div className="p-6 pt-2">
+          <SceneControls sceneConfig={editableSceneConfig} onUpdate={setEditableSceneConfig} />
+        </div>
+      </ScrollArea>
+    </div>
+  );
+
+  return (
+    <div className="w-full h-full relative overflow-hidden bg-black">
+      {isMobile ? (
+        <div className="w-full h-full">{World3D}</div>
+      ) : (
+        <ResizablePanelGroup direction="horizontal">
+          <ResizablePanel>
+            <div className="w-full h-full relative">{World3D}</div>
+          </ResizablePanel>
+          {isSettingsOpen && (
+            <>
+              <ResizableHandle withHandle />
+              <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
+                {SceneSettingsPanel}
+              </ResizablePanel>
+            </>
+          )}
+        </ResizablePanelGroup>
+      )}
 
       <ExperienceUI
         worldName={worldData.name}

@@ -43,7 +43,7 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 
 -   **World Hopping:** Navigate through a collection of unique 3D worlds.
 -   **Dynamic Day/Night Cycle:** Press the `SPACE` bar to toggle between day and night themes within each world.
--   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time.
+-   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile.
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.
 -   **Supabase Integration:** World data is fetched from a Supabase backend.
 -   **Responsive UI:** The interface is designed to work across different screen sizes.
@@ -52,6 +52,7 @@ Contributions are welcome! If you have ideas for new scenes, features, or improv
 <details>
 <summary><b>Bugs & TODOs</b></summary>
 
+-   [ ] Implement user authentication to enable features like issue reporting and liking worlds.
 -   [ ] Add more worlds with diverse objects and backgrounds.
 -   [ ] Implement a "save scene" feature for users.
 -   [ ] Improve performance on lower-end devices.

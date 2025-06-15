@@ -25,6 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interactive parallax effect on the home page.
 - Interactive 3D objects in scenes that respond to mouse movement.
 - Additional clouds in the home page's night theme for enhanced atmosphere.
+- Resizable side panel for scene settings on desktop for a better editing experience.
+- Disclaimer for issue reporting and like functionality, directing users to LinkedIn pending implementation of user authentication.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -32,6 +34,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced help toast notification with a more comprehensive and up-to-date help dialog.
 - Issue reporting is now a "fire-and-forget" operation to improve UI responsiveness.
 - Replaced the loading spinner with a more thematic "summoning" animation.
+- Disabled issue reporting and "like" features, replacing them with informational tooltips/messages.
+- Scene settings UI now opens on the side on desktop, resizing the canvas, while remaining a drawer on mobile.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
@@ -44,3 +48,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
+

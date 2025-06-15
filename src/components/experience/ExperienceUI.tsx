@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/tooltip";
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
-import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search, Heart, Link } from "lucide-react";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -85,6 +85,7 @@ const ExperienceUI = ({
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
   }
 
+  // This handler is no longer used but kept for potential re-enablement
   const handleToggleLike = () => {
     onToggleLike();
   };
@@ -92,14 +93,14 @@ const ExperienceUI = ({
   return (
     <TooltipProvider>
       {/* UI Overlay now uses uiColor for high contrast */}
-      <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">
           <h2 className="text-2xl sm:text-3xl font-bold h-10 flex items-center">{worldName}</h2>
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 style={uiStyle}
-                onClick={handleToggleLike}
+                disabled
                 className={`transition-colors duration-300 ${blendedButtonClasses}`}
                 size="icon"
                 aria-label="Like this world"
@@ -107,8 +108,15 @@ const ExperienceUI = ({
                 <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
               </Button>
             </TooltipTrigger>
-            <TooltipContent>
-              <p>{isLiked ? 'Unlike this world' : 'Like this world'}</p>
+            <TooltipContent className="max-w-xs">
+               <div className="text-center">
+                <p className="mb-2">Liking is disabled pending user authentication.</p>
+                <Button asChild size="sm">
+                  <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
+                    <Link className="mr-2" /> Contact on LinkedIn
+                  </a>
+                </Button>
+              </div>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -222,36 +230,55 @@ const ExperienceUI = ({
 
       {/* Bottom Right Buttons & Drawer */}
       <div style={uiStyle} className={`absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10`}>
-        <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
-          <Tooltip>
+        {isMobile ? (
+          <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DrawerTrigger asChild>
+                  <Button
+                    style={uiStyle}
+                    className={`pointer-events-auto ${blendedButtonClasses}`}
+                    size="icon"
+                    aria-label="Scene Settings"
+                  >
+                    <Settings />
+                  </Button>
+                </DrawerTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Scene Settings (E)</p>
+              </TooltipContent>
+            </Tooltip>
+            <DrawerContent>
+              <DrawerHeader className="text-left">
+                <DrawerTitle>Customize Scene</DrawerTitle>
+                <DrawerDescription>
+                  Tweak the live parameters of the scene. Your changes can be copied.
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="p-4">
+                <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        ) : (
+           <Tooltip>
             <TooltipTrigger asChild>
-              <DrawerTrigger asChild>
-                <Button
-                  style={uiStyle}
-                  className={`pointer-events-auto ${blendedButtonClasses}`}
-                  size="icon"
-                  aria-label="Scene Settings"
-                >
-                  <Settings />
-                </Button>
-              </DrawerTrigger>
+              <Button
+                style={uiStyle}
+                className={`pointer-events-auto ${blendedButtonClasses}`}
+                size="icon"
+                aria-label="Scene Settings"
+                onClick={() => onToggleSettings(!isSettingsOpen)}
+              >
+                <Settings />
+              </Button>
             </TooltipTrigger>
             <TooltipContent>
               <p>Scene Settings (E)</p>
             </TooltipContent>
           </Tooltip>
-          <DrawerContent>
-            <DrawerHeader className="text-left">
-              <DrawerTitle>Customize Scene</DrawerTitle>
-              <DrawerDescription>
-                Tweak the live parameters of the scene. Your changes can be copied.
-              </DrawerDescription>
-            </DrawerHeader>
-            <div className="p-4">
-              <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
-            </div>
-          </DrawerContent>
-        </Drawer>
+        )}
         
         <Tooltip>
           <TooltipTrigger asChild>
