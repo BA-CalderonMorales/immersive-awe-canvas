@@ -1,18 +1,27 @@
 
-import { useRef } from 'react';
+import { useMemo, useRef } from 'react';
 import { TorusKnot } from '@react-three/drei';
-import { MaterialConfig } from '@/types/scene';
+import { SceneThemeConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 
 interface TorusKnotObjectProps {
-  color: string;
-  materialConfig: MaterialConfig;
+  themeConfig: SceneThemeConfig;
 }
 
-const TorusKnotObject = ({ color, materialConfig }: TorusKnotObjectProps) => {
+const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
   const ref = useRef<THREE.Mesh>(null!);
   const { viewport, mouse } = useThree();
+  const { mainObjectColor: color, material: materialConfig, torusKnot } = themeConfig;
+
+  const args = useMemo(() => [
+      torusKnot?.radius ?? 1,
+      torusKnot?.tube ?? 0.4,
+      torusKnot?.tubularSegments ?? 256,
+      torusKnot?.radialSegments ?? 32,
+      torusKnot?.p ?? 2,
+      torusKnot?.q ?? 3,
+  ] as const, [torusKnot]);
 
   useFrame((state, delta) => {
     if (ref.current) {
@@ -31,7 +40,7 @@ const TorusKnotObject = ({ color, materialConfig }: TorusKnotObjectProps) => {
   });
 
   return (
-    <TorusKnot ref={ref} args={[1, 0.4, 256, 32]}>
+    <TorusKnot ref={ref} args={args}>
       <meshStandardMaterial color={color} {...materialConfig} />
     </TorusKnot>
   );

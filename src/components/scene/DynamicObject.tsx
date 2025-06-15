@@ -1,4 +1,3 @@
-
 import { SceneConfig, SceneThemeConfig } from '@/types/scene';
 import TorusKnotObject from './objects/TorusKnotObject';
 import WobbleFieldObject from './objects/WobbleFieldObject';
@@ -15,7 +14,7 @@ const DynamicObject = ({ type, themeConfig }: DynamicObjectProps) => {
   const { mainObjectColor, material } = themeConfig;
   switch (type) {
     case 'TorusKnot':
-      return <TorusKnotObject color={mainObjectColor} materialConfig={material} />;
+      return <TorusKnotObject themeConfig={themeConfig} />;
     case 'WobbleField':
       return <WobbleFieldObject color={mainObjectColor} materialConfig={material} />;
     case 'DistortionSphere':

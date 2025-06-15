@@ -1,4 +1,3 @@
-
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
@@ -45,12 +44,22 @@ export type MaterialConfig = {
     opacity?: number;
 }
 
+export type TorusKnotConfig = {
+    p?: number;
+    q?: number;
+    radius?: number;
+    tube?: number;
+    tubularSegments?: number;
+    radialSegments?: number;
+}
+
 export type SceneThemeConfig = {
   mainObjectColor: string;
   material: MaterialConfig;
   background: BackgroundConfig;
   lights: LightConfig[];
   extras?: ExtraConfig[];
+  torusKnot?: TorusKnotConfig;
 };
 
 export type SceneConfig = {

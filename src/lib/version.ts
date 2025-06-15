@@ -1,8 +1,8 @@
 
 import { formatInTimeZone } from 'date-fns-tz';
 
-// This is a placeholder commit hash. In a real CI/CD pipeline, this would be dynamically generated.
-const commitHash = "e4a9c2d"; 
+// The commit hash is injected at build time via the VITE_GIT_COMMIT_HASH environment variable.
+const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH || "dev";
 const timeZone = 'America/Chicago';
 
 const now = new Date();
