@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -65,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Restored the missing settings button on mobile devices.
 - Corrected styling for dropdown menus in the scene editor panel to ensure they are not transparent.
 - Fixed a build error related to a missing `BackgroundConfig` type import.
+- Fixed an issue causing asset loading failures (404 errors) on the deployed GitHub Pages site.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
