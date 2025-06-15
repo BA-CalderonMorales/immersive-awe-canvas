@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,8 +10,9 @@ import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
-// Determine the basename based on the environment
-const basename = import.meta.env.MODE === 'production' ? '/immersive-awe-canvas/' : '/';
+// The basename for the router will now be dynamically set by Vite's config.
+// This ensures it's correct for both dev (`/`) and gh-pages (`/repo-name/`).
+const basename = import.meta.env.BASE_URL;
 
 const App = () => (
   <QueryClientProvider client={queryClient}>

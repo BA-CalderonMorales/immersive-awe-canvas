@@ -1,3 +1,4 @@
+
 name: Build and Deploy to GitHub Pages
 
 on:
@@ -39,14 +40,11 @@ jobs:
         run: bun install
 
       - name: Build project
-        # Assuming your build script outputs to 'dist' and your package.json has a 'build' script
-        # If your vite.config.ts base is not '/', you might need to set it for GitHub Pages:
-        # e.g., bun run build --base=/${{ github.event.repository.name }}/
-        # Or configure it directly in vite.config.ts
+        # We set a VITE_DEPLOY_TARGET environment variable to signal
+        # that this build is specifically for GitHub pages.
         run: bun run build 
         env:
-          # If your vite.config.js needs the base path, uncomment and set it
-          # VITE_APP_BASE_URL: /${{ github.event.repository.name }}/
+          VITE_DEPLOY_TARGET: 'github'
           CI: true
 
       - name: Setup Pages
