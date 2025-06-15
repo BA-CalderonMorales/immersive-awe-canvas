@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
@@ -11,7 +10,6 @@ import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "@/components/experience/LoadingOverlay";
 import { logEvent } from "@/lib/logger";
-import { useLikes } from "@/hooks/useLikes";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import TransitionSplash from "@/components/TransitionSplash";
@@ -33,7 +31,6 @@ const ExperienceContent = () => {
   } = useWorlds();
   
   const { theme, toggleTheme } = useExperience();
-  const { isLiked, toggleLike } = useLikes();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [isObjectLocked, setIsObjectLocked] = useState(false);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
@@ -216,8 +213,6 @@ const ExperienceContent = () => {
         uiColor={uiColor}
         isSettingsOpen={isSettingsOpen}
         onToggleSettings={setIsSettingsOpen}
-        isLiked={isLiked(worldData.id)}
-        onToggleLike={() => toggleLike(worldData.id, worldData.name)}
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
         showUiHint={showUiHint}
