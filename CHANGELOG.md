@@ -25,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Interactive parallax effect on the home page.
 - Interactive 3D objects in scenes that respond to mouse movement.
 - Additional clouds in the home page's night theme for enhanced atmosphere.
+- Implemented a "Like" feature for worlds, with state persisted in local storage.
+- Interactive 3D text on the home page that subtly reacts to mouse movement.
+- Randomized cloudscapes on the home page for a more dynamic and unique feel on each visit.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -32,6 +35,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Replaced help toast notification with a more comprehensive and up-to-date help dialog.
 - Issue reporting is now a "fire-and-forget" operation to improve UI responsiveness.
 - Replaced the loading spinner with a more thematic "summoning" animation.
+- Replaced home page HTML text with `react-three-drei` `<Text>` for a more integrated and animated experience.
+- Enhanced the home page exit transition with a camera zoom-in/FOV-change effect.
+- Improved home page visuals with more dynamic clouds and lighting adjustments.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
@@ -41,6 +47,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Version display in help dialog now correctly uses the project's local timezone.
 - Resolved CORS issue in the `create-github-issue` edge function.
 - Fixed a rendering issue in the issue report form where content could be clipped by the scrollbar.
+- Resolved rendering glitch causing horizontal lines in the Help Dialog on scroll.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
+- Removed overlay div from HomePage to allow direct interaction with the canvas.
+

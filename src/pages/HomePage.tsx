@@ -12,7 +12,8 @@ const HomePageContent = () => {
   const handleStartJourney = useCallback(() => {
     if (isLeaving) return;
     setIsLeaving(true);
-    setTimeout(() => navigate("/experience"), 500); // Match fade-out duration
+    // Give the animation time to play out
+    setTimeout(() => navigate("/experience"), 1500);
   }, [isLeaving, navigate]);
 
   useEffect(() => {
@@ -37,21 +38,8 @@ const HomePageContent = () => {
       className="relative w-full h-full cursor-pointer group" 
       onClick={handleStartJourney}
     >
-      <div className="absolute inset-0 z-0 transition-transform duration-1000 ease-out group-hover:scale-105">
-        <BackgroundScene theme={theme} />
-      </div>
-      <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-colors duration-1000 
-        ${theme === 'day' 
-            ? 'bg-transparent group-hover:bg-black/15' 
-            : 'bg-black/20 group-hover:bg-black/40'}`}>
-        <div className="text-center">
-          <h1 className={`text-5xl md:text-7xl font-bold text-white mix-blend-difference transition-transform duration-500 group-hover:scale-105 ${isLeaving ? 'animate-fade-out' : 'animate-fade-in'}`}>
-            The Journey Awaits
-          </h1>
-          <p className={`mt-8 text-lg text-white/80 mix-blend-difference transition-opacity duration-500 group-hover:opacity-100 opacity-80 ${isLeaving ? 'animate-fade-out' : 'animate-fade-in [animation-delay:0.5s]'}`}>
-            Click anywhere or press Enter to begin
-          </p>
-        </div>
+      <div className="absolute inset-0 z-0">
+        <BackgroundScene theme={theme} isLeaving={isLeaving} />
       </div>
     </div>
   );
