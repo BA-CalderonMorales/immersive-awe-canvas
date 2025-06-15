@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -17,7 +18,7 @@ import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
 import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search } from "lucide-react";
 import { logEvent } from "@/lib/logger";
-import { useMobile } from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -52,7 +53,7 @@ const ExperienceUI = ({
   isSettingsOpen,
   onToggleSettings,
 }: ExperienceUIProps) => {
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
   const uiStyle = { color: uiColor };
 
