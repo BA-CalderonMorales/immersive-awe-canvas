@@ -56,13 +56,8 @@ const ExperienceContent = () => {
            changeWorld('next');
            break;
         case 'KeyP':
-           if (event.ctrlKey || event.metaKey) {
-             event.preventDefault();
-             setIsSearchOpen(o => !o);
-           } else {
-             event.preventDefault();
-             changeWorld('prev');
-           }
+           event.preventDefault();
+           changeWorld('prev');
            break;
         case 'KeyK':
           if (event.ctrlKey || event.metaKey) {
@@ -70,13 +65,21 @@ const ExperienceContent = () => {
             setIsSearchOpen(o => !o);
           }
           break;
+        case 'KeyH':
+          event.preventDefault();
+          handleGoHome();
+          break;
+        case 'KeyS':
+          event.preventDefault();
+          setIsSearchOpen(true);
+          break;
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen]);
+  }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen, handleGoHome]);
 
   const handleGoHome = () => {
     navigate('/');

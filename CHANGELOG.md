@@ -1,4 +1,3 @@
-
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -17,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Ability to copy scene configuration.
 - UI improvements, including an animated loading overlay.
 - Keyboard controls (Arrows, WASD, Space, N/P) and a search shortcut (Ctrl/Cmd + K).
+- Added keyboard shortcuts: 'H' for Home and 'S' for Search.
 - A detailed help dialog and a searchable world list.
 - New `useWorlds` custom hook to encapsulate world state management.
 

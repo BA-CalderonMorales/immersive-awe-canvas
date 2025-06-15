@@ -30,9 +30,10 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
           <ul className="list-disc list-inside space-y-2 pl-4 text-sm">
             <li><b>Look around:</b> Click and drag with your mouse.</li>
             <li><b>Pan camera:</b> Use the Arrow keys or WASD keys.</li>
+            <li><b>Go Home:</b> Press 'H'.</li>
             <li><b>Toggle Day/Night:</b> Press the SPACE key.</li>
             <li><b>Cycle worlds:</b> Use the arrow buttons on the sides or press 'N' for next and 'P' for previous.</li>
-            <li><b>Search worlds:</b> Press Ctrl+K (or Cmd+K) to open the search palette.</li>
+            <li><b>Search worlds:</b> Press 'S' or Ctrl+K (or Cmd+K) to open the search palette.</li>
           </ul>
 
           <h3 className="font-semibold flex items-center"><LifeBuoy className="mr-2 h-4 w-4" />Features & Bugs</h3>

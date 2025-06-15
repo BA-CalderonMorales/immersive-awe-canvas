@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -87,7 +86,7 @@ const ExperienceUI = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Go Home</p>
+              <p>Go Home (H)</p>
             </TooltipContent>
           </Tooltip>
         </div>
@@ -160,7 +159,7 @@ const ExperienceUI = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Search Worlds (Ctrl+K)</p>
+            <p>Search Worlds (S or Ctrl+K)</p>
           </TooltipContent>
         </Tooltip>
       </div>

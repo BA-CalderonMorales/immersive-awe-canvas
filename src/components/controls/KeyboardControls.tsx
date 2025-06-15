@@ -6,7 +6,19 @@ const useKeyPress = () => {
   const keys = useRef<{ [key: string]: boolean }>({});
 
   useEffect(() => {
-    const onKeyDown = (e: KeyboardEvent) => (keys.current[e.code] = true);
+    const onKeyDown = (e: KeyboardEvent) => {
+      const activeEl = document.activeElement;
+      // Prevent camera movement when user is typing in an input or a button is focused.
+      if (
+        activeEl &&
+        (activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.tagName === 'BUTTON')
+      ) {
+        return;
+      }
+      keys.current[e.code] = true
+    };
     const onKeyUp = (e: KeyboardEvent) => (keys.current[e.code] = false);
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
