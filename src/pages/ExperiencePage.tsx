@@ -7,9 +7,11 @@ import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import { useExperience } from "@/hooks/useExperience";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Sun, Moon, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Loader2, Copy } from "lucide-react";
 import DynamicWorld from "@/components/scene/DynamicWorld";
 import { isSceneConfig } from "@/lib/typeguards";
+import { SceneConfig } from "@/types/scene";
+import { toast } from "sonner";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -23,11 +25,24 @@ const ExperienceContent = () => {
   const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { theme, toggleTheme } = useExperience();
+  const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
   });
+
+  const worldData = useMemo(() => {
+    if (!worlds || worlds.length === 0) return null;
+    return worlds[currentWorldIndex];
+  }, [worlds, currentWorldIndex]);
+  
+  useEffect(() => {
+    if (worldData && isSceneConfig(worldData.scene_config)) {
+      // Deep copy to avoid mutating the cached data from react-query
+      setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
+    }
+  }, [worldData]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -54,13 +69,21 @@ const ExperienceContent = () => {
         return newIndex;
       });
       setIsTransitioning(false);
-    }, 500); // Increased transition time for a smoother effect
+    }, 1000); // Increased transition time for a smoother effect
   };
 
-  const worldData = useMemo(() => {
-    if (!worlds || worlds.length === 0) return null;
-    return worlds[currentWorldIndex];
-  }, [worlds, currentWorldIndex]);
+  const handleCopyCode = () => {
+    if (!editableSceneConfig) return;
+    const codeString = JSON.stringify(editableSceneConfig, null, 2);
+    navigator.clipboard.writeText(codeString)
+      .then(() => {
+        toast.success("Scene configuration copied to clipboard!");
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+        toast.error("Failed to copy configuration.");
+      });
+  };
 
   if (isLoading) {
     return (
@@ -79,6 +102,15 @@ const ExperienceContent = () => {
     );
   }
   
+  if (!editableSceneConfig) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-black text-white">
+        <Loader2 className="w-8 h-8 animate-spin" />
+        <p className="ml-4 text-lg">Initializing Scene...</p>
+      </div>
+    );
+  }
+
   if (!isSceneConfig(worldData.scene_config)) {
      return (
       <div className="w-full h-full flex items-center justify-center bg-black text-white">
@@ -91,10 +123,10 @@ const ExperienceContent = () => {
     <div className="w-full h-full relative overflow-hidden bg-black">
       <div
         key={currentWorldIndex}
-        className={`w-full h-full absolute inset-0 transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+        className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
       >
         <WorldContainer>
-          <DynamicWorld sceneConfig={worldData.scene_config} />
+          <DynamicWorld sceneConfig={editableSceneConfig} setSceneConfig={setEditableSceneConfig} />
         </WorldContainer>
       </div>
 
@@ -131,6 +163,16 @@ const ExperienceContent = () => {
         disabled={isTransitioning}
       >
         <ArrowRight />
+      </Button>
+
+      {/* Copy Code Button */}
+      <Button
+        onClick={handleCopyCode}
+        className="absolute bottom-4 left-4 sm:left-8 text-white bg-white/20 hover:bg-white/40 border-0 pointer-events-auto z-10 transition-opacity duration-300"
+        size="icon"
+        aria-label="Copy Scene Configuration"
+      >
+        <Copy />
       </Button>
 
       <div className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-white mix-blend-difference text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
