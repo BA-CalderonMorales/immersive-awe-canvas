@@ -34,14 +34,29 @@ export type ExtraConfig = {
 }
 
 export type MaterialConfig = {
+    materialType?: 'standard' | 'physical' | 'toon' | 'lambert' | 'phong' | 'normal' | 'basic';
+    wireframe?: boolean;
+    // Common properties
     roughness?: number;
     metalness?: number;
-    distort?: number;
-    speed?: number;
     emissive?: string;
     emissiveIntensity?: number;
     transparent?: boolean;
     opacity?: number;
+    // For MeshDistortMaterial, often used with standard
+    distort?: number;
+    speed?: number; // also for distort
+    // Physical material properties
+    clearcoat?: number;
+    clearcoatRoughness?: number;
+    ior?: number; // index of refraction
+    thickness?: number;
+    specularIntensity?: number;
+    specularColor?: string;
+    // Phong material properties
+    shininess?: number;
+    // Toon material properties
+    gradientMap?: 'three' | 'five';
 }
 
 export type TorusKnotConfig = {

@@ -4,6 +4,7 @@ import { TorusKnot } from '@react-three/drei';
 import { SceneThemeConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
+import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface TorusKnotObjectProps {
   themeConfig: SceneThemeConfig;
@@ -13,7 +14,7 @@ interface TorusKnotObjectProps {
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const ref = useRef<THREE.Mesh>(null!);
   const { viewport, mouse } = useThree();
-  const { mainObjectColor: color, material: materialConfig, torusKnot } = themeConfig;
+  const { mainObjectColor, material: materialConfig, torusKnot } = themeConfig;
 
   const args = useMemo(() => [
       torusKnot?.radius ?? 1,
@@ -42,7 +43,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
 
   return (
     <TorusKnot ref={ref} args={args}>
-      <meshStandardMaterial color={color} {...materialConfig} />
+      <DynamicMaterial materialConfig={materialConfig} color={mainObjectColor} />
     </TorusKnot>
   );
 };

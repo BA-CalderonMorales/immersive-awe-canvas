@@ -45,9 +45,51 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const material = themeConfig.material;
     if (material) {
         const materialFolder = mainObjectFolder.addFolder('Material');
-        if (material.roughness !== undefined) materialFolder.add(material, 'roughness', 0, 1).onChange(value => updateConfig(c => { c[theme].material.roughness = value; }));
-        if (material.metalness !== undefined) materialFolder.add(material, 'metalness', 0, 1).onChange(value => updateConfig(c => { c[theme].material.metalness = value; }));
-        if (material.distort !== undefined) materialFolder.add(material, 'distort', 0, 1).onChange(value => updateConfig(c => { c[theme].material.distort = value; }));
+        
+        if (material.materialType !== undefined) {
+            materialFolder.add(material, 'materialType', ['standard', 'physical', 'toon', 'lambert', 'phong', 'normal', 'basic']).onChange(value => {
+                updateConfig(c => { c[theme].material.materialType = value; });
+            });
+        }
+        if (material.wireframe !== undefined) materialFolder.add(material, 'wireframe').onChange(value => updateConfig(c => { c[theme].material.wireframe = value; }));
+
+        if (material.materialType === 'standard' || material.materialType === 'physical') {
+            if (material.roughness !== undefined) materialFolder.add(material, 'roughness', 0, 1).onChange(value => updateConfig(c => { c[theme].material.roughness = value; }));
+            if (material.metalness !== undefined) materialFolder.add(material, 'metalness', 0, 1).onChange(value => updateConfig(c => { c[theme].material.metalness = value; }));
+        }
+
+        if (material.materialType === 'standard') {
+            if (material.distort !== undefined) materialFolder.add(material, 'distort', 0, 1).onChange(value => updateConfig(c => { c[theme].material.distort = value; }));
+        }
+        
+        if (material.materialType === 'physical') {
+            const physicalFolder = materialFolder.addFolder('Physical Properties');
+            if (material.clearcoat !== undefined) physicalFolder.add(material, 'clearcoat', 0, 1).onChange(value => updateConfig(c => { c[theme].material.clearcoat = value; }));
+            if (material.clearcoatRoughness !== undefined) physicalFolder.add(material, 'clearcoatRoughness', 0, 1).onChange(value => updateConfig(c => { c[theme].material.clearcoatRoughness = value; }));
+            if (material.ior !== undefined) physicalFolder.add(material, 'ior', 1, 2.333).onChange(value => updateConfig(c => { c[theme].material.ior = value; }));
+            if (material.thickness !== undefined) physicalFolder.add(material, 'thickness', 0, 5).onChange(value => updateConfig(c => { c[theme].material.thickness = value; }));
+            if (material.specularIntensity !== undefined) physicalFolder.add(material, 'specularIntensity', 0, 1).onChange(value => updateConfig(c => { c[theme].material.specularIntensity = value; }));
+            if (material.specularColor !== undefined) physicalFolder.addColor(material, 'specularColor').onChange(value => updateConfig(c => { c[theme].material.specularColor = value; }));
+            physicalFolder.open();
+        }
+
+        if (material.materialType === 'phong') {
+            const phongFolder = materialFolder.addFolder('Phong Properties');
+            if (material.shininess !== undefined) phongFolder.add(material, 'shininess', 0, 1024).onChange(value => updateConfig(c => { c[theme].material.shininess = value; }));
+            if (material.specularColor !== undefined) phongFolder.addColor(material, 'specularColor').name('specular').onChange(value => updateConfig(c => { c[theme].material.specularColor = value; }));
+            phongFolder.open();
+        }
+
+        if (material.materialType === 'toon') {
+            const toonFolder = materialFolder.addFolder('Toon Properties');
+            if (material.gradientMap !== undefined) {
+                toonFolder.add(material, 'gradientMap', ['three', 'five']).onChange(value => {
+                    updateConfig(c => { c[theme].material.gradientMap = value; });
+                });
+            }
+            toonFolder.open();
+        }
+
         if (material.speed !== undefined) materialFolder.add(material, 'speed', 0, 10).onChange(value => updateConfig(c => { c[theme].material.speed = value; }));
         if (material.emissive !== undefined) materialFolder.addColor(material, 'emissive').onChange(value => updateConfig(c => { c[theme].material.emissive = value; }));
         if (material.emissiveIntensity !== undefined) materialFolder.add(material, 'emissiveIntensity', 0, 5).onChange(value => updateConfig(c => { c[theme].material.emissiveIntensity = value; }));
@@ -157,4 +199,3 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
 };
 
 export default SceneControls;
-
