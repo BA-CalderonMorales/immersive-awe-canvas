@@ -16,13 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -33,10 +27,16 @@ const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ALLOWED_IMAGE_TYPES = ["image/png"];
 const ALLOWED_EMAIL_DOMAINS = ["gmail.com", "outlook.com", "icloud.com", "me.com", "mac.com"];
 
+const deviceItems = [
+  { id: "desktop", label: "Desktop" },
+  { id: "mobile", label: "Mobile" },
+  { id: "tablet", label: "Tablet" },
+] as const;
+
 const issueFormSchema = z.object({
   issueLocation: z.string().min(1, "Please describe where the issue occurred."),
   inUS: z.enum(["yes", "no"], { required_error: "This field is required." }),
-  device: z.enum(["desktop", "mobile", "tablet"], { required_error: "Please select a device." }),
+  device: z.array(z.enum(["desktop", "mobile", "tablet"])).min(1, { message: "Please select at least one device." }),
   expectedBehavior: z.string().min(10, "Please describe what you expected in at least 10 characters."),
   frequency: z.string().min(1, "Please describe how often this happens."),
   workaround: z.string().optional(),
@@ -75,6 +75,9 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
     defaultValues: {
       workaround: "",
       email: "",
+      inUS: "yes",
+      canContact: "yes",
+      device: [],
     },
   });
 
@@ -137,7 +140,7 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 overflow-hidden flex flex-col">
           <ScrollArea className="-mx-6 px-6 flex-1">
-            <div className="space-y-6 py-4 pr-6">
+            <div className="space-y-6 py-4 pr-8">
               <Alert variant="destructive" className="mb-6">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Warning: Public Submission</AlertTitle>
@@ -163,21 +166,45 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
               <FormField
                 control={form.control}
                 name="device"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
-                    <FormLabel>What device are you using?</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a device" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="desktop">Desktop</SelectItem>
-                        <SelectItem value="mobile">Mobile</SelectItem>
-                        <SelectItem value="tablet">Tablet</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <div className="mb-4">
+                      <FormLabel>What devices are you seeing this issue on?</FormLabel>
+                      <FormDescription>Select all that apply.</FormDescription>
+                    </div>
+                    {deviceItems.map((item) => (
+                      <FormField
+                        key={item.id}
+                        control={form.control}
+                        name="device"
+                        render={({ field }) => {
+                          return (
+                            <FormItem
+                              key={item.id}
+                              className="flex flex-row items-start space-x-3 space-y-0"
+                            >
+                              <FormControl>
+                                <Checkbox
+                                  checked={field.value?.includes(item.id)}
+                                  onCheckedChange={(checked) => {
+                                    return checked
+                                      ? field.onChange([...(field.value || []), item.id])
+                                      : field.onChange(
+                                          field.value?.filter(
+                                            (value) => value !== item.id
+                                          )
+                                        );
+                                  }}
+                                />
+                              </FormControl>
+                              <FormLabel className="font-normal">
+                                {item.label}
+                              </FormLabel>
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    ))}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -299,7 +326,7 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
               <FormField
                 control={form.control}
                 name="attachment"
-                render={({ field: { onChange, ...fieldProps } }) => (
+                render={({ field: { onChange, onBlur, name, ref } }) => (
                   <FormItem>
                     <FormLabel>Attach Screenshot (Optional)</FormLabel>
                     <FormDescription>A single .png file, max 1MB. Drag & drop or click to upload.</FormDescription>
@@ -315,10 +342,12 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
                       >
                       <FormControl>
                         <Input
-                          {...fieldProps}
                           type="file"
                           accept=".png"
                           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          name={name}
+                          onBlur={onBlur}
+                          ref={ref}
                           onChange={(event) => onChange(event.target.files)}
                         />
                       </FormControl>
