@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -29,6 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added new `WavyGrid` object type for more diverse scenes.
 - Added more material controls to the scene editor (emissive color, transparency, opacity).
 - Added a shortcut list display when the main UI is hidden for a minimalistic view.
+- Informational modal in scene settings panel with usage tips.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -39,6 +41,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Disabled issue reporting and "like" features, replacing them with informational tooltips/messages.
 - Scene settings UI now opens on the side on desktop, resizing the canvas, while remaining a drawer on mobile.
 - Overhauled app entry and world-switching transitions to be more subtle and cinematic.
+- Scene lock (`.` key) now freezes all scene animations, including camera rotation, for a complete pause.
+- Replaced tooltip on scene settings info icon with a more detailed modal.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.

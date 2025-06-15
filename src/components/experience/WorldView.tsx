@@ -18,7 +18,7 @@ const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggl
       key={worldIndex}
       className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
     >
-      <WorldContainer onToggleLock={onToggleLock}>
+      <WorldContainer onToggleLock={onToggleLock} isLocked={isLocked}>
         <KeyboardControls />
         <DynamicWorld sceneConfig={sceneConfig} isLocked={isLocked} />
       </WorldContainer>

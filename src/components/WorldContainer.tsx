@@ -7,9 +7,10 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 type WorldContainerProps = {
   children: React.ReactNode;
   onToggleLock?: () => void;
+  isLocked: boolean;
 };
 
-const WorldContainer = ({ children, onToggleLock }: WorldContainerProps) => {
+const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
   return (
     <Canvas camera={{ position: [0, 0, 5], fov: 75 }} onDoubleClick={onToggleLock}>
       <Suspense fallback={null}>
@@ -18,7 +19,7 @@ const WorldContainer = ({ children, onToggleLock }: WorldContainerProps) => {
       <OrbitControls
         enableZoom={false}
         enablePan={false}
-        autoRotate
+        autoRotate={!isLocked}
         autoRotateSpeed={0.5}
       />
       <EffectComposer>
