@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee } from "lucide-react";
@@ -56,7 +57,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
                 <AlertDialogAction asChild>
-                    <a href="https://www.buymeacoffee.com/cmoe" target="_blank" rel="noopener noreferrer">
+                    <a href="https://buymeacoffee.com/brandoncalderonmorales" target="_blank" rel="noopener noreferrer">
                         <Coffee className="mr-2" /> Buy me a coffee
                     </a>
                 </AlertDialogAction>
