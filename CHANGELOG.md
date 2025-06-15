@@ -1,4 +1,3 @@
-
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -56,6 +55,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redesigned the "Liking is Coming Soon" modal for a cleaner look and a stronger call to action.
 
 ### Fixed
+- Fixed a TypeScript error in `vite.config.ts` that caused build failures.
 - Addressed a development server build error (`EMFILE: too many open files`) by optimizing Vite's file-watching configuration.
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
 - Corrected a broken theme implementation in the toast notification component.
@@ -71,4 +71,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
-

@@ -7,10 +7,18 @@ import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => ({
-  base: command === 'production' ? '/immersive-awe-canvas/' : '/',
+  // Set base path based on VITE_DEPLOY_TARGET env var to support different deployment targets.
+  base: process.env.VITE_DEPLOY_TARGET === 'github' ? '/immersive-awe-canvas/' : '/',
   server: {
     host: "::",
     port: 8080,
+    // Explicitly ignore node_modules and .git to prevent "too many open files" errors.
+    watch: {
+      ignored: [
+        "**/.git/**",
+        "**/node_modules/**",
+      ],
+    },
   },
   plugins: [
     react(),
