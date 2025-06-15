@@ -1,4 +1,3 @@
-
 import { MaterialConfig } from '@/types/scene';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
@@ -12,12 +11,12 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const { gl } = useThree();
 
     // Re-usable gradient maps for toon material
-    const fiveTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 5, 1, THREE.LuminanceFormat, THREE.UnsignedByteType);
+    const fiveTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 5, 1, THREE.RedFormat, THREE.UnsignedByteType);
     fiveTone.minFilter = THREE.NearestFilter;
     fiveTone.magFilter = THREE.NearestFilter;
     fiveTone.needsUpdate = true;
     
-    const threeTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 128, 128, 128, 255, 255, 255]), 3, 1, THREE.LuminanceFormat, THREE.UnsignedByteType);
+    const threeTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 128, 128, 128, 255, 255, 255]), 3, 1, THREE.RedFormat, THREE.UnsignedByteType);
     threeTone.minFilter = THREE.NearestFilter;
     threeTone.magFilter = THREE.NearestFilter;
     threeTone.needsUpdate = true;
