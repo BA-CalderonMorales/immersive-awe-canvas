@@ -7,10 +7,8 @@ interface TransitionSplashProps {
   onAnimationEnd?: () => void;
 }
 
-const sunGradient =
-  "radial-gradient(ellipse at center, #fffdf7 0%, #ffe795 45%, #fecc60 70%, #9a7b39 100%)";
-const nightGradient =
-  "radial-gradient(circle at 70% 30%, #2b3a64 0%, #0d1725 50%, #080d14 100%)";
+const professionalDayBg = "linear-gradient(135deg, #f4e7d7 0%, #d3ecfd 100%)";
+const professionalNightBg = "linear-gradient(135deg, #18203a 0%, #2b3a64 100%)";
 
 export default function TransitionSplash({
   show,
@@ -20,30 +18,47 @@ export default function TransitionSplash({
   if (!show) return null;
   return (
     <div
-      className={`fixed z-[9999] inset-0 flex items-center justify-center transition-all duration-800 ${
+      className={`fixed z-[9999] inset-0 flex items-center justify-center transition-all duration-700 ${
         show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
       }`}
       style={{
-        background: theme === "day" ? sunGradient : nightGradient,
+        background: theme === "day" ? professionalDayBg : professionalNightBg,
       }}
       onAnimationEnd={onAnimationEnd}
     >
       <div className="flex flex-col items-center">
-        <div className="flex mb-6">
-          {theme === "day" ? (
-            <span className="animate-spin-slow text-yellow-400 text-6xl md:text-8xl">☀️</span>
-          ) : (
-            <span className="animate-spin-slow text-blue-300 text-6xl md:text-8xl">🌙</span>
-          )}
+        <div
+          className="mb-8"
+          aria-label="Loading"
+        >
+          <div className="relative w-16 h-16 md:w-24 md:h-24">
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                className={`block w-16 h-16 md:w-24 md:h-24 rounded-full border-4 ${
+                  theme === "day"
+                    ? "border-yellow-300 border-t-blue-200"
+                    : "border-blue-400 border-t-blue-900"
+                } animate-spin`}
+              ></span>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span
+                className={`block w-10 h-10 md:w-16 md:h-16 rounded-full ${
+                  theme === "day" ? "bg-yellow-100" : "bg-blue-900"
+                } opacity-80`}
+              ></span>
+            </div>
+          </div>
         </div>
         <h2
-          className={`text-center font-bold text-lg md:text-2xl
-            ${theme === "day" ? "text-yellow-950" : "text-blue-200"}
+          className={`text-center font-semibold text-lg md:text-2xl tracking-tight
+            ${theme === "day" ? "text-slate-800" : "text-blue-200"}
             animate-fade-in`}
         >
-          Teleporting...
+          Loading your experience...
         </h2>
       </div>
     </div>
   );
 }
+

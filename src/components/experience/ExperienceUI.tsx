@@ -18,6 +18,7 @@ import { SceneConfig } from "@/types/scene";
 import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search, Heart, Link } from "lucide-react";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Eye, EyeOff } from "lucide-react";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -36,6 +37,8 @@ interface ExperienceUIProps {
   onToggleSettings: (isOpen: boolean) => void;
   isLiked: boolean;
   onToggleLike: () => void;
+  isUiHidden: boolean;
+  onToggleUiHidden: () => void;
 }
 
 const ExperienceUI = ({
@@ -55,6 +58,8 @@ const ExperienceUI = ({
   onToggleSettings,
   isLiked,
   onToggleLike,
+  isUiHidden,
+  onToggleUiHidden,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
@@ -90,8 +95,37 @@ const ExperienceUI = ({
     onToggleLike();
   };
 
+  if (isUiHidden) {
+    // Show only the "Show UI" button overlay for easy recovery.
+    return (
+      <div className="fixed top-4 right-4 z-50 pointer-events-auto">
+        <Button
+          size="icon"
+          aria-label="Show UI"
+          onClick={onToggleUiHidden}
+          className="bg-black/30 hover:bg-black/50 text-white shadow-md"
+          style={uiStyle}
+        >
+          <Eye className="w-6 h-6" />
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <TooltipProvider>
+      {/* Add "Hide UI" button at top right overlay */}
+      <div className="fixed top-4 right-4 z-50 pointer-events-auto">
+        <Button
+          size="icon"
+          aria-label="Hide UI"
+          onClick={onToggleUiHidden}
+          className="bg-black/30 hover:bg-black/50 text-white shadow-md"
+          style={uiStyle}
+        >
+          <EyeOff className="w-6 h-6" />
+        </Button>
+      </div>
       {/* UI Overlay now uses uiColor for high contrast */}
       <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">

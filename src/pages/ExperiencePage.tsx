@@ -39,6 +39,7 @@ const ExperienceContent = () => {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUiHidden, setIsUiHidden] = useState(false);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   
@@ -119,6 +120,10 @@ const ExperienceContent = () => {
         case 'KeyC':
           event.preventDefault();
           handleCopyCode();
+          break;
+        case 'KeyU':
+          event.preventDefault();
+          setIsUiHidden((o) => !o);
           break;
       }
     };
@@ -205,6 +210,7 @@ const ExperienceContent = () => {
         </ResizablePanelGroup>
       )}
 
+      {/* Only render ExperienceUI if UI is not hidden */}
       <ExperienceUI
         worldName={worldData.name}
         theme={theme}
@@ -222,6 +228,8 @@ const ExperienceContent = () => {
         onToggleSettings={setIsSettingsOpen}
         isLiked={isLiked(worldData.id)}
         onToggleLike={() => toggleLike(worldData.id, worldData.name)}
+        isUiHidden={isUiHidden}
+        onToggleUiHidden={() => setIsUiHidden((h) => !h)}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog
