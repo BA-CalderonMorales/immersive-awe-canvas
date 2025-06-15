@@ -1,4 +1,3 @@
-
 import {
   Dialog,
   DialogContent,
@@ -85,7 +84,7 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
         </ScrollArea>
         <DialogFooter className="pt-4 flex-col sm:flex-row sm:justify-between items-center border-t mt-4">
           <p className="text-xs text-muted-foreground mb-2 sm:mb-0">Version: {appVersion}</p>
-          <a href="https://github.com/lovable-labs/av-dx/issues" target="_blank" rel="noopener noreferrer">
+          <a href="https://github.com/BA-CalderonMorales/immersive-awe-canvas/issues" target="_blank" rel="noopener noreferrer">
             <Button>
               <Github className="mr-2 h-4 w-4" /> Report an Issue
             </Button>
