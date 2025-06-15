@@ -93,8 +93,24 @@ const ExperienceUI = ({
     <TooltipProvider>
       {/* UI Overlay now uses uiColor for high contrast */}
       <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-center z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        <div key={worldName} className="animate-fade-in [animation-delay:0.5s]">
-          <h2 className="text-2xl sm:text-3xl font-bold">{worldName}</h2>
+        <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">
+          <h2 className="text-2xl sm:text-3xl font-bold h-10 flex items-center">{worldName}</h2>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                style={uiStyle}
+                onClick={handleToggleLike}
+                className={`transition-colors duration-300 ${blendedButtonClasses}`}
+                size="icon"
+                aria-label="Like this world"
+              >
+                <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{isLiked ? 'Unlike this world' : 'Like this world'}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
         <div className="flex items-center gap-2 pointer-events-auto">
           <Tooltip>
@@ -200,22 +216,6 @@ const ExperienceUI = ({
           </TooltipTrigger>
           <TooltipContent>
             <p>Search Worlds (S or Ctrl+K)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              onClick={handleToggleLike}
-              className={`pointer-events-auto z-10 transition-colors duration-300 ${blendedButtonClasses}`}
-              size="icon"
-              aria-label="Like this world"
-            >
-              <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>{isLiked ? 'Unlike this world' : 'Like this world'}</p>
           </TooltipContent>
         </Tooltip>
       </div>
