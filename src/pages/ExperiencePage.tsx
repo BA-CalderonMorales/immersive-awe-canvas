@@ -14,6 +14,7 @@ import { toast } from "sonner";
 import ExperienceUI from "@/components/experience/ExperienceUI";
 import HelpDialog from "@/components/dialogs/HelpDialog";
 import KeyboardControls from "@/components/controls/KeyboardControls";
+import { useNavigate } from "react-router-dom";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -30,6 +31,7 @@ const ExperienceContent = () => {
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const navigate = useNavigate();
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
@@ -50,25 +52,13 @@ const ExperienceContent = () => {
     }
   }, [worldData, currentWorldId]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Space') {
-        event.preventDefault();
-        toggleTheme();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [toggleTheme]);
-
-  const changeWorld = (direction: 'next' | 'prev') => {
+  const changeWorld = useMemo(() => (direction: 'next' | 'prev') => {
     if (isTransitioning || !worlds || worlds.length === 0) return;
     
     setIsTransitioning(true);
     setTimeout(() => {
       setCurrentWorldIndex((prevIndex) => {
+        if (!worlds) return 0;
         const newIndex = direction === 'next'
           ? (prevIndex + 1) % worlds.length
           : (prevIndex - 1 + worlds.length) % worlds.length;
@@ -76,6 +66,35 @@ const ExperienceContent = () => {
       });
       setIsTransitioning(false);
     }, 1000);
+  }, [isTransitioning, worlds]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isHelpOpen) return;
+
+      switch (event.code) {
+        case 'Space':
+          event.preventDefault();
+          toggleTheme();
+          break;
+        case 'KeyN':
+           event.preventDefault();
+           changeWorld('next');
+           break;
+        case 'KeyP':
+           event.preventDefault();
+           changeWorld('prev');
+           break;
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [toggleTheme, changeWorld, isHelpOpen]);
+
+  const handleGoHome = () => {
+    navigate('/');
   };
 
   const handleCopyCode = () => {
@@ -147,6 +166,7 @@ const ExperienceContent = () => {
         onCopyCode={handleCopyCode}
         onUpdateSceneConfig={setEditableSceneConfig}
         onShowHelp={() => setIsHelpOpen(true)}
+        onGoHome={handleGoHome}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
     </div>

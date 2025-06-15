@@ -34,11 +34,11 @@ const HomePageContent = () => {
       onClick={handleStartJourney}
     >
       <div className="absolute inset-0 z-0">
-        <BackgroundScene />
+        <BackgroundScene theme={theme} />
       </div>
       <div className={`absolute top-0 left-0 w-full h-full flex flex-col items-center justify-center transition-colors duration-1000 
         ${theme === 'day' 
-            ? 'bg-black/5 group-hover:bg-black/15' 
+            ? 'bg-transparent group-hover:bg-black/15' 
             : 'bg-black/20 group-hover:bg-black/40'}`}>
         <div className="text-center">
           <h1 className={`text-5xl md:text-7xl font-bold text-white mix-blend-difference transition-transform duration-500 group-hover:scale-105 ${isLeaving ? 'animate-fade-out' : 'animate-fade-in'}`}>

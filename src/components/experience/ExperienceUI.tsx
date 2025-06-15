@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/drawer";
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
-import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle } from "lucide-react";
+import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home } from "lucide-react";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -22,6 +22,7 @@ interface ExperienceUIProps {
   onCopyCode: () => void;
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
+  onGoHome: () => void;
 }
 
 const ExperienceUI = ({
@@ -34,6 +35,7 @@ const ExperienceUI = ({
   onCopyCode,
   onUpdateSceneConfig,
   onShowHelp,
+  onGoHome,
 }: ExperienceUIProps) => {
   const themedButtonClasses = theme === 'day' 
     ? 'text-neutral-900 bg-black/5 hover:bg-black/10' 
@@ -48,14 +50,24 @@ const ExperienceUI = ({
         <div key={worldName} className="animate-fade-in [animation-delay:0.5s]">
           <h2 className={`text-2xl sm:text-3xl font-bold ${titleClasses}`}>{worldName}</h2>
         </div>
-        <Button
-          onClick={onToggleTheme}
-          className={`border-0 pointer-events-auto ${themedButtonClasses}`}
-          size="icon"
-          aria-label="Toggle Theme"
-        >
-          {theme === 'day' ? <Moon /> : <Sun />}
-        </Button>
+        <div className="flex items-center gap-2 pointer-events-auto">
+          <Button
+            onClick={onToggleTheme}
+            className={`border-0 ${themedButtonClasses}`}
+            size="icon"
+            aria-label="Toggle Theme"
+          >
+            {theme === 'day' ? <Moon /> : <Sun />}
+          </Button>
+          <Button
+            onClick={onGoHome}
+            className={`border-0 ${themedButtonClasses}`}
+            size="icon"
+            aria-label="Go Home"
+          >
+            <Home />
+          </Button>
+        </div>
       </div>
       
       {/* Navigation */}
@@ -131,4 +143,3 @@ const ExperienceUI = ({
 };
 
 export default ExperienceUI;
-
