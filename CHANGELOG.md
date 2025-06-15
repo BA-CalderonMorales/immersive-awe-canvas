@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added a shortcut list display when the main UI is hidden for a minimalistic view.
 - Informational modal in scene settings panel with usage tips.
 - Added zoom controls via mouse wheel/pinch and set zoom limits.
+- Added several new "environment" presets for scene backgrounds (sunset, dawn, night, etc.).
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -48,6 +49,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Updated help dialog, hidden UI view, and README with a complete and reorganized list of user controls and keyboard shortcuts.
 - Updated "Distortion Sphere" world with new default scene settings.
 - Swapped "Wobble Field" and "Distortion Sphere" worlds.
+- Enhanced the "Distortion Sphere" visual effect to be more dynamic and interactive.
+- Redesigned the "Liking is Coming Soon" modal for a cleaner look and a stronger call to action.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
@@ -59,6 +62,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed a rendering issue in the issue report form where content could be clipped by the scrollbar.
 - Restored the missing settings button on mobile devices.
 - Corrected styling for dropdown menus in the scene editor panel to ensure they are not transparent.
+- Fixed a build error related to a missing `BackgroundConfig` type import.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.

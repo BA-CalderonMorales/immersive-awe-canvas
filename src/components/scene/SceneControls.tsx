@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
-import { SceneConfig, EnvironmentPreset } from '@/types/scene';
+import { SceneConfig, MaterialConfig, LightConfig, ExtraConfig, TorusKnotConfig, BackgroundConfig, EnvironmentPreset } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
 import { useIsMobile } from "@/hooks/use-mobile";
 

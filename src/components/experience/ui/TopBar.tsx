@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee } from "lucide-react";
@@ -47,23 +48,30 @@ const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, 
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Liking Worlds is Coming Soon!</AlertDialogTitle>
-              <AlertDialogDescription>
-                This feature is under development. User authentication and the ability to save your favorite worlds are planned. Show your interest to help prioritize it!
-              </AlertDialogDescription>
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                  <Heart className="h-6 w-6 text-primary" />
+              </div>
+              <div className="text-center">
+                  <AlertDialogTitle>Like this project?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                      This is a passion project by one developer. Features like saving and sharing worlds are on the roadmap. Your support helps bring them to life!
+                  </AlertDialogDescription>
+              </div>
             </AlertDialogHeader>
+            <div className="grid gap-4 py-4">
+                <AlertDialogAction asChild>
+                    <a href="https://www.buymeacoffee.com/cmoe" target="_blank" rel="noopener noreferrer">
+                        <Coffee className="mr-2" /> Buy me a coffee
+                    </a>
+                </AlertDialogAction>
+                <AlertDialogAction asChild>
+                    <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
+                        <Link className="mr-2" /> Connect on LinkedIn
+                    </a>
+                </AlertDialogAction>
+            </div>
             <AlertDialogFooter>
               <AlertDialogCancel>Maybe later</AlertDialogCancel>
-              <AlertDialogAction asChild>
-                <a href="https://www.buymeacoffee.com/cmoe" target="_blank" rel="noopener noreferrer">
-                  <Coffee className="mr-2" /> Buy me a coffee
-                </a>
-              </AlertDialogAction>
-              <AlertDialogAction asChild>
-                <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
-                  <Link className="mr-2" /> Contact on LinkedIn
-                </a>
-              </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
