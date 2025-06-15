@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import WorldContainer from "@/components/WorldContainer";
 import { ExperienceProvider } from "@/context/ExperienceContext";
@@ -41,9 +41,11 @@ const ExperienceContent = () => {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isUiHidden, setIsUiHidden] = useState(false);
+  const [isUiHidden, setIsUiHidden] = useState(true);
   const navigate = useNavigate();
   const isMobile = useIsMobile();
+  const [showUiHint, setShowUiHint] = useState(false);
+  const hintShownRef = useRef(false);
   
   const handleGoHome = useCallback(() => {
     navigate('/');
@@ -70,6 +72,15 @@ const ExperienceContent = () => {
 
   const handleEntryTransitionEnd = () => {
     setShowEntryTransition(false);
+    // Show the UI hint only once, after the initial entry.
+    if (!hintShownRef.current) {
+      hintShownRef.current = true;
+      // The UI is hidden by default, so we show a hint to make it visible.
+      setShowUiHint(true);
+      setTimeout(() => {
+        setShowUiHint(false);
+      }, 4000); // Display hint for 4 seconds
+    }
   };
 
   const handleWorldTransitionEnd = () => {
@@ -264,6 +275,7 @@ const ExperienceContent = () => {
         onToggleLike={() => toggleLike(worldData.id, worldData.name)}
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
+        showUiHint={showUiHint}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog

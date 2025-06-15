@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -39,6 +40,7 @@ interface ExperienceUIProps {
   onToggleLike: () => void;
   isUiHidden: boolean;
   onToggleUiHidden: () => void;
+  showUiHint?: boolean;
 }
 
 const ExperienceUI = ({
@@ -60,6 +62,7 @@ const ExperienceUI = ({
   onToggleLike,
   isUiHidden,
   onToggleUiHidden,
+  showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
@@ -98,17 +101,26 @@ const ExperienceUI = ({
   if (isUiHidden) {
     // Show only the "Show UI" button overlay for easy recovery.
     return (
-      <div className="fixed top-4 right-4 z-50 pointer-events-auto">
-        <Button
-          size="icon"
-          aria-label="Show UI"
-          onClick={onToggleUiHidden}
-          className="bg-black/30 hover:bg-black/50 text-white shadow-md"
-          style={uiStyle}
-        >
-          <Eye className="w-6 h-6" />
-        </Button>
-      </div>
+      <TooltipProvider>
+        <Tooltip open={showUiHint}>
+          <TooltipTrigger asChild>
+            <div className="fixed top-4 right-4 z-50 pointer-events-auto">
+              <Button
+                size="icon"
+                aria-label="Show UI"
+                onClick={onToggleUiHidden}
+                className="bg-black/30 hover:bg-black/50 text-white shadow-md"
+                style={uiStyle}
+              >
+                <Eye className="w-6 h-6" />
+              </Button>
+            </div>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="pointer-events-none">
+            <p>Show UI (Press U)</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
     );
   }
 

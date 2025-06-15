@@ -82,13 +82,13 @@ const HomePageContent = () => {
         <div className="text-center select-none pointer-events-none">
           <h1 
             ref={textRef}
-            className="text-5xl md:text-7xl font-bold text-white mix-blend-difference mb-2 opacity-0"
+            className="text-5xl md:text-7xl font-bold text-white mix-blend-difference mb-2 opacity-0 [text-shadow:0_0_8px_rgba(255,255,255,0.3)]"
           >
             The Journey Awaits
           </h1>
           <p
             ref={subTextRef}
-            className="mt-8 text-lg text-white/80 mix-blend-difference opacity-0"
+            className="mt-8 text-lg text-white/80 mix-blend-difference opacity-0 [text-shadow:0_0_8px_rgba(255,255,255,0.2)]"
           >
             Click anywhere or press Enter to begin
           </p>
