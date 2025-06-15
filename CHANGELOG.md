@@ -43,6 +43,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Overhauled app entry and world-switching transitions to be more subtle and cinematic.
 - Scene lock (`.` key) now freezes all scene animations, including camera rotation, for a complete pause.
 - Replaced tooltip on scene settings info icon with a more detailed modal.
+- Updated "Genesis Torus" world to use a new, more dynamic scene configuration.
 
 ### Fixed
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
@@ -53,6 +54,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Resolved CORS issue in the `create-github-issue` edge function.
 - Fixed a rendering issue in the issue report form where content could be clipped by the scrollbar.
 - Restored the missing settings button on mobile devices.
+- Corrected styling for dropdown menus in the scene editor panel to ensure they are not transparent.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
