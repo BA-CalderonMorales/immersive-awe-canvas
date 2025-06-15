@@ -13,6 +13,7 @@ import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 import KeyboardControls from "@/components/controls/KeyboardControls";
 import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "@/components/experience/LoadingOverlay";
+import { logEvent } from "@/lib/logger";
 
 const ExperienceContent = () => {
   const {
@@ -31,6 +32,7 @@ const ExperienceContent = () => {
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const navigate = useNavigate();
   
   const handleGoHome = useCallback(() => {
@@ -48,12 +50,13 @@ const ExperienceContent = () => {
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (isHelpOpen || isSearchOpen) return;
+      if (isHelpOpen || isSearchOpen || isSettingsOpen) return;
 
       switch (event.code) {
         case 'Space':
           event.preventDefault();
           toggleTheme();
+          logEvent('keyboard_shortcut', 'toggle_theme');
           break;
         case 'KeyN':
            event.preventDefault();
@@ -77,26 +80,42 @@ const ExperienceContent = () => {
           event.preventDefault();
           setIsSearchOpen(true);
           break;
+        case 'KeyQ':
+          event.preventDefault();
+          setIsHelpOpen(true);
+          logEvent('keyboard_shortcut', 'open_help');
+          break;
+        case 'KeyE':
+          event.preventDefault();
+          setIsSettingsOpen(o => !o);
+          logEvent('keyboard_shortcut', 'toggle_settings');
+          break;
+        case 'KeyC':
+          event.preventDefault();
+          handleCopyCode();
+          break;
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen, handleGoHome]);
+  }, [toggleTheme, changeWorld, isHelpOpen, isSearchOpen, handleGoHome, handleCopyCode, isSettingsOpen]);
 
-  const handleCopyCode = () => {
+  const handleCopyCode = useCallback(() => {
     if (!editableSceneConfig) return;
     const codeString = JSON.stringify(editableSceneConfig, null, 2);
     navigator.clipboard.writeText(codeString)
       .then(() => {
         toast.success("Scene configuration copied to clipboard!");
+        logEvent('action', 'copy_code_success');
       })
       .catch(err => {
         console.error('Failed to copy text: ', err);
         toast.error("Failed to copy configuration.");
+        logEvent('action', 'copy_code_failure', { error: (err as Error).message });
       });
-  };
+  }, [editableSceneConfig]);
 
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
@@ -150,6 +169,8 @@ const ExperienceContent = () => {
         onGoHome={handleGoHome}
         onShowSearch={() => setIsSearchOpen(true)}
         uiColor={uiColor}
+        isSettingsOpen={isSettingsOpen}
+        onToggleSettings={setIsSettingsOpen}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog

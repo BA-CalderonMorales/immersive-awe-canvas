@@ -16,6 +16,7 @@ import {
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
 import { ArrowLeft, ArrowRight, Sun, Moon, Copy, Settings, HelpCircle, Home, Search } from "lucide-react";
+import { logEvent } from "@/lib/logger";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -30,6 +31,8 @@ interface ExperienceUIProps {
   onShowHelp: () => void;
   onGoHome: () => void;
   onShowSearch: () => void;
+  isSettingsOpen: boolean;
+  onToggleSettings: (isOpen: boolean) => void;
 }
 
 const ExperienceUI = ({
@@ -45,9 +48,36 @@ const ExperienceUI = ({
   onShowHelp,
   onGoHome,
   onShowSearch,
+  isSettingsOpen,
+  onToggleSettings,
 }: ExperienceUIProps) => {
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
   const uiStyle = { color: uiColor };
+
+  const handleToggleTheme = () => {
+    onToggleTheme();
+    logEvent('button_click', 'toggle_theme', { to_theme: theme === 'day' ? 'night' : 'day' });
+  }
+
+  const handleGoHome = () => {
+    onGoHome();
+    logEvent('button_click', 'go_home');
+  }
+
+  const handleChangeWorld = (direction: 'next' | 'prev') => {
+    onChangeWorld(direction);
+    logEvent('button_click', 'change_world', { direction });
+  }
+  
+  const handleShowSearch = () => {
+    onShowSearch();
+    logEvent('button_click', 'show_search');
+  }
+  
+  const handleShowHelp = () => {
+    onShowHelp();
+    logEvent('button_click', 'show_help');
+  }
 
   return (
     <TooltipProvider>
@@ -61,7 +91,7 @@ const ExperienceUI = ({
             <TooltipTrigger asChild>
               <Button
                 style={uiStyle}
-                onClick={onToggleTheme}
+                onClick={handleToggleTheme}
                 className={blendedButtonClasses}
                 size="icon"
                 aria-label="Toggle Theme"
@@ -77,7 +107,7 @@ const ExperienceUI = ({
             <TooltipTrigger asChild>
               <Button
                 style={uiStyle}
-                onClick={onGoHome}
+                onClick={handleGoHome}
                 className={blendedButtonClasses}
                 size="icon"
                 aria-label="Go Home"
@@ -97,7 +127,7 @@ const ExperienceUI = ({
         <TooltipTrigger asChild>
           <Button
             style={uiStyle}
-            onClick={() => onChangeWorld('prev')}
+            onClick={() => handleChangeWorld('prev')}
             className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
             size="icon"
             aria-label="Previous World"
@@ -114,7 +144,7 @@ const ExperienceUI = ({
         <TooltipTrigger asChild>
           <Button
             style={uiStyle}
-            onClick={() => onChangeWorld('next')}
+            onClick={() => handleChangeWorld('next')}
             className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
             size="icon"
             aria-label="Next World"
@@ -143,7 +173,7 @@ const ExperienceUI = ({
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Copy Scene Config</p>
+            <p>Copy Scene Config (C)</p>
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -153,7 +183,7 @@ const ExperienceUI = ({
               className={`pointer-events-auto ${blendedButtonClasses}`}
               size="icon"
               aria-label="Search Worlds"
-              onClick={onShowSearch}
+              onClick={handleShowSearch}
             >
               <Search />
             </Button>
@@ -166,7 +196,7 @@ const ExperienceUI = ({
 
       {/* Bottom Right Buttons & Drawer */}
       <div style={uiStyle} className={`absolute bottom-4 right-4 sm:right-8 flex items-center gap-2 z-10`}>
-        <Drawer shouldScaleBackground={false}>
+        <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
           <Tooltip>
             <TooltipTrigger asChild>
               <DrawerTrigger asChild>
@@ -181,7 +211,7 @@ const ExperienceUI = ({
               </DrawerTrigger>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Scene Settings</p>
+              <p>Scene Settings (E)</p>
             </TooltipContent>
           </Tooltip>
           <DrawerContent>
@@ -204,13 +234,13 @@ const ExperienceUI = ({
               className={`pointer-events-auto ${blendedButtonClasses}`}
               size="icon"
               aria-label="Help"
-              onClick={onShowHelp}
+              onClick={handleShowHelp}
             >
               <HelpCircle />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Help & Shortcuts</p>
+            <p>Help & Shortcuts (Q)</p>
           </TooltipContent>
         </Tooltip>
       </div>

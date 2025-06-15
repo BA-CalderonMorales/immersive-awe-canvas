@@ -9,6 +9,30 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      logs: {
+        Row: {
+          created_at: string
+          event_source: string | null
+          event_type: string
+          id: number
+          metadata: Json | null
+        }
+        Insert: {
+          created_at?: string
+          event_source?: string | null
+          event_type: string
+          id?: number
+          metadata?: Json | null
+        }
+        Update: {
+          created_at?: string
+          event_source?: string | null
+          event_type?: string
+          id?: number
+          metadata?: Json | null
+        }
+        Relationships: []
+      }
       worlds: {
         Row: {
           created_at: string

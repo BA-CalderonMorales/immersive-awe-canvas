@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Github, LifeBuoy, Move } from "lucide-react";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { appVersion } from "@/lib/version";
 
 interface HelpDialogProps {
   isOpen: boolean;
@@ -24,14 +26,14 @@ interface HelpDialogProps {
 const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px] flex flex-col max-h-[85vh]">
+      <DialogContent className="sm:max-w-[425px] flex flex-col h-[85vh] max-h-[600px]">
         <DialogHeader>
           <DialogTitle>Help & Information</DialogTitle>
           <DialogDescription>
             Here's how to interact with the experience and get help.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex-1 overflow-y-auto -mx-6 px-6">
+        <ScrollArea className="flex-1 -mx-6 px-6 pr-4">
           <Accordion type="multiple" defaultValue={['controls']} className="w-full">
             <AccordionItem value="controls" className="border-b-0">
               <AccordionTrigger>
@@ -80,8 +82,10 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
-        <DialogFooter className="pt-4">
+        </ScrollArea>
+        <ScrollBar />
+        <DialogFooter className="pt-4 flex-col sm:flex-row sm:justify-between items-center border-t mt-4">
+          <p className="text-xs text-muted-foreground mb-2 sm:mb-0">Version: {appVersion}</p>
           <a href="https://github.com/lovable-labs/av-dx/issues" target="_blank" rel="noopener noreferrer">
             <Button>
               <Github className="mr-2 h-4 w-4" /> Report an Issue
