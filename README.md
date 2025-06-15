@@ -2,6 +2,8 @@
 
 A creative coding playground for crafting beautiful, interactive 3D worlds right in your browser.
 
+**Deployed Site:** [https://ba-calderonmorales.github.io/immersive-awe-canvas/](https://ba-calderonmorales.github.io/immersive-awe-canvas/)
+
 <details>
 <summary><b>What is this?</b></summary>
 
@@ -21,19 +23,30 @@ This project is a web-based application that allows users to explore and customi
     ```
 3.  **Install dependencies:**
     ```bash
-    npm install
+    bun install
     ```
-    > **Note:** If you encounter an `ERESOLVE` error during `npm install` related to `vite` and `lovable-tagger`, it's because `lovable-tagger` currently requires an older version of `vite`. You can proceed by running:
-    > ```bash
-    > npm install --legacy-peer-deps
-    > ```
-    > This will install dependencies, but be aware that `lovable-tagger` might not be fully compatible with the newer `vite` version.
-
 4.  **Start the development server:**
     ```bash
-    npm start
+    bun run dev
     ```
 This will start the application, and you can view it in your browser at the local address provided.
+</details>
+
+<details>
+<summary><b>Deployment</b></summary>
+
+This project is automatically built and deployed to GitHub Pages on every push to the `main` branch using a GitHub Actions workflow.
+
+The live site can be accessed at: [https://ba-calderonmorales.github.io/immersive-awe-canvas/](https://ba-calderonmorales.github.io/immersive-awe-canvas/)
+
+The workflow handles:
+- Checking out the code.
+- Setting up Node.js and Bun.
+- Installing dependencies.
+- Building the Vite project.
+- Configuring and deploying to GitHub Pages.
+
+To ensure correct routing on GitHub Pages, the Vite configuration (`vite.config.ts`) and React Router (`src/App.tsx`) have been updated to handle the repository name as the base path in production.
 </details>
 
 <details>
