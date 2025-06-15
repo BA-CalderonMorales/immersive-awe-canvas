@@ -46,6 +46,7 @@ const ExperienceUI = ({
   isSettingsOpen,
   onToggleSettings,
   isLiked,
+  onToggleLike,
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
@@ -101,6 +102,7 @@ const ExperienceUI = ({
         theme={theme}
         onGoHome={handleGoHome}
         isTransitioning={isTransitioning}
+        onToggleLike={onToggleLike}
       />
       
       <NavigationControls 

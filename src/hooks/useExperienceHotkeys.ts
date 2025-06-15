@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { logEvent } from "@/lib/logger";
 
@@ -10,6 +11,7 @@ interface HotkeyCallbacks {
   toggleSettings: () => void;
   copyCode: () => void;
   toggleUi: () => void;
+  toggleLock: () => void;
 }
 
 interface useExperienceHotkeysProps {
@@ -67,6 +69,11 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
         case 'KeyV':
           event.preventDefault();
           callbacks.toggleUi();
+          break;
+        case 'Period':
+          event.preventDefault();
+          callbacks.toggleLock();
+          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
           break;
       }
     };

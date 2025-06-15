@@ -83,6 +83,7 @@ const ExperienceContent = () => {
       toggleSettings: () => setIsSettingsOpen(o => !o),
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
+      toggleLock: toggleObjectLock,
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,
   });

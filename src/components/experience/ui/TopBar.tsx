@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { EyeOff, Sun, Moon, Home, Heart, Link } from "lucide-react";
+import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,9 +22,10 @@ interface TopBarProps {
   theme: 'day' | 'night';
   onGoHome: () => void;
   isTransitioning: boolean;
+  onToggleLike: () => void;
 }
 
-const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning }: TopBarProps) => {
+const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, onToggleLike }: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
   const uiStyle = { color: uiColor };
 
@@ -40,6 +40,7 @@ const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, 
               className={`transition-colors duration-300 ${blendedButtonClasses}`}
               size="icon"
               aria-label="Like this world"
+              onClick={onToggleLike}
             >
               <Heart className={`transition-all ${isLiked ? 'fill-current' : 'fill-none'}`} />
             </Button>
@@ -53,6 +54,11 @@ const TopBar = ({ worldName, isLiked, uiColor, onToggleUiHidden, onToggleTheme, 
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Maybe later</AlertDialogCancel>
+              <AlertDialogAction asChild>
+                <a href="https://www.buymeacoffee.com/cmoe" target="_blank" rel="noopener noreferrer">
+                  <Coffee className="mr-2" /> Buy me a coffee
+                </a>
+              </AlertDialogAction>
               <AlertDialogAction asChild>
                 <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
                   <Link className="mr-2" /> Contact on LinkedIn
