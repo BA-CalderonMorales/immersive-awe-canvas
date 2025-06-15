@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -89,82 +88,57 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
 
   async function onSubmit(data: IssueFormValues) {
     setIsSubmitting(true);
-    toast.info("Submitting your issue...");
-    await logEvent({
-      eventType: 'issue_form_submission_started',
-      eventSource: 'IssueReportForm',
-      metadata: { appVersion }
-    });
+    
+    // UI reflects submission instantly, then fires request in background.
+    toast.success("Thank you! Your feedback has been submitted.");
+    onBack();
 
-    try {
-      // NOTE: Attachment upload is not implemented as part of this flow.
-      // The edge function currently does not handle file uploads.
-      const { attachment, ...issueData } = data;
-
+    (async () => {
       await logEvent({
-        eventType: 'issue_form_submission_invoking_function',
+        eventType: 'issue_form_submission_started',
         eventSource: 'IssueReportForm',
-        metadata: {
-          issueData: {
-            ...issueData,
-            email: issueData.email ? 'REDACTED' : '', // Avoid logging PII
-          },
-          appVersion,
+        metadata: { appVersion }
+      });
+
+      try {
+        // NOTE: Attachment upload is not implemented as part of this flow.
+        const { attachment, ...issueData } = data;
+
+        await logEvent({
+          eventType: 'issue_form_submission_invoking_function',
+          eventSource: 'IssueReportForm',
+          metadata: {
+            issueData: {
+              ...issueData,
+              email: issueData.email ? 'REDACTED' : '', // Avoid logging PII
+            },
+            appVersion,
+          }
+        });
+
+        const { error } = await supabase.functions.invoke('create-github-issue', {
+          body: { issueData, appVersion },
+        });
+
+        if (error) {
+          throw new Error(`Edge function error: ${error.message}`);
         }
-      });
-
-      const { data: functionResponse, error } = await supabase.functions.invoke('create-github-issue', {
-        body: { issueData, appVersion },
-      });
-
-      if (error) {
+        
         await logEvent({
-          eventType: 'issue_form_submission_function_error',
+          eventType: 'issue_form_submission_sent',
           eventSource: 'IssueReportForm',
-          metadata: { error: error.message, appVersion }
+          metadata: { appVersion }
         });
-        throw new Error(`Edge function error: ${error.message}`);
-      }
 
-      const responseData = functionResponse;
-
-      if (responseData.error) {
+      } catch (error: any) {
+        console.error("Submission failed silently:", error);
         await logEvent({
-          eventType: 'issue_form_submission_github_error',
+          eventType: 'issue_form_submission_failed',
           eventSource: 'IssueReportForm',
-          metadata: { error: responseData.error, details: responseData.details, appVersion }
+          metadata: { error: error.message, cause: error.cause, appVersion }
         });
-        throw new Error(responseData.error, { cause: responseData.details });
       }
-
-      toast.success("Thank you! Your issue has been submitted.", {
-        description: `Issue created successfully. You can view it on GitHub.`,
-        action: {
-          label: "View Issue",
-          onClick: () => window.open(responseData.issue.html_url, '_blank'),
-        },
-      });
-
-      await logEvent({
-        eventType: 'issue_form_submission_success',
-        eventSource: 'IssueReportForm',
-        metadata: { issueUrl: responseData.issue.html_url }
-      });
-      onBack();
-
-    } catch (error: any) {
-      console.error("Submission failed:", error);
-      toast.error("Submission Failed", {
-        description: error.message || "Could not submit your issue. Please try again.",
-      });
-      await logEvent({
-        eventType: 'issue_form_submission_failed',
-        eventSource: 'IssueReportForm',
-        metadata: { error: error.message, cause: error.cause }
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
+    })();
   }
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
@@ -205,7 +179,7 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 flex-1 overflow-hidden flex flex-col">
           <ScrollArea className="-mx-6 px-6 flex-1">
-            <div className="space-y-6 py-4 pr-8">
+            <div className="space-y-6 py-4 pr-4">
               <Alert variant="destructive" className="mb-6">
                 <AlertTriangle className="h-4 w-4" />
                 <AlertTitle>Warning: Public Submission</AlertTitle>

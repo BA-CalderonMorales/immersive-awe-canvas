@@ -10,6 +10,7 @@ import {
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import type { Database } from "@/integrations/supabase/types";
 import { Globe } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -29,24 +30,26 @@ const WorldSearchDialog = ({ isOpen, onOpenChange, worlds, onSelectWorld }: Worl
       </DialogDescription>
       <CommandInput placeholder="Search for a world..." />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        {worlds && worlds.length > 0 && (
-          <CommandGroup heading="Worlds">
-            {worlds.map((world, index) => (
-              <CommandItem
-                key={world.id}
-                value={world.name}
-                onSelect={() => {
-                  onSelectWorld(index);
-                  onOpenChange(false);
-                }}
-              >
-                <Globe className="mr-2 h-4 w-4" />
-                <span>{world.name}</span>
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        )}
+        <ScrollArea className="h-[300px] pr-3">
+          <CommandEmpty>No results found.</CommandEmpty>
+          {worlds && worlds.length > 0 && (
+            <CommandGroup heading="Worlds">
+              {worlds.map((world, index) => (
+                <CommandItem
+                  key={world.id}
+                  value={world.name}
+                  onSelect={() => {
+                    onSelectWorld(index);
+                    onOpenChange(false);
+                  }}
+                >
+                  <Globe className="mr-2 h-4 w-4" />
+                  <span>{world.name}</span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </ScrollArea>
       </CommandList>
     </CommandDialog>
   );

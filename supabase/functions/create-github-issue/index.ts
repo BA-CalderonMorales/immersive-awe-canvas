@@ -3,19 +3,22 @@ import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const GITHUB_REPO = Deno.env.get('GITHUB_REPO'); // e.g., 'your-username/your-repo-name'
+// For private repos, the token needs the `repo` scope. For public repos, `public_repo` is sufficient.
 const GITHUB_ACCESS_TOKEN = Deno.env.get('GITHUB_ACCESS_TOKEN');
 
 // Helper to send a response
 const sendResponse = (body: any, status = 200) => {
-  return new Response(JSON.stringify(body), {
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey' },
-    status,
-  });
+  const headers = {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+    'Content-Type': 'application/json',
+  };
+  return new Response(JSON.stringify(body), { headers, status });
 };
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return sendResponse({ message: 'ok' }, 200);
+    return new Response('ok', { headers: { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type' } });
   }
 
   const supabaseClient = createClient(
