@@ -1,4 +1,3 @@
-
 import { useMemo, useRef } from 'react';
 import { TorusKnot } from '@react-three/drei';
 import { SceneThemeConfig } from '@/types/scene';
@@ -21,7 +20,7 @@ const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
       torusKnot?.radialSegments ?? 32,
       torusKnot?.p ?? 2,
       torusKnot?.q ?? 3,
-  ], [torusKnot]);
+  ] as [number, number, number, number, number, number], [torusKnot]);
 
   useFrame((state, delta) => {
     if (ref.current) {
@@ -46,4 +45,3 @@ const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
   );
 };
 export default TorusKnotObject;
-
