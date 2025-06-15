@@ -8,17 +8,19 @@ interface WorldViewProps {
   sceneConfig: SceneConfig;
   isTransitioning: boolean;
   worldIndex: number;
+  isLocked: boolean;
+  onToggleLock: () => void;
 }
 
-const WorldView = ({ sceneConfig, isTransitioning, worldIndex }: WorldViewProps) => {
+const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggleLock }: WorldViewProps) => {
   return (
     <div
       key={worldIndex}
       className={`w-full h-full absolute inset-0 transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
     >
-      <WorldContainer>
+      <WorldContainer onToggleLock={onToggleLock}>
         <KeyboardControls />
-        <DynamicWorld sceneConfig={sceneConfig} />
+        <DynamicWorld sceneConfig={sceneConfig} isLocked={isLocked} />
       </WorldContainer>
     </div>
   );

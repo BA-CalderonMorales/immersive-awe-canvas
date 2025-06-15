@@ -35,6 +35,7 @@ const ExperienceContent = () => {
   const { theme, toggleTheme } = useExperience();
   const { isLiked, toggleLike } = useLikes();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
+  const [isObjectLocked, setIsObjectLocked] = useState(false);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -44,6 +45,14 @@ const ExperienceContent = () => {
   const isMobile = useIsMobile();
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
+
+  const toggleObjectLock = useCallback(() => {
+    setIsObjectLocked(locked => {
+      const newLockState = !locked;
+      toast.info(newLockState ? "Object motion locked" : "Object motion unlocked");
+      return newLockState;
+    });
+  }, []);
   
   const handleGoHome = useCallback(() => {
     navigate('/');
@@ -155,13 +164,13 @@ const ExperienceContent = () => {
       />
       {isMobile ? (
         <div className="w-full h-full">
-            <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} />
+            <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} isLocked={isObjectLocked} onToggleLock={toggleObjectLock} />
         </div>
       ) : (
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel>
             <div className="w-full h-full relative">
-                <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} />
+                <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} isLocked={isObjectLocked} onToggleLock={toggleObjectLock} />
             </div>
           </ResizablePanel>
           {isSettingsOpen && (

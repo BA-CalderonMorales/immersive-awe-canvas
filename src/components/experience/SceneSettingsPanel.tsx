@@ -31,7 +31,7 @@ const SceneSettingsPanel = ({
       </div>
       <ScrollArea className="flex-1">
         <div className="p-4">
-          <div className="mb-2">
+          <div className="mb-2 flex justify-end">
             <TooltipProvider>
               <Tooltip delayDuration={100}>
                 <TooltipTrigger>

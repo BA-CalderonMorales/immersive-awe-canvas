@@ -6,11 +6,12 @@ import { EffectComposer, Bloom } from '@react-three/postprocessing';
 
 type WorldContainerProps = {
   children: React.ReactNode;
+  onToggleLock?: () => void;
 };
 
-const WorldContainer = ({ children }: WorldContainerProps) => {
+const WorldContainer = ({ children, onToggleLock }: WorldContainerProps) => {
   return (
-    <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+    <Canvas camera={{ position: [0, 0, 5], fov: 75 }} onDoubleClick={onToggleLock}>
       <Suspense fallback={null}>
         {children}
       </Suspense>

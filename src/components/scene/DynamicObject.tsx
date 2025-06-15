@@ -1,3 +1,4 @@
+
 import { SceneConfig, SceneThemeConfig } from '@/types/scene';
 import TorusKnotObject from './objects/TorusKnotObject';
 import WobbleFieldObject from './objects/WobbleFieldObject';
@@ -8,13 +9,14 @@ import WavyGridObject from './objects/WavyGridObject';
 interface DynamicObjectProps {
   type: SceneConfig['type'];
   themeConfig: SceneThemeConfig;
+  isLocked: boolean;
 }
 
-const DynamicObject = ({ type, themeConfig }: DynamicObjectProps) => {
+const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
   const { mainObjectColor, material } = themeConfig;
   switch (type) {
     case 'TorusKnot':
-      return <TorusKnotObject themeConfig={themeConfig} />;
+      return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} />;
     case 'WobbleField':
       return <WobbleFieldObject color={mainObjectColor} materialConfig={material} />;
     case 'DistortionSphere':

@@ -7,9 +7,10 @@ import DynamicObject from './DynamicObject';
 
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
+  isLocked: boolean;
 }
 
-const DynamicWorld = ({ sceneConfig }: DynamicWorldProps) => {
+const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
   const { theme } = useExperience();
   const { type, day, night } = sceneConfig;
 
@@ -23,7 +24,7 @@ const DynamicWorld = ({ sceneConfig }: DynamicWorldProps) => {
     <>
       <DynamicLights lights={themeConfig.lights} />
       <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
-      <DynamicObject type={type} themeConfig={themeConfig} />
+      <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
     </>
   );
 };

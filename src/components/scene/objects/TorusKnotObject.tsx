@@ -1,3 +1,4 @@
+
 import { useMemo, useRef } from 'react';
 import { TorusKnot } from '@react-three/drei';
 import { SceneThemeConfig } from '@/types/scene';
@@ -6,9 +7,10 @@ import * as THREE from 'three';
 
 interface TorusKnotObjectProps {
   themeConfig: SceneThemeConfig;
+  isLocked: boolean;
 }
 
-const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
+const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const ref = useRef<THREE.Mesh>(null!);
   const { viewport, mouse } = useThree();
   const { mainObjectColor: color, material: materialConfig, torusKnot } = themeConfig;
@@ -20,10 +22,10 @@ const TorusKnotObject = ({ themeConfig }: TorusKnotObjectProps) => {
       torusKnot?.radialSegments ?? 32,
       torusKnot?.p ?? 2,
       torusKnot?.q ?? 3,
-  ] as [number, number, number, number, number, number], [torusKnot]);
+  ] as const, [torusKnot]);
 
   useFrame((state, delta) => {
-    if (ref.current) {
+    if (ref.current && !isLocked) {
       // More responsive mouse following
       const x = (mouse.x * viewport.width) / 2;
       const y = (mouse.y * viewport.height) / 2;
