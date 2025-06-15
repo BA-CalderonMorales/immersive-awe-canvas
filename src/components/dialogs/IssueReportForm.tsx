@@ -22,6 +22,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { cn } from "@/lib/utils";
 import { AlertTriangle, UploadCloud } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { logEvent } from "@/lib/logger";
 
 const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
 const ALLOWED_IMAGE_TYPES = ["image/png"];
@@ -30,7 +32,7 @@ const ALLOWED_EMAIL_DOMAINS = ["gmail.com", "outlook.com", "icloud.com", "me.com
 const deviceItems = [
   { id: "desktop", label: "Desktop" },
   { id: "mobile", label: "Mobile" },
-  { id: "tablet", label: "Tablet" },
+  { id: "tablet", label: "Tablet" }
 ] as const;
 
 const issueFormSchema = z.object({
@@ -87,19 +89,47 @@ const IssueReportForm = ({ onBack, appVersion }: IssueReportFormProps) => {
   async function onSubmit(data: IssueFormValues) {
     setIsSubmitting(true);
     toast.info("Submitting your issue...");
+    await logEvent('issue_form_submission_started', 'IssueReportForm', { appVersion });
 
-    console.log("App Version:", appVersion);
-    console.log("Issue Report Submitted:", data);
+    try {
+      // NOTE: Attachment upload is not implemented as part of this flow.
+      // The edge function currently does not handle file uploads.
+      const { attachment, ...issueData } = data;
 
-    // This is a placeholder for the future GitHub API call.
-    // I will implement the real submission logic in the next step.
-    setTimeout(() => {
-      toast.success("Thank you for your feedback!", {
-        description: "This form is for demonstration. Issue submission to GitHub is coming soon.",
+      const { data: functionResponse, error } = await supabase.functions.invoke('create-github-issue', {
+        body: { issueData, appVersion },
       });
-      setIsSubmitting(false);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      const responseData = functionResponse;
+
+      if (responseData.error) {
+        throw new Error(responseData.error, { cause: responseData.details });
+      }
+
+      toast.success("Thank you! Your issue has been submitted.", {
+        description: `Issue created successfully. You can view it on GitHub.`,
+        action: {
+          label: "View Issue",
+          onClick: () => window.open(responseData.issue.html_url, '_blank'),
+        },
+      });
+
+      await logEvent('issue_form_submission_success', 'IssueReportForm', { issueUrl: responseData.issue.html_url });
       onBack();
-    }, 1500);
+
+    } catch (error: any) {
+      console.error("Submission failed:", error);
+      toast.error("Submission Failed", {
+        description: error.message || "Could not submit your issue. Please try again.",
+      });
+      await logEvent('issue_form_submission_failed', 'IssueReportForm', { error: error.message, cause: error.cause });
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
