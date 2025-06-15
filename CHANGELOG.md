@@ -56,6 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redesigned the "Liking is Coming Soon" modal for a cleaner look and a stronger call to action.
 
 ### Fixed
+- Addressed a development server build error (`EMFILE: too many open files`) by optimizing Vite's file-watching configuration.
 - Resolved major UI visibility issue where text and buttons could become invisible against certain scene backgrounds.
 - Corrected a broken theme implementation in the toast notification component.
 - Adjusted "Echoing Void" night theme for better visibility.
@@ -70,3 +71,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
+

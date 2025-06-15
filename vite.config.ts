@@ -11,6 +11,9 @@ export default defineConfig(({ command }) => ({
   server: {
     host: "::",
     port: 8080,
+    watch: {
+      ignored: ["**/node_modules/**", "**/.git/**"],
+    },
   },
   plugins: [
     react(),
