@@ -1,11 +1,10 @@
-
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
   color?: string;
   position?: [number, number, number];
   groundColor?: string;
-  ref?: string;
+  ref?: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
 };
 
 export type BackgroundConfig = {
