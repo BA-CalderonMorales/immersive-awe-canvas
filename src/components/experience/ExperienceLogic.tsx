@@ -1,13 +1,13 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from "react";
+
+import { useMemo } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
 import { isSceneConfig } from "@/lib/typeguards";
-import { SceneConfig } from "@/types/scene";
-import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
-import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
+import { useExperienceState } from "@/hooks/useExperienceState";
+import { useExperienceTransitions } from "@/hooks/useExperienceTransitions";
+import { useExperienceCallbacks } from "@/hooks/useExperienceCallbacks";
+import { useExperienceEffects } from "@/hooks/useExperienceEffects";
 import ExperienceUI from "./ExperienceUI";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceHotkeys from "./ExperienceHotkeys";
@@ -27,101 +27,54 @@ const ExperienceLogic = () => {
   } = useWorlds();
   
   const { theme, toggleTheme } = useExperience();
-  const { toggleVisible: toggleKeyboardShortcuts } = useKeyboardShortcuts();
-  const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
-  const [isObjectLocked, setIsObjectLocked] = useState(false);
-  const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
-  const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isUiHidden, setIsUiHidden] = useState(true);
-  const navigate = useNavigate();
   const isMobile = useIsMobile();
-  const [showUiHint, setShowUiHint] = useState(false);
-  const hintShownRef = useRef(false);
-
-  const toggleObjectLock = useCallback(() => {
-    setIsObjectLocked(locked => {
-      const newLockState = !locked;
-      toast.info(newLockState ? "Object motion locked" : "Object motion unlocked");
-      return newLockState;
-    });
-  }, []);
   
-  const handleGoHome = useCallback(() => {
-    navigate('/');
-  }, [navigate]);
+  const {
+    editableSceneConfig,
+    setEditableSceneConfig,
+    isObjectLocked,
+    toggleObjectLock,
+    currentWorldId,
+    setCurrentWorldId,
+    isHelpOpen,
+    setIsHelpOpen,
+    isSearchOpen,
+    setIsSearchOpen,
+    isSettingsOpen,
+    setIsSettingsOpen,
+    isUiHidden,
+    setIsUiHidden,
+    showUiHint,
+    setShowUiHint,
+    hintShownRef,
+    handleCopyCode,
+  } = useExperienceState();
 
-  const handleCopyCode = useCallback(() => {
-    if (!editableSceneConfig) return;
-    const codeString = JSON.stringify(editableSceneConfig, null, 2);
-    navigator.clipboard.writeText(codeString)
-      .then(() => {
-        toast.success("Scene configuration copied to clipboard!");
-        logEvent({ eventType: 'action', eventSource: 'copy_code_success' });
-      })
-      .catch(err => {
-        console.error('Failed to copy text: ', err);
-        toast.error("Failed to copy configuration.");
-        logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
-      });
-  }, [editableSceneConfig]);
+  const {
+    showEntryTransition,
+    showWorldTransition,
+    handleEntryTransitionEnd,
+    handleWorldTransitionEnd,
+  } = useExperienceTransitions(isTransitioning);
 
-  const handleToggleShortcuts = useCallback(() => {
-    toggleKeyboardShortcuts();
-    logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
-  }, [toggleKeyboardShortcuts]);
+  const {
+    handleGoHome,
+    handleToggleShortcuts,
+  } = useExperienceCallbacks();
 
-  const [showEntryTransition, setShowEntryTransition] = useState(true);
-  const [showWorldTransition, setShowWorldTransition] = useState(false);
-
-  const handleEntryTransitionEnd = () => {
-    setShowEntryTransition(false);
-    if (!hintShownRef.current) {
-      hintShownRef.current = true;
-      setShowUiHint(true);
-      setTimeout(() => {
-        setShowUiHint(false);
-      }, 4000);
-    }
-  };
-
-  const handleWorldTransitionEnd = () => {
-    setShowWorldTransition(false);
-  };
-
-  useEffect(() => {
-    if (isTransitioning) {
-      setShowWorldTransition(true);
-    }
-  }, [isTransitioning]);
-
-  useEffect(() => {
-    if (worldData && worldData.id !== currentWorldId) {
-      if (isSceneConfig(worldData.scene_config)) {
-        setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
-        setCurrentWorldId(worldData.id);
-        if (isSettingsOpen) {
-          setIsSettingsOpen(false);
-        }
-      }
-    }
-  }, [worldData, currentWorldId, isSettingsOpen]);
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape' && isSettingsOpen) {
-        event.preventDefault();
-        setIsSettingsOpen(false);
-        logEvent({ eventType: 'keyboard_shortcut', eventSource: 'close_settings' });
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isSettingsOpen]);
+  const {
+    handleEntryTransitionEndWithHint,
+  } = useExperienceEffects({
+    worldData,
+    currentWorldId,
+    setEditableSceneConfig,
+    setCurrentWorldId,
+    isSettingsOpen,
+    setIsSettingsOpen,
+    hintShownRef,
+    setShowUiHint,
+    handleEntryTransitionEnd,
+  });
 
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
@@ -155,7 +108,7 @@ const ExperienceLogic = () => {
         showEntryTransition={showEntryTransition}
         showWorldTransition={showWorldTransition}
         theme={theme}
-        onEntryTransitionEnd={handleEntryTransitionEnd}
+        onEntryTransitionEnd={handleEntryTransitionEndWithHint}
         onWorldTransitionEnd={handleWorldTransitionEnd}
       />
       
