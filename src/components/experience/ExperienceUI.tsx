@@ -131,6 +131,8 @@ const ExperienceUI = ({
           theme={theme}
           isVisible={showKeyboardShortcuts}
           onToggle={onToggleKeyboardShortcuts}
+          isExpanded={showKeyboardShortcuts}
+          onToggleExpanded={onToggleKeyboardShortcuts}
         />
       )}
 
