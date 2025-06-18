@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig, MaterialConfig, LightConfig, ExtraConfig, TorusKnotConfig, BackgroundConfig, EnvironmentPreset } from '@/types/scene';
@@ -154,17 +155,61 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const backgroundConf = themeConfig.background;
     const bgFolder = gui.addFolder('Background');
     
-    bgFolder.add(backgroundConf, 'type', ['sky', 'stars', 'fog', 'sparkles', 'color', 'environment']).name('Type').onChange(value => {
+    bgFolder.add(backgroundConf, 'type', [
+      'sky', 'stars', 'fog', 'sparkles', 'color', 'environment', 
+      'gradient', 'noise', 'plasma', 'void', 'aurora'
+    ]).name('Type').onChange(value => {
         updateConfig(c => {
             const bg = c[theme].background;
             bg.type = value as BackgroundConfig['type'];
+            
+            // Set defaults for new background types
             if (value === 'environment') {
                 if (bg.preset === undefined) bg.preset = 'night';
                 if (bg.blur === undefined) bg.blur = 0.5;
+            } else if (value === 'gradient') {
+                if (bg.colorTop === undefined) bg.colorTop = '#ff6b6b';
+                if (bg.colorBottom === undefined) bg.colorBottom = '#4ecdc4';
+                if (bg.speed === undefined) bg.speed = 0.1;
+            } else if (value === 'noise') {
+                if (bg.noiseScale === undefined) bg.noiseScale = 10.0;
+                if (bg.noiseIntensity === undefined) bg.noiseIntensity = 0.5;
+                if (bg.noiseSpeed === undefined) bg.noiseSpeed = 0.1;
+                if (bg.color === undefined) bg.color = '#1a1a2e';
+            } else if (value === 'plasma') {
+                if (bg.plasmaSpeed === undefined) bg.plasmaSpeed = 1.0;
+                if (bg.plasmaIntensity === undefined) bg.plasmaIntensity = 0.5;
+                if (bg.plasmaColor1 === undefined) bg.plasmaColor1 = '#ff0080';
+                if (bg.plasmaColor2 === undefined) bg.plasmaColor2 = '#0080ff';
+            } else if (value === 'aurora') {
+                if (bg.auroraSpeed === undefined) bg.auroraSpeed = 0.5;
+                if (bg.auroraIntensity === undefined) bg.auroraIntensity = 2.0;
+                if (bg.auroraColors === undefined) bg.auroraColors = ['#00ff88', '#0088ff', '#ff0088'];
+            } else if (value === 'stars') {
+                if (bg.radius === undefined) bg.radius = 100;
+                if (bg.depth === undefined) bg.depth = 50;
+                if (bg.count === undefined) bg.count = 5000;
+                if (bg.factor === undefined) bg.factor = 4;
+                if (bg.saturation === undefined) bg.saturation = 0;
+                if (bg.fade === undefined) bg.fade = true;
+                if (bg.speed === undefined) bg.speed = 1;
+            } else if (value === 'sparkles') {
+                if (bg.count === undefined) bg.count = 100;
+                if (bg.scale === undefined) bg.scale = 10;
+                if (bg.size === undefined) bg.size = 2;
+                if (bg.speed === undefined) bg.speed = 0.3;
+                if (bg.opacity === undefined) bg.opacity = 1;
+                if (bg.color === undefined) bg.color = '#ffffff';
+            } else if (value === 'fog') {
+                if (bg.color === undefined) bg.color = '#ffffff';
+                if (bg.near === undefined) bg.near = 1;
+                if (bg.far === undefined) bg.far = 100;
+                if (bg.density === undefined) bg.density = 0.01;
             }
         });
     });
 
+    // Background-specific controls
     if (backgroundConf.type === 'environment') {
         const presets: EnvironmentPreset[] = [
           'apartment', 'city', 'dawn', 'forest', 'lobby', 'night', 'park', 'studio', 'sunset', 'warehouse'
@@ -177,32 +222,63 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
             updateConfig(c => {c[theme].background.blur = 0.5});
         }
         bgFolder.add(backgroundConf, 'blur', 0, 1).onChange(v => updateConfig(c => {c[theme].background.blur = v}));
+        
     } else if (backgroundConf.type === 'sky' && backgroundConf.sunPosition) {
         const sunPosFolder = bgFolder.addFolder('Sun Position');
         sunPosFolder.add(backgroundConf.sunPosition, '0', -200, 200).name('x').onChange(v => updateConfig(c => {c[theme].background.sunPosition![0] = v}));
         sunPosFolder.add(backgroundConf.sunPosition, '1', -200, 200).name('y').onChange(v => updateConfig(c => {c[theme].background.sunPosition![1] = v}));
         sunPosFolder.add(backgroundConf.sunPosition, '2', -200, 200).name('z').onChange(v => updateConfig(c => {c[theme].background.sunPosition![2] = v}));
         sunPosFolder.open();
+        
     } else if (backgroundConf.type === 'stars') {
         if (backgroundConf.radius !== undefined) bgFolder.add(backgroundConf, 'radius', 10, 2000).onChange(v => updateConfig(c => {c[theme].background.radius = v}));
-        if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 10000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
-        if (backgroundConf.saturation !== undefined) bgFolder.add(backgroundConf, 'saturation', 0, 2).onChange(v => updateConfig(c => {c[theme].background.saturation = v}));
+        if (backgroundConf.depth !== undefined) bgFolder.add(backgroundConf, 'depth', 1, 200).onChange(v => updateConfig(c => {c[theme].background.depth = v}));
+        if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 20000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
         if (backgroundConf.factor !== undefined) bgFolder.add(backgroundConf, 'factor', 0, 20).onChange(v => updateConfig(c => {c[theme].background.factor = v}));
+        if (backgroundConf.saturation !== undefined) bgFolder.add(backgroundConf, 'saturation', 0, 2).onChange(v => updateConfig(c => {c[theme].background.saturation = v}));
         if (backgroundConf.speed !== undefined) bgFolder.add(backgroundConf, 'speed', 0, 5).onChange(v => updateConfig(c => {c[theme].background.speed = v}));
         if (backgroundConf.fade !== undefined) bgFolder.add(backgroundConf, 'fade').onChange(v => updateConfig(c => {c[theme].background.fade = v}));
+        
     } else if (backgroundConf.type === 'sparkles') {
         if (backgroundConf.count !== undefined) bgFolder.add(backgroundConf, 'count', 0, 10000).step(100).onChange(v => updateConfig(c => {c[theme].background.count = v}));
+        if (backgroundConf.scale !== undefined) bgFolder.add(backgroundConf, 'scale', 0, 50).onChange(v => updateConfig(c => {c[theme].background.scale = v}));
+        if (backgroundConf.size !== undefined) bgFolder.add(backgroundConf, 'size', 0, 20).onChange(v => updateConfig(c => {c[theme].background.size = v}));
         if (backgroundConf.speed !== undefined) bgFolder.add(backgroundConf, 'speed', 0, 5).onChange(v => updateConfig(c => {c[theme].background.speed = v}));
         if (backgroundConf.opacity !== undefined) bgFolder.add(backgroundConf, 'opacity', 0, 1).onChange(v => updateConfig(c => {c[theme].background.opacity = v}));
         if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
-        if (backgroundConf.size !== undefined) bgFolder.add(backgroundConf, 'size', 0, 20).onChange(v => updateConfig(c => {c[theme].background.size = v}));
-        if (backgroundConf.scale !== undefined) bgFolder.add(backgroundConf, 'scale', 0, 50).onChange(v => updateConfig(c => {c[theme].background.scale = v}));
+        
     } else if (backgroundConf.type === 'fog') {
         if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
         if (backgroundConf.near !== undefined) bgFolder.add(backgroundConf, 'near', 0, 100).onChange(v => updateConfig(c => {c[theme].background.near = v}));
         if (backgroundConf.far !== undefined) bgFolder.add(backgroundConf, 'far', 0, 200).onChange(v => updateConfig(c => {c[theme].background.far = v}));
+        if (backgroundConf.density !== undefined) bgFolder.add(backgroundConf, 'density', 0, 1).onChange(v => updateConfig(c => {c[theme].background.density = v}));
+        
     } else if (backgroundConf.type === 'color') {
         if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
+        if (backgroundConf.colorTop !== undefined) bgFolder.addColor(backgroundConf, 'colorTop').name('Top Color').onChange(v => updateConfig(c => {c[theme].background.colorTop = v}));
+        if (backgroundConf.colorBottom !== undefined) bgFolder.addColor(backgroundConf, 'colorBottom').name('Bottom Color').onChange(v => updateConfig(c => {c[theme].background.colorBottom = v}));
+        
+    } else if (backgroundConf.type === 'gradient') {
+        if (backgroundConf.colorTop !== undefined) bgFolder.addColor(backgroundConf, 'colorTop').name('Top Color').onChange(v => updateConfig(c => {c[theme].background.colorTop = v}));
+        if (backgroundConf.colorBottom !== undefined) bgFolder.addColor(backgroundConf, 'colorBottom').name('Bottom Color').onChange(v => updateConfig(c => {c[theme].background.colorBottom = v}));
+        if (backgroundConf.speed !== undefined) bgFolder.add(backgroundConf, 'speed', 0, 2).onChange(v => updateConfig(c => {c[theme].background.speed = v}));
+        
+    } else if (backgroundConf.type === 'noise') {
+        if (backgroundConf.color !== undefined) bgFolder.addColor(backgroundConf, 'color').onChange(v => updateConfig(c => {c[theme].background.color = v}));
+        if (backgroundConf.noiseScale !== undefined) bgFolder.add(backgroundConf, 'noiseScale', 1, 50).onChange(v => updateConfig(c => {c[theme].background.noiseScale = v}));
+        if (backgroundConf.noiseIntensity !== undefined) bgFolder.add(backgroundConf, 'noiseIntensity', 0, 2).onChange(v => updateConfig(c => {c[theme].background.noiseIntensity = v}));
+        if (backgroundConf.noiseSpeed !== undefined) bgFolder.add(backgroundConf, 'noiseSpeed', 0, 1).onChange(v => updateConfig(c => {c[theme].background.noiseSpeed = v}));
+        
+    } else if (backgroundConf.type === 'plasma') {
+        if (backgroundConf.plasmaColor1 !== undefined) bgFolder.addColor(backgroundConf, 'plasmaColor1').name('Color 1').onChange(v => updateConfig(c => {c[theme].background.plasmaColor1 = v}));
+        if (backgroundConf.plasmaColor2 !== undefined) bgFolder.addColor(backgroundConf, 'plasmaColor2').name('Color 2').onChange(v => updateConfig(c => {c[theme].background.plasmaColor2 = v}));
+        if (backgroundConf.plasmaSpeed !== undefined) bgFolder.add(backgroundConf, 'plasmaSpeed', 0, 3).onChange(v => updateConfig(c => {c[theme].background.plasmaSpeed = v}));
+        if (backgroundConf.plasmaIntensity !== undefined) bgFolder.add(backgroundConf, 'plasmaIntensity', 0, 2).onChange(v => updateConfig(c => {c[theme].background.plasmaIntensity = v}));
+        
+    } else if (backgroundConf.type === 'aurora') {
+        if (backgroundConf.auroraSpeed !== undefined) bgFolder.add(backgroundConf, 'auroraSpeed', 0, 2).onChange(v => updateConfig(c => {c[theme].background.auroraSpeed = v}));
+        if (backgroundConf.auroraIntensity !== undefined) bgFolder.add(backgroundConf, 'auroraIntensity', 0, 5).onChange(v => updateConfig(c => {c[theme].background.auroraIntensity = v}));
+        // Note: Aurora colors would need a more complex control for the array
     }
 
     bgFolder.open();
@@ -213,7 +289,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         guiRef.current = null;
       }
     };
-  }, [sceneConfig, theme, onUpdate]); // Re-create GUI when config or theme changes
+  }, [sceneConfig, theme, onUpdate]);
 
   return (
     <div

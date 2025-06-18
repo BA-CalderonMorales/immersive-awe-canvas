@@ -1,3 +1,4 @@
+
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
@@ -10,8 +11,11 @@ export type LightConfig = {
 export type EnvironmentPreset = 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby' | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
 
 export type BackgroundConfig = {
-  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment';
+  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment' | 'gradient' | 'noise' | 'plasma' | 'void' | 'aurora';
+  // Sky properties
   sunPosition?: [number, number, number];
+  
+  // Stars properties
   radius?: number;
   depth?: number;
   count?: number;
@@ -19,12 +23,39 @@ export type BackgroundConfig = {
   saturation?: number;
   fade?: boolean;
   speed?: number;
+  
+  // Fog properties
   color?: string;
   near?: number;
   far?: number;
-  scale?: number;
+  density?: number;
+  
+  // Sparkles properties
   size?: number;
   opacity?: number;
+  scale?: number;
+  
+  // Color/Gradient properties
+  colorTop?: string;
+  colorBottom?: string;
+  
+  // Noise properties
+  noiseScale?: number;
+  noiseIntensity?: number;
+  noiseSpeed?: number;
+  
+  // Plasma properties
+  plasmaSpeed?: number;
+  plasmaIntensity?: number;
+  plasmaColor1?: string;
+  plasmaColor2?: string;
+  
+  // Aurora properties
+  auroraSpeed?: number;
+  auroraIntensity?: number;
+  auroraColors?: string[];
+  
+  // Environment properties
   preset?: EnvironmentPreset;
   blur?: number;
 };
