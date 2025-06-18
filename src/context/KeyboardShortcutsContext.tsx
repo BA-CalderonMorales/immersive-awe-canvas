@@ -1,5 +1,6 @@
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, ReactNode } from 'react';
+import { useKeyboardShortcutsState } from '@/hooks/useKeyboardShortcutsState';
 
 interface KeyboardShortcutsContextType {
   isExpanded: boolean;
@@ -19,24 +20,10 @@ export const useKeyboardShortcuts = () => {
 };
 
 export const KeyboardShortcutsProvider = ({ children }: { children: ReactNode }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
-  const [isVisible, setIsVisible] = useState(false);
-
-  const toggleExpanded = () => {
-    setIsExpanded(prev => !prev);
-  };
-
-  const toggleVisible = () => {
-    setIsVisible(prev => !prev);
-  };
+  const shortcuts = useKeyboardShortcutsState();
 
   return (
-    <KeyboardShortcutsContext.Provider value={{
-      isExpanded,
-      toggleExpanded,
-      isVisible,
-      toggleVisible
-    }}>
+    <KeyboardShortcutsContext.Provider value={shortcuts}>
       {children}
     </KeyboardShortcutsContext.Provider>
   );
