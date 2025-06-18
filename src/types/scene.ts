@@ -1,4 +1,3 @@
-
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
@@ -8,7 +7,7 @@ export type LightConfig = {
   ref?: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
 };
 
-export type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby' | 'canyon' | 'cave' | 'crystal' | 'underground' | 'glacier' | 'desert' | 'ocean' | 'space' | 'neon' | 'industrial' | 'temple' | 'volcanic' | 'arctic' | 'mystical' | 'ethereal' | 'cosmic';
+export type EnvironmentPreset = 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby' | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
 
 export type BackgroundConfig = {
   type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment';
