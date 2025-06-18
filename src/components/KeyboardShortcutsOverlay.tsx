@@ -1,36 +1,22 @@
 
 import { Button } from "@/components/ui/button";
-import { X, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
 
 interface KeyboardShortcutsOverlayProps {
   theme: 'day' | 'night';
-  isVisible: boolean;
-  onToggle: () => void;
-  isExpanded?: boolean;
-  onToggleExpanded?: () => void;
 }
 
-const KeyboardShortcutsOverlay = ({ 
-  theme, 
-  isVisible, 
-  onToggle, 
-  isExpanded = true,
-  onToggleExpanded
-}: KeyboardShortcutsOverlayProps) => {
+const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
   const isMobile = useIsMobile();
+  const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
   // Don't render on mobile devices
   if (isMobile) return null;
 
   if (!isVisible) return null;
-
-  const handleToggleExpanded = () => {
-    if (onToggleExpanded) {
-      onToggleExpanded();
-    }
-  };
 
   return (
     <div 
@@ -40,7 +26,7 @@ const KeyboardShortcutsOverlay = ({
         }`
       }
     >
-      <Collapsible open={isExpanded} onOpenChange={handleToggleExpanded}>
+      <Collapsible open={isExpanded} onOpenChange={toggleExpanded}>
         <CollapsibleTrigger asChild>
           <div className="flex items-center justify-between p-3 pb-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors w-full">
             <span className="font-semibold">Shortcuts</span>

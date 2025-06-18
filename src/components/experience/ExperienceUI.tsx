@@ -28,8 +28,6 @@ interface ExperienceUIProps {
   onToggleUiHidden: () => void;
   showUiHint?: boolean;
   onToggleShortcuts?: () => void;
-  showKeyboardShortcuts?: boolean;
-  onToggleKeyboardShortcuts?: () => void;
 }
 
 const ExperienceUI = ({
@@ -51,8 +49,6 @@ const ExperienceUI = ({
   onToggleUiHidden,
   showUiHint = false,
   onToggleShortcuts,
-  showKeyboardShortcuts = false,
-  onToggleKeyboardShortcuts,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
 
@@ -126,13 +122,9 @@ const ExperienceUI = ({
       />
 
       {/* Keyboard Shortcuts Overlay - only on desktop/tablet */}
-      {!isMobile && onToggleKeyboardShortcuts && (
+      {!isMobile && (
         <KeyboardShortcutsOverlay 
           theme={theme}
-          isVisible={showKeyboardShortcuts}
-          onToggle={onToggleKeyboardShortcuts}
-          isExpanded={showKeyboardShortcuts}
-          onToggleExpanded={onToggleKeyboardShortcuts}
         />
       )}
 

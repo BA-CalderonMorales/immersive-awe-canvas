@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
@@ -15,10 +16,11 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import TransitionSplash from "@/components/TransitionSplash";
 import WorldTransition from "@/components/transition/WorldTransition";
 import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
+import { KeyboardShortcutsProvider, useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
 import WorldView from "./WorldView";
 import SceneSettingsPanel from "./SceneSettingsPanel";
 
-const ExperienceContent = () => {
+const ExperienceContentInner = () => {
   const {
     worlds,
     isLoading,
@@ -31,6 +33,7 @@ const ExperienceContent = () => {
   } = useWorlds();
   
   const { theme, toggleTheme } = useExperience();
+  const { toggleVisible: toggleKeyboardShortcuts, toggleExpanded } = useKeyboardShortcuts();
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
   const [isObjectLocked, setIsObjectLocked] = useState(false);
   const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
@@ -43,7 +46,6 @@ const ExperienceContent = () => {
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
   const [showShortcutsExpanded, setShowShortcutsExpanded] = useState(true);
-  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
@@ -92,18 +94,14 @@ const ExperienceContent = () => {
     setShowShortcutsExpanded(prev => !prev);
   };
 
-  const handleToggleKeyboardShortcuts = () => {
-    setShowKeyboardShortcuts(prev => !prev);
-  };
-
   // Create a unified toggle function that works based on UI state
   const handleToggleShortcuts = useCallback(() => {
     if (isUiHidden) {
       handleToggleShortcutsExpanded();
     } else {
-      handleToggleKeyboardShortcuts();
+      toggleKeyboardShortcuts();
     }
-  }, [isUiHidden]);
+  }, [isUiHidden, toggleKeyboardShortcuts]);
 
   useExperienceHotkeys({
     callbacks: {
@@ -237,8 +235,6 @@ const ExperienceContent = () => {
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
         showUiHint={showUiHint}
         onToggleShortcuts={isUiHidden ? handleToggleShortcutsExpanded : undefined}
-        showKeyboardShortcuts={showKeyboardShortcuts}
-        onToggleKeyboardShortcuts={handleToggleKeyboardShortcuts}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog
@@ -248,6 +244,14 @@ const ExperienceContent = () => {
         onSelectWorld={jumpToWorld}
       />
     </div>
+  );
+};
+
+const ExperienceContent = () => {
+  return (
+    <KeyboardShortcutsProvider>
+      <ExperienceContentInner />
+    </KeyboardShortcutsProvider>
   );
 };
 
