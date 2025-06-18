@@ -8,25 +8,28 @@ import { MathUtils, Mesh } from 'three';
 interface DistortionSphereObjectProps {
   color: string;
   materialConfig: MaterialConfig;
+  isLocked: boolean;
 }
 
-const DistortionSphereObject = ({ color, materialConfig }: DistortionSphereObjectProps) => {
+const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {
   const materialRef = useRef<any>(null!);
   const vortexRef = useRef<Mesh>(null!);
 
   useFrame((state, delta) => {
-    if (materialRef.current) {
-      // Time-based wave for continuous motion only
-      const timeDistort = Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
-      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.4 + timeDistort, 0.05);
+    if (!isLocked) {
+      if (materialRef.current) {
+        // Time-based wave for continuous motion only
+        const timeDistort = Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
+        materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.4 + timeDistort, 0.05);
 
-      // Constant speed for the material
-      materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, 3, 0.05);
-    }
-    if (vortexRef.current) {
-      vortexRef.current.rotation.x += delta * 0.3;
-      vortexRef.current.rotation.y += delta * 0.5;
-      vortexRef.current.rotation.z += delta * 0.1;
+        // Constant speed for the material
+        materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, 3, 0.05);
+      }
+      if (vortexRef.current) {
+        vortexRef.current.rotation.x += delta * 0.3;
+        vortexRef.current.rotation.y += delta * 0.5;
+        vortexRef.current.rotation.z += delta * 0.1;
+      }
     }
   });
 

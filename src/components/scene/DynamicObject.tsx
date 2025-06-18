@@ -18,13 +18,13 @@ const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
     case 'TorusKnot':
       return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} />;
     case 'WobbleField':
-      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} />;
+      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     case 'DistortionSphere':
-      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} />;
+      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     case 'MorphingIcosahedron':
-      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} />;
+      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     case 'WavyGrid':
-      return <WavyGridObject color={mainObjectColor} materialConfig={material} />;
+      return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     default:
       return null;
   }
