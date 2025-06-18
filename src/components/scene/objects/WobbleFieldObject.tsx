@@ -39,7 +39,7 @@ const generateFieldPositions = () => {
   return positions;
 };
 
-// Geometries that Rick would approve of
+// Geometries that Rick would approve of - with CORRECT TypeScript args!
 const getRandomGeometry = (index: number) => {
   const geometries = [
     { type: 'icosahedron', args: [0.8 + Math.random() * 0.4, Math.floor(Math.random() * 3)] },
@@ -161,13 +161,13 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
               Math.random() * Math.PI
             ]}
           >
-            {/* Render different geometries based on type */}
-            {geometry.type === 'icosahedron' && <icosahedronGeometry args={geometry.args} />}
-            {geometry.type === 'dodecahedron' && <dodecahedronGeometry args={geometry.args} />}
-            {geometry.type === 'octahedron' && <octahedronGeometry args={geometry.args} />}
-            {geometry.type === 'tetrahedron' && <tetrahedronGeometry args={geometry.args} />}
-            {geometry.type === 'torus' && <torusGeometry args={geometry.args} />}
-            {geometry.type === 'torusKnot' && <torusKnotGeometry args={geometry.args} />}
+            {/* Render different geometries based on type - FIXED ARGS! */}
+            {geometry.type === 'icosahedron' && <icosahedronGeometry args={geometry.args as [number?, number?]} />}
+            {geometry.type === 'dodecahedron' && <dodecahedronGeometry args={geometry.args as [number?]} />}
+            {geometry.type === 'octahedron' && <octahedronGeometry args={geometry.args as [number?]} />}
+            {geometry.type === 'tetrahedron' && <tetrahedronGeometry args={geometry.args as [number?]} />}
+            {geometry.type === 'torus' && <torusGeometry args={geometry.args as [number?, number?, number?, number?]} />}
+            {geometry.type === 'torusKnot' && <torusKnotGeometry args={geometry.args as [number?, number?, number?, number?, number?, number?]} />}
             
             <MeshWobbleMaterial
               ref={(ref) => { 
