@@ -103,7 +103,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
             logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
           }
           break;
-        case 'Slash':
+        case 'KeyM':
           if (!isTyping) {
             event.preventDefault();
             if (callbacks.toggleShortcuts) {
