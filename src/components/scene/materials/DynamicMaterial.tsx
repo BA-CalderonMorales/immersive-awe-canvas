@@ -123,7 +123,8 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         const safeColor = color && typeof color === 'string' ? color : '#ffffff';
         console.log('Using safe color:', safeColor);
         
-        const rawProps = {
+        // Define all possible properties with proper typing
+        const rawProps: Record<string, any> = {
             color: safeColor,
             wireframe: Boolean(materialConfig.wireframe),
             transparent: Boolean(materialConfig.transparent),
@@ -133,7 +134,9 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         // Add emissive properties only if they exist and are valid
         if (materialConfig.emissive && typeof materialConfig.emissive === 'string') {
             rawProps.emissive = materialConfig.emissive;
-            rawProps.emissiveIntensity = typeof materialConfig.emissiveIntensity === 'number' && !isNaN(materialConfig.emissiveIntensity) ? materialConfig.emissiveIntensity : 0.0;
+        }
+        if (typeof materialConfig.emissiveIntensity === 'number' && !isNaN(materialConfig.emissiveIntensity)) {
+            rawProps.emissiveIntensity = materialConfig.emissiveIntensity;
         }
         
         const props = validateAndClean(rawProps);
