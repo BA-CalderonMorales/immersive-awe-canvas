@@ -24,56 +24,83 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
     const handleKeyDown = (event: KeyboardEvent) => {
       if (!enabled) return;
 
+      // Check if user is typing in an input field
+      const activeEl = document.activeElement;
+      const isTyping = activeEl && (
+        activeEl.tagName === 'INPUT' ||
+        activeEl.tagName === 'TEXTAREA' ||
+        activeEl.getAttribute('contenteditable') === 'true'
+      );
+
       switch (event.code) {
         case 'Space':
+          // Always prevent default for spacebar and allow theme toggle
           event.preventDefault();
           callbacks.toggleTheme();
           logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_theme' });
           break;
         case 'KeyN':
-           event.preventDefault();
-           callbacks.changeWorld('next');
-           break;
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.changeWorld('next');
+          }
+          break;
         case 'KeyP':
-           event.preventDefault();
-           callbacks.changeWorld('prev');
-           break;
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.changeWorld('prev');
+          }
+          break;
         case 'KeyK':
-          if (event.ctrlKey || event.metaKey) {
+          if ((event.ctrlKey || event.metaKey) && !isTyping) {
             event.preventDefault();
             callbacks.openSearch();
           }
           break;
         case 'KeyG':
-          event.preventDefault();
-          callbacks.goHome();
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.goHome();
+          }
           break;
         case 'KeyS':
-          event.preventDefault();
-          callbacks.openSearch();
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.openSearch();
+          }
           break;
         case 'KeyH':
-          event.preventDefault();
-          callbacks.openHelp();
-          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'open_help' });
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.openHelp();
+            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'open_help' });
+          }
           break;
         case 'KeyE':
-          event.preventDefault();
-          callbacks.toggleSettings();
-          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_settings' });
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.toggleSettings();
+            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_settings' });
+          }
           break;
         case 'KeyC':
-          event.preventDefault();
-          callbacks.copyCode();
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.copyCode();
+          }
           break;
         case 'KeyV':
-          event.preventDefault();
-          callbacks.toggleUi();
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.toggleUi();
+          }
           break;
         case 'Period':
-          event.preventDefault();
-          callbacks.toggleLock();
-          logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
+          if (!isTyping) {
+            event.preventDefault();
+            callbacks.toggleLock();
+            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
+          }
           break;
       }
     };
