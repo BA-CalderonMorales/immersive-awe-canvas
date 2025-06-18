@@ -13,18 +13,25 @@ interface DynamicMaterialProps {
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const { gl } = useThree();
 
-    // Comprehensive validation function
+    console.log('DynamicMaterial render - materialConfig:', materialConfig);
+    console.log('DynamicMaterial render - color:', color);
+
+    // Comprehensive validation function with logging
     const validateAndClean = (obj: Record<string, any>) => {
+        console.log('validateAndClean input:', obj);
         const cleaned: Record<string, any> = {};
+        
         Object.keys(obj).forEach(key => {
             const value = obj[key];
+            console.log(`Validating ${key}:`, value, typeof value);
             
-            // Skip undefined, null, or invalid values
-            if (value === undefined || value === null) {
+            // Skip undefined, null, NaN, or invalid values
+            if (value === undefined || value === null || (typeof value === 'number' && isNaN(value))) {
+                console.warn(`Skipping invalid value for ${key}:`, value);
                 return;
             }
             
-            // Type-specific validation
+            // Type-specific validation with logging
             switch (key) {
                 case 'opacity':
                 case 'roughness':
@@ -37,7 +44,11 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
                 case 'specularIntensity':
                 case 'shininess':
                     if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
-                        cleaned[key] = Math.max(0, Math.min(value, key === 'opacity' ? 1 : 10));
+                        const clampedValue = Math.max(0, Math.min(value, key === 'opacity' ? 1 : 10));
+                        cleaned[key] = clampedValue;
+                        console.log(`Set ${key} to:`, clampedValue);
+                    } else {
+                        console.warn(`Invalid numeric value for ${key}:`, value);
                     }
                     break;
                 case 'color':
@@ -47,21 +58,32 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
                 case 'groundColor':
                     if (typeof value === 'string' && value.length > 0) {
                         cleaned[key] = value;
+                        console.log(`Set ${key} to:`, value);
+                    } else {
+                        console.warn(`Invalid string value for ${key}:`, value);
                     }
                     break;
                 case 'wireframe':
                 case 'transparent':
                     if (typeof value === 'boolean') {
                         cleaned[key] = value;
+                        console.log(`Set ${key} to:`, value);
+                    } else {
+                        console.warn(`Invalid boolean value for ${key}:`, value);
                     }
                     break;
                 default:
-                    // For other properties, only include if they're valid
-                    if (value !== undefined && value !== null) {
+                    // For other properties, only include if they're valid and not undefined
+                    if (value !== undefined && value !== null && !isNaN(value)) {
                         cleaned[key] = value;
+                        console.log(`Set ${key} to:`, value);
+                    } else {
+                        console.warn(`Skipping unknown property ${key}:`, value);
                     }
             }
         });
+        
+        console.log('validateAndClean output:', cleaned);
         return cleaned;
     };
 
@@ -94,45 +116,55 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     
     const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
-    // Prepare base properties with defaults
+    // Prepare base properties with strict defaults and validation
     const baseProps = useMemo(() => {
-        const props = validateAndClean({
-            color: color || '#ffffff',
-            wireframe: materialConfig.wireframe || false,
-            transparent: materialConfig.transparent || false,
-            opacity: materialConfig.opacity !== undefined ? materialConfig.opacity : 1.0,
-        });
+        console.log('Creating baseProps with materialConfig:', materialConfig);
         
-        // Add emissive properties only if they exist
-        if (materialConfig.emissive) {
-            props.emissive = materialConfig.emissive;
-            props.emissiveIntensity = materialConfig.emissiveIntensity !== undefined ? materialConfig.emissiveIntensity : 0.0;
+        const safeColor = color && typeof color === 'string' ? color : '#ffffff';
+        console.log('Using safe color:', safeColor);
+        
+        const rawProps = {
+            color: safeColor,
+            wireframe: Boolean(materialConfig.wireframe),
+            transparent: Boolean(materialConfig.transparent),
+            opacity: typeof materialConfig.opacity === 'number' && !isNaN(materialConfig.opacity) ? materialConfig.opacity : 1.0,
+        };
+        
+        // Add emissive properties only if they exist and are valid
+        if (materialConfig.emissive && typeof materialConfig.emissive === 'string') {
+            rawProps.emissive = materialConfig.emissive;
+            rawProps.emissiveIntensity = typeof materialConfig.emissiveIntensity === 'number' && !isNaN(materialConfig.emissiveIntensity) ? materialConfig.emissiveIntensity : 0.0;
         }
         
+        const props = validateAndClean(rawProps);
+        console.log('Final baseProps:', props);
         return props;
     }, [materialConfig, color]);
 
-    // Get material type with fallback
-    const materialType = materialConfig.materialType || 'standard';
+    // Get material type with fallback and validation
+    const materialType = materialConfig.materialType && typeof materialConfig.materialType === 'string' ? materialConfig.materialType : 'standard';
+    console.log('Using material type:', materialType);
 
-    // Render materials with proper prop validation
+    // Render materials with proper prop validation and error boundaries
     switch (materialType) {
         case 'physical':
             const physicalProps = validateAndClean({
                 ...baseProps,
-                roughness: materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5,
-                metalness: materialConfig.metalness !== undefined ? materialConfig.metalness : 0.0,
-                clearcoat: materialConfig.clearcoat || 0.0,
-                clearcoatRoughness: materialConfig.clearcoatRoughness || 0.0,
-                ior: materialConfig.ior || 1.5,
-                thickness: materialConfig.thickness || 0.0,
-                specularIntensity: materialConfig.specularIntensity || 1.0,
-                specularColor: materialConfig.specularColor || '#ffffff',
+                roughness: typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5,
+                metalness: typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0,
+                clearcoat: typeof materialConfig.clearcoat === 'number' && !isNaN(materialConfig.clearcoat) ? materialConfig.clearcoat : 0.0,
+                clearcoatRoughness: typeof materialConfig.clearcoatRoughness === 'number' && !isNaN(materialConfig.clearcoatRoughness) ? materialConfig.clearcoatRoughness : 0.0,
+                ior: typeof materialConfig.ior === 'number' && !isNaN(materialConfig.ior) ? materialConfig.ior : 1.5,
+                thickness: typeof materialConfig.thickness === 'number' && !isNaN(materialConfig.thickness) ? materialConfig.thickness : 0.0,
+                specularIntensity: typeof materialConfig.specularIntensity === 'number' && !isNaN(materialConfig.specularIntensity) ? materialConfig.specularIntensity : 1.0,
+                specularColor: materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#ffffff',
             });
+            console.log('Rendering meshPhysicalMaterial with props:', physicalProps);
             return <meshPhysicalMaterial {...physicalProps} />;
 
         case 'toon':
             const toonProps = validateAndClean(baseProps);
+            console.log('Rendering meshToonMaterial with props:', toonProps);
             return (
                 <meshToonMaterial
                     {...toonProps}
@@ -142,18 +174,21 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
 
         case 'matcap':
             const matcapProps = validateAndClean(baseProps);
+            console.log('Rendering meshMatcapMaterial with props:', matcapProps);
             return <meshMatcapMaterial {...matcapProps} matcap={matcap} />;
 
         case 'lambert':
             const lambertProps = validateAndClean(baseProps);
+            console.log('Rendering meshLambertMaterial with props:', lambertProps);
             return <meshLambertMaterial {...lambertProps} />;
 
         case 'phong':
             const phongProps = validateAndClean({
                 ...baseProps,
-                shininess: materialConfig.shininess || 30,
-                specular: materialConfig.specularColor || '#111111',
+                shininess: typeof materialConfig.shininess === 'number' && !isNaN(materialConfig.shininess) ? materialConfig.shininess : 30,
+                specular: materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#111111',
             });
+            console.log('Rendering meshPhongMaterial with props:', phongProps);
             return <meshPhongMaterial {...phongProps} />;
 
         case 'normal':
@@ -162,19 +197,22 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
                 transparent: baseProps.transparent,
                 opacity: baseProps.opacity,
             });
+            console.log('Rendering meshNormalMaterial with props:', normalProps);
             return <meshNormalMaterial {...normalProps} />;
 
         case 'basic':
             const basicProps = validateAndClean(baseProps);
+            console.log('Rendering meshBasicMaterial with props:', basicProps);
             return <meshBasicMaterial {...basicProps} />;
 
         case 'standard':
         default:
             const standardProps = validateAndClean({
                 ...baseProps,
-                roughness: materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5,
-                metalness: materialConfig.metalness !== undefined ? materialConfig.metalness : 0.0,
+                roughness: typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5,
+                metalness: typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0,
             });
+            console.log('Rendering meshStandardMaterial with props:', standardProps);
             return <meshStandardMaterial {...standardProps} />;
     }
 };
