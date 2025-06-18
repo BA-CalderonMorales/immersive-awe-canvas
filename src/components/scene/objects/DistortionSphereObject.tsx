@@ -2,7 +2,7 @@
 import { useRef } from 'react';
 import { MeshDistortMaterial } from '@react-three/drei';
 import { MaterialConfig } from '@/types/scene';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import { MathUtils, Mesh } from 'three';
 
 interface DistortionSphereObjectProps {
@@ -13,19 +13,15 @@ interface DistortionSphereObjectProps {
 const DistortionSphereObject = ({ color, materialConfig }: DistortionSphereObjectProps) => {
   const materialRef = useRef<any>(null!);
   const vortexRef = useRef<Mesh>(null!);
-  const { mouse } = useThree();
 
   useFrame((state, delta) => {
     if (materialRef.current) {
-      // Base distortion on distance from center
-      const distortValue = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.5;
-      // Add a time-based wave for continuous motion
+      // Time-based wave for continuous motion only
       const timeDistort = Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
+      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.4 + timeDistort, 0.05);
 
-      materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.4 + distortValue + timeDistort, 0.05);
-
-      const speedValue = Math.abs(mouse.y) * 4 + 2;
-      materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, speedValue, 0.05);
+      // Constant speed for the material
+      materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, 3, 0.05);
     }
     if (vortexRef.current) {
       vortexRef.current.rotation.x += delta * 0.3;

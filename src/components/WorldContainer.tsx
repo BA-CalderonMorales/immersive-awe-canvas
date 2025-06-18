@@ -1,5 +1,5 @@
 
-import { Suspense } from 'react';
+import { Suspense, useState } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -11,11 +11,16 @@ type WorldContainerProps = {
 };
 
 const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
+  const [isDragging, setIsDragging] = useState(false);
+
   return (
     <Canvas 
       camera={{ position: [0, 0, 5], fov: 75 }} 
       onDoubleClick={onToggleLock}
-      style={{ cursor: 'grab' }}
+      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      onPointerDown={() => setIsDragging(true)}
+      onPointerUp={() => setIsDragging(false)}
+      onPointerLeave={() => setIsDragging(false)}
     >
       <Suspense fallback={null}>
         {children}
@@ -27,6 +32,8 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
         autoRotateSpeed={0.5}
         minDistance={2}
         maxDistance={10}
+        onStart={() => setIsDragging(true)}
+        onEnd={() => setIsDragging(false)}
       />
       <EffectComposer>
         <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} height={300} intensity={0.7} />

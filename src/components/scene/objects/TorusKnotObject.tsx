@@ -2,7 +2,7 @@
 import { useMemo, useRef } from 'react';
 import { TorusKnot } from '@react-three/drei';
 import { SceneThemeConfig } from '@/types/scene';
-import { useFrame, useThree } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
@@ -13,7 +13,6 @@ interface TorusKnotObjectProps {
 
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const ref = useRef<THREE.Mesh>(null!);
-  const { viewport, mouse } = useThree();
   const { mainObjectColor, material: materialConfig, torusKnot } = themeConfig;
 
   const args = useMemo(() => [
@@ -27,12 +26,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
 
   useFrame((state, delta) => {
     if (ref.current && !isLocked) {
-      // More responsive mouse following
-      const x = (mouse.x * viewport.width) / 2;
-      const y = (mouse.y * viewport.height) / 2;
-      ref.current.lookAt(x, y, 1);
-
-      // Gentle constant rotation
+      // Gentle constant rotation only
       ref.current.rotation.z += delta * 0.1;
 
       // Add a subtle pulse
