@@ -12,7 +12,11 @@ type WorldContainerProps = {
 
 const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
   return (
-    <Canvas camera={{ position: [0, 0, 5], fov: 75 }} onDoubleClick={onToggleLock}>
+    <Canvas 
+      camera={{ position: [0, 0, 5], fov: 75 }} 
+      onDoubleClick={onToggleLock}
+      style={{ cursor: 'grab' }}
+    >
       <Suspense fallback={null}>
         {children}
       </Suspense>

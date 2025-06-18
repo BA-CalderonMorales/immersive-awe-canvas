@@ -1,22 +1,10 @@
 
 import { Suspense } from 'react';
-import { Canvas, useThree, useFrame } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { Stars, Cloud } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
-import * as THREE from 'three';
 
 const SceneContent = ({ theme }: { theme: 'day' | 'night' }) => {
-  const { camera, mouse } = useThree();
-
-  useFrame(() => {
-    // Parallax effect based on mouse position
-    const targetX = mouse.x * 0.5;
-    const targetY = mouse.y * 0.5;
-    camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.05);
-    camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.05);
-    camera.lookAt(0, 0, 0);
-  });
-
   return (
     <>
       {theme === 'day' && <color attach="background" args={['#87CEEB']} />}
