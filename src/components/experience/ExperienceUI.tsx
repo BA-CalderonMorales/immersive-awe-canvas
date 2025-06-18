@@ -7,7 +7,6 @@ import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
-import KeyboardShortcutsOverlay from "@/components/KeyboardShortcutsOverlay";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -117,13 +116,6 @@ const ExperienceUI = ({
         onUpdateSceneConfig={onUpdateSceneConfig}
         onShowHelp={handleShowHelp}
       />
-
-      {/* Keyboard Shortcuts Overlay - only on desktop/tablet */}
-      {!isMobile && (
-        <KeyboardShortcutsOverlay 
-          theme={theme}
-        />
-      )}
 
       {!isMobile && (
         <div style={{ color: uiColor }} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none">
