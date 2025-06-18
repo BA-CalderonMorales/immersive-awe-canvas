@@ -166,7 +166,12 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     });
 
     if (backgroundConf.type === 'environment') {
-        const presets: EnvironmentPreset[] = ['sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 'city', 'park', 'lobby'];
+        const presets: EnvironmentPreset[] = [
+          'sunset', 'dawn', 'night', 'warehouse', 'forest', 'apartment', 'studio', 
+          'city', 'park', 'lobby', 'canyon', 'cave', 'crystal', 'underground', 
+          'glacier', 'desert', 'ocean', 'space', 'neon', 'industrial', 'temple', 
+          'volcanic', 'arctic', 'mystical', 'ethereal', 'cosmic'
+        ];
         if (backgroundConf.preset === undefined) {
              updateConfig(c => {c[theme].background.preset = 'night'});
         }

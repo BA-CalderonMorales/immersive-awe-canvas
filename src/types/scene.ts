@@ -8,7 +8,7 @@ export type LightConfig = {
   ref?: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
 };
 
-export type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby';
+export type EnvironmentPreset = 'sunset' | 'dawn' | 'night' | 'warehouse' | 'forest' | 'apartment' | 'studio' | 'city' | 'park' | 'lobby' | 'canyon' | 'cave' | 'crystal' | 'underground' | 'glacier' | 'desert' | 'ocean' | 'space' | 'neon' | 'industrial' | 'temple' | 'volcanic' | 'arctic' | 'mystical' | 'ethereal' | 'cosmic';
 
 export type BackgroundConfig = {
   type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment';

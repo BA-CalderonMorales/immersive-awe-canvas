@@ -15,52 +15,111 @@ interface CrystalFragmentProps {
 const getCrystalGeometry = (type: number) => {
   switch (type) {
     case 0:
-      return <octahedronGeometry args={[1, 2]} />;
+      // Sharp prismatic crystal
+      return <coneGeometry args={[0.3, 1.5, 6]} />;
     case 1:
-      return <tetrahedronGeometry args={[1, 1]} />;
+      // Hexagonal prism crystal
+      return <cylinderGeometry args={[0.25, 0.35, 1.2, 6]} />;
     case 2:
-      return <icosahedronGeometry args={[1, 1]} />;
+      // Pointed crystal
+      return <octahedronGeometry args={[0.8, 2]} />;
     case 3:
-      return <dodecahedronGeometry args={[1, 2]} />;
+      // Cluster crystal
+      return <dodecahedronGeometry args={[0.6, 1]} />;
+    case 4:
+      // Needle crystal
+      return <coneGeometry args={[0.15, 2, 4]} />;
+    case 5:
+      // Bipyramidal crystal
+      return <bipyramidGeometry args={[0.4, 1, 6]} />;
     default:
-      return <octahedronGeometry args={[1, 1]} />;
+      return <octahedronGeometry args={[0.6, 1]} />;
+  }
+};
+
+// Custom bipyramid geometry component
+const BipyramidGeometry = ({ args }: { args: [number, number, number] }) => {
+  const [radius, height, segments] = args;
+  return <coneGeometry args={[radius, height, segments]} />;
+};
+
+const getCrystalGeometryComponent = (type: number) => {
+  switch (type) {
+    case 0:
+      return <coneGeometry args={[0.3, 1.5, 6]} />;
+    case 1:
+      return <cylinderGeometry args={[0.25, 0.35, 1.2, 6]} />;
+    case 2:
+      return <octahedronGeometry args={[0.8, 2]} />;
+    case 3:
+      return <dodecahedronGeometry args={[0.6, 1]} />;
+    case 4:
+      return <coneGeometry args={[0.15, 2, 4]} />;
+    case 5:
+      return <BipyramidGeometry args={[0.4, 1, 6]} />;
+    default:
+      return <octahedronGeometry args={[0.6, 1]} />;
   }
 };
 
 const CrystalFragmentComponent = ({ fragment, color, materialConfig, onRef }: CrystalFragmentProps) => {
   const { theme } = useExperience();
 
+  // Vary crystal colors based on cluster for more natural look
+  const clusterColors = [color, color, `hsl(${(parseInt(color.slice(1), 16) % 360 + 20) % 360}, 70%, 60%)`, `hsl(${(parseInt(color.slice(1), 16) % 360 + 40) % 360}, 70%, 55%)`];
+  const crystalColor = clusterColors[fragment.cluster] || color;
+
   return (
     <group
       ref={onRef}
       position={fragment.position}
+      scale={[fragment.scale, fragment.scale * (1.2 + Math.sin(fragment.phaseOffset) * 0.3), fragment.scale]}
     >
-      {/* Main crystal fragment */}
+      {/* Main crystal formation */}
       <mesh>
-        {getCrystalGeometry(fragment.geometry)}
+        {getCrystalGeometryComponent(fragment.geometry)}
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
             transparent: true,
-            opacity: 0.7,
-            emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.1 : 0.3
+            opacity: 0.8 + Math.sin(fragment.phaseOffset) * 0.1,
+            emissive: crystalColor,
+            emissiveIntensity: theme === 'day' ? 0.2 : 0.5,
+            roughness: 0.1,
+            metalness: 0.1
           }}
-          color={color}
+          color={crystalColor}
         />
       </mesh>
       
-      {/* Energy aura around fragment */}
-      <mesh scale={1.5}>
-        <octahedronGeometry args={[1, 0]} />
+      {/* Crystal inner glow */}
+      <mesh scale={0.7}>
+        <octahedronGeometry args={[0.5, 0]} />
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
             transparent: true,
-            opacity: theme === 'day' ? 0.05 : 0.15,
-            wireframe: true
+            opacity: theme === 'day' ? 0.1 : 0.3,
+            emissive: crystalColor,
+            emissiveIntensity: theme === 'day' ? 0.5 : 1.0,
+            wireframe: false
           }}
-          color={color}
+          color={crystalColor}
+        />
+      </mesh>
+
+      {/* Tiny sparkle effects */}
+      <mesh position={[0, fragment.scale * 0.8, 0]} scale={0.1}>
+        <sphereGeometry args={[1, 4, 4]} />
+        <DynamicMaterial
+          materialConfig={{
+            ...materialConfig,
+            transparent: true,
+            opacity: theme === 'day' ? 0.6 : 0.9,
+            emissive: crystalColor,
+            emissiveIntensity: theme === 'day' ? 1.0 : 2.0
+          }}
+          color={crystalColor}
         />
       </mesh>
     </group>
