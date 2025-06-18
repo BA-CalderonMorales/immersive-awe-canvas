@@ -12,6 +12,17 @@ interface DynamicMaterialProps {
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const { gl } = useThree();
 
+    // Helper function to filter out undefined values
+    const filterUndefined = (obj: Record<string, any>) => {
+        const filtered: Record<string, any> = {};
+        Object.keys(obj).forEach(key => {
+            if (obj[key] !== undefined) {
+                filtered[key] = obj[key];
+            }
+        });
+        return filtered;
+    };
+
     // Re-usable gradient maps for toon material
     const fiveTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 5, 1, THREE.RedFormat, THREE.UnsignedByteType);
     fiveTone.minFilter = THREE.NearestFilter;
@@ -31,27 +42,29 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     
     const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
-    const commonProps = {
+    const commonProps = filterUndefined({
         color: color,
         wireframe: materialConfig.wireframe,
         emissive: materialConfig.emissive,
         emissiveIntensity: materialConfig.emissiveIntensity,
         transparent: materialConfig.transparent,
         opacity: materialConfig.opacity,
-    };
+    });
 
     switch (materialConfig.materialType) {
         case 'physical':
             return <meshPhysicalMaterial
                 {...commonProps}
-                roughness={materialConfig.roughness}
-                metalness={materialConfig.metalness}
-                clearcoat={materialConfig.clearcoat}
-                clearcoatRoughness={materialConfig.clearcoatRoughness}
-                ior={materialConfig.ior}
-                thickness={materialConfig.thickness}
-                specularIntensity={materialConfig.specularIntensity}
-                specularColor={materialConfig.specularColor}
+                {...filterUndefined({
+                    roughness: materialConfig.roughness,
+                    metalness: materialConfig.metalness,
+                    clearcoat: materialConfig.clearcoat,
+                    clearcoatRoughness: materialConfig.clearcoatRoughness,
+                    ior: materialConfig.ior,
+                    thickness: materialConfig.thickness,
+                    specularIntensity: materialConfig.specularIntensity,
+                    specularColor: materialConfig.specularColor,
+                })}
             />;
         case 'toon':
             return <meshToonMaterial
@@ -63,7 +76,13 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         case 'lambert':
             return <meshLambertMaterial {...commonProps} />;
         case 'phong':
-            return <meshPhongMaterial {...commonProps} shininess={materialConfig.shininess} specular={materialConfig.specularColor} />;
+            return <meshPhongMaterial 
+                {...commonProps} 
+                {...filterUndefined({
+                    shininess: materialConfig.shininess,
+                    specular: materialConfig.specularColor,
+                })}
+            />;
         case 'normal':
             return <meshNormalMaterial {...commonProps} />;
         case 'basic':
@@ -72,8 +91,10 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         default:
             return <meshStandardMaterial
                 {...commonProps}
-                roughness={materialConfig.roughness}
-                metalness={materialConfig.metalness}
+                {...filterUndefined({
+                    roughness: materialConfig.roughness,
+                    metalness: materialConfig.metalness,
+                })}
             />;
     }
 };
