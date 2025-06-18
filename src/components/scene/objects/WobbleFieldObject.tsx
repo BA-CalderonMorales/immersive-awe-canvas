@@ -24,8 +24,8 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     const t = time * heartbeatSpeed;
     
     // Create double-beat pattern like a real heartbeat (lub-dub)
-    const beat1 = Math.exp(-((t % 2) - 0.2) * (t % 2) - 0.2) * 20) * 0.3;
-    const beat2 = Math.exp(-((t % 2) - 0.5) * (t % 2) - 0.5) * 25) * 0.2;
+    const beat1 = Math.exp(-((t % 2) - 0.2) * ((t % 2) - 0.2) * 20) * 0.3;
+    const beat2 = Math.exp(-((t % 2) - 0.5) * ((t % 2) - 0.5) * 25) * 0.2;
     const baseline = Math.sin(t * Math.PI) * 0.1;
     
     return Math.max(0, beat1 + beat2 + baseline) + 0.8; // Ensure positive with baseline
