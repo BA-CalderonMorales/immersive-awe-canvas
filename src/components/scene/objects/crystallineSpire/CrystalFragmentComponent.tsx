@@ -12,7 +12,7 @@ interface CrystalFragmentProps {
   onRef: (ref: Group | null) => void;
 }
 
-const getCrystalGeometry = (type: number) => {
+const getCrystalGeometryComponent = (type: number) => {
   switch (type) {
     case 0:
       // Sharp prismatic crystal
@@ -30,33 +30,8 @@ const getCrystalGeometry = (type: number) => {
       // Needle crystal
       return <coneGeometry args={[0.15, 2, 4]} />;
     case 5:
-      // Bipyramidal crystal
-      return <bipyramidGeometry args={[0.4, 1, 6]} />;
-    default:
-      return <octahedronGeometry args={[0.6, 1]} />;
-  }
-};
-
-// Custom bipyramid geometry component
-const BipyramidGeometry = ({ args }: { args: [number, number, number] }) => {
-  const [radius, height, segments] = args;
-  return <coneGeometry args={[radius, height, segments]} />;
-};
-
-const getCrystalGeometryComponent = (type: number) => {
-  switch (type) {
-    case 0:
-      return <coneGeometry args={[0.3, 1.5, 6]} />;
-    case 1:
-      return <cylinderGeometry args={[0.25, 0.35, 1.2, 6]} />;
-    case 2:
-      return <octahedronGeometry args={[0.8, 2]} />;
-    case 3:
-      return <dodecahedronGeometry args={[0.6, 1]} />;
-    case 4:
-      return <coneGeometry args={[0.15, 2, 4]} />;
-    case 5:
-      return <BipyramidGeometry args={[0.4, 1, 6]} />;
+      // Bipyramidal crystal (using octahedron for double-pyramid shape)
+      return <octahedronGeometry args={[0.4, 1]} />;
     default:
       return <octahedronGeometry args={[0.6, 1]} />;
   }
