@@ -1,8 +1,12 @@
 
 import { Sky, Stars, Sparkles, Cloud, Environment } from '@react-three/drei';
 import { BackgroundConfig, ExtraConfig } from '@/types/scene';
+import VoidBackground from './effects/VoidBackground';
+import { useExperience } from '@/hooks/useExperience';
 
 const DynamicBackground = ({ background, extras }: { background: BackgroundConfig, extras?: ExtraConfig[] }) => {
+  const { theme } = useExperience();
+  
   switch (background.type) {
     case 'sky':
       // @ts-ignore
@@ -11,8 +15,13 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
       // @ts-ignore
       return <Stars {...background} />;
     case 'sparkles':
-        // @ts-ignore
-        return <Sparkles {...background} />;
+      return (
+        <>
+          <VoidBackground theme={theme} />
+          {/* @ts-ignore */}
+          <Sparkles {...background} />
+        </>
+      );
     case 'color':
         return <color attach="background" args={[background.color || '#000000']} />;
     case 'fog':
