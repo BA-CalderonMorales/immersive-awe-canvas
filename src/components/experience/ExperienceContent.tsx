@@ -97,6 +97,7 @@ const ExperienceContent = () => {
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
       toggleLock: toggleObjectLock,
+      ...((!isUiHidden && !isMobile) && { toggleShortcuts: () => {} }) // Empty function when UI is visible but handled by ExperienceUI
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,
   });

@@ -12,6 +12,7 @@ interface HotkeyCallbacks {
   copyCode: () => void;
   toggleUi: () => void;
   toggleLock: () => void;
+  toggleShortcuts?: () => void;
 }
 
 interface useExperienceHotkeysProps {
@@ -100,6 +101,13 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
             event.preventDefault();
             callbacks.toggleLock();
             logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
+          }
+          break;
+        case 'Backquote':
+          if (!isTyping && callbacks.toggleShortcuts) {
+            event.preventDefault();
+            callbacks.toggleShortcuts();
+            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
           }
           break;
       }
