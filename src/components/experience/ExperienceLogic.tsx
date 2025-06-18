@@ -1,3 +1,4 @@
+
 import { useMemo } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
@@ -7,8 +8,6 @@ import { useExperienceState } from "@/hooks/useExperienceState";
 import { useExperienceTransitions } from "@/hooks/useExperienceTransitions";
 import { useExperienceCallbacks } from "@/hooks/useExperienceCallbacks";
 import { useExperienceEffects } from "@/hooks/useExperienceEffects";
-import { useKeyboardDebug } from "@/hooks/useKeyboardDebug";
-import { debugLogger } from "@/lib/debugLogs";
 import ExperienceUI from "./ExperienceUI";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceHotkeys from "./ExperienceHotkeys";
@@ -16,9 +15,6 @@ import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
 
 const ExperienceLogic = () => {
-  // Enable keyboard debugging
-  useKeyboardDebug(true);
-
   const {
     worlds,
     isLoading,
@@ -104,14 +100,6 @@ const ExperienceLogic = () => {
 
   if (!isSceneConfig(worldData.scene_config)) {
      return <LoadingOverlay message="World data is incomplete or corrupted." />;
-  }
-
-  // Log when component renders
-  console.log('🔍 ExperienceLogic rendered, debug logging enabled');
-  
-  // Add a way to print debug summary in console
-  if (typeof window !== 'undefined') {
-    (window as any).printDebugSummary = () => debugLogger.printSummary();
   }
 
   return (
