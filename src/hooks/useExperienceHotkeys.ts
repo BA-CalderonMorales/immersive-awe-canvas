@@ -1,3 +1,4 @@
+
 import { useEffect } from 'react';
 import { logEvent } from "@/lib/logger";
 
@@ -11,7 +12,7 @@ interface HotkeyCallbacks {
   copyCode: () => void;
   toggleUi: () => void;
   toggleLock: () => void;
-  toggleShortcuts?: () => void;
+  toggleShortcuts: () => void;
 }
 
 interface useExperienceHotkeysProps {
@@ -120,11 +121,9 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
         
         case 'KeyM':
           if (!isTyping) {
-            if (callbacks.toggleShortcuts) {
-              event.preventDefault();
-              callbacks.toggleShortcuts();
-              logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
-            }
+            event.preventDefault();
+            callbacks.toggleShortcuts();
+            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
           }
           break;
       

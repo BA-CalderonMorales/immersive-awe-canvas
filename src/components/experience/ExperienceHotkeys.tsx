@@ -9,7 +9,7 @@ interface ExperienceHotkeysProps {
   handleGoHome: () => void;
   handleCopyCode: () => void;
   toggleObjectLock: () => void;
-  handleToggleShortcuts?: () => void;
+  handleToggleShortcuts: () => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsHelpOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean | ((prev: boolean) => boolean)) => void;

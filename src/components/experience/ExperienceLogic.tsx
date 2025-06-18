@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
@@ -197,7 +196,7 @@ const ExperienceLogic = () => {
         handleGoHome={handleGoHome}
         handleCopyCode={handleCopyCode}
         toggleObjectLock={toggleObjectLock}
-        handleToggleShortcuts={!isMobile ? handleToggleShortcuts : undefined}
+        handleToggleShortcuts={handleToggleShortcuts}
         setIsSearchOpen={setIsSearchOpen}
         setIsHelpOpen={setIsHelpOpen}
         setIsSettingsOpen={setIsSettingsOpen}
