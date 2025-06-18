@@ -2,7 +2,7 @@
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Group } from 'three';
+import { Group, Vector3 } from 'three';
 import { useExperience } from '@/hooks/useExperience';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
@@ -13,261 +13,347 @@ interface CrystallineSpireObjectProps {
 }
 
 const CrystallineSpireObject = ({ color, materialConfig, isLocked }: CrystallineSpireObjectProps) => {
-  const groupRef = useRef<Group>(null!);
-  const swarmRefs = useRef<Group[]>([]);
+  const mainGroupRef = useRef<Group>(null!);
+  const spireRefs = useRef<Group[]>([]);
+  const orbitalRefs = useRef<Group[]>([]);
   const { mouse } = useThree();
   const { theme } = useExperience();
   const timeRef = useRef(0);
 
-  // Generate crystal swarm configuration
-  const crystalSwarmConfig = useMemo(() => {
-    const swarm = [];
-    for (let i = 0; i < 16; i++) {
-      const angle = (i / 16) * Math.PI * 2;
-      const radius = 6 + Math.random() * 8;
-      const height = (Math.random() - 0.5) * 12;
+  // Generate recursive spire formations
+  const spireFormations = useMemo(() => {
+    const formations = [];
+    
+    // Main central spires with different heights and rotations
+    for (let level = 0; level < 5; level++) {
+      const height = 8 - level * 1.2;
+      const radius = 0.8 + level * 0.3;
+      const segments = 8 - level;
       
-      swarm.push({
-        position: [
-          Math.cos(angle) * radius,
-          height,
-          Math.sin(angle) * radius
-        ] as [number, number, number],
-        scale: 0.2 + Math.random() * 0.3,
-        speed: 0.6 + Math.random() * 0.4,
-        geometry: Math.floor(Math.random() * 3), // 0: octahedron, 1: diamond, 2: crystal
-        phaseOffset: Math.random() * Math.PI * 2,
-        orbitSpeed: 0.08 + Math.random() * 0.12
+      formations.push({
+        position: [0, level * 1.5, 0] as [number, number, number],
+        height,
+        radius,
+        segments,
+        rotation: level * Math.PI / 4,
+        scale: 1 - level * 0.15,
+        type: 'main'
       });
     }
-    return swarm;
+    
+    // Recursive satellite spires
+    for (let ring = 0; ring < 3; ring++) {
+      const ringRadius = 4 + ring * 2;
+      const spireCount = 6 + ring * 2;
+      
+      for (let i = 0; i < spireCount; i++) {
+        const angle = (i / spireCount) * Math.PI * 2;
+        const x = Math.cos(angle) * ringRadius;
+        const z = Math.sin(angle) * ringRadius;
+        const y = Math.sin(angle * 3) * 0.5;
+        
+        formations.push({
+          position: [x, y, z] as [number, number, number],
+          height: 3 - ring * 0.5,
+          radius: 0.3 + ring * 0.1,
+          segments: 6,
+          rotation: angle + ring * 0.5,
+          scale: 0.7 - ring * 0.2,
+          type: 'satellite',
+          orbitSpeed: 0.1 + ring * 0.05,
+          phaseOffset: i * 0.3
+        });
+      }
+    }
+    
+    return formations;
   }, []);
 
-  // Ultra-smooth crystalline pulse function
-  const getCrystallinePulse = (time: number) => {
-    const pulseSpeed = 0.6; // Slower, more mystical speed
-    const t = time * pulseSpeed;
+  // Generate floating crystal fragments
+  const crystalFragments = useMemo(() => {
+    const fragments = [];
     
-    // Create smooth crystalline energy pulses
-    const mainPulse = Math.exp(-Math.pow((t % 4) - 1.2, 2) * 6) * 0.5; // Main energy surge
-    const echoPulse = Math.exp(-Math.pow((t % 4) - 2.8, 2) * 8) * 0.3; // Echo pulse
-    const ambientFlow = Math.sin(t * Math.PI * 0.4) * 0.12; // Gentle ambient flow
-    const crystallineResonance = Math.sin(t * Math.PI * 0.7) * 0.08; // Higher frequency resonance
+    for (let i = 0; i < 24; i++) {
+      const radius = 8 + Math.random() * 6;
+      const angle = (i / 24) * Math.PI * 2;
+      const height = (Math.random() - 0.5) * 8;
+      
+      fragments.push({
+        position: [
+          Math.cos(angle) * radius + (Math.random() - 0.5) * 2,
+          height,
+          Math.sin(angle) * radius + (Math.random() - 0.5) * 2
+        ] as [number, number, number],
+        scale: 0.3 + Math.random() * 0.4,
+        geometry: Math.floor(Math.random() * 4), // Different crystal shapes
+        rotationSpeed: [
+          (Math.random() - 0.5) * 0.02,
+          (Math.random() - 0.5) * 0.02,
+          (Math.random() - 0.5) * 0.02
+        ] as [number, number, number],
+        orbitRadius: radius,
+        orbitSpeed: 0.05 + Math.random() * 0.1,
+        phaseOffset: Math.random() * Math.PI * 2,
+        floatOffset: Math.random() * Math.PI * 2
+      });
+    }
     
-    return Math.max(0.75, mainPulse + echoPulse + ambientFlow + crystallineResonance + 0.9); // Smooth positive range
+    return fragments;
+  }, []);
+
+  // Enhanced energy pulse function with recursive patterns
+  const getRecursivePulse = (time: number, depth: number = 0) => {
+    const baseFreq = 0.8;
+    const pulse = Math.sin(time * baseFreq) * 0.5 + 0.5;
+    
+    if (depth > 0) {
+      const subPulse = getRecursivePulse(time * 1.618, depth - 1) * 0.3;
+      return pulse + subPulse;
+    }
+    
+    return pulse;
   };
 
   useFrame((state) => {
     if (isLocked) return;
     
     timeRef.current = state.clock.getElapsedTime();
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.2;
     
-    // Mouse influence creates energy field distortion
-    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.18;
-    
-    if (groupRef.current) {
-      // Very gentle rotation for crystalline formation
-      groupRef.current.rotation.y += 0.0015;
+    if (mainGroupRef.current) {
+      // Slow mystical rotation
+      mainGroupRef.current.rotation.y += 0.002;
       
-      // Smooth crystalline pulse affects the entire structure
-      const crystalPulse = getCrystallinePulse(timeRef.current);
-      const fieldPulse = crystalPulse * (1 + mouseInfluence * 0.25);
-      groupRef.current.scale.setScalar(fieldPulse);
+      // Recursive pulse effect
+      const mainPulse = getRecursivePulse(timeRef.current, 2);
+      const scaleFactor = 0.8 + mainPulse * 0.3 + mouseInfluence * 0.2;
+      mainGroupRef.current.scale.setScalar(scaleFactor);
       
-      // Subtle crystalline resonance motion
-      const resonance = Math.sin(timeRef.current * 0.2) * 0.04;
-      groupRef.current.rotation.x = resonance;
-      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.15) * 0.025;
+      // Subtle breathing motion
+      mainGroupRef.current.position.y = Math.sin(timeRef.current * 0.3) * 0.1;
     }
 
-    // Animate crystal swarm elements
-    swarmRefs.current.forEach((swarmRef, index) => {
-      if (!swarmRef) return;
+    // Animate spire formations
+    spireRefs.current.forEach((spireRef, index) => {
+      if (!spireRef) return;
       
-      const config = crystalSwarmConfig[index];
-      const swarmPulse = getCrystallinePulse(timeRef.current + config.phaseOffset);
+      const formation = spireFormations[index];
+      if (!formation) return;
       
-      // Orbital motion around the spire
-      const orbitAngle = timeRef.current * config.orbitSpeed + config.phaseOffset;
-      const baseRadius = Math.sqrt(config.position[0] ** 2 + config.position[2] ** 2);
+      if (formation.type === 'satellite') {
+        // Orbital motion for satellite spires
+        const orbitAngle = timeRef.current * formation.orbitSpeed + formation.phaseOffset;
+        const baseRadius = Math.sqrt(formation.position[0] ** 2 + formation.position[2] ** 2);
+        
+        spireRef.position.x = Math.cos(orbitAngle) * baseRadius;
+        spireRef.position.z = Math.sin(orbitAngle) * baseRadius;
+        spireRef.position.y = formation.position[1] + Math.sin(timeRef.current * 0.4 + formation.phaseOffset) * 0.3;
+      }
       
-      swarmRef.position.x = Math.cos(orbitAngle) * baseRadius;
-      swarmRef.position.z = Math.sin(orbitAngle) * baseRadius;
-      swarmRef.position.y = config.position[1] + Math.sin(timeRef.current * 0.25 + config.phaseOffset) * 0.8;
+      // Individual spire pulse
+      const spireP = getRecursivePulse(timeRef.current + index * 0.2, 1);
+      const spireScale = formation.scale * (0.7 + spireP * 0.4);
+      spireRef.scale.setScalar(spireScale);
       
-      // Individual crystalline pulse scaling
-      const crystalScale = swarmPulse * config.scale * (0.7 + mouseInfluence * 0.4);
-      swarmRef.scale.setScalar(crystalScale);
+      // Rotation animation
+      spireRef.rotation.x = formation.rotation + timeRef.current * 0.1;
+      spireRef.rotation.z = Math.sin(timeRef.current * 0.15 + index) * 0.1;
+    });
+
+    // Animate crystal fragments
+    orbitalRefs.current.forEach((orbitalRef, index) => {
+      if (!orbitalRef) return;
       
-      // Individual crystal rotation
-      swarmRef.rotation.x = timeRef.current * 0.15 + config.phaseOffset;
-      swarmRef.rotation.y = timeRef.current * 0.18 + config.phaseOffset * 0.6;
-      swarmRef.rotation.z = timeRef.current * 0.12 + config.phaseOffset * 0.4;
+      const fragment = crystalFragments[index];
+      if (!fragment) return;
+      
+      // Orbital motion
+      const orbitAngle = timeRef.current * fragment.orbitSpeed + fragment.phaseOffset;
+      orbitalRef.position.x = Math.cos(orbitAngle) * fragment.orbitRadius;
+      orbitalRef.position.z = Math.sin(orbitAngle) * fragment.orbitRadius;
+      
+      // Floating motion
+      orbitalRef.position.y = fragment.position[1] + 
+        Math.sin(timeRef.current * 0.5 + fragment.floatOffset) * 1.2;
+      
+      // Individual rotation
+      orbitalRef.rotation.x += fragment.rotationSpeed[0];
+      orbitalRef.rotation.y += fragment.rotationSpeed[1];
+      orbitalRef.rotation.z += fragment.rotationSpeed[2];
+      
+      // Pulse scaling
+      const fragmentPulse = getRecursivePulse(timeRef.current + fragment.phaseOffset, 0);
+      orbitalRef.scale.setScalar(fragment.scale * (0.8 + fragmentPulse * 0.3));
     });
   });
 
   const getCrystalGeometry = (type: number) => {
     switch (type) {
       case 0:
-        return <octahedronGeometry args={[1, 0]} />;
+        return <octahedronGeometry args={[1, 2]} />;
       case 1:
-        return <coneGeometry args={[0.6, 2, 8]} />;
+        return <tetrahedronGeometry args={[1, 1]} />;
       case 2:
-        return <cylinderGeometry args={[0.3, 0.8, 1.8, 6]} />;
+        return <icosahedronGeometry args={[1, 1]} />;
+      case 3:
+        return <dodecahedronGeometry args={[1, 2]} />;
       default:
-        return <octahedronGeometry args={[1, 0]} />;
+        return <octahedronGeometry args={[1, 1]} />;
     }
   };
 
   return (
     <>
       {/* Main Crystalline Spire Formation */}
-      <group ref={groupRef}>
-        {/* Central Spire Core */}
-        <mesh scale={1.0} position={[0, 0, 0]} rotation={[0, 0, 0]}>
-          <coneGeometry args={[1.5, 6, 8]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: 0.85,
-              emissive: color,
-              emissiveIntensity: theme === 'day' ? 0.3 : 0.5
-            }}
-            color={color}
-          />
-        </mesh>
+      <group ref={mainGroupRef}>
         
-        {/* Secondary Spire Layer */}
-        <mesh scale={1.2} position={[0, 1, 0]} rotation={[0, Math.PI / 8, 0]}>
-          <coneGeometry args={[1.2, 4.5, 6]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.4 : 0.6,
-              wireframe: true
+        {/* Recursive Spire Structures */}
+        {spireFormations.map((formation, index) => (
+          <group
+            key={`spire-${index}`}
+            ref={(ref) => {
+              if (ref) spireRefs.current[index] = ref;
             }}
-            color={color}
-          />
-        </mesh>
+            position={formation.position}
+            rotation={[0, formation.rotation, 0]}
+          >
+            {/* Main spire body - crystalline tower */}
+            <mesh position={[0, formation.height / 2, 0]}>
+              <cylinderGeometry args={[formation.radius * 0.3, formation.radius, formation.height, formation.segments]} />
+              <DynamicMaterial
+                materialConfig={{
+                  ...materialConfig,
+                  transparent: true,
+                  opacity: formation.type === 'main' ? 0.8 : 0.6,
+                  emissive: color,
+                  emissiveIntensity: theme === 'day' ? 0.2 : 0.4
+                }}
+                color={color}
+              />
+            </mesh>
+            
+            {/* Spire tip - sharp crystal point */}
+            <mesh position={[0, formation.height, 0]}>
+              <coneGeometry args={[formation.radius * 0.4, formation.height * 0.3, formation.segments]} />
+              <DynamicMaterial
+                materialConfig={{
+                  ...materialConfig,
+                  transparent: true,
+                  opacity: 0.9,
+                  emissive: color,
+                  emissiveIntensity: theme === 'day' ? 0.3 : 0.6
+                }}
+                color={color}
+              />
+            </mesh>
+            
+            {/* Crystal formation rings */}
+            {[0.3, 0.6, 0.9].map((heightRatio, ringIndex) => (
+              <mesh
+                key={`ring-${ringIndex}`}
+                position={[0, formation.height * heightRatio, 0]}
+                rotation={[0, ringIndex * Math.PI / 3, 0]}
+              >
+                <torusGeometry args={[formation.radius * 1.2, formation.radius * 0.1, 8, 16]} />
+                <DynamicMaterial
+                  materialConfig={{
+                    ...materialConfig,
+                    transparent: true,
+                    opacity: theme === 'day' ? 0.2 : 0.4,
+                    wireframe: true
+                  }}
+                  color={color}
+                />
+              </mesh>
+            ))}
+            
+            {/* Base crystal cluster */}
+            {formation.type === 'main' && (
+              <group position={[0, -formation.height * 0.1, 0]}>
+                {Array.from({ length: formation.segments }, (_, i) => {
+                  const angle = (i / formation.segments) * Math.PI * 2;
+                  const x = Math.cos(angle) * formation.radius * 0.8;
+                  const z = Math.sin(angle) * formation.radius * 0.8;
+                  return (
+                    <mesh key={i} position={[x, 0, z]} rotation={[0, angle, 0]}>
+                      <coneGeometry args={[formation.radius * 0.2, formation.height * 0.4, 6]} />
+                      <DynamicMaterial
+                        materialConfig={{
+                          ...materialConfig,
+                          transparent: true,
+                          opacity: 0.6,
+                          wireframe: true
+                        }}
+                        color={color}
+                      />
+                    </mesh>
+                  );
+                })}
+              </group>
+            )}
+          </group>
+        ))}
         
-        {/* Tertiary Crystal Formation */}
-        <mesh scale={1.5} position={[0, -0.5, 0]} rotation={[0, Math.PI / 6, 0]}>
-          <coneGeometry args={[1.0, 3.5, 6]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.25 : 0.4,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
-        
-        {/* Base Crystal Platform */}
-        <mesh scale={2.0} position={[0, -2, 0]}>
-          <cylinderGeometry args={[2, 1.5, 1, 8]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.2 : 0.35,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
-        
-        {/* Energy Field Rings */}
-        <mesh scale={3.2} position={[0, 0, 0]}>
-          <torusGeometry args={[2.5, 0.15, 16, 32]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.15 : 0.25,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
-        
-        <mesh scale={4.5} position={[0, 1.5, 0]} rotation={[Math.PI / 4, 0, 0]}>
-          <torusGeometry args={[2.8, 0.12, 12, 24]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.1 : 0.18,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
-        
-        {/* Outer Resonance Field */}
-        <mesh scale={6.0} position={[0, -1, 0]} rotation={[0, 0, Math.PI / 6]}>
-          <torusGeometry args={[3.2, 0.08, 8, 16]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.06 : 0.12,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
-        
-        {/* Extended Energy Aura */}
-        <mesh scale={8.0} position={[0, 0.5, 0]}>
-          <torusGeometry args={[3.8, 0.05, 6, 12]} />
-          <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.03 : 0.08,
-              wireframe: true
-            }}
-            color={color}
-          />
-        </mesh>
+        {/* Energy Field Web - connecting all spires */}
+        <group>
+          {Array.from({ length: 8 }, (_, i) => {
+            const angle = (i / 8) * Math.PI * 2;
+            const radius = 12;
+            return (
+              <mesh
+                key={`energy-web-${i}`}
+                position={[Math.cos(angle) * radius, 0, Math.sin(angle) * radius]}
+                rotation={[0, angle, Math.PI / 2]}
+              >
+                <cylinderGeometry args={[0.02, 0.02, radius * 2, 8]} />
+                <DynamicMaterial
+                  materialConfig={{
+                    ...materialConfig,
+                    transparent: true,
+                    opacity: theme === 'day' ? 0.1 : 0.2,
+                    emissive: color,
+                    emissiveIntensity: 0.8
+                  }}
+                  color={color}
+                />
+              </mesh>
+            );
+          })}
+        </group>
       </group>
 
-      {/* Swarm of Crystal Satellites */}
-      {crystalSwarmConfig.map((config, index) => (
+      {/* Floating Crystal Fragments */}
+      {crystalFragments.map((fragment, index) => (
         <group
-          key={index}
+          key={`fragment-${index}`}
           ref={(ref) => {
-            if (ref) swarmRefs.current[index] = ref;
+            if (ref) orbitalRefs.current[index] = ref;
           }}
-          position={config.position}
+          position={fragment.position}
         >
-          {/* Core crystal satellite */}
+          {/* Main crystal fragment */}
           <mesh>
-            {getCrystalGeometry(config.geometry)}
+            {getCrystalGeometry(fragment.geometry)}
             <DynamicMaterial
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
                 opacity: 0.7,
                 emissive: color,
-                emissiveIntensity: theme === 'day' ? 0.15 : 0.25
+                emissiveIntensity: theme === 'day' ? 0.1 : 0.3
               }}
               color={color}
             />
           </mesh>
           
-          {/* Energy field around crystal */}
-          <mesh scale={1.8}>
+          {/* Energy aura around fragment */}
+          <mesh scale={1.5}>
             <octahedronGeometry args={[1, 0]} />
             <DynamicMaterial
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
-                opacity: theme === 'day' ? 0.12 : 0.2,
+                opacity: theme === 'day' ? 0.05 : 0.15,
                 wireframe: true
               }}
               color={color}
