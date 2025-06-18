@@ -18,17 +18,18 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   const { theme } = useExperience();
   const timeRef = useRef(0);
 
-  // Heartbeat function - creates a rhythmic pulse like a heartbeat
+  // Smooth, eerie heartbeat function - creates a rhythmic pulse like a living organism
   const getHeartbeatPulse = (time: number) => {
-    const heartbeatSpeed = 1.2; // BPM-like speed
+    const heartbeatSpeed = 0.8; // Slower, more eerie speed
     const t = time * heartbeatSpeed;
     
-    // Create double-beat pattern like a real heartbeat (lub-dub)
-    const beat1 = Math.exp(-((t % 2) - 0.2) * ((t % 2) - 0.2) * 20) * 0.3;
-    const beat2 = Math.exp(-((t % 2) - 0.5) * ((t % 2) - 0.5) * 25) * 0.2;
-    const baseline = Math.sin(t * Math.PI) * 0.1;
+    // Create smooth double-beat pattern with organic feel
+    const beat1 = Math.exp(-Math.pow((t % 3) - 0.3, 2) * 8) * 0.4; // Primary beat
+    const beat2 = Math.exp(-Math.pow((t % 3) - 0.8, 2) * 12) * 0.25; // Secondary beat
+    const organicFlow = Math.sin(t * Math.PI * 0.5) * 0.15; // Smooth baseline flow
+    const breathing = Math.sin(t * Math.PI * 0.3) * 0.08; // Gentle breathing
     
-    return Math.max(0, beat1 + beat2 + baseline) + 0.8; // Ensure positive with baseline
+    return Math.max(0.7, beat1 + beat2 + organicFlow + breathing + 0.85); // Smooth positive range
   };
 
   useFrame((state) => {
@@ -37,75 +38,114 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     timeRef.current = state.clock.getElapsedTime();
     
     // Mouse influence creates gentle field distortion
-    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.2;
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.15;
     
     if (groupRef.current) {
-      // Gentle rotation for the entire field
-      groupRef.current.rotation.y += 0.002;
+      // Very gentle rotation for the entire field
+      groupRef.current.rotation.y += 0.001;
       
-      // Heartbeat pulse affects the entire field
+      // Smooth heartbeat pulse affects the entire field
       const heartbeat = getHeartbeatPulse(timeRef.current);
-      const fieldPulse = heartbeat * (1 + mouseInfluence * 0.3);
+      const fieldPulse = heartbeat * (1 + mouseInfluence * 0.2);
       groupRef.current.scale.setScalar(fieldPulse);
       
-      // Subtle breathing motion
-      const breathe = Math.sin(timeRef.current * 0.3) * 0.05;
+      // Subtle organic breathing motion
+      const breathe = Math.sin(timeRef.current * 0.25) * 0.03;
       groupRef.current.rotation.x = breathe;
-      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.25) * 0.03;
+      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.18) * 0.02;
     }
   });
 
   return (
     <group ref={groupRef}>
-      {/* Central Wobble Core - main heartbeat */}
-      <mesh scale={0.8} position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1, 3]} />
+      {/* Central Core - the heart of the organism */}
+      <mesh scale={1.0} position={[0, 0, 0]}>
+        <icosahedronGeometry args={[1.2, 4]} />
         <MeshWobbleMaterial
           color={color}
-          speed={1.8} // Faster speed for more alive feeling
-          factor={0.6} // Increased factor for more pronounced wobble
+          speed={1.2} 
+          factor={0.4} 
           transparent
-          opacity={0.8}
+          opacity={0.9}
           emissive={color}
-          emissiveIntensity={theme === 'day' ? 0.15 : 0.3}
+          emissiveIntensity={theme === 'day' ? 0.2 : 0.4}
         />
       </mesh>
       
-      {/* Inner Wobble Field Layer - synchronized heartbeat */}
-      <mesh scale={1.2}>
-        <sphereGeometry args={[1, 32, 24]} />
+      {/* Inner Energy Layer */}
+      <mesh scale={1.8}>
+        <sphereGeometry args={[1.2, 32, 24]} />
         <MeshWobbleMaterial
           color={color}
-          speed={1.4} // Slightly different speed for layered effect
-          factor={0.3}
+          speed={1.0}
+          factor={0.25}
           transparent
-          opacity={theme === 'day' ? 0.2 : 0.35}
+          opacity={theme === 'day' ? 0.25 : 0.4}
           wireframe
         />
       </mesh>
       
-      {/* Outer Wobble Shell - gentle heartbeat resonance */}
-      <mesh scale={1.6}>
-        <sphereGeometry args={[1, 24, 16]} />
+      {/* Mid Energy Shell */}
+      <mesh scale={2.6}>
+        <sphereGeometry args={[1.2, 28, 20]} />
         <MeshWobbleMaterial
           color={color}
-          speed={0.8} // Slower, more gentle wobble
-          factor={0.15}
+          speed={0.7}
+          factor={0.18}
           transparent
-          opacity={theme === 'day' ? 0.1 : 0.18}
+          opacity={theme === 'day' ? 0.15 : 0.25}
           wireframe
         />
       </mesh>
       
-      {/* Outer Energy Field - very subtle heartbeat echo */}
-      <mesh scale={2.2}>
-        <sphereGeometry args={[1, 16, 12]} />
+      {/* Outer Resonance Field */}
+      <mesh scale={3.8}>
+        <sphereGeometry args={[1.2, 24, 16]} />
         <MeshWobbleMaterial
           color={color}
-          speed={0.4} // Very slow, like distant heartbeat
+          speed={0.5}
+          factor={0.12}
+          transparent
+          opacity={theme === 'day' ? 0.08 : 0.15}
+          wireframe
+        />
+      </mesh>
+      
+      {/* Extended Aura Field */}
+      <mesh scale={5.2}>
+        <sphereGeometry args={[1.2, 20, 14]} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={0.3}
           factor={0.08}
           transparent
-          opacity={theme === 'day' ? 0.05 : 0.1}
+          opacity={theme === 'day' ? 0.04 : 0.08}
+          wireframe
+        />
+      </mesh>
+      
+      {/* Distant Echo Field */}
+      <mesh scale={7.0}>
+        <sphereGeometry args={[1.2, 16, 12]} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={0.2}
+          factor={0.05}
+          transparent
+          opacity={theme === 'day' ? 0.02 : 0.05}
+          wireframe
+        />
+      </mesh>
+      
+      {/* Ethereal Boundary */}
+      <mesh scale={9.0}>
+        <sphereGeometry args={[1.2, 12, 10]} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={0.15}
+          factor={0.03}
+          transparent
+          opacity={theme === 'day' ? 0.01 : 0.03}
           wireframe
         />
       </mesh>
