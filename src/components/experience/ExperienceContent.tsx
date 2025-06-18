@@ -96,6 +96,15 @@ const ExperienceContent = () => {
     setShowKeyboardShortcuts(prev => !prev);
   };
 
+  // Create a unified toggle function that works based on UI state
+  const handleToggleShortcuts = useCallback(() => {
+    if (isUiHidden) {
+      handleToggleShortcutsExpanded();
+    } else {
+      handleToggleKeyboardShortcuts();
+    }
+  }, [isUiHidden]);
+
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,
@@ -107,7 +116,7 @@ const ExperienceContent = () => {
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
       toggleLock: toggleObjectLock,
-      toggleShortcuts: isUiHidden && !isMobile ? handleToggleShortcutsExpanded : (!isUiHidden && !isMobile ? handleToggleKeyboardShortcuts : undefined)
+      toggleShortcuts: !isMobile ? handleToggleShortcuts : undefined
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,
   });

@@ -104,10 +104,12 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
           }
           break;
         case 'Slash':
-          if (!isTyping && callbacks.toggleShortcuts) {
+          if (!isTyping) {
             event.preventDefault();
-            callbacks.toggleShortcuts();
-            logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
+            if (callbacks.toggleShortcuts) {
+              callbacks.toggleShortcuts();
+              logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
+            }
           }
           break;
       }
