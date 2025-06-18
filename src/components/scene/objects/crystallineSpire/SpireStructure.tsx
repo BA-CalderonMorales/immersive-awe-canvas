@@ -22,79 +22,51 @@ const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStruct
       position={formation.position}
       rotation={[0, formation.rotation, 0]}
     >
-      {/* Main spire body - crystalline tower */}
+      {/* Clean, minimalist spire body */}
       <mesh position={[0, formation.height / 2, 0]}>
-        <cylinderGeometry args={[formation.radius * 0.3, formation.radius, formation.height, formation.segments]} />
+        <cylinderGeometry args={[formation.radius * 0.2, formation.radius, formation.height, formation.segments]} />
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
             transparent: true,
-            opacity: formation.type === 'main' ? 0.8 : 0.6,
+            opacity: formation.type === 'main' ? 0.9 : 0.7,
             emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.2 : 0.4
+            emissiveIntensity: theme === 'day' ? 0.1 : 0.3,
+            wireframe: false
           }}
           color={color}
         />
       </mesh>
       
-      {/* Spire tip - sharp crystal point */}
+      {/* Simple crystal tip */}
       <mesh position={[0, formation.height, 0]}>
-        <coneGeometry args={[formation.radius * 0.4, formation.height * 0.3, formation.segments]} />
+        <coneGeometry args={[formation.radius * 0.3, formation.height * 0.4, formation.segments]} />
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
             transparent: true,
-            opacity: 0.9,
+            opacity: 0.95,
             emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.3 : 0.6
+            emissiveIntensity: theme === 'day' ? 0.2 : 0.5
           }}
           color={color}
         />
       </mesh>
       
-      {/* Crystal formation rings */}
-      {[0.3, 0.6, 0.9].map((heightRatio, ringIndex) => (
-        <mesh
-          key={`ring-${ringIndex}`}
-          position={[0, formation.height * heightRatio, 0]}
-          rotation={[0, ringIndex * Math.PI / 3, 0]}
-        >
-          <torusGeometry args={[formation.radius * 1.2, formation.radius * 0.1, 8, 16]} />
+      {/* Single energy ring only for main spire */}
+      {formation.type === 'main' && (
+        <mesh position={[0, formation.height * 0.7, 0]}>
+          <torusGeometry args={[formation.radius * 1.5, formation.radius * 0.05, 8, 16]} />
           <DynamicMaterial
             materialConfig={{
               ...materialConfig,
               transparent: true,
-              opacity: theme === 'day' ? 0.2 : 0.4,
+              opacity: theme === 'day' ? 0.4 : 0.6,
               wireframe: true
             }}
             color={color}
           />
         </mesh>
-      ))}
-      
-      {/* Base crystal cluster */}
-      {formation.type === 'main' && (
-        <group position={[0, -formation.height * 0.1, 0]}>
-          {Array.from({ length: formation.segments }, (_, i) => {
-            const angle = (i / formation.segments) * Math.PI * 2;
-            const x = Math.cos(angle) * formation.radius * 0.8;
-            const z = Math.sin(angle) * formation.radius * 0.8;
-            return (
-              <mesh key={i} position={[x, 0, z]} rotation={[0, angle, 0]}>
-                <coneGeometry args={[formation.radius * 0.2, formation.height * 0.4, 6]} />
-                <DynamicMaterial
-                  materialConfig={{
-                    ...materialConfig,
-                    transparent: true,
-                    opacity: 0.6,
-                    wireframe: true
-                  }}
-                  color={color}
-                />
-              </mesh>
-            );
-          })}
-        </group>
       )}
     </group>
   );

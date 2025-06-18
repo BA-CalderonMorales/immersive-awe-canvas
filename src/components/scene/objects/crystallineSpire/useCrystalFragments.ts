@@ -16,28 +16,28 @@ export const useCrystalFragments = () => {
   return useMemo(() => {
     const fragments: CrystalFragment[] = [];
     
-    for (let i = 0; i < 24; i++) {
-      const radius = 8 + Math.random() * 6;
-      const angle = (i / 24) * Math.PI * 2;
-      const height = (Math.random() - 0.5) * 8;
+    // Reduced to just 6 elegant fragments
+    for (let i = 0; i < 6; i++) {
+      const radius = 6 + i * 0.5;
+      const angle = (i / 6) * Math.PI * 2;
       
       fragments.push({
         position: [
-          Math.cos(angle) * radius + (Math.random() - 0.5) * 2,
-          height,
-          Math.sin(angle) * radius + (Math.random() - 0.5) * 2
+          Math.cos(angle) * radius,
+          Math.sin(angle * 2) * 2,
+          Math.sin(angle) * radius
         ] as [number, number, number],
-        scale: 0.3 + Math.random() * 0.4,
-        geometry: Math.floor(Math.random() * 4),
+        scale: 0.4 + Math.sin(i) * 0.2,
+        geometry: i % 2, // Only octahedron and tetrahedron for simplicity
         rotationSpeed: [
-          (Math.random() - 0.5) * 0.02,
-          (Math.random() - 0.5) * 0.02,
-          (Math.random() - 0.5) * 0.02
+          0.01,
+          0.005,
+          0.008
         ] as [number, number, number],
         orbitRadius: radius,
-        orbitSpeed: 0.05 + Math.random() * 0.1,
-        phaseOffset: Math.random() * Math.PI * 2,
-        floatOffset: Math.random() * Math.PI * 2
+        orbitSpeed: 0.03,
+        phaseOffset: i * Math.PI / 3,
+        floatOffset: i * Math.PI / 6
       });
     }
     

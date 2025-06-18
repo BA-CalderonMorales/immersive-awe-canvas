@@ -25,39 +25,31 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const spireFormations = useSpireFormations();
   const crystalFragments = useCrystalFragments();
 
-  // Enhanced energy pulse function with recursive patterns
-  const getRecursivePulse = (time: number, depth: number = 0) => {
-    const baseFreq = 0.8;
-    const pulse = Math.sin(time * baseFreq) * 0.5 + 0.5;
-    
-    if (depth > 0) {
-      const subPulse = getRecursivePulse(time * 1.618, depth - 1) * 0.3;
-      return pulse + subPulse;
-    }
-    
-    return pulse;
+  // Gentle, meditative animation
+  const getGentlePulse = (time: number) => {
+    return Math.sin(time * 0.5) * 0.5 + 0.5;
   };
 
   useFrame((state) => {
     if (isLocked) return;
     
     timeRef.current = state.clock.getElapsedTime();
-    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.2;
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.1;
     
     if (mainGroupRef.current) {
-      // Slow mystical rotation
-      mainGroupRef.current.rotation.y += 0.002;
+      // Slow, peaceful rotation
+      mainGroupRef.current.rotation.y += 0.001;
       
-      // Recursive pulse effect
-      const mainPulse = getRecursivePulse(timeRef.current, 2);
-      const scaleFactor = 0.8 + mainPulse * 0.3 + mouseInfluence * 0.2;
+      // Gentle breathing motion
+      const pulse = getGentlePulse(timeRef.current);
+      const scaleFactor = 0.9 + pulse * 0.1 + mouseInfluence * 0.1;
       mainGroupRef.current.scale.setScalar(scaleFactor);
       
-      // Subtle breathing motion
-      mainGroupRef.current.position.y = Math.sin(timeRef.current * 0.3) * 0.1;
+      // Subtle floating
+      mainGroupRef.current.position.y = Math.sin(timeRef.current * 0.2) * 0.05;
     }
 
-    // Animate spire formations
+    // Smooth satellite motion
     spireRefs.current.forEach((spireRef, index) => {
       if (!spireRef) return;
       
@@ -65,58 +57,49 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
       if (!formation) return;
       
       if (formation.type === 'satellite') {
-        // Orbital motion for satellite spires
         const orbitAngle = timeRef.current * formation.orbitSpeed! + formation.phaseOffset!;
         const baseRadius = Math.sqrt(formation.position[0] ** 2 + formation.position[2] ** 2);
         
         spireRef.position.x = Math.cos(orbitAngle) * baseRadius;
         spireRef.position.z = Math.sin(orbitAngle) * baseRadius;
-        spireRef.position.y = formation.position[1] + Math.sin(timeRef.current * 0.4 + formation.phaseOffset!) * 0.3;
+        spireRef.position.y = formation.position[1] + Math.sin(timeRef.current * 0.3 + formation.phaseOffset!) * 0.1;
       }
       
-      // Individual spire pulse
-      const spireP = getRecursivePulse(timeRef.current + index * 0.2, 1);
-      const spireScale = formation.scale * (0.7 + spireP * 0.4);
+      // Gentle scaling
+      const spireP = getGentlePulse(timeRef.current + index * 0.3);
+      const spireScale = formation.scale * (0.9 + spireP * 0.2);
       spireRef.scale.setScalar(spireScale);
       
-      // Rotation animation
-      spireRef.rotation.x = formation.rotation + timeRef.current * 0.1;
-      spireRef.rotation.z = Math.sin(timeRef.current * 0.15 + index) * 0.1;
+      // Minimal rotation
+      spireRef.rotation.x = formation.rotation + timeRef.current * 0.05;
     });
 
-    // Animate crystal fragments
+    // Graceful fragment motion
     orbitalRefs.current.forEach((orbitalRef, index) => {
       if (!orbitalRef) return;
       
       const fragment = crystalFragments[index];
       if (!fragment) return;
       
-      // Orbital motion
       const orbitAngle = timeRef.current * fragment.orbitSpeed + fragment.phaseOffset;
       orbitalRef.position.x = Math.cos(orbitAngle) * fragment.orbitRadius;
       orbitalRef.position.z = Math.sin(orbitAngle) * fragment.orbitRadius;
       
-      // Floating motion
       orbitalRef.position.y = fragment.position[1] + 
-        Math.sin(timeRef.current * 0.5 + fragment.floatOffset) * 1.2;
+        Math.sin(timeRef.current * 0.4 + fragment.floatOffset) * 0.5;
       
-      // Individual rotation
       orbitalRef.rotation.x += fragment.rotationSpeed[0];
       orbitalRef.rotation.y += fragment.rotationSpeed[1];
       orbitalRef.rotation.z += fragment.rotationSpeed[2];
       
-      // Pulse scaling
-      const fragmentPulse = getRecursivePulse(timeRef.current + fragment.phaseOffset, 0);
-      orbitalRef.scale.setScalar(fragment.scale * (0.8 + fragmentPulse * 0.3));
+      const fragmentPulse = getGentlePulse(timeRef.current + fragment.phaseOffset);
+      orbitalRef.scale.setScalar(fragment.scale * (0.9 + fragmentPulse * 0.2));
     });
   });
 
   return (
     <>
-      {/* Main Crystalline Spire Formation */}
       <group ref={mainGroupRef}>
-        
-        {/* Recursive Spire Structures */}
         {spireFormations.map((formation, index) => (
           <SpireStructure
             key={`spire-${index}`}
@@ -129,11 +112,9 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
           />
         ))}
         
-        {/* Energy Field Web - connecting all spires */}
         <EnergyWeb color={color} materialConfig={materialConfig} />
       </group>
 
-      {/* Floating Crystal Fragments */}
       {crystalFragments.map((fragment, index) => (
         <CrystalFragmentComponent
           key={`fragment-${index}`}
