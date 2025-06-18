@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye, ChevronDown, ChevronUp, Pointer } from "lucide-react";
+import { Eye, ChevronDown, ChevronUp, Pointer, Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
@@ -37,6 +37,29 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
           <p>Show UI (Press V)</p>
         </TooltipContent>
       </Tooltip>
+
+      {/* Info icon when shortcuts are hidden */}
+      {!isMobile && !isVisible && (
+        <div className="fixed bottom-4 left-4 z-50 pointer-events-auto">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className={`w-6 h-6 p-0 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-md transition-colors ${
+                  theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
+                }`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Info className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Press M to show keyboard shortcuts menu</p>
+            </TooltipContent>
+          </Tooltip>
+        </div>
+      )}
       
       {/* Only show shortcuts on desktop/tablet when visible */}
       {!isMobile && isVisible && (
