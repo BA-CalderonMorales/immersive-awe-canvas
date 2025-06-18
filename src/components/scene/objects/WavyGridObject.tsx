@@ -8,13 +8,14 @@ import { MathUtils } from 'three';
 interface WavyGridObjectProps {
   color: string;
   materialConfig: MaterialConfig;
+  isLocked: boolean;
 }
 
-const WavyGridObject = ({ color, materialConfig }: WavyGridObjectProps) => {
+const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
   const materialRef = useRef<any>(null!);
 
   useFrame((state) => {
-    if (materialRef.current) {
+    if (!isLocked && materialRef.current) {
       const time = state.clock.getElapsedTime();
       materialRef.current.distort = MathUtils.lerp(
         materialRef.current.distort,

@@ -8,23 +8,26 @@ import { MathUtils } from 'three';
 interface MorphingIcosahedronObjectProps {
   color: string;
   materialConfig: MaterialConfig;
+  isLocked: boolean;
 }
 
-const MorphingIcosahedronObject = ({ color, materialConfig }: MorphingIcosahedronObjectProps) => {
+const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: MorphingIcosahedronObjectProps) => {
   const materialRef = useRef<any>(null!);
   const meshRef = useRef<any>(null!);
 
   useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.distort = MathUtils.lerp(
-        materialRef.current.distort,
-        Math.sin(state.clock.getElapsedTime() * 0.5) * 0.25 + 0.25,
-        0.02
-      );
-    }
-    if (meshRef.current) {
-        meshRef.current.rotation.x += 0.001;
-        meshRef.current.rotation.y += 0.002;
+    if (!isLocked) {
+      if (materialRef.current) {
+        materialRef.current.distort = MathUtils.lerp(
+          materialRef.current.distort,
+          Math.sin(state.clock.getElapsedTime() * 0.5) * 0.25 + 0.25,
+          0.02
+        );
+      }
+      if (meshRef.current) {
+          meshRef.current.rotation.x += 0.001;
+          meshRef.current.rotation.y += 0.002;
+      }
     }
   });
 

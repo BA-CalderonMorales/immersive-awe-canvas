@@ -8,15 +8,16 @@ import { MathUtils } from 'three';
 interface WobbleFieldObjectProps {
   color: string;
   materialConfig: MaterialConfig;
+  isLocked: boolean;
 }
 
-const WobbleFieldObject = ({ color, materialConfig }: WobbleFieldObjectProps) => {
+const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const materialRef = useRef<any>(null!);
   const { mouse } = useThree();
   const lastMouse = useRef({ x: 0 });
 
   useFrame(() => {
-    if (materialRef.current) {
+    if (!isLocked && materialRef.current) {
       // Make wobble speed react to mouse speed
       const mouseSpeed = Math.abs(mouse.x - lastMouse.current.x);
       lastMouse.current.x = mouse.x;
