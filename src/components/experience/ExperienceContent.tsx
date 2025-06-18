@@ -45,7 +45,6 @@ const ExperienceContentInner = () => {
   const isMobile = useIsMobile();
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
-  const [showShortcutsExpanded, setShowShortcutsExpanded] = useState(true);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
@@ -74,34 +73,15 @@ const ExperienceContentInner = () => {
       });
   }, [editableSceneConfig]);
 
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.code === 'Escape' && isSettingsOpen) {
-        event.preventDefault();
-        setIsSettingsOpen(false);
-        logEvent({ eventType: 'keyboard_shortcut', eventSource: 'close_settings' });
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isSettingsOpen]);
-
-  const handleToggleShortcutsExpanded = () => {
-    setShowShortcutsExpanded(prev => !prev);
-  };
-
-  // Create a unified toggle function that works based on UI state
+  // Handle shortcut toggle based on UI state
   const handleToggleShortcuts = useCallback(() => {
     if (isUiHidden) {
-      handleToggleShortcutsExpanded();
+      toggleExpanded();
     } else {
       toggleKeyboardShortcuts();
     }
-  }, [isUiHidden, toggleKeyboardShortcuts]);
+    logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
+  }, [isUiHidden, toggleExpanded, toggleKeyboardShortcuts]);
 
   useExperienceHotkeys({
     callbacks: {
@@ -155,6 +135,21 @@ const ExperienceContentInner = () => {
     }
   }, [worldData, currentWorldId, isSettingsOpen]);
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.code === 'Escape' && isSettingsOpen) {
+        event.preventDefault();
+        setIsSettingsOpen(false);
+        logEvent({ eventType: 'keyboard_shortcut', eventSource: 'close_settings' });
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isSettingsOpen]);
+
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
     const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
@@ -196,13 +191,25 @@ const ExperienceContentInner = () => {
       />
       {isMobile ? (
         <div className="w-full h-full">
-            <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} isLocked={isObjectLocked} onToggleLock={toggleObjectLock} />
+          <WorldView 
+            sceneConfig={editableSceneConfig} 
+            isTransitioning={isTransitioning} 
+            worldIndex={currentWorldIndex} 
+            isLocked={isObjectLocked} 
+            onToggleLock={toggleObjectLock} 
+          />
         </div>
       ) : (
         <ResizablePanelGroup direction="horizontal">
           <ResizablePanel>
             <div className="w-full h-full relative">
-                <WorldView sceneConfig={editableSceneConfig} isTransitioning={isTransitioning} worldIndex={currentWorldIndex} isLocked={isObjectLocked} onToggleLock={toggleObjectLock} />
+              <WorldView 
+                sceneConfig={editableSceneConfig} 
+                isTransitioning={isTransitioning} 
+                worldIndex={currentWorldIndex} 
+                isLocked={isObjectLocked} 
+                onToggleLock={toggleObjectLock} 
+              />
             </div>
           </ResizablePanel>
           {isSettingsOpen && (
@@ -234,7 +241,6 @@ const ExperienceContentInner = () => {
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
         showUiHint={showUiHint}
-        onToggleShortcuts={isUiHidden ? handleToggleShortcutsExpanded : undefined}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog

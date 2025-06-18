@@ -3,27 +3,19 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Eye, ChevronDown, ChevronUp, Pointer } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
 
 interface HiddenUiViewProps {
   onToggleUiHidden: () => void;
   showUiHint?: boolean;
   uiColor: string;
   theme: 'day' | 'night';
-  onToggleShortcuts?: () => void;
 }
 
-const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme, onToggleShortcuts }: HiddenUiViewProps) => {
+const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
   const isMobile = useIsMobile();
-  const [isExpanded, setIsExpanded] = useState(true);
-
-  const handleToggleExpanded = () => {
-    setIsExpanded(!isExpanded);
-    if (onToggleShortcuts) {
-      onToggleShortcuts();
-    }
-  };
+  const { isExpanded, toggleExpanded } = useKeyboardShortcuts();
 
   return (
     <>
@@ -53,7 +45,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme, onToggleSh
             theme === 'day' ? 'bg-white/40 text-black border border-gray-200/50' : 'bg-black/40 text-slate-200 border border-gray-700/50'
           }`}
         >
-          <Collapsible open={isExpanded} onOpenChange={handleToggleExpanded}>
+          <Collapsible open={isExpanded} onOpenChange={toggleExpanded}>
             <CollapsibleTrigger asChild>
               <div className="flex items-center justify-between p-3 pb-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                 <span className="font-semibold">Shortcuts</span>
