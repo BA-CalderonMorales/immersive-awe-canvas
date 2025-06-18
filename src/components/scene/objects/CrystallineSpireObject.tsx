@@ -33,7 +33,12 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   useFrame((state) => {
     if (isLocked) return;
     
-    timeRef.current = state.clock.getElapsedTime();
+    const currentTime = state.clock.getElapsedTime();
+    
+    // Prevent excessive updates by checking if enough time has passed
+    if (Math.abs(currentTime - timeRef.current) < 0.016) return; // ~60fps cap
+    
+    timeRef.current = currentTime;
     const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.1;
     
     if (mainGroupRef.current) {
