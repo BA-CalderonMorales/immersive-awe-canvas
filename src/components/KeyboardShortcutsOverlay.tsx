@@ -29,11 +29,11 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
       <Collapsible open={isExpanded} onOpenChange={toggleExpanded}>
         <CollapsibleTrigger asChild>
           <div className="flex items-center justify-between p-3 pb-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors w-full">
-            <span className="font-semibold">Shortcuts</span>
+            <span className="font-semibold">Shortcuts (use the letter "M" to expand/collapse this menu)</span>
             <Button
               variant="ghost"
               size="icon"
-              className="w-4 h-4 p-0 hover:bg-transparent pointer-events-none"
+              className="w-4 h-4 p-0 hover:bg-transparent"
             >
               {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
             </Button>
@@ -52,7 +52,6 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
             <p>Press <span className="font-bold">H</span> to open the help guide</p>
             <p>Press <span className="font-bold">G</span> to return to the home page</p>
             <p>Press <span className="font-bold">C</span> to copy scene configuration</p>
-            <p>Press <span className="font-bold">M</span> to toggle this shortcuts menu</p>
           </div>
         </CollapsibleContent>
       </Collapsible>
