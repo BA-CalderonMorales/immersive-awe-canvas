@@ -15,8 +15,8 @@ export const useKeyboardDebug = (enabled: boolean = false) => {
         ctrlKey: event.ctrlKey,
         metaKey: event.metaKey,
         shiftKey: event.shiftKey,
-        target: event.target?.tagName,
-        activeElement: document.activeElement?.tagName
+        target: event.target instanceof Element ? event.target.tagName : 'Unknown',
+        activeElement: document.activeElement?.tagName || 'Unknown'
       });
       
       setLastKey(event.code);
