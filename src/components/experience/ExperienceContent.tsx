@@ -43,6 +43,7 @@ const ExperienceContent = () => {
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
   const [showShortcutsExpanded, setShowShortcutsExpanded] = useState(true);
+  const [showKeyboardShortcuts, setShowKeyboardShortcuts] = useState(false);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
@@ -91,6 +92,10 @@ const ExperienceContent = () => {
     setShowShortcutsExpanded(prev => !prev);
   };
 
+  const handleToggleKeyboardShortcuts = () => {
+    setShowKeyboardShortcuts(prev => !prev);
+  };
+
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,
@@ -102,7 +107,7 @@ const ExperienceContent = () => {
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
       toggleLock: toggleObjectLock,
-      ...(isUiHidden && !isMobile && { toggleShortcuts: handleToggleShortcutsExpanded })
+      toggleShortcuts: isUiHidden && !isMobile ? handleToggleShortcutsExpanded : (!isUiHidden && !isMobile ? handleToggleKeyboardShortcuts : undefined)
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,
   });
@@ -223,6 +228,8 @@ const ExperienceContent = () => {
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
         showUiHint={showUiHint}
         onToggleShortcuts={isUiHidden ? handleToggleShortcutsExpanded : undefined}
+        showKeyboardShortcuts={showKeyboardShortcuts}
+        onToggleKeyboardShortcuts={handleToggleKeyboardShortcuts}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog
