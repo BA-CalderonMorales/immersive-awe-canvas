@@ -160,8 +160,8 @@ const HomePageContent = () => {
           </p>
         </div>
 
-        {/* Bottom helpful text with info icon */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 opacity-70 hover:opacity-100 transition-opacity duration-300 pointer-events-auto">
+        {/* Bottom info icon only */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center opacity-70 hover:opacity-100 transition-opacity duration-300 pointer-events-auto">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
@@ -176,14 +176,12 @@ const HomePageContent = () => {
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Click anywhere or press Enter to begin your journey</p>
+              <div className="text-sm space-y-1">
+                <p>Click anywhere or press Enter to begin your journey</p>
+                <p>Press Space to toggle between day and night themes</p>
+              </div>
             </TooltipContent>
           </Tooltip>
-          <span className={`text-sm transition-colors duration-1000 ${
-            theme === 'day' ? 'text-emerald-600' : 'text-blue-300'
-          }`}>
-            Begin your journey
-          </span>
         </div>
 
         {/* Subtle pulse effect to guide user */}

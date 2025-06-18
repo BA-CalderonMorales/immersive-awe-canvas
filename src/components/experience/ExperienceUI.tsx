@@ -1,11 +1,14 @@
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useState } from "react";
 import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
+import KeyboardShortcutsOverlay from "@/components/KeyboardShortcutsOverlay";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -47,6 +50,7 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   const handleToggleTheme = () => {
     onToggleTheme();
@@ -71,6 +75,10 @@ const ExperienceUI = ({
   const handleShowHelp = () => {
     onShowHelp();
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
+  };
+
+  const handleToggleShortcuts = () => {
+    setShowShortcuts(!showShortcuts);
   };
 
   if (isUiHidden) {
@@ -116,6 +124,13 @@ const ExperienceUI = ({
         onShowHelp={handleShowHelp}
       />
 
+      {/* Keyboard Shortcuts Overlay - only on desktop/tablet */}
+      <KeyboardShortcutsOverlay 
+        theme={theme}
+        isVisible={showShortcuts}
+        onToggle={handleToggleShortcuts}
+      />
+
       {!isMobile && (
         <div style={{ color: uiColor }} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none">
           Press SPACE to change time of day
@@ -124,4 +139,5 @@ const ExperienceUI = ({
     </TooltipProvider>
   );
 };
+
 export default ExperienceUI;

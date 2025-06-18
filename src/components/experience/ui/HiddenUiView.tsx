@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Eye } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface HiddenUiViewProps {
   onToggleUiHidden: () => void;
@@ -11,6 +12,8 @@ interface HiddenUiViewProps {
 }
 
 const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
+  const isMobile = useIsMobile();
+
   return (
     <>
       <Tooltip open={showUiHint}>
@@ -31,22 +34,26 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
           <p>Show UI (Press V)</p>
         </TooltipContent>
       </Tooltip>
-      <div
-        className={`fixed bottom-4 left-4 z-50 pointer-events-none text-xs space-y-1 font-mono p-3 rounded-md shadow-lg backdrop-blur-sm ${
-          theme === 'day' ? 'bg-white/40 text-black' : 'bg-black/40 text-slate-200'
-        }`}
-      >
-        <p className="font-semibold underline">Shortcuts</p>
-        <p>N/P&nbsp;&nbsp;: Cycle World</p>
-        <p>SPC&nbsp;&nbsp;: Theme</p>
-        <p>.&nbsp;&nbsp;&nbsp;&nbsp;: Freeze</p>
-        <p>V&nbsp;&nbsp;&nbsp;&nbsp;: Toggle UI</p>
-        <p>E&nbsp;&nbsp;&nbsp;&nbsp;: Settings</p>
-        <p>S&nbsp;&nbsp;&nbsp;&nbsp;: Search</p>
-        <p>H&nbsp;&nbsp;&nbsp;&nbsp;: Help</p>
-        <p>G&nbsp;&nbsp;&nbsp;&nbsp;: Home</p>
-        <p>C&nbsp;&nbsp;&nbsp;&nbsp;: Copy</p>
-      </div>
+      
+      {/* Only show shortcuts on desktop/tablet */}
+      {!isMobile && (
+        <div
+          className={`fixed bottom-4 left-4 z-50 pointer-events-none text-xs space-y-1 font-mono p-3 rounded-md shadow-lg backdrop-blur-sm ${
+            theme === 'day' ? 'bg-white/40 text-black' : 'bg-black/40 text-slate-200'
+          }`}
+        >
+          <p className="font-semibold underline">Shortcuts</p>
+          <p>N/P&nbsp;&nbsp;: Cycle World</p>
+          <p>SPC&nbsp;&nbsp;: Theme</p>
+          <p>.&nbsp;&nbsp;&nbsp;&nbsp;: Freeze</p>
+          <p>V&nbsp;&nbsp;&nbsp;&nbsp;: Toggle UI</p>
+          <p>E&nbsp;&nbsp;&nbsp;&nbsp;: Settings</p>
+          <p>S&nbsp;&nbsp;&nbsp;&nbsp;: Search</p>
+          <p>H&nbsp;&nbsp;&nbsp;&nbsp;: Help</p>
+          <p>G&nbsp;&nbsp;&nbsp;&nbsp;: Home</p>
+          <p>C&nbsp;&nbsp;&nbsp;&nbsp;: Copy</p>
+        </div>
+      )}
     </>
   );
 };
