@@ -13,6 +13,7 @@ export const useExperienceCallbacks = () => {
   }, [navigate]);
 
   const handleToggleShortcuts = useCallback(() => {
+    console.log('useExperienceCallbacks - handleToggleShortcuts called');
     toggleKeyboardShortcuts();
     logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
   }, [toggleKeyboardShortcuts]);

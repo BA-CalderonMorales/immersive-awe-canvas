@@ -22,6 +22,7 @@ export const useHotkeyActions = (callbacks: HotkeyActionCallbacks) => {
   }, [callbacks]);
 
   const handleToggleShortcuts = useCallback(() => {
+    console.log('useHotkeyActions - handleToggleShortcuts called');
     callbacks.toggleShortcuts();
     logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_shortcuts' });
   }, [callbacks]);

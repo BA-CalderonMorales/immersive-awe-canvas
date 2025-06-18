@@ -31,9 +31,28 @@ export const useKeyboardEventHandler = ({
 }: KeyboardEventHandlerProps) => {
   
   const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!enabled) return;
+    console.log('KeyboardEventHandler - Key pressed:', event.code, 'enabled:', enabled);
+    
+    if (!enabled) {
+      console.log('KeyboardEventHandler - Handler disabled');
+      return;
+    }
 
     const typing = isUserTyping();
+    console.log('KeyboardEventHandler - User typing:', typing);
+
+    // Handle M key specifically for shortcuts toggle
+    if (event.code === 'KeyM') {
+      if (!typing) {
+        console.log('KeyboardEventHandler - M key pressed, toggling shortcuts');
+        event.preventDefault();
+        onToggleShortcuts();
+        return;
+      } else {
+        console.log('KeyboardEventHandler - M key pressed but user is typing');
+        return;
+      }
+    }
 
     switch (event.code) {
       case 'Space':
@@ -108,13 +127,6 @@ export const useKeyboardEventHandler = ({
         if (!typing) {
           event.preventDefault();
           onToggleLock();
-        }
-        break;
-      
-      case 'KeyM':
-        if (!typing) {
-          event.preventDefault();
-          onToggleShortcuts();
         }
         break;
     }

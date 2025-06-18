@@ -6,10 +6,12 @@ export const useKeyboardShortcutsState = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   const toggleExpanded = () => {
+    console.log('useKeyboardShortcutsState - toggleExpanded called, current:', isExpanded);
     setIsExpanded(prev => !prev);
   };
 
   const toggleVisible = () => {
+    console.log('useKeyboardShortcutsState - toggleVisible called, current:', isVisible);
     setIsVisible(prev => !prev);
   };
 

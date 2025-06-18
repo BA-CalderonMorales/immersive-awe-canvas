@@ -22,6 +22,8 @@ export const useKeyboardShortcuts = () => {
 export const KeyboardShortcutsProvider = ({ children }: { children: ReactNode }) => {
   const shortcuts = useKeyboardShortcutsState();
 
+  console.log('KeyboardShortcutsProvider - Current state:', shortcuts);
+
   return (
     <KeyboardShortcutsContext.Provider value={shortcuts}>
       {children}
