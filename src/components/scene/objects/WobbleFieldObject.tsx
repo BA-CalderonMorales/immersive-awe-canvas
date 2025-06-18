@@ -170,6 +170,9 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     
     timeRef.current = state.clock.getElapsedTime();
     
+    // Calculate mouse influence here where it's used
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
+    
     if (groupRef.current) {
       // Master field rotation with chaotic wobbles
       groupRef.current.rotation.y += 0.005;
@@ -177,7 +180,6 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
       groupRef.current.rotation.z = Math.cos(timeRef.current * 0.2) * 0.1;
       
       // Mouse creates dimensional distortions
-      const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
       groupRef.current.scale.setScalar(1 + mouseInfluence * 0.1);
     }
 
