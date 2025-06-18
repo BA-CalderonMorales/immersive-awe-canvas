@@ -20,7 +20,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   const { mouse } = useThree();
   const timeRef = useRef(0);
 
-  // Generate the contemplative field data
+  // Generate the philosophical field data
   const fieldData = useMemo(() => generateChaoticField(), []);
 
   useFrame((state) => {
@@ -28,17 +28,18 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     
     timeRef.current = state.clock.getElapsedTime();
     
-    // Gentle mouse influence for contemplation
-    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.3;
+    // Consciousness responds to attention (mouse as focus of awareness)
+    const awarenessInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.2;
     
     if (groupRef.current) {
-      // Gentle, meditative field rotation
-      groupRef.current.rotation.y += 0.001; // Much slower
-      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.1) * 0.05; // Gentler
-      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.08) * 0.03; // Subtler
+      // Deep, meditative field rotation - like the slow turn of contemplation
+      groupRef.current.rotation.y += 0.0008; // Even slower for deeper thought
+      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.08) * 0.03; // Minimal tilt
+      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.06) * 0.02; // Subtle sway
       
-      // Gentle scaling response to mouse
-      groupRef.current.scale.setScalar(1 + mouseInfluence * 0.05);
+      // Breathing response to consciousness
+      const breathingScale = 1 + Math.sin(timeRef.current * 0.4) * 0.02 + awarenessInfluence * 0.03;
+      groupRef.current.scale.setScalar(breathingScale);
     }
   });
 
@@ -51,17 +52,27 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
         isLocked={isLocked}
       />
       
-      {/* Central Contemplative Core */}
-      <mesh scale={0.6}> {/* Smaller, less dominant */}
-        <icosahedronGeometry args={[1, 1]} /> {/* Less complex */}
+      {/* Central Mind Core - the seat of consciousness */}
+      <mesh scale={0.5} position={[0, 0, 0]}> {/* Smaller, more humble presence */}
+        <icosahedronGeometry args={[1, 2]} /> {/* Higher complexity for deeper thought */}
         <MeshWobbleMaterial
           color={color}
-          speed={2} // Much slower wobble
-          factor={0.3} // Gentler wobble
+          speed={1.5} // Slower wobble for deep contemplation
+          factor={0.2} // Very gentle wobble
           transparent
-          opacity={0.7} // More transparent
+          opacity={0.6} // More transparent to suggest the ethereal nature of mind
           emissive={color}
-          emissiveIntensity={0.1} // Subtle glow
+          emissiveIntensity={0.08} // Subtle inner light
+        />
+      </mesh>
+      
+      {/* Subtle Inner Glow - representing inner awareness */}
+      <mesh scale={0.45}>
+        <sphereGeometry args={[1, 16, 12]} />
+        <meshBasicMaterial
+          color={color}
+          transparent
+          opacity={0.05}
         />
       </mesh>
       
