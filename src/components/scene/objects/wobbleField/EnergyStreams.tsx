@@ -17,31 +17,31 @@ const EnergyStreams = ({ materialConfig }: EnergyStreamsProps) => {
 
   return (
     <>
-      {/* Chaotic Energy Streams */}
-      {[...Array(12)].map((_, i) => {
-        const angle = (i / 12) * Math.PI * 2;
-        const radius = 4 + Math.sin(i) * 2;
+      {/* Contemplative Thought Streams */}
+      {[...Array(6)].map((_, i) => { // Reduced from 12 to 6
+        const angle = (i / 6) * Math.PI * 2;
+        const radius = 3 + Math.sin(i * 0.5) * 1; // Smaller, gentler movement
         return (
           <mesh 
-            key={`energy-stream-${i}`}
+            key={`thought-stream-${i}`}
             position={[
-              Math.cos(angle + timeRef.current * 0.5) * radius,
-              Math.sin(timeRef.current * 0.8 + i) * 3,
-              Math.sin(angle + timeRef.current * 0.5) * radius
+              Math.cos(angle + timeRef.current * 0.1) * radius, // Much slower rotation
+              Math.sin(timeRef.current * 0.2 + i) * 1.5, // Gentler vertical movement
+              Math.sin(angle + timeRef.current * 0.1) * radius
             ]}
-            rotation={[timeRef.current * 2 + i, timeRef.current * 1.5, 0]}
-            scale={[0.1, 2 + Math.sin(timeRef.current * 3 + i), 0.1]}
+            rotation={[timeRef.current * 0.3 + i, timeRef.current * 0.2, 0]} // Slower rotation
+            scale={[0.08, 1.5 + Math.sin(timeRef.current * 0.8 + i) * 0.3, 0.08]} // Gentler scaling
           >
-            <cylinderGeometry args={[0.1, 0.05, 1, 6]} />
+            <cylinderGeometry args={[0.05, 0.02, 1, 6]} />
             <DynamicMaterial 
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
-                opacity: 0.7,
-                emissiveIntensity: 0.8,
-                wireframe: true
+                opacity: 0.4, // More subtle
+                emissiveIntensity: 0.2,
+                wireframe: false // Solid for contemplation
               }} 
-              color={`hsl(${(i * 30 + timeRef.current * 50) % 360}, 80%, 60%)`} 
+              color={`hsl(${(i * 60 + timeRef.current * 20) % 360}, 60%, 65%)`} // Softer colors
             />
           </mesh>
         );

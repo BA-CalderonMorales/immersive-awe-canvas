@@ -5,86 +5,86 @@ SET scene_config = '{
     "lights": [
       {
         "type": "ambient",
-        "intensity": 0.3
+        "intensity": 0.4
       },
       {
         "type": "directional",
         "color": "#ffffff",
         "position": [10, 20, 5],
-        "intensity": 1.2
+        "intensity": 0.8
       },
       {
         "type": "point",
-        "color": "#00aaff",
-        "position": [5, 5, 5],
-        "intensity": 1.5,
-        "ref": "swirl"
+        "color": "#4a90e2",
+        "position": [3, 3, 3],
+        "intensity": 1.0,
+        "ref": "slowPulse"
       }
     ],
     "material": {
       "materialType": "standard",
-      "roughness": 0.4,
-      "metalness": 0.6,
-      "emissive": "#001122",
-      "emissiveIntensity": 0.1
+      "roughness": 0.3,
+      "metalness": 0.4,
+      "emissive": "#001133",
+      "emissiveIntensity": 0.05
     },
     "background": {
       "type": "sparkles",
-      "color": "#88ccff",
-      "count": 400,
-      "scale": 8,
-      "size": 2,
-      "speed": 1.5
+      "color": "#e8f4fd",
+      "count": 150,
+      "scale": 12,
+      "size": 1.5,
+      "speed": 0.8
     },
-    "mainObjectColor": "#0088ff"
+    "mainObjectColor": "#4a90e2"
   },
   "type": "WobbleField",
   "night": {
     "lights": [
       {
         "type": "ambient",
-        "intensity": 0.1
+        "intensity": 0.15
       },
       {
         "type": "hemisphere",
-        "intensity": 0.4,
+        "intensity": 0.3,
         "groundColor": "#001122"
       },
       {
         "type": "point",
-        "color": "#ff3366",
-        "position": [0, 8, 0],
-        "intensity": 2.5,
-        "ref": "pulsing"
+        "color": "#8b5cf6",
+        "position": [0, 5, 0],
+        "intensity": 1.5,
+        "ref": "slowPulse"
       },
       {
         "type": "point",
-        "color": "#3366ff",
-        "position": [-8, -4, 8],
-        "intensity": 1.8,
-        "ref": "flicker"
+        "color": "#06b6d4",
+        "position": [-5, -2, 5],
+        "intensity": 1.0,
+        "ref": "slowPulse"
       }
     ],
     "material": {
       "materialType": "physical",
-      "roughness": 0.2,
-      "metalness": 0.8,
-      "emissive": "#330022",
-      "emissiveIntensity": 0.3,
-      "clearcoat": 0.5,
-      "clearcoatRoughness": 0.1
+      "roughness": 0.1,
+      "metalness": 0.7,
+      "emissive": "#220033",
+      "emissiveIntensity": 0.1,
+      "clearcoat": 0.3,
+      "clearcoatRoughness": 0.05
     },
     "background": {
       "type": "stars",
-      "count": 2000,
-      "radius": 150,
-      "depth": 50,
-      "factor": 4,
-      "speed": 1,
-      "saturation": 0.8,
+      "count": 800,
+      "radius": 100,
+      "depth": 30,
+      "factor": 2,
+      "speed": 0.5,
+      "saturation": 0.6,
       "fade": true
     },
-    "mainObjectColor": "#ff2266"
+    "mainObjectColor": "#8b5cf6"
   }
 }'::jsonb
 WHERE name = 'Wobble Field';

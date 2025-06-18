@@ -4,7 +4,7 @@ import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
 import { InstancedMesh, Object3D, Matrix4, Color } from 'three';
 import DynamicMaterial from '../../materials/DynamicMaterial';
-import { CHAOS_MULTIPLIER, createRickGeometry } from './fieldGenerator';
+import { HARMONY_MULTIPLIER, createRickGeometry } from './fieldGenerator';
 
 interface InstancedFieldElementsProps {
   color: string;
@@ -28,13 +28,13 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
   // Create instanced meshes for different geometry types
   const instancedMeshes = useMemo(() => {
     const meshes = [];
-    const instanceCounts = new Array(8).fill(0);
+    const instanceCounts = new Array(5).fill(0); // Reduced to 5 types
     
     // Count instances per type
     fieldData.types.forEach(type => instanceCounts[type]++);
     
     // Create instanced mesh for each type
-    for (let typeIndex = 0; typeIndex < 8; typeIndex++) {
+    for (let typeIndex = 0; typeIndex < 5; typeIndex++) {
       if (instanceCounts[typeIndex] > 0) {
         meshes.push({
           type: typeIndex,
@@ -52,10 +52,10 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
     
     timeRef.current = state.clock.getElapsedTime();
     
-    // Calculate mouse influence here where it's used
-    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
+    // Gentle mouse influence for contemplation
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.3;
 
-    // Animate each instanced mesh
+    // Animate each instanced mesh with contemplative motion
     fieldInstanceRefs.current.forEach((instancedMesh, meshIndex) => {
       if (!instancedMesh) return;
       
@@ -67,39 +67,39 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
           const [sx, sy, sz] = fieldData.scales[fieldIndex];
           const [rx, ry, rz] = fieldData.rotations[fieldIndex];
           
-          // Chaotic movement patterns
-          const chaosTime = timeRef.current + fieldIndex * 0.1;
-          const chaosX = x + Math.sin(chaosTime * 0.8 + fieldIndex) * CHAOS_MULTIPLIER;
-          const chaosY = y + Math.cos(chaosTime * 0.6 + fieldIndex * 2) * CHAOS_MULTIPLIER;
-          const chaosZ = z + Math.sin(chaosTime * 0.4 + fieldIndex * 3) * CHAOS_MULTIPLIER;
+          // Gentle, meditative movement patterns
+          const contemplativeTime = timeRef.current * 0.3 + fieldIndex * 0.05; // Much slower
+          const floatX = x + Math.sin(contemplativeTime * 0.4 + fieldIndex) * HARMONY_MULTIPLIER * 0.3;
+          const floatY = y + Math.cos(contemplativeTime * 0.2 + fieldIndex * 1.5) * HARMONY_MULTIPLIER * 0.5;
+          const floatZ = z + Math.sin(contemplativeTime * 0.15 + fieldIndex * 2) * HARMONY_MULTIPLIER * 0.2;
           
-          // Dynamic scaling based on time and mouse
-          const pulseFactor = 1 + Math.sin(chaosTime * 2 + fieldIndex) * 0.3;
-          const mouseFactor = 1 + mouseInfluence * 0.5;
+          // Gentle breathing-like scaling
+          const breatheFactor = 1 + Math.sin(contemplativeTime * 0.8 + fieldIndex) * 0.1;
+          const mouseInteraction = 1 + mouseInfluence * 0.2;
           
-          dummyObject.current.position.set(chaosX, chaosY, chaosZ);
+          dummyObject.current.position.set(floatX, floatY, floatZ);
           dummyObject.current.rotation.set(
-            rx + chaosTime * 0.5,
-            ry + chaosTime * 0.3,
-            rz + chaosTime * 0.7
+            rx + contemplativeTime * 0.1,
+            ry + contemplativeTime * 0.15,
+            rz + contemplativeTime * 0.08
           );
           dummyObject.current.scale.set(
-            sx * pulseFactor * mouseFactor,
-            sy * pulseFactor * mouseFactor,
-            sz * pulseFactor * mouseFactor
+            sx * breatheFactor * mouseInteraction,
+            sy * breatheFactor * mouseInteraction,
+            sz * breatheFactor * mouseInteraction
           );
           
           dummyObject.current.updateMatrix();
           instancedMesh.setMatrixAt(instanceIndex, dummyObject.current.matrix);
           
-          // Dynamic color chaos
-          const colorShift = (timeRef.current + fieldIndex) * 50;
-          const chaosColor = new Color().setHSL(
-            ((colorShift % 360) / 360),
-            0.7 + Math.sin(chaosTime) * 0.3,
-            0.5 + Math.cos(chaosTime * 1.5) * 0.3
+          // Gentle color transitions like shifting thoughts
+          const colorShift = (timeRef.current * 10 + fieldIndex * 20) % 360;
+          const contemplativeColor = new Color().setHSL(
+            (colorShift / 360),
+            0.4 + Math.sin(contemplativeTime * 0.5) * 0.2, // Gentle saturation
+            0.5 + Math.cos(contemplativeTime * 0.3) * 0.15  // Subtle brightness
           );
-          instancedMesh.setColorAt(instanceIndex, chaosColor);
+          instancedMesh.setColorAt(instanceIndex, contemplativeColor);
           
           instanceIndex++;
         }
@@ -114,10 +114,10 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
 
   return (
     <>
-      {/* Rick's Chaotic Instanced Field Elements */}
+      {/* Contemplative Field Elements */}
       {instancedMeshes.map((meshData, index) => (
         <instancedMesh
-          key={`rick-chaos-${index}`}
+          key={`contemplative-${index}`}
           ref={(ref) => {
             if (ref) fieldInstanceRefs.current[index] = ref;
           }}
@@ -127,9 +127,9 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
             materialConfig={{
               ...materialConfig,
               transparent: true,
-              opacity: 0.6 + Math.random() * 0.4,
-              emissiveIntensity: 0.3,
-              wireframe: Math.random() > 0.7
+              opacity: 0.7,
+              emissiveIntensity: 0.1,
+              wireframe: Math.random() > 0.8 // Fewer wireframes
             }} 
             color={color} 
           />
