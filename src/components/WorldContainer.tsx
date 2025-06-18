@@ -31,7 +31,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
         autoRotate={!isLocked}
         autoRotateSpeed={0.5}
         minDistance={2}
-        maxDistance={10}
+        maxDistance={25}
         onStart={() => setIsDragging(true)}
         onEnd={() => setIsDragging(false)}
       />
