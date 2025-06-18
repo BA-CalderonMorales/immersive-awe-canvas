@@ -1,5 +1,6 @@
 
 import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
+import { useEffect } from "react";
 import HelpDialog from "@/components/dialogs/HelpDialog";
 import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 
@@ -39,6 +40,31 @@ const ExperienceHotkeys = ({
   jumpToWorld,
 }: ExperienceHotkeysProps) => {
   
+  // Handle M key separately - should always work
+  useEffect(() => {
+    const handleMKey = (event: KeyboardEvent) => {
+      if (event.code === 'KeyM') {
+        // Check if user is typing
+        const activeEl = document.activeElement;
+        const isTyping = activeEl && (
+          activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.getAttribute('contenteditable') === 'true'
+        );
+        
+        if (!isTyping) {
+          console.log('ExperienceHotkeys - M key pressed, calling handleToggleShortcuts');
+          event.preventDefault();
+          handleToggleShortcuts();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleMKey);
+    return () => window.removeEventListener('keydown', handleMKey);
+  }, [handleToggleShortcuts]);
+  
+  // Handle all other hotkeys - only when dialogs are closed
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,

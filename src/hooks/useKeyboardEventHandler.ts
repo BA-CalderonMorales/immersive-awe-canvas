@@ -41,17 +41,10 @@ export const useKeyboardEventHandler = ({
     const typing = isUserTyping();
     console.log('KeyboardEventHandler - User typing:', typing);
 
-    // Handle M key specifically for shortcuts toggle
+    // Skip M key - it's handled separately in ExperienceHotkeys
     if (event.code === 'KeyM') {
-      if (!typing) {
-        console.log('KeyboardEventHandler - M key pressed, toggling shortcuts');
-        event.preventDefault();
-        onToggleShortcuts();
-        return;
-      } else {
-        console.log('KeyboardEventHandler - M key pressed but user is typing');
-        return;
-      }
+      console.log('KeyboardEventHandler - M key skipped (handled separately)');
+      return;
     }
 
     switch (event.code) {
