@@ -1,8 +1,8 @@
 
 import { ConeGeometry, CylinderGeometry, RingGeometry, BufferGeometry, Float32BufferAttribute, IcosahedronGeometry, TetrahedronGeometry, OctahedronGeometry, DodecahedronGeometry } from 'three';
 
-export const CONTEMPLATIVE_FIELD_COUNT = 60; // Further reduced for deeper focus
-export const HARMONY_MULTIPLIER = 1.5; // Even gentler for profound contemplation
+export const CONTEMPLATIVE_FIELD_COUNT = 80; // Increased for richer wobble field
+export const HARMONY_MULTIPLIER = 2.0; // Increased for more pronounced wobble effects
 
 export const generateChaoticField = () => {
   const positions = [];
@@ -13,44 +13,50 @@ export const generateChaoticField = () => {
   const meanings = []; // Add philosophical meaning to each element
   
   for (let i = 0; i < CONTEMPLATIVE_FIELD_COUNT; i++) {
-    // Philosophical arrangement patterns
+    // Create wobble field distribution patterns
     const distributionType = Math.random();
     let x, y, z;
     
-    if (distributionType < 0.3) {
-      // Mandala pattern - representing wholeness and the cosmos
-      const rings = 5;
+    if (distributionType < 0.4) {
+      // Wobble field rings - concentric waves
+      const rings = 6;
       const ringIndex = Math.floor(i / (CONTEMPLATIVE_FIELD_COUNT / rings));
       const angle = (i % (CONTEMPLATIVE_FIELD_COUNT / rings)) * (Math.PI * 2) / (CONTEMPLATIVE_FIELD_COUNT / rings);
-      const radius = (ringIndex + 1) * 1.8;
-      x = Math.cos(angle) * radius;
-      y = Math.sin(ringIndex * 0.5) * 2; // Subtle vertical variation
-      z = Math.sin(angle) * radius;
-    } else if (distributionType < 0.6) {
-      // Spiral of consciousness - representing growth and evolution
+      const radius = (ringIndex + 1) * 1.5;
+      // Add some random wobble to ring positions
+      const wobbleOffset = (Math.random() - 0.5) * 0.8;
+      x = Math.cos(angle) * (radius + wobbleOffset);
+      y = (Math.random() - 0.5) * 4 + Math.sin(ringIndex * 0.7) * 1.5;
+      z = Math.sin(angle) * (radius + wobbleOffset);
+    } else if (distributionType < 0.7) {
+      // Wobble field spirals - energy flow patterns
       const t = i / CONTEMPLATIVE_FIELD_COUNT;
-      const spiralTurns = 3;
+      const spiralTurns = 4;
       const angle = t * Math.PI * 2 * spiralTurns;
-      const radius = t * 5;
+      const radius = t * 6 + Math.sin(t * 8) * 0.5; // Add wobble to spiral
       x = Math.cos(angle) * radius;
-      y = (t - 0.5) * 6; // Ascend through consciousness levels
+      y = (t - 0.5) * 8 + Math.sin(angle * 3) * 0.8; // Wobble vertically
       z = Math.sin(angle) * radius;
     } else {
-      // Meditation clusters - representing states of awareness
-      const clusterCount = 8;
-      const clusterIndex = Math.floor(i / (CONTEMPLATIVE_FIELD_COUNT / clusterCount));
-      const clusterAngle = clusterIndex * (Math.PI * 2) / clusterCount;
-      const clusterRadius = 4;
-      x = Math.cos(clusterAngle) * clusterRadius + (Math.random() - 0.5) * 1.5;
-      y = (Math.random() - 0.5) * 4;
-      z = Math.sin(clusterAngle) * clusterRadius + (Math.random() - 0.5) * 1.5;
+      // Random wobble field scatter
+      const sphericalRadius = 3 + Math.random() * 3;
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.acos(2 * Math.random() - 1);
+      x = sphericalRadius * Math.sin(phi) * Math.cos(theta);
+      y = sphericalRadius * Math.cos(phi);
+      z = sphericalRadius * Math.sin(phi) * Math.sin(theta);
+      // Add wobble distortion
+      x += (Math.random() - 0.5) * 1.2;
+      y += (Math.random() - 0.5) * 1.2;
+      z += (Math.random() - 0.5) * 1.2;
     }
     
     positions.push([x, y, z]);
     
-    // Scales represent the intensity of contemplation
-    const contemplationDepth = 0.4 + Math.sin(i * 0.1) * 0.3;
-    scales.push([contemplationDepth, contemplationDepth, contemplationDepth]);
+    // Wobble field responsive scales
+    const baseScale = 0.3 + Math.random() * 0.4;
+    const wobbleScale = baseScale * (0.8 + Math.sin(i * 0.3) * 0.4); // Varied for field effect
+    scales.push([wobbleScale, wobbleScale * (0.8 + Math.random() * 0.4), wobbleScale]);
     
     rotations.push([
       Math.random() * Math.PI,
@@ -58,16 +64,16 @@ export const generateChaoticField = () => {
       Math.random() * Math.PI
     ]);
     
-    // More diverse philosophical forms
-    types.push(Math.floor(Math.random() * 7)); // Expanded to 7 meaningful types
+    // More diverse types for richer wobble field
+    types.push(Math.floor(Math.random() * 7));
     
-    // Color represents the nature of thought
-    const thoughtHue = (i * 23 + Math.random() * 20) % 360; // Prime number for natural distribution
-    const contemplationSaturation = 35 + Math.random() * 25; // Muted for deep thought
-    const wisdomLightness = 40 + Math.random() * 30; // Balanced luminosity
-    colors.push(`hsl(${thoughtHue}, ${contemplationSaturation}%, ${wisdomLightness}%)`);
+    // Wobble field energy colors
+    const energyHue = (i * 31 + Math.random() * 30) % 360; // Prime distribution
+    const fieldSaturation = 40 + Math.random() * 35; // More vibrant for energy
+    const energyBrightness = 45 + Math.random() * 35;
+    colors.push(`hsl(${energyHue}, ${fieldSaturation}%, ${energyBrightness}%)`);
     
-    // Assign philosophical meaning
+    // Assign philosophical meaning for wobble field interactions
     const meaningTypes = ['memory', 'question', 'insight', 'doubt', 'wonder', 'truth', 'mystery'];
     meanings.push(meaningTypes[i % meaningTypes.length]);
   }
@@ -75,42 +81,42 @@ export const generateChaoticField = () => {
   return { positions, scales, rotations, types, colors, meanings };
 };
 
-// Philosophical Geometry Factory - each form embodies deeper meaning
+// Enhanced Geometry Factory for wobble field compatibility
 export const createRickGeometry = (type: number, scale: [number, number, number]) => {
   const [sx, sy, sz] = scale;
   const baseSize = Math.max(sx, sy, sz);
   
   switch (type) {
-    case 0: // Questions - pointed upward, seeking answers
-      return new ConeGeometry(baseSize * 0.35, baseSize * 2.2, 8);
-    case 1: // Memories - cylindrical columns of experience
+    case 0: // Wobble cones - energy spikes
+      return new ConeGeometry(baseSize * 0.4, baseSize * 2.5, 12);
+    case 1: // Wobble cylinders - field columns
       return new CylinderGeometry(
-        baseSize * 0.25, 
-        baseSize * 0.4, 
-        baseSize * 1.5, 
-        12
-      );
-    case 2: // Cycles of Understanding - rings of wisdom
-      return new RingGeometry(
         baseSize * 0.3, 
-        baseSize * 0.8, 
-        16,
-        2
+        baseSize * 0.5, 
+        baseSize * 1.8, 
+        16
       );
-    case 3: // Complex Thoughts - icosahedrons for multifaceted ideas
-      return new IcosahedronGeometry(baseSize * 0.65, 2);
-    case 4: // Moments of Clarity - tetrahedra for sharp insights
-      return new TetrahedronGeometry(baseSize * 0.9);
-    case 5: // Balanced Perspectives - octahedra for dual nature of truth
-      return new OctahedronGeometry(baseSize * 0.7);
-    case 6: // Universal Truths - dodecahedra for cosmic understanding
-      return new DodecahedronGeometry(baseSize * 0.6);
-    default: // Default contemplative form - simple meditation
+    case 2: // Wobble rings - energy halos
+      return new RingGeometry(
+        baseSize * 0.4, 
+        baseSize * 0.9, 
+        20,
+        3
+      );
+    case 3: // Wobble icosahedrons - complex field nodes
+      return new IcosahedronGeometry(baseSize * 0.7, 3);
+    case 4: // Wobble tetrahedra - field spikes
+      return new TetrahedronGeometry(baseSize * 1.0);
+    case 5: // Wobble octahedra - dual field points
+      return new OctahedronGeometry(baseSize * 0.8);
+    case 6: // Wobble dodecahedra - cosmic field harmonics
+      return new DodecahedronGeometry(baseSize * 0.65);
+    default: // Default wobble cylinders
       return new CylinderGeometry(
-        baseSize * 0.3,
-        baseSize * 0.3,
-        baseSize * 1.2,
-        8
+        baseSize * 0.35,
+        baseSize * 0.35,
+        baseSize * 1.5,
+        12
       );
   }
 };

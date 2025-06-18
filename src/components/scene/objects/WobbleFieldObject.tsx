@@ -28,18 +28,21 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     
     timeRef.current = state.clock.getElapsedTime();
     
-    // Gentle consciousness response to attention
-    const awarenessInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.15;
+    // Create wobble field influence from mouse
+    const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.3;
     
     if (groupRef.current) {
-      // Subtle, meditative field rotation
-      groupRef.current.rotation.y += 0.002;
-      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.3) * 0.02;
-      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.2) * 0.015;
+      // Main field wobble - slow, wave-like motion
+      const wobbleSpeed = 0.4;
+      const wobbleIntensity = 0.8 + mouseInfluence;
       
-      // Gentle breathing response
-      const breathingScale = 1 + Math.sin(timeRef.current * 0.4) * 0.02 + awarenessInfluence * 0.03;
-      groupRef.current.scale.setScalar(breathingScale);
+      groupRef.current.rotation.y += 0.003;
+      groupRef.current.rotation.x = Math.sin(timeRef.current * wobbleSpeed) * 0.1 * wobbleIntensity;
+      groupRef.current.rotation.z = Math.cos(timeRef.current * wobbleSpeed * 0.7) * 0.08 * wobbleIntensity;
+      
+      // Field breathing - the entire field pulses together
+      const fieldPulse = 1 + Math.sin(timeRef.current * 0.6) * 0.15 + mouseInfluence * 0.1;
+      groupRef.current.scale.setScalar(fieldPulse);
     }
   });
 
@@ -52,27 +55,43 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
         isLocked={isLocked}
       />
       
-      {/* Central Mind Core - simplified */}
-      <mesh scale={0.5} position={[0, 0, 0]}>
-        <icosahedronGeometry args={[1, 2]} />
+      {/* Central Wobble Core */}
+      <mesh scale={0.8} position={[0, 0, 0]}>
+        <icosahedronGeometry args={[1, 3]} />
         <MeshWobbleMaterial
           color={color}
-          speed={0.8}
-          factor={0.1}
+          speed={1.2}
+          factor={0.4}
           transparent
-          opacity={0.8}
+          opacity={0.7}
           emissive={color}
-          emissiveIntensity={theme === 'day' ? 0.04 : 0.08}
+          emissiveIntensity={theme === 'day' ? 0.1 : 0.2}
         />
       </mesh>
       
-      {/* Simplified Inner Layer */}
-      <mesh scale={0.35}>
-        <sphereGeometry args={[1, 16, 12]} />
-        <meshBasicMaterial
+      {/* Wobble Field Layers */}
+      <mesh scale={1.2}>
+        <sphereGeometry args={[1, 32, 24]} />
+        <MeshWobbleMaterial
           color={color}
+          speed={0.8}
+          factor={0.2}
           transparent
-          opacity={theme === 'day' ? 0.02 : 0.04}
+          opacity={theme === 'day' ? 0.15 : 0.25}
+          wireframe
+        />
+      </mesh>
+      
+      {/* Outer Wobble Shell */}
+      <mesh scale={1.6}>
+        <sphereGeometry args={[1, 24, 16]} />
+        <MeshWobbleMaterial
+          color={color}
+          speed={0.5}
+          factor={0.1}
+          transparent
+          opacity={theme === 'day' ? 0.08 : 0.12}
+          wireframe
         />
       </mesh>
     </group>
