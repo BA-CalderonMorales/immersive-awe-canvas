@@ -13,26 +13,59 @@ interface DynamicMaterialProps {
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const { gl } = useThree();
 
-    // Helper function to filter out undefined values and validate
-    const filterUndefined = (obj: Record<string, any>) => {
-        const filtered: Record<string, any> = {};
+    // Comprehensive validation function
+    const validateAndClean = (obj: Record<string, any>) => {
+        const cleaned: Record<string, any> = {};
         Object.keys(obj).forEach(key => {
             const value = obj[key];
-            if (value !== undefined && value !== null) {
-                // Additional validation for specific properties
-                if (key === 'opacity' && (typeof value !== 'number' || isNaN(value))) {
-                    filtered[key] = 1.0;
-                } else if (key === 'emissiveIntensity' && (typeof value !== 'number' || isNaN(value))) {
-                    filtered[key] = 0.0;
-                } else {
-                    filtered[key] = value;
-                }
+            
+            // Skip undefined, null, or invalid values
+            if (value === undefined || value === null) {
+                return;
+            }
+            
+            // Type-specific validation
+            switch (key) {
+                case 'opacity':
+                case 'roughness':
+                case 'metalness':
+                case 'emissiveIntensity':
+                case 'clearcoat':
+                case 'clearcoatRoughness':
+                case 'ior':
+                case 'thickness':
+                case 'specularIntensity':
+                case 'shininess':
+                    if (typeof value === 'number' && !isNaN(value) && isFinite(value)) {
+                        cleaned[key] = Math.max(0, Math.min(value, key === 'opacity' ? 1 : 10));
+                    }
+                    break;
+                case 'color':
+                case 'emissive':
+                case 'specular':
+                case 'specularColor':
+                case 'groundColor':
+                    if (typeof value === 'string' && value.length > 0) {
+                        cleaned[key] = value;
+                    }
+                    break;
+                case 'wireframe':
+                case 'transparent':
+                    if (typeof value === 'boolean') {
+                        cleaned[key] = value;
+                    }
+                    break;
+                default:
+                    // For other properties, only include if they're valid
+                    if (value !== undefined && value !== null) {
+                        cleaned[key] = value;
+                    }
             }
         });
-        return filtered;
+        return cleaned;
     };
 
-    // Memoize gradient maps to prevent recreation on every render
+    // Memoize gradient maps to prevent recreation
     const gradientMaps = useMemo(() => {
         const fiveTone = new THREE.DataTexture(
             new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 
@@ -61,64 +94,88 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     
     const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
-    // Validate and prepare common properties
-    const commonProps = useMemo(() => filterUndefined({
-        color: color || '#ffffff',
-        wireframe: materialConfig.wireframe,
-        emissive: materialConfig.emissive,
-        emissiveIntensity: materialConfig.emissiveIntensity,
-        transparent: materialConfig.transparent,
-        opacity: materialConfig.opacity,
-    }), [materialConfig, color]);
+    // Prepare base properties with defaults
+    const baseProps = useMemo(() => {
+        const props = validateAndClean({
+            color: color || '#ffffff',
+            wireframe: materialConfig.wireframe || false,
+            transparent: materialConfig.transparent || false,
+            opacity: materialConfig.opacity !== undefined ? materialConfig.opacity : 1.0,
+        });
+        
+        // Add emissive properties only if they exist
+        if (materialConfig.emissive) {
+            props.emissive = materialConfig.emissive;
+            props.emissiveIntensity = materialConfig.emissiveIntensity !== undefined ? materialConfig.emissiveIntensity : 0.0;
+        }
+        
+        return props;
+    }, [materialConfig, color]);
 
-    // Ensure material type is valid
+    // Get material type with fallback
     const materialType = materialConfig.materialType || 'standard';
 
+    // Render materials with proper prop validation
     switch (materialType) {
         case 'physical':
-            return <meshPhysicalMaterial
-                {...commonProps}
-                {...filterUndefined({
-                    roughness: materialConfig.roughness,
-                    metalness: materialConfig.metalness,
-                    clearcoat: materialConfig.clearcoat,
-                    clearcoatRoughness: materialConfig.clearcoatRoughness,
-                    ior: materialConfig.ior,
-                    thickness: materialConfig.thickness,
-                    specularIntensity: materialConfig.specularIntensity,
-                    specularColor: materialConfig.specularColor,
-                })}
-            />;
+            const physicalProps = validateAndClean({
+                ...baseProps,
+                roughness: materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5,
+                metalness: materialConfig.metalness !== undefined ? materialConfig.metalness : 0.0,
+                clearcoat: materialConfig.clearcoat || 0.0,
+                clearcoatRoughness: materialConfig.clearcoatRoughness || 0.0,
+                ior: materialConfig.ior || 1.5,
+                thickness: materialConfig.thickness || 0.0,
+                specularIntensity: materialConfig.specularIntensity || 1.0,
+                specularColor: materialConfig.specularColor || '#ffffff',
+            });
+            return <meshPhysicalMaterial {...physicalProps} />;
+
         case 'toon':
-            return <meshToonMaterial
-                {...commonProps}
-                gradientMap={materialConfig.gradientMap === 'five' ? gradientMaps.fiveTone : gradientMaps.threeTone}
-            />;
+            const toonProps = validateAndClean(baseProps);
+            return (
+                <meshToonMaterial
+                    {...toonProps}
+                    gradientMap={materialConfig.gradientMap === 'five' ? gradientMaps.fiveTone : gradientMaps.threeTone}
+                />
+            );
+
         case 'matcap':
-            return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
+            const matcapProps = validateAndClean(baseProps);
+            return <meshMatcapMaterial {...matcapProps} matcap={matcap} />;
+
         case 'lambert':
-            return <meshLambertMaterial {...commonProps} />;
+            const lambertProps = validateAndClean(baseProps);
+            return <meshLambertMaterial {...lambertProps} />;
+
         case 'phong':
-            return <meshPhongMaterial 
-                {...commonProps} 
-                {...filterUndefined({
-                    shininess: materialConfig.shininess,
-                    specular: materialConfig.specularColor,
-                })}
-            />;
+            const phongProps = validateAndClean({
+                ...baseProps,
+                shininess: materialConfig.shininess || 30,
+                specular: materialConfig.specularColor || '#111111',
+            });
+            return <meshPhongMaterial {...phongProps} />;
+
         case 'normal':
-            return <meshNormalMaterial {...commonProps} />;
+            const normalProps = validateAndClean({
+                wireframe: baseProps.wireframe,
+                transparent: baseProps.transparent,
+                opacity: baseProps.opacity,
+            });
+            return <meshNormalMaterial {...normalProps} />;
+
         case 'basic':
-            return <meshBasicMaterial {...commonProps} />;
+            const basicProps = validateAndClean(baseProps);
+            return <meshBasicMaterial {...basicProps} />;
+
         case 'standard':
         default:
-            return <meshStandardMaterial
-                {...commonProps}
-                {...filterUndefined({
-                    roughness: materialConfig.roughness,
-                    metalness: materialConfig.metalness,
-                })}
-            />;
+            const standardProps = validateAndClean({
+                ...baseProps,
+                roughness: materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5,
+                metalness: materialConfig.metalness !== undefined ? materialConfig.metalness : 0.0,
+            });
+            return <meshStandardMaterial {...standardProps} />;
     }
 };
 
