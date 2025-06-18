@@ -28,38 +28,40 @@ const KeyboardShortcutsOverlay = ({ theme, isVisible, onToggle }: KeyboardShortc
     >
       <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
         <div className="flex items-center justify-between p-3 pb-2">
-          <CollapsibleTrigger asChild>
+          <span className="font-semibold">Keyboard Shortcuts</span>
+          <div className="flex items-center gap-2">
+            <CollapsibleTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="w-4 h-4 p-0 hover:bg-transparent"
+              >
+                {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              </Button>
+            </CollapsibleTrigger>
             <Button
               variant="ghost"
-              size="sm"
-              className="p-0 h-auto font-semibold hover:bg-transparent flex items-center gap-2"
+              size="icon"
+              className="w-4 h-4 p-0 hover:bg-transparent"
+              onClick={onToggle}
             >
-              Keyboard Shortcuts
-              {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
+              <X className="w-3 h-3" />
             </Button>
-          </CollapsibleTrigger>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-4 h-4 p-0 hover:bg-transparent"
-            onClick={onToggle}
-          >
-            <X className="w-3 h-3" />
-          </Button>
+          </div>
         </div>
         
         <CollapsibleContent className="px-3 pb-3">
           <div className="space-y-1.5">
-            <p>Press <span className="font-bold">N</span> to go to the Next World</p>
-            <p>Press <span className="font-bold">P</span> to go to the Previous World</p>
-            <p>Press <span className="font-bold">Space</span> to change the time of day</p>
-            <p>Press <span className="font-bold">.</span> to freeze/unfreeze objects</p>
-            <p>Press <span className="font-bold">V</span> to toggle UI visibility</p>
-            <p>Press <span className="font-bold">E</span> to open Settings panel</p>
-            <p>Press <span className="font-bold">S</span> to open Search worlds</p>
-            <p>Press <span className="font-bold">H</span> to open Help dialog</p>
-            <p>Press <span className="font-bold">G</span> to go back to Home</p>
-            <p>Press <span className="font-bold">C</span> to copy scene code</p>
+            <p>Press <span className="font-bold">N</span> to navigate to the next world</p>
+            <p>Press <span className="font-bold">P</span> to navigate to the previous world</p>
+            <p>Press <span className="font-bold">Space</span> to switch between day and night</p>
+            <p>Press <span className="font-bold">.</span> to freeze or unfreeze moving objects</p>
+            <p>Press <span className="font-bold">V</span> to show or hide the interface</p>
+            <p>Press <span className="font-bold">E</span> to open the settings panel</p>
+            <p>Press <span className="font-bold">S</span> to search for worlds</p>
+            <p>Press <span className="font-bold">H</span> to open the help guide</p>
+            <p>Press <span className="font-bold">G</span> to return to the home page</p>
+            <p>Press <span className="font-bold">C</span> to copy the scene configuration</p>
           </div>
         </CollapsibleContent>
       </Collapsible>
