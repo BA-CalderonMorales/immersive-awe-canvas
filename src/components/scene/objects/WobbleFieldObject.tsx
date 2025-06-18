@@ -1,9 +1,9 @@
 
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { MeshWobbleMaterial } from '@react-three/drei';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
-import { MathUtils, Group, Vector3, CatmullRomCurve3, Mesh } from 'three';
+import { MathUtils, Group, Vector3, BufferGeometry, Float32BufferAttribute, InstancedMesh, Object3D, Matrix4, Color, CylinderGeometry, ConeGeometry, RingGeometry } from 'three';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface WobbleFieldObjectProps {
@@ -12,83 +12,158 @@ interface WobbleFieldObjectProps {
   isLocked: boolean;
 }
 
-// Rick's chaotic field generator - because normal fields are for Jerry!
-const generateFieldPositions = () => {
+// Rick's Interdimensional Chaos Generator™ - because boring is for Jerry!
+const RICK_FIELD_COUNT = 200;
+const CHAOS_MULTIPLIER = 5;
+
+const generateChaoticField = () => {
   const positions = [];
-  const centerWeight = 0.3; // Probability of spawning near center
+  const scales = [];
+  const rotations = [];
+  const types = [];
+  const colors = [];
   
-  for (let i = 0; i < 15; i++) {
+  for (let i = 0; i < RICK_FIELD_COUNT; i++) {
+    // Chaotic position distribution - some clustered, some scattered
+    const clusterChance = Math.random();
     let x, y, z;
     
-    if (Math.random() < centerWeight) {
-      // Central cluster for dramatic effect
-      x = (Math.random() - 0.5) * 3;
-      y = (Math.random() - 0.5) * 2;
-      z = (Math.random() - 0.5) * 3;
-    } else {
-      // Outer ring of chaos
-      const angle = (i / 15) * Math.PI * 2 + Math.random() * 0.5;
-      const radius = 4 + Math.random() * 2;
+    if (clusterChance < 0.4) {
+      // Dense central chaos cluster
+      x = (Math.random() - 0.5) * 4;
+      y = (Math.random() - 0.5) * 3;
+      z = (Math.random() - 0.5) * 4;
+    } else if (clusterChance < 0.7) {
+      // Orbital ring of madness
+      const angle = (i / RICK_FIELD_COUNT) * Math.PI * 6 + Math.random();
+      const radius = 5 + Math.random() * 3;
       x = Math.cos(angle) * radius;
-      y = (Math.random() - 0.5) * 4;
+      y = (Math.random() - 0.5) * 6;
       z = Math.sin(angle) * radius;
+    } else {
+      // Scattered interdimensional debris
+      x = (Math.random() - 0.5) * 20;
+      y = (Math.random() - 0.5) * 15;
+      z = (Math.random() - 0.5) * 20;
     }
     
     positions.push([x, y, z]);
+    scales.push([
+      0.1 + Math.random() * 0.8,
+      0.1 + Math.random() * 0.8,
+      0.1 + Math.random() * 0.8
+    ]);
+    rotations.push([
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2,
+      Math.random() * Math.PI * 2
+    ]);
+    
+    // Different geometry types for maximum chaos
+    types.push(Math.floor(Math.random() * 8));
+    
+    // Chaotic color variations
+    const hue = (i * 7 + Math.random() * 60) % 360;
+    colors.push(`hsl(${hue}, ${70 + Math.random() * 30}%, ${40 + Math.random() * 40}%)`);
   }
-  return positions;
+  
+  return { positions, scales, rotations, types, colors };
 };
 
-// Geometries that Rick would approve of - with CORRECT TypeScript args!
-const getRandomGeometry = (index: number) => {
-  const geometries = [
-    { type: 'icosahedron', args: [0.8 + Math.random() * 0.4, Math.floor(Math.random() * 3)] },
-    { type: 'dodecahedron', args: [0.6 + Math.random() * 0.5] },
-    { type: 'octahedron', args: [0.9 + Math.random() * 0.3] },
-    { type: 'tetrahedron', args: [1.1 + Math.random() * 0.4] },
-    { type: 'torus', args: [0.6, 0.2 + Math.random() * 0.2, 8, 16] },
-    { type: 'torusKnot', args: [0.5, 0.15, 32, 8, 2 + Math.floor(Math.random() * 3), 3 + Math.floor(Math.random() * 4)] },
-  ];
+// Rick's Procedural Geometry Factory - each one different!
+const createRickGeometry = (type: number, scale: [number, number, number]) => {
+  const [sx, sy, sz] = scale;
+  const baseSize = Math.max(sx, sy, sz);
   
-  return geometries[index % geometries.length];
+  switch (type) {
+    case 0: // Chaotic Crystal Spikes
+      return new ConeGeometry(baseSize * 0.5, baseSize * 2, 6 + Math.floor(Math.random() * 8));
+    case 1: // Dimensional Tubes
+      return new CylinderGeometry(
+        baseSize * 0.3, 
+        baseSize * 0.1, 
+        baseSize * 1.5, 
+        8 + Math.floor(Math.random() * 8)
+      );
+    case 2: // Portal Rings
+      return new RingGeometry(
+        baseSize * 0.3, 
+        baseSize * 0.8, 
+        6 + Math.floor(Math.random() * 10),
+        2 + Math.floor(Math.random() * 4)
+      );
+    case 3: // Chaos Polyhedron
+      const vertices = [];
+      const vertexCount = 8 + Math.floor(Math.random() * 12);
+      for (let i = 0; i < vertexCount; i++) {
+        vertices.push(
+          (Math.random() - 0.5) * baseSize,
+          (Math.random() - 0.5) * baseSize,
+          (Math.random() - 0.5) * baseSize
+        );
+      }
+      const geometry = new BufferGeometry();
+      geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3));
+      geometry.computeVertexNormals();
+      return geometry;
+    case 4: // Interdimensional Spikes
+      return new ConeGeometry(baseSize * 0.2, baseSize * 3, 3 + Math.floor(Math.random() * 5));
+    case 5: // Reality Fragments
+      const fragVertices = [];
+      for (let i = 0; i < 30; i++) {
+        fragVertices.push(
+          (Math.random() - 0.5) * baseSize * 2,
+          (Math.random() - 0.5) * baseSize * 2,
+          (Math.random() - 0.5) * baseSize * 2
+        );
+      }
+      const fragGeometry = new BufferGeometry();
+      fragGeometry.setAttribute('position', new Float32BufferAttribute(fragVertices, 3));
+      return fragGeometry;
+    case 6: // Dimensional Discs
+      return new RingGeometry(0, baseSize, 16, 1);
+    default: // Chaotic Polyhedra
+      return new CylinderGeometry(
+        baseSize * (0.1 + Math.random() * 0.4),
+        baseSize * (0.1 + Math.random() * 0.4),
+        baseSize * (0.5 + Math.random() * 1.5),
+        3 + Math.floor(Math.random() * 9)
+      );
+  }
 };
 
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
-  const fieldElements = useRef<any[]>([]);
-  const connectionRefs = useRef<Mesh[]>([]);
+  const fieldInstanceRefs = useRef<InstancedMesh[]>([]);
   const { mouse } = useThree();
   const timeRef = useRef(0);
+  const dummyObject = useRef(new Object3D());
+  const matrix = useRef(new Matrix4());
 
-  // Generate chaotic field positions
-  const fieldPositions = useMemo(() => generateFieldPositions(), []);
+  // Generate the chaotic field data
+  const fieldData = useMemo(() => generateChaoticField(), []);
   
-  // Create connection paths between nearby elements
-  const connectionPaths = useMemo(() => {
-    const paths = [];
-    for (let i = 0; i < fieldPositions.length; i++) {
-      for (let j = i + 1; j < fieldPositions.length; j++) {
-        const pos1 = new Vector3(...fieldPositions[i]);
-        const pos2 = new Vector3(...fieldPositions[j]);
-        const distance = pos1.distanceTo(pos2);
-        
-        // Only connect nearby elements for that chaotic web effect
-        if (distance < 4 && Math.random() > 0.6) {
-          const midPoint = pos1.clone().lerp(pos2, 0.5);
-          midPoint.y += (Math.random() - 0.5) * 2; // Add some curve chaos
-          
-          const curve = new CatmullRomCurve3([
-            pos1,
-            midPoint,
-            pos2
-          ]);
-          
-          paths.push({ curve, distance });
-        }
+  // Create instanced meshes for different geometry types
+  const instancedMeshes = useMemo(() => {
+    const meshes = [];
+    const instanceCounts = new Array(8).fill(0);
+    
+    // Count instances per type
+    fieldData.types.forEach(type => instanceCounts[type]++);
+    
+    // Create instanced mesh for each type
+    for (let typeIndex = 0; typeIndex < 8; typeIndex++) {
+      if (instanceCounts[typeIndex] > 0) {
+        meshes.push({
+          type: typeIndex,
+          count: instanceCounts[typeIndex],
+          geometry: createRickGeometry(typeIndex, [1, 1, 1])
+        });
       }
     }
-    return paths;
-  }, [fieldPositions]);
+    
+    return meshes;
+  }, [fieldData]);
 
   useFrame((state) => {
     if (isLocked) return;
@@ -96,165 +171,165 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
     timeRef.current = state.clock.getElapsedTime();
     
     if (groupRef.current) {
-      // Slow orbital rotation of the entire field
-      groupRef.current.rotation.y += 0.003;
-      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.2) * 0.1;
+      // Master field rotation with chaotic wobbles
+      groupRef.current.rotation.y += 0.005;
+      groupRef.current.rotation.x = Math.sin(timeRef.current * 0.3) * 0.2;
+      groupRef.current.rotation.z = Math.cos(timeRef.current * 0.2) * 0.1;
       
-      // Mouse interaction creates field distortion
+      // Mouse creates dimensional distortions
       const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y);
-      groupRef.current.rotation.z = MathUtils.lerp(
-        groupRef.current.rotation.z,
-        mouse.x * 0.15,
-        0.02
-      );
+      groupRef.current.scale.setScalar(1 + mouseInfluence * 0.1);
     }
 
-    // Animate individual field elements with chaotic behavior
-    fieldElements.current.forEach((element, index) => {
-      if (element) {
-        const offset = index * 0.7;
-        const chaos = Math.sin(timeRef.current * 1.5 + offset) * 0.3;
-        const mouseBoost = Math.abs(mouse.x + mouse.y) * 0.4;
-        
-        // Wobble factor varies chaotically
-        element.factor = MathUtils.lerp(
-          element.factor,
-          0.4 + chaos + mouseBoost,
-          0.04
-        );
-        
-        // Speed varies with position and time
-        element.speed = MathUtils.lerp(
-          element.speed,
-          2 + Math.sin(timeRef.current * 0.8 + offset * 2) * 1.5 + mouseBoost * 3,
-          0.03
-        );
-      }
-    });
-
-    // Animate connection tubes
-    connectionRefs.current.forEach((connection, index) => {
-      if (connection) {
-        const offset = index * 0.4;
-        connection.rotation.z += 0.02 + Math.sin(timeRef.current + offset) * 0.01;
-        connection.scale.setScalar(0.8 + Math.sin(timeRef.current * 2 + offset) * 0.3);
+    // Animate each instanced mesh
+    fieldInstanceRefs.current.forEach((instancedMesh, meshIndex) => {
+      if (!instancedMesh) return;
+      
+      let instanceIndex = 0;
+      
+      fieldData.positions.forEach((position, fieldIndex) => {
+        if (fieldData.types[fieldIndex] === instancedMeshes[meshIndex].type) {
+          const [x, y, z] = position;
+          const [sx, sy, sz] = fieldData.scales[fieldIndex];
+          const [rx, ry, rz] = fieldData.rotations[fieldIndex];
+          
+          // Chaotic movement patterns
+          const chaosTime = timeRef.current + fieldIndex * 0.1;
+          const chaosX = x + Math.sin(chaosTime * 0.8 + fieldIndex) * CHAOS_MULTIPLIER;
+          const chaosY = y + Math.cos(chaosTime * 0.6 + fieldIndex * 2) * CHAOS_MULTIPLIER;
+          const chaosZ = z + Math.sin(chaosTime * 0.4 + fieldIndex * 3) * CHAOS_MULTIPLIER;
+          
+          // Dynamic scaling based on time and mouse
+          const pulseFactor = 1 + Math.sin(chaosTime * 2 + fieldIndex) * 0.3;
+          const mouseFactor = 1 + mouseInfluence * 0.5;
+          
+          dummyObject.current.position.set(chaosX, chaosY, chaosZ);
+          dummyObject.current.rotation.set(
+            rx + chaosTime * 0.5,
+            ry + chaosTime * 0.3,
+            rz + chaosTime * 0.7
+          );
+          dummyObject.current.scale.set(
+            sx * pulseFactor * mouseFactor,
+            sy * pulseFactor * mouseFactor,
+            sz * pulseFactor * mouseFactor
+          );
+          
+          dummyObject.current.updateMatrix();
+          instancedMesh.setMatrixAt(instanceIndex, dummyObject.current.matrix);
+          
+          // Dynamic color chaos
+          const colorShift = (timeRef.current + fieldIndex) * 50;
+          const chaosColor = new Color().setHSL(
+            ((colorShift % 360) / 360),
+            0.7 + Math.sin(chaosTime) * 0.3,
+            0.5 + Math.cos(chaosTime * 1.5) * 0.3
+          );
+          instancedMesh.setColorAt(instanceIndex, chaosColor);
+          
+          instanceIndex++;
+        }
+      });
+      
+      instancedMesh.instanceMatrix.needsUpdate = true;
+      if (instancedMesh.instanceColor) {
+        instancedMesh.instanceColor.needsUpdate = true;
       }
     });
   });
 
   return (
     <group ref={groupRef}>
-      {/* The chaotic field elements */}
-      {fieldPositions.map((position, index) => {
-        const scale = 0.7 + Math.random() * 0.6;
-        const geometry = getRandomGeometry(index);
-        const opacity = index < 3 ? 1 : 0.7 + Math.random() * 0.3; // Hero elements vs supporting cast
-        
-        return (
-          <mesh 
-            key={`field-${index}`} 
-            position={position as [number, number, number]} 
-            scale={scale}
-            rotation={[
-              Math.random() * Math.PI, 
-              Math.random() * Math.PI, 
-              Math.random() * Math.PI
-            ]}
-          >
-            {/* Render different geometries based on type - FIXED ARGS! */}
-            {geometry.type === 'icosahedron' && <icosahedronGeometry args={geometry.args as [number?, number?]} />}
-            {geometry.type === 'dodecahedron' && <dodecahedronGeometry args={geometry.args as [number?]} />}
-            {geometry.type === 'octahedron' && <octahedronGeometry args={geometry.args as [number?]} />}
-            {geometry.type === 'tetrahedron' && <tetrahedronGeometry args={geometry.args as [number?]} />}
-            {geometry.type === 'torus' && <torusGeometry args={geometry.args as [number?, number?, number?, number?]} />}
-            {geometry.type === 'torusKnot' && <torusKnotGeometry args={geometry.args as [number?, number?, number?, number?, number?, number?]} />}
-            
-            <MeshWobbleMaterial
-              ref={(ref) => { 
-                if (ref) fieldElements.current[index] = ref;
-              }}
-              color={index < 3 ? color : `hsl(${(index * 40) % 360}, 70%, 60%)`} // Color variation
-              speed={2}
-              factor={0.4}
-              transparent={opacity < 1}
-              opacity={opacity}
-              wireframe={Math.random() > 0.7} // Some wireframe chaos
-            />
-          </mesh>
-        );
-      })}
-      
-      {/* Energy connection tubes between field elements */}
-      {connectionPaths.map((path, index) => (
-        <mesh 
-          key={`connection-${index}`}
+      {/* Rick's Chaotic Instanced Field Elements */}
+      {instancedMeshes.map((meshData, index) => (
+        <instancedMesh
+          key={`rick-chaos-${index}`}
           ref={(ref) => {
-            if (ref) connectionRefs.current[index] = ref;
+            if (ref) fieldInstanceRefs.current[index] = ref;
           }}
+          args={[meshData.geometry, undefined, meshData.count]}
         >
-          <tubeGeometry 
-            args={[
-              path.curve,
-              20, 
-              0.02 + Math.random() * 0.03, // Varying tube thickness
-              6, 
-              false
-            ]} 
-          />
           <DynamicMaterial 
             materialConfig={{
               ...materialConfig,
               transparent: true,
-              opacity: 0.4 + Math.random() * 0.3,
-              emissiveIntensity: 0.5,
-              wireframe: Math.random() > 0.8
+              opacity: 0.6 + Math.random() * 0.4,
+              emissiveIntensity: 0.3,
+              wireframe: Math.random() > 0.7
             }} 
-            color={`hsl(${(index * 60) % 360}, 80%, 50%)`} 
+            color={color} 
           />
-        </mesh>
+        </instancedMesh>
       ))}
       
-      {/* Central energy core - the heart of the chaos */}
-      <mesh scale={0.3}>
-        <sphereGeometry args={[1, 32, 32]} />
+      {/* Central Interdimensional Core */}
+      <mesh scale={0.8}>
+        <icosahedronGeometry args={[1, 2]} />
         <MeshWobbleMaterial
-          color="#ffffff"
-          speed={5}
-          factor={0.8}
+          color={color}
+          speed={8}
+          factor={1.2}
           transparent
-          opacity={0.8}
+          opacity={0.9}
           emissive={color}
-          emissiveIntensity={0.3}
+          emissiveIntensity={0.4}
         />
       </mesh>
       
-      {/* Orbital ring elements for extra visual flair */}
-      {[...Array(8)].map((_, i) => {
-        const angle = (i / 8) * Math.PI * 2;
-        const radius = 3;
+      {/* Chaotic Energy Streams */}
+      {[...Array(12)].map((_, i) => {
+        const angle = (i / 12) * Math.PI * 2;
+        const radius = 4 + Math.sin(i) * 2;
         return (
           <mesh 
-            key={`orbital-${i}`}
+            key={`energy-stream-${i}`}
             position={[
               Math.cos(angle + timeRef.current * 0.5) * radius,
-              Math.sin(timeRef.current * 0.3 + i) * 0.5,
+              Math.sin(timeRef.current * 0.8 + i) * 3,
               Math.sin(angle + timeRef.current * 0.5) * radius
             ]}
-            scale={0.2}
+            rotation={[timeRef.current * 2 + i, timeRef.current * 1.5, 0]}
+            scale={[0.1, 2 + Math.sin(timeRef.current * 3 + i), 0.1]}
           >
-            <boxGeometry args={[1, 0.2, 0.2]} />
+            <cylinderGeometry args={[0.1, 0.05, 1, 6]} />
             <DynamicMaterial 
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
-                opacity: 0.6,
-                emissiveIntensity: 0.4
+                opacity: 0.7,
+                emissiveIntensity: 0.8,
+                wireframe: true
               }} 
-              color={color} 
+              color={`hsl(${(i * 30 + timeRef.current * 50) % 360}, 80%, 60%)`} 
             />
           </mesh>
         );
       })}
+      
+      {/* Dimensional Portal Effects */}
+      {[...Array(6)].map((_, i) => (
+        <mesh 
+          key={`portal-${i}`}
+          position={[
+            Math.cos(i * Math.PI / 3) * 6,
+            Math.sin(timeRef.current * 0.4 + i) * 2,
+            Math.sin(i * Math.PI / 3) * 6
+          ]}
+          rotation={[0, timeRef.current * 2 + i, Math.PI / 2]}
+          scale={1 + Math.sin(timeRef.current * 4 + i) * 0.5}
+        >
+          <ringGeometry args={[1, 1.5, 16]} />
+          <DynamicMaterial 
+            materialConfig={{
+              ...materialConfig,
+              transparent: true,
+              opacity: 0.3,
+              emissiveIntensity: 0.6
+            }} 
+            color={`hsl(${(i * 60 + timeRef.current * 30) % 360}, 90%, 70%)`} 
+          />
+        </mesh>
+      ))}
     </group>
   );
 };
