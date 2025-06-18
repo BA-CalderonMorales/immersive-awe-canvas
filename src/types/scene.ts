@@ -1,3 +1,4 @@
+
 export type LightConfig = {
   type: 'ambient' | 'directional' | 'point' | 'hemisphere';
   intensity?: number;
@@ -84,7 +85,7 @@ export type SceneThemeConfig = {
 };
 
 export type SceneConfig = {
-  type: 'TorusKnot' | 'WobbleField' | 'DistortionSphere' | 'MorphingIcosahedron' | 'WavyGrid';
+  type: 'TorusKnot' | 'WobbleField' | 'DistortionSphere' | 'MorphingIcosahedron' | 'WavyGrid' | 'CrystallineSpire';
   day: SceneThemeConfig;
   night: SceneThemeConfig;
 };
