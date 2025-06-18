@@ -1,45 +1,72 @@
 
 import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { PointLight as PointLightImpl } from 'three';
-
-type AnimationType = 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
+import { PointLight } from 'three';
 
 interface AnimatedPointLightProps {
-  animationType: AnimationType;
-  intensity?: number;
+  animationType: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
+  color?: string;
   position?: [number, number, number];
-  [key: string]: any;
+  intensity?: number;
 }
 
-const AnimatedPointLight = ({ animationType, ...props }: AnimatedPointLightProps) => {
-  const lightRef = useRef<PointLightImpl>(null!);
-  const initialIntensity = props.intensity || 1;
-  const initialPosition = props.position || [0, 0, 0];
+const AnimatedPointLight = ({ 
+  animationType, 
+  color = '#ffffff', 
+  position = [0, 0, 0], 
+  intensity = 1 
+}: AnimatedPointLightProps) => {
+  const lightRef = useRef<PointLight>(null!);
+  const timeRef = useRef(0);
+  const baseIntensity = intensity;
 
-  useFrame(({ clock }) => {
+  useFrame((state) => {
     if (!lightRef.current) return;
-
-    const time = clock.getElapsedTime();
-
+    
+    timeRef.current = state.clock.getElapsedTime();
+    
     switch (animationType) {
       case 'pulsing':
-        lightRef.current.intensity = initialIntensity * (1 + Math.sin(time * 2));
+        // Fast, rhythmic pulsing like a heartbeat
+        lightRef.current.intensity = baseIntensity * (0.5 + Math.sin(timeRef.current * 3) * 0.5);
         break;
       case 'flicker':
-        lightRef.current.intensity = initialIntensity * (Math.random() > 0.1 ? 1 : 0.5);
+        // Erratic flickering like candlelight or electrical interference
+        const flicker = Math.sin(timeRef.current * 8) * 0.3 + 
+                       Math.sin(timeRef.current * 12.7) * 0.2 + 
+                       Math.sin(timeRef.current * 5.3) * 0.15;
+        lightRef.current.intensity = baseIntensity * (0.7 + flicker * 0.3);
         break;
       case 'swirl':
-        lightRef.current.position.x = initialPosition[0] + Math.sin(time * 0.5) * 2;
-        lightRef.current.position.y = initialPosition[1] + Math.cos(time * 0.5) * 2;
+        // Orbital movement with intensity variation - like consciousness flowing
+        const swirlIntensity = 0.6 + Math.sin(timeRef.current * 1.5) * 0.4;
+        lightRef.current.intensity = baseIntensity * swirlIntensity;
+        
+        // Add subtle orbital movement
+        const radius = 0.8;
+        lightRef.current.position.x = position[0] + Math.cos(timeRef.current * 0.7) * radius;
+        lightRef.current.position.z = position[2] + Math.sin(timeRef.current * 0.7) * radius;
+        lightRef.current.position.y = position[1] + Math.sin(timeRef.current * 0.4) * 0.5;
         break;
       case 'slowPulse':
-        lightRef.current.intensity = initialIntensity * (1 + Math.sin(time * 0.5) * 0.5);
+        // Deep, meditative breathing rhythm
+        lightRef.current.intensity = baseIntensity * (0.4 + Math.sin(timeRef.current * 0.8) * 0.6);
         break;
+      default:
+        lightRef.current.intensity = baseIntensity;
     }
   });
 
-  return <pointLight ref={lightRef} {...props} />;
+  return (
+    <pointLight
+      ref={lightRef}
+      color={color}
+      position={position}
+      intensity={intensity}
+      distance={30}
+      decay={2}
+    />
+  );
 };
 
 export default AnimatedPointLight;

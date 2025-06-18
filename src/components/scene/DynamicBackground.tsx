@@ -16,29 +16,46 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
     case 'color':
         return <color attach="background" args={[background.color || '#000000']} />;
     case 'fog':
-        const hasClouds = extras?.some(e => e.type === 'cloud');
         return (
           <>
             <fog attach="fog" args={[background.color || '#ffffff', background.near || 0, background.far || 20]} />
             <color attach="background" args={[background.color || '#ffffff']} />
-            {!hasClouds && ( // Add default clouds if none are provided
-              <>
-                <Cloud position={[-10, -5, -15]} speed={0.2} opacity={0.3} segments={40} frustumCulled={false} />
-                <Cloud position={[10, 5, -20]} speed={0.2} opacity={0.25} segments={40} frustumCulled={false} />
-              </>
-            )}
+            
+            {/* Render extra clouds if provided */}
             {extras?.map((extra, i) => {
               if (extra.type === 'cloud') {
                 // @ts-ignore
-                return <Cloud key={`cloud-${i}`} {...extra} frustumCulled={false} />
+                return <Cloud key={`extra-cloud-${i}`} {...extra} frustumCulled={false} />
+              }
+              return null
+            })}
+            
+            {/* Add default atmospheric clouds if no extras provided */}
+            {(!extras || extras.length === 0) && (
+              <>
+                <Cloud position={[-15, -8, -20]} speed={0.1} opacity={0.2} segments={30} frustumCulled={false} />
+                <Cloud position={[12, 6, -25]} speed={0.08} opacity={0.18} segments={25} frustumCulled={false} />
+                <Cloud position={[0, 0, -35]} speed={0.12} opacity={0.15} segments={35} frustumCulled={false} />
+              </>
+            )}
+          </>
+        );
+    case 'environment':
+        return (
+          <>
+            {/* @ts-ignore */}
+            <Environment preset={background.preset} background blur={background.blur} />
+            
+            {/* Add atmospheric clouds for environment backgrounds too */}
+            {extras?.map((extra, i) => {
+              if (extra.type === 'cloud') {
+                // @ts-ignore
+                return <Cloud key={`env-cloud-${i}`} {...extra} frustumCulled={false} />
               }
               return null
             })}
           </>
         );
-    case 'environment':
-        // @ts-ignore
-        return <Environment preset={background.preset} background blur={background.blur} />;
     default:
       return null;
   }
