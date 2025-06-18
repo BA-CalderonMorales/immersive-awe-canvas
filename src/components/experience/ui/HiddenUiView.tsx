@@ -15,7 +15,7 @@ interface HiddenUiViewProps {
 
 const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
   const isMobile = useIsMobile();
-  const { isExpanded, toggleExpanded } = useKeyboardShortcuts();
+  const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
   return (
     <>
@@ -38,8 +38,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         </TooltipContent>
       </Tooltip>
       
-      {/* Only show shortcuts on desktop/tablet */}
-      {!isMobile && (
+      {/* Only show shortcuts on desktop/tablet and when visible */}
+      {!isMobile && isVisible && (
         <div
           className={`fixed bottom-4 left-4 z-50 pointer-events-auto text-xs font-mono rounded-md shadow-lg backdrop-blur-sm min-w-[280px] ${
             theme === 'day' ? 'bg-white/40 text-black border border-gray-200/50' : 'bg-black/40 text-slate-200 border border-gray-700/50'
