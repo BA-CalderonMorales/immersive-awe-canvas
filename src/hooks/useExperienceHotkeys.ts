@@ -1,4 +1,3 @@
-
 import { useEffect } from 'react';
 import { logEvent } from "@/lib/logger";
 
@@ -103,7 +102,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
             logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
           }
           break;
-        case 'Backquote':
+        case 'BracketRight':
           if (!isTyping && callbacks.toggleShortcuts) {
             event.preventDefault();
             callbacks.toggleShortcuts();

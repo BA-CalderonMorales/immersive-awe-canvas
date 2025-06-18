@@ -51,7 +51,7 @@ const KeyboardShortcutsOverlay = ({ theme, isVisible, onToggle }: KeyboardShortc
             <p>Press <span className="font-bold">H</span> to open the help guide</p>
             <p>Press <span className="font-bold">G</span> to return to the home page</p>
             <p>Press <span className="font-bold">C</span> to copy scene configuration</p>
-            <p>Press <span className="font-bold">~</span> to toggle this shortcuts menu</p>
+            <p>Press <span className="font-bold">]</span> to toggle this shortcuts menu</p>
           </div>
         </CollapsibleContent>
       </Collapsible>
