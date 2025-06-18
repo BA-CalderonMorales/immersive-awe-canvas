@@ -15,15 +15,15 @@ interface CrystalFragmentProps {
 const getCrystalGeometry = (type: number) => {
   switch (type) {
     case 0:
-      return <octahedronGeometry args={[1, 3]} />; // Higher detail
-    case 1:
-      return <tetrahedronGeometry args={[1, 2]} />; // More refined
-    case 2:
-      return <icosahedronGeometry args={[1, 2]} />; // Better definition
-    case 3:
-      return <dodecahedronGeometry args={[1, 3]} />; // Higher detail
-    default:
       return <octahedronGeometry args={[1, 2]} />;
+    case 1:
+      return <tetrahedronGeometry args={[1, 1]} />;
+    case 2:
+      return <icosahedronGeometry args={[1, 1]} />;
+    case 3:
+      return <dodecahedronGeometry args={[1, 2]} />;
+    default:
+      return <octahedronGeometry args={[1, 1]} />;
   }
 };
 
@@ -35,54 +35,29 @@ const CrystalFragmentComponent = ({ fragment, color, materialConfig, onRef }: Cr
       ref={onRef}
       position={fragment.position}
     >
-      {/* Main crystal fragment with proper lighting */}
-      <mesh castShadow receiveShadow>
+      {/* Main crystal fragment */}
+      <mesh>
         {getCrystalGeometry(fragment.geometry)}
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
-            materialType: 'physical', // Better for crystals
             transparent: true,
-            opacity: 0.85,
-            roughness: 0.1,
-            metalness: 0.2,
-            clearcoat: 0.8,
-            clearcoatRoughness: 0.1,
+            opacity: 0.7,
             emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.2 : 0.4,
-            ior: 1.5 // Crystal-like refraction
+            emissiveIntensity: theme === 'day' ? 0.1 : 0.3
           }}
           color={color}
         />
       </mesh>
       
-      {/* Inner core for depth and complexity */}
-      <mesh scale={0.6}>
-        {getCrystalGeometry((fragment.geometry + 1) % 4)}
+      {/* Energy aura around fragment */}
+      <mesh scale={1.5}>
+        <octahedronGeometry args={[1, 0]} />
         <DynamicMaterial
           materialConfig={{
             ...materialConfig,
-            materialType: 'physical',
             transparent: true,
-            opacity: 0.6,
-            roughness: 0.05,
-            metalness: 0.8,
-            emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.3 : 0.6
-          }}
-          color={color}
-        />
-      </mesh>
-      
-      {/* Outer wireframe for crystal structure definition */}
-      <mesh scale={1.2}>
-        {getCrystalGeometry(fragment.geometry)}
-        <DynamicMaterial
-          materialConfig={{
-            ...materialConfig,
-            materialType: 'basic',
-            transparent: true,
-            opacity: theme === 'day' ? 0.15 : 0.25,
+            opacity: theme === 'day' ? 0.05 : 0.15,
             wireframe: true
           }}
           color={color}

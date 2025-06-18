@@ -3,7 +3,6 @@ import { MaterialConfig } from '@/types/scene';
 import { useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useMatcapTexture } from '@react-three/drei';
-import { useMemo } from 'react';
 
 interface DynamicMaterialProps {
     materialConfig: MaterialConfig;
@@ -13,29 +12,16 @@ interface DynamicMaterialProps {
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const { gl } = useThree();
 
-    console.log('DynamicMaterial render - materialConfig:', materialConfig);
-    console.log('DynamicMaterial render - color:', color);
-
-    // Memoize gradient maps to prevent recreation
-    const gradientMaps = useMemo(() => {
-        const fiveTone = new THREE.DataTexture(
-            new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 
-            5, 1, THREE.RedFormat, THREE.UnsignedByteType
-        );
-        fiveTone.minFilter = THREE.NearestFilter;
-        fiveTone.magFilter = THREE.NearestFilter;
-        fiveTone.needsUpdate = true;
-        
-        const threeTone = new THREE.DataTexture(
-            new Uint8Array([0, 0, 0, 128, 128, 128, 255, 255, 255]), 
-            3, 1, THREE.RedFormat, THREE.UnsignedByteType
-        );
-        threeTone.minFilter = THREE.NearestFilter;
-        threeTone.magFilter = THREE.NearestFilter;
-        threeTone.needsUpdate = true;
-
-        return { fiveTone, threeTone };
-    }, []);
+    // Re-usable gradient maps for toon material
+    const fiveTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 5, 1, THREE.RedFormat, THREE.UnsignedByteType);
+    fiveTone.minFilter = THREE.NearestFilter;
+    fiveTone.magFilter = THREE.NearestFilter;
+    fiveTone.needsUpdate = true;
+    
+    const threeTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 128, 128, 128, 255, 255, 255]), 3, 1, THREE.RedFormat, THREE.UnsignedByteType);
+    threeTone.minFilter = THREE.NearestFilter;
+    threeTone.magFilter = THREE.NearestFilter;
+    threeTone.needsUpdate = true;
 
     const MATCAP_TEXTURES = {
         chrome: '3B3C3F_DAD9D5_929290_ABACA8',
@@ -45,100 +31,50 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     
     const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
-    // Safe value helpers
-    const safeColor = color && typeof color === 'string' ? color : '#ffffff';
-    const safeOpacity = typeof materialConfig.opacity === 'number' && !isNaN(materialConfig.opacity) ? materialConfig.opacity : 1.0;
-    const safeWireframe = Boolean(materialConfig.wireframe);
-    const safeTransparent = Boolean(materialConfig.transparent);
-
-    // Get material type with fallback
-    const materialType = materialConfig.materialType && typeof materialConfig.materialType === 'string' ? materialConfig.materialType : 'standard';
-    console.log('Using material type:', materialType);
-
-    // Common props for all materials - properly typed to include all possible properties
-    const commonProps: {
-        color: string;
-        wireframe: boolean;
-        transparent: boolean;
-        opacity: number;
-        emissive?: string;
-        emissiveIntensity?: number;
-    } = {
-        color: safeColor,
-        wireframe: safeWireframe,
-        transparent: safeTransparent,
-        opacity: safeOpacity,
+    const commonProps = {
+        color: color,
+        wireframe: materialConfig.wireframe,
+        emissive: materialConfig.emissive,
+        emissiveIntensity: materialConfig.emissiveIntensity,
+        transparent: materialConfig.transparent,
+        opacity: materialConfig.opacity,
     };
 
-    // Add emissive properties if they exist
-    if (materialConfig.emissive && typeof materialConfig.emissive === 'string') {
-        commonProps.emissive = materialConfig.emissive;
-    }
-    if (typeof materialConfig.emissiveIntensity === 'number' && !isNaN(materialConfig.emissiveIntensity)) {
-        commonProps.emissiveIntensity = materialConfig.emissiveIntensity;
-    }
-
-    // Render materials with only the props they expect
-    switch (materialType) {
+    switch (materialConfig.materialType) {
         case 'physical':
-            return (
-                <meshPhysicalMaterial
-                    {...commonProps}
-                    roughness={typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5}
-                    metalness={typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0}
-                    clearcoat={typeof materialConfig.clearcoat === 'number' && !isNaN(materialConfig.clearcoat) ? materialConfig.clearcoat : 0.0}
-                    clearcoatRoughness={typeof materialConfig.clearcoatRoughness === 'number' && !isNaN(materialConfig.clearcoatRoughness) ? materialConfig.clearcoatRoughness : 0.0}
-                    ior={typeof materialConfig.ior === 'number' && !isNaN(materialConfig.ior) ? materialConfig.ior : 1.5}
-                    thickness={typeof materialConfig.thickness === 'number' && !isNaN(materialConfig.thickness) ? materialConfig.thickness : 0.0}
-                    specularIntensity={typeof materialConfig.specularIntensity === 'number' && !isNaN(materialConfig.specularIntensity) ? materialConfig.specularIntensity : 1.0}
-                    specularColor={materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#ffffff'}
-                />
-            );
-
+            return <meshPhysicalMaterial
+                {...commonProps}
+                roughness={materialConfig.roughness}
+                metalness={materialConfig.metalness}
+                clearcoat={materialConfig.clearcoat}
+                clearcoatRoughness={materialConfig.clearcoatRoughness}
+                ior={materialConfig.ior}
+                thickness={materialConfig.thickness}
+                specularIntensity={materialConfig.specularIntensity}
+                specularColor={materialConfig.specularColor}
+            />;
         case 'toon':
-            return (
-                <meshToonMaterial
-                    {...commonProps}
-                    gradientMap={materialConfig.gradientMap === 'five' ? gradientMaps.fiveTone : gradientMaps.threeTone}
-                />
-            );
-
+            return <meshToonMaterial
+                {...commonProps}
+                gradientMap={materialConfig.gradientMap === 'five' ? fiveTone : threeTone}
+            />;
         case 'matcap':
             return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
-
         case 'lambert':
             return <meshLambertMaterial {...commonProps} />;
-
         case 'phong':
-            return (
-                <meshPhongMaterial
-                    {...commonProps}
-                    shininess={typeof materialConfig.shininess === 'number' && !isNaN(materialConfig.shininess) ? materialConfig.shininess : 30}
-                    specular={materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#111111'}
-                />
-            );
-
+            return <meshPhongMaterial {...commonProps} shininess={materialConfig.shininess} specular={materialConfig.specularColor} />;
         case 'normal':
-            return (
-                <meshNormalMaterial
-                    wireframe={safeWireframe}
-                    transparent={safeTransparent}
-                    opacity={safeOpacity}
-                />
-            );
-
+            return <meshNormalMaterial {...commonProps} />;
         case 'basic':
             return <meshBasicMaterial {...commonProps} />;
-
         case 'standard':
         default:
-            return (
-                <meshStandardMaterial
-                    {...commonProps}
-                    roughness={typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5}
-                    metalness={typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0}
-                />
-            );
+            return <meshStandardMaterial
+                {...commonProps}
+                roughness={materialConfig.roughness}
+                metalness={materialConfig.metalness}
+            />;
     }
 };
 

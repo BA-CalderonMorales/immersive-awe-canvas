@@ -55,9 +55,6 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
             {/* @ts-ignore */}
             <Environment preset={background.preset} background blur={background.blur} />
             
-            {/* Add atmospheric enhancement for better crystal visibility */}
-            <fog attach="fog" args={['#000020', 15, 40]} />
-            
             {/* Add atmospheric clouds for environment backgrounds too */}
             {extras?.map((extra, i) => {
               if (extra.type === 'cloud') {
