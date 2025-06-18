@@ -55,8 +55,15 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     const materialType = materialConfig.materialType && typeof materialConfig.materialType === 'string' ? materialConfig.materialType : 'standard';
     console.log('Using material type:', materialType);
 
-    // Common props for all materials
-    const commonProps = {
+    // Common props for all materials - properly typed to include all possible properties
+    const commonProps: {
+        color: string;
+        wireframe: boolean;
+        transparent: boolean;
+        opacity: number;
+        emissive?: string;
+        emissiveIntensity?: number;
+    } = {
         color: safeColor,
         wireframe: safeWireframe,
         transparent: safeTransparent,
@@ -74,18 +81,19 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     // Render materials with only the props they expect
     switch (materialType) {
         case 'physical':
-            const physicalProps = {
-                ...commonProps,
-                roughness: typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5,
-                metalness: typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0,
-                clearcoat: typeof materialConfig.clearcoat === 'number' && !isNaN(materialConfig.clearcoat) ? materialConfig.clearcoat : 0.0,
-                clearcoatRoughness: typeof materialConfig.clearcoatRoughness === 'number' && !isNaN(materialConfig.clearcoatRoughness) ? materialConfig.clearcoatRoughness : 0.0,
-                ior: typeof materialConfig.ior === 'number' && !isNaN(materialConfig.ior) ? materialConfig.ior : 1.5,
-                thickness: typeof materialConfig.thickness === 'number' && !isNaN(materialConfig.thickness) ? materialConfig.thickness : 0.0,
-                specularIntensity: typeof materialConfig.specularIntensity === 'number' && !isNaN(materialConfig.specularIntensity) ? materialConfig.specularIntensity : 1.0,
-                specularColor: materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#ffffff',
-            };
-            return <meshPhysicalMaterial {...physicalProps} />;
+            return (
+                <meshPhysicalMaterial
+                    {...commonProps}
+                    roughness={typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5}
+                    metalness={typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0}
+                    clearcoat={typeof materialConfig.clearcoat === 'number' && !isNaN(materialConfig.clearcoat) ? materialConfig.clearcoat : 0.0}
+                    clearcoatRoughness={typeof materialConfig.clearcoatRoughness === 'number' && !isNaN(materialConfig.clearcoatRoughness) ? materialConfig.clearcoatRoughness : 0.0}
+                    ior={typeof materialConfig.ior === 'number' && !isNaN(materialConfig.ior) ? materialConfig.ior : 1.5}
+                    thickness={typeof materialConfig.thickness === 'number' && !isNaN(materialConfig.thickness) ? materialConfig.thickness : 0.0}
+                    specularIntensity={typeof materialConfig.specularIntensity === 'number' && !isNaN(materialConfig.specularIntensity) ? materialConfig.specularIntensity : 1.0}
+                    specularColor={materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#ffffff'}
+                />
+            );
 
         case 'toon':
             return (
@@ -102,32 +110,35 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
             return <meshLambertMaterial {...commonProps} />;
 
         case 'phong':
-            const phongProps = {
-                ...commonProps,
-                shininess: typeof materialConfig.shininess === 'number' && !isNaN(materialConfig.shininess) ? materialConfig.shininess : 30,
-                specular: materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#111111',
-            };
-            return <meshPhongMaterial {...phongProps} />;
+            return (
+                <meshPhongMaterial
+                    {...commonProps}
+                    shininess={typeof materialConfig.shininess === 'number' && !isNaN(materialConfig.shininess) ? materialConfig.shininess : 30}
+                    specular={materialConfig.specularColor && typeof materialConfig.specularColor === 'string' ? materialConfig.specularColor : '#111111'}
+                />
+            );
 
         case 'normal':
-            const normalProps = {
-                wireframe: safeWireframe,
-                transparent: safeTransparent,
-                opacity: safeOpacity,
-            };
-            return <meshNormalMaterial {...normalProps} />;
+            return (
+                <meshNormalMaterial
+                    wireframe={safeWireframe}
+                    transparent={safeTransparent}
+                    opacity={safeOpacity}
+                />
+            );
 
         case 'basic':
             return <meshBasicMaterial {...commonProps} />;
 
         case 'standard':
         default:
-            const standardProps = {
-                ...commonProps,
-                roughness: typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5,
-                metalness: typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0,
-            };
-            return <meshStandardMaterial {...standardProps} />;
+            return (
+                <meshStandardMaterial
+                    {...commonProps}
+                    roughness={typeof materialConfig.roughness === 'number' && !isNaN(materialConfig.roughness) ? materialConfig.roughness : 0.5}
+                    metalness={typeof materialConfig.metalness === 'number' && !isNaN(materialConfig.metalness) ? materialConfig.metalness : 0.0}
+                />
+            );
     }
 };
 
