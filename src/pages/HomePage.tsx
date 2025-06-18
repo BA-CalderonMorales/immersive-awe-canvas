@@ -11,6 +11,7 @@ import { Sun, Moon, Info } from "lucide-react";
 import anime from "animejs";
 
 const HomePageContent = () => {
+
   const navigate = useNavigate();
   const { theme, toggleTheme } = useExperience();
   const [isLeaving, setIsLeaving] = useState(false);
@@ -19,17 +20,25 @@ const HomePageContent = () => {
   const subTextRef = useRef<HTMLParagraphElement>(null);
 
   const handleStartJourney = useCallback(() => {
+  
     if (isLeaving) return;
+    
     setIsLeaving(true);
     setShowSplash(true);
+    
     setTimeout(() => {
+    
       navigate("/experience");
+  
     }, 1850);
+  
   }, [isLeaving, navigate]);
 
   useEffect(() => {
+    
     // Animate main title
     if (textRef.current) {
+    
       anime({
         targets: textRef.current,
         translateY: [-40, 0],
@@ -38,9 +47,12 @@ const HomePageContent = () => {
         duration: 1200,
         delay: 120,
       });
+    
     }
+    
     // Animate subtitle
     if (subTextRef.current) {
+    
       anime({
         targets: subTextRef.current,
         opacity: [0, 0.85],
@@ -49,24 +61,35 @@ const HomePageContent = () => {
         duration: 900,
         easing: "easeOutQuad",
       });
+    
     }
+  
   }, []);
 
   useEffect(() => {
+  
     const handleKeyDown = (event: KeyboardEvent) => {
+    
       if (event.code === 'Space') {
         event.preventDefault();
         toggleTheme();
       }
+      
       if (event.key === 'Enter') {
         event.preventDefault();
         handleStartJourney();
       }
+    
     };
+    
     window.addEventListener('keydown', handleKeyDown);
+    
     return () => {
+    
       window.removeEventListener('keydown', handleKeyDown);
+    
     };
+  
   }, [toggleTheme, handleStartJourney]);
 
   const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40 backdrop-blur-sm";
@@ -77,10 +100,14 @@ const HomePageContent = () => {
       className="relative w-full h-full cursor-pointer group" 
       onClick={handleStartJourney}
     >
+  
       {/* Theme switcher in top right */}
       <div className="absolute top-4 right-4 sm:top-8 sm:right-8 z-20 pointer-events-auto">
+      
         <Tooltip>
+        
           <TooltipTrigger asChild>
+          
             <Button
               style={{ color: uiColor }}
               onClick={(e) => {
@@ -93,33 +120,45 @@ const HomePageContent = () => {
             >
               {theme === 'day' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
             </Button>
+          
           </TooltipTrigger>
+          
           <TooltipContent>
             <p>Toggle Theme (Space)</p>
           </TooltipContent>
+        
         </Tooltip>
+      
       </div>
 
       {/* Background with floating elements */}
       <div className="absolute inset-0 z-0 transition-transform duration-1000 ease-out group-hover:scale-105">
+      
         <BackgroundScene theme={theme} />
         
         {/* Floating trees for day mode */}
         {theme === 'day' && (
+        
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        
             <div className="absolute top-1/4 left-1/4 w-8 h-12 opacity-20 animate-bounce-slow [animation-delay:0s]">
               🌲
             </div>
+            
             <div className="absolute top-1/3 right-1/3 w-6 h-10 opacity-15 animate-bounce-slow [animation-delay:1s]">
               🌳
             </div>
+            
             <div className="absolute bottom-1/3 left-1/5 w-7 h-11 opacity-25 animate-bounce-slow [animation-delay:2s]">
               🌲
             </div>
+            
             <div className="absolute top-1/2 right-1/4 w-5 h-9 opacity-10 animate-bounce-slow [animation-delay:1.5s]">
               🌿
             </div>
+          
           </div>
+        
         )}
 
         {/* Moon for night mode */}
@@ -128,6 +167,7 @@ const HomePageContent = () => {
             🌙
           </div>
         )}
+      
       </div>
 
       {/* Main content overlay */}
@@ -198,11 +238,15 @@ const HomePageContent = () => {
 };
 
 const HomePage = () => {
+  
   return (
+
     <ExperienceProvider>
       <HomePageContent />
     </ExperienceProvider>
+  
   )
+
 }
 
 export default HomePage;

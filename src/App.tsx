@@ -15,20 +15,34 @@ const queryClient = new QueryClient();
 const basename = import.meta.env.BASE_URL;
 
 const App = () => (
+  
   <QueryClientProvider client={queryClient}>
+  
     <TooltipProvider>
+    
       <Toaster />
+      
       <Sonner />
+      
       <BrowserRouter basename={basename}>
+      
         <Routes>
+        
           <Route path="/" element={<HomePage />} />
+        
           <Route path="/experience" element={<ExperiencePage />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
+        
         </Routes>
+    
       </BrowserRouter>
+    
     </TooltipProvider>
+
   </QueryClientProvider>
+
 );
 
 export default App;
