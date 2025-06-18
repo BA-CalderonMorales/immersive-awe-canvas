@@ -11,11 +11,19 @@ interface HiddenUiViewProps {
   showUiHint?: boolean;
   uiColor: string;
   theme: 'day' | 'night';
+  onToggleShortcuts?: () => void;
 }
 
-const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
+const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme, onToggleShortcuts }: HiddenUiViewProps) => {
   const isMobile = useIsMobile();
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const handleToggleExpanded = () => {
+    setIsExpanded(!isExpanded);
+    if (onToggleShortcuts) {
+      onToggleShortcuts();
+    }
+  };
 
   return (
     <>
@@ -45,7 +53,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
             theme === 'day' ? 'bg-white/40 text-black border border-gray-200/50' : 'bg-black/40 text-slate-200 border border-gray-700/50'
           }`}
         >
-          <Collapsible open={isExpanded} onOpenChange={setIsExpanded}>
+          <Collapsible open={isExpanded} onOpenChange={handleToggleExpanded}>
             <CollapsibleTrigger asChild>
               <div className="flex items-center justify-between p-3 pb-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors">
                 <span className="font-semibold">Shortcuts</span>
@@ -71,6 +79,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                 <p>Press <span className="font-bold">H</span> to open the help guide</p>
                 <p>Press <span className="font-bold">G</span> to return to the home page</p>
                 <p>Press <span className="font-bold">C</span> to copy scene configuration</p>
+                <p>Press <span className="font-bold">/</span> to toggle this shortcuts menu</p>
               </div>
             </CollapsibleContent>
           </Collapsible>

@@ -42,6 +42,7 @@ const ExperienceContent = () => {
   const isMobile = useIsMobile();
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
+  const [showShortcutsExpanded, setShowShortcutsExpanded] = useState(true);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
@@ -86,6 +87,10 @@ const ExperienceContent = () => {
     };
   }, [isSettingsOpen]);
 
+  const handleToggleShortcutsExpanded = () => {
+    setShowShortcutsExpanded(prev => !prev);
+  };
+
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,
@@ -97,7 +102,7 @@ const ExperienceContent = () => {
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
       toggleLock: toggleObjectLock,
-      ...((!isUiHidden && !isMobile) && { toggleShortcuts: () => {} }) // Empty function when UI is visible but handled by ExperienceUI
+      ...(isUiHidden && !isMobile && { toggleShortcuts: handleToggleShortcutsExpanded })
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,
   });
@@ -217,6 +222,7 @@ const ExperienceContent = () => {
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
         showUiHint={showUiHint}
+        onToggleShortcuts={isUiHidden ? handleToggleShortcutsExpanded : undefined}
       />
       <HelpDialog isOpen={isHelpOpen} onOpenChange={setIsHelpOpen} />
       <WorldSearchDialog

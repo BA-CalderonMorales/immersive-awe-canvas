@@ -28,6 +28,7 @@ interface ExperienceUIProps {
   isUiHidden: boolean;
   onToggleUiHidden: () => void;
   showUiHint?: boolean;
+  onToggleShortcuts?: () => void;
 }
 
 const ExperienceUI = ({
@@ -48,6 +49,7 @@ const ExperienceUI = ({
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
+  onToggleShortcuts,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
   const [showShortcuts, setShowShortcuts] = useState(false);
@@ -89,6 +91,7 @@ const ExperienceUI = ({
           showUiHint={showUiHint}
           uiColor={uiColor}
           theme={theme}
+          onToggleShortcuts={onToggleShortcuts}
         />
       </TooltipProvider>
     );
