@@ -25,7 +25,7 @@ interface TopBarProps {
 }
 
 const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning }: TopBarProps) => {
-  const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40";
+  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   const uiStyle = { color: uiColor };
 
   return (

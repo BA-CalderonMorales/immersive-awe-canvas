@@ -6,6 +6,7 @@ import DistortionSphereObject from './objects/DistortionSphereObject';
 import MorphingIcosahedronObject from './objects/MorphingIcosahedronObject';
 import WavyGridObject from './objects/WavyGridObject';
 import CrystallineSpireObject from './objects/CrystallineSpireObject';
+import JellyTorusObject from './objects/JellyTorusObject';
 
 interface DynamicObjectProps {
   type: SceneConfig['type'];
@@ -28,6 +29,8 @@ const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
       return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     case 'WavyGrid':
       return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+    case 'JellyTorus':
+      return <JellyTorusObject isLocked={isLocked} />;
     default:
       return null;
   }

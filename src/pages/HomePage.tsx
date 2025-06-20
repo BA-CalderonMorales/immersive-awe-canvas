@@ -92,7 +92,7 @@ const HomePageContent = () => {
   
   }, [toggleTheme, handleStartJourney]);
 
-  const blendedButtonClasses = "border-0 bg-black/20 hover:bg-black/40 backdrop-blur-sm";
+  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 backdrop-blur-sm";
   const uiColor = theme === 'day' ? '#1a1a1a' : '#ffffff';
 
   return (
@@ -175,7 +175,7 @@ const HomePageContent = () => {
           transition-colors duration-1000 
           ${theme === 'day' 
             ? 'bg-transparent group-hover:bg-black/10' 
-            : 'bg-black/20 group-hover:bg-black/40'}`}>
+            : 'bg-black/40 dark:bg-white/40 group-hover:bg-black/60 dark:group-hover:bg-white/60'}`}>
         
         <div className="text-center select-none pointer-events-none mb-8">
           <h1 
