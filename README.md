@@ -35,7 +35,7 @@ This will start the application, and you can view it in your browser at the loca
 <details>
 <summary><b>Deployment</b></summary>
 
-This project is automatically built and deployed to GitHub Pages on every push to the `main` branch using a GitHub Actions workflow.
+This project is automatically built and deployed to GitHub Pages on every push to the `main` branch using a GitHub Actions workflow. Pull requests trigger the same workflow but deploy to a temporary preview site so changes can be reviewed before merging.
 
 The live site can be accessed at: [https://ba-calderonmorales.github.io/immersive-awe-canvas/](https://ba-calderonmorales.github.io/immersive-awe-canvas/)
 
