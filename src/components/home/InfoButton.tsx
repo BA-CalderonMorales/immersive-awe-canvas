@@ -23,6 +23,23 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) =
     }
   };
 
+  // Device-appropriate messaging
+  const getInstructions = () => {
+    if (isMobile) {
+      return {
+        primary: "Tap anywhere on the screen to begin your journey",
+        secondary: "Use the theme button (top right) to switch between day and night"
+      };
+    } else {
+      return {
+        primary: "Click anywhere or press Enter to begin your journey",
+        secondary: "Press Space or use the theme button to toggle between day and night"
+      };
+    }
+  };
+
+  const instructions = getInstructions();
+
   return (
     <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-20 pointer-events-auto">
       <TooltipProvider>
@@ -42,10 +59,32 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) =
               <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
             </Button>
           </TooltipTrigger>
-          <TooltipContent side="right" className="max-w-xs">
-            <div className="text-sm space-y-1">
-              <p>Click anywhere or press Enter to begin your journey</p>
-              <p>Press Space to toggle between day and night themes</p>
+          <TooltipContent 
+            side="right" 
+            className={`max-w-xs p-4 rounded-lg shadow-2xl border-0 ${
+              theme === 'day' 
+                ? 'bg-white/95 text-gray-800 backdrop-blur-md' 
+                : 'bg-gray-900/95 text-gray-100 backdrop-blur-md'
+            }`}
+            sideOffset={8}
+          >
+            <div className="space-y-3">
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm font-medium leading-relaxed">
+                  {instructions.primary}
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm leading-relaxed opacity-90">
+                  {instructions.secondary}
+                </p>
+              </div>
             </div>
           </TooltipContent>
         </Tooltip>
