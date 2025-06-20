@@ -26,7 +26,10 @@ interface TopBarProps {
 
 const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning }: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
-  const uiStyle = { color: uiColor };
+  
+  // Use black text in day mode for better visibility against bright backgrounds
+  const textColor = theme === 'day' ? '#000000' : uiColor;
+  const uiStyle = { color: textColor };
 
   return (
     <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>

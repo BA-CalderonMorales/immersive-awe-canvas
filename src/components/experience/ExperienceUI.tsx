@@ -118,7 +118,10 @@ const ExperienceUI = ({
       />
 
       {!isMobile && (
-        <div style={{ color: uiColor }} className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none">
+        <div 
+          style={{ color: theme === 'day' ? '#000000' : uiColor }} 
+          className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
+        >
           Press SPACE to change time of day
         </div>
       )}

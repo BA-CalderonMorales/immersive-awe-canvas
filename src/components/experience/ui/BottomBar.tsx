@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Drawer,
@@ -36,6 +37,8 @@ const BottomBar = ({
   onShowHelp,
 }: BottomBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
+  
+  // Use the original uiColor for bottom bar buttons (they work fine with the current system)
   const uiStyle = { color: uiColor };
 
   return (
