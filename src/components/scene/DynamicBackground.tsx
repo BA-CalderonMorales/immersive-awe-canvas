@@ -84,7 +84,6 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
               background.near || 1, 
               background.far || 100
             ]} 
-            density={background.density}
           />
           <color attach="background" args={[background.color || '#ffffff']} />
           

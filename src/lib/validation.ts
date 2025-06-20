@@ -34,19 +34,16 @@ export const githubIssueSchema = z.object({
   
   email: z.string()
     .email('Invalid email address')
-    .optional()
-    .refine((email, ctx) => {
-      // Email is required if canContact is 'yes'
-      const canContact = ctx.parent.canContact;
-      if (canContact === 'yes' && !email) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Email is required when you consent to be contacted',
-        });
-        return false;
-      }
-      return true;
-    }),
+    .optional(),
+}).superRefine((data, ctx) => {
+  // Email is required if canContact is 'yes'
+  if (data.canContact === 'yes' && !data.email) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: 'Email is required when you consent to be contacted',
+      path: ['email'],
+    });
+  }
 });
 
 // Scene settings validation schema
