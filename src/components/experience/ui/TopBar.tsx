@@ -30,13 +30,15 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
 
   return (
     <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-      <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto">
-        <h2 className="text-2xl sm:text-3xl font-bold h-10 flex items-center">{worldName}</h2>
+      <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
+        <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
+          {worldName}
+        </h2>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
               style={uiStyle}
-              className={`transition-colors duration-300 ${blendedButtonClasses}`}
+              className={`transition-colors duration-300 ${blendedButtonClasses} flex-shrink-0`}
               size="icon"
               aria-label="Like this project"
             >
@@ -73,7 +75,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
           </AlertDialogContent>
         </AlertDialog>
       </div>
-      <div className="flex items-center gap-2 pointer-events-auto">
+      <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
