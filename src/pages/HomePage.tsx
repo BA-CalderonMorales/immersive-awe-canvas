@@ -1,4 +1,3 @@
-
 import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { ExperienceProvider } from "@/context/ExperienceContext";
@@ -8,6 +7,7 @@ import TransitionSplash from "@/components/TransitionSplash";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Sun, Moon, Info } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import anime from "animejs";
 
 const HomePageContent = () => {
@@ -18,6 +18,7 @@ const HomePageContent = () => {
   const [showSplash, setShowSplash] = useState(false);
   const textRef = useRef<HTMLHeadingElement>(null);
   const subTextRef = useRef<HTMLParagraphElement>(null);
+  const isMobile = useIsMobile();
 
   const handleStartJourney = useCallback(() => {
   
@@ -200,7 +201,7 @@ const HomePageContent = () => {
           </p>
         </div>
 
-        {/* Bottom info icon only */}
+        {/* Bottom info icon/button */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center opacity-70 hover:opacity-100 transition-opacity duration-300 pointer-events-auto">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -209,8 +210,15 @@ const HomePageContent = () => {
                 size="icon"
                 className={`w-6 h-6 p-0 ${
                   theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
-                }`}
-                onClick={(e) => e.stopPropagation()}
+                } ${isMobile ? 'cursor-default' : 'cursor-pointer hover:bg-white/10'}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isMobile) {
+                    // On desktop, clicking shows the tooltip longer or could trigger other actions
+                    // For now, we'll just prevent the click from bubbling up
+                  }
+                }}
+                disabled={isMobile}
               >
                 <Info className="w-4 h-4" />
               </Button>

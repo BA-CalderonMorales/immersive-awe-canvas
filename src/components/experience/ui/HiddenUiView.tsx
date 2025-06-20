@@ -38,7 +38,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         </TooltipContent>
       </Tooltip>
 
-      {/* Info icon when shortcuts are hidden */}
+      {/* Info icon/button when shortcuts are hidden */}
       {!isMobile && !isVisible && (
         <div className="fixed bottom-4 left-4 z-50 pointer-events-auto">
           <Tooltip>
@@ -48,14 +48,21 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                 size="icon"
                 className={`w-6 h-6 p-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 backdrop-blur-sm rounded-md transition-colors ${
                   theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
-                }`}
-                onClick={(e) => e.stopPropagation()}
+                } ${isMobile ? 'cursor-default' : 'cursor-pointer'}`}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isMobile) {
+                    // On desktop, make it feel interactive by toggling the shortcuts visibility
+                    toggleExpanded();
+                  }
+                }}
+                disabled={isMobile}
               >
                 <Info className="w-4 h-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Press M to show keyboard shortcuts menu</p>
+              <p>{isMobile ? 'Press M to show keyboard shortcuts menu' : 'Click to show keyboard shortcuts or press M'}</p>
             </TooltipContent>
           </Tooltip>
         </div>
