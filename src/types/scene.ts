@@ -115,7 +115,7 @@ export type SceneThemeConfig = {
 };
 
 export type SceneConfig = {
-  type: 'TorusKnot' | 'WobbleField' | 'DistortionSphere' | 'MorphingIcosahedron' | 'WavyGrid' | 'CrystallineSpire';
+  type: 'TorusKnot' | 'WobbleField' | 'DistortionSphere' | 'MorphingIcosahedron' | 'WavyGrid' | 'CrystallineSpire' | 'PhysicsPlayground';
   day: SceneThemeConfig;
   night: SceneThemeConfig;
 };

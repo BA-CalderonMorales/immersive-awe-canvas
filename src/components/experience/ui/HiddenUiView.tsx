@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye, ChevronDown, ChevronUp, Pointer, Info } from "lucide-react";
+import { Eye, ChevronDown, ChevronUp, Pointer, Info, Hand } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
@@ -11,9 +11,11 @@ interface HiddenUiViewProps {
   showUiHint?: boolean;
   uiColor: string;
   theme: 'day' | 'night';
+  onToggleGrabMode: () => void;
+  isGrabMode: boolean;
 }
 
-const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
+const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme, onToggleGrabMode, isGrabMode }: HiddenUiViewProps) => {
   const isMobile = useIsMobile();
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
@@ -37,6 +39,26 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
           <p>Show UI (Press V)</p>
         </TooltipContent>
       </Tooltip>
+
+      {/* Grab mode toggle */}
+      <div className="fixed top-4 left-4 z-50 pointer-events-auto">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              size="icon"
+              aria-label="Toggle Grab Mode"
+              onClick={onToggleGrabMode}
+              className="bg-black/30 hover:bg-black/50 text-white shadow-md"
+              style={{ color: uiColor }}
+            >
+              <Hand className="w-6 h-6" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{isGrabMode ? 'Disable' : 'Enable'} Grab Mode</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
 
       {/* Info icon when shortcuts are hidden */}
       {!isMobile && !isVisible && (

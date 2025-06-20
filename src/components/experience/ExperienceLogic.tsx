@@ -44,6 +44,8 @@ const ExperienceLogic = () => {
     setIsSettingsOpen,
     isUiHidden,
     setIsUiHidden,
+    isGrabMode,
+    setIsGrabMode,
     showUiHint,
     setShowUiHint,
     hintShownRef,
@@ -121,6 +123,7 @@ const ExperienceLogic = () => {
         isSettingsOpen={isSettingsOpen}
         isMobile={isMobile}
         onUpdateSceneConfig={setEditableSceneConfig}
+        isGrabMode={isGrabMode}
       />
 
       <ExperienceUI
@@ -140,6 +143,8 @@ const ExperienceLogic = () => {
         onToggleSettings={setIsSettingsOpen}
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
+        isGrabMode={isGrabMode}
+        onToggleGrabMode={() => setIsGrabMode((g) => !g)}
         showUiHint={showUiHint}
       />
 

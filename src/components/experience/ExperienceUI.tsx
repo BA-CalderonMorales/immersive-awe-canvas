@@ -25,6 +25,8 @@ interface ExperienceUIProps {
   onToggleSettings: (isOpen: boolean) => void;
   isUiHidden: boolean;
   onToggleUiHidden: () => void;
+  isGrabMode: boolean;
+  onToggleGrabMode: () => void;
   showUiHint?: boolean;
 }
 
@@ -45,6 +47,8 @@ const ExperienceUI = ({
   onToggleSettings,
   isUiHidden,
   onToggleUiHidden,
+  isGrabMode,
+  onToggleGrabMode,
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
@@ -77,11 +81,13 @@ const ExperienceUI = ({
   if (isUiHidden) {
     return (
       <TooltipProvider>
-        <HiddenUiView 
+        <HiddenUiView
           onToggleUiHidden={onToggleUiHidden}
           showUiHint={showUiHint}
           uiColor={uiColor}
           theme={theme}
+          onToggleGrabMode={onToggleGrabMode}
+          isGrabMode={isGrabMode}
         />
       </TooltipProvider>
     );

@@ -6,14 +6,16 @@ import DistortionSphereObject from './objects/DistortionSphereObject';
 import MorphingIcosahedronObject from './objects/MorphingIcosahedronObject';
 import WavyGridObject from './objects/WavyGridObject';
 import CrystallineSpireObject from './objects/CrystallineSpireObject';
+import PhysicsPlaygroundObject from './objects/PhysicsPlaygroundObject';
 
 interface DynamicObjectProps {
   type: SceneConfig['type'];
   themeConfig: SceneThemeConfig;
   isLocked: boolean;
+  isGrabMode: boolean;
 }
 
-const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
+const DynamicObject = ({ type, themeConfig, isLocked, isGrabMode }: DynamicObjectProps) => {
   const { mainObjectColor, material } = themeConfig;
   switch (type) {
     case 'TorusKnot':
@@ -28,6 +30,8 @@ const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
       return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
     case 'WavyGrid':
       return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+    case 'PhysicsPlayground':
+      return <PhysicsPlaygroundObject isGrabMode={isGrabMode} />;
     default:
       return null;
   }
