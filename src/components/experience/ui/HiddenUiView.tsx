@@ -46,7 +46,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-6 h-6 p-0 bg-black/20 hover:bg-black/40 backdrop-blur-sm rounded-md transition-colors ${
+                className={`w-6 h-6 p-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 backdrop-blur-sm rounded-md transition-colors ${
                   theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
                 }`}
                 onClick={(e) => e.stopPropagation()}
