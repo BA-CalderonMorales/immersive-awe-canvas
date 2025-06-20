@@ -78,6 +78,7 @@ const HomePageContent = () => {
 
         <InfoButton 
           theme={theme}
+          uiColor={uiColor}
           blendedButtonClasses={blendedButtonClasses}
         />
 

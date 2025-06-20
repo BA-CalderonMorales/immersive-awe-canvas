@@ -6,38 +6,36 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 interface InfoButtonProps {
   theme: 'day' | 'night';
+  uiColor: string;
   blendedButtonClasses: string;
 }
 
-const InfoButton = ({ theme, blendedButtonClasses }: InfoButtonProps) => {
+const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) => {
   const isMobile = useIsMobile();
 
   return (
-    <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center opacity-70 hover:opacity-100 transition-opacity duration-300 pointer-events-auto">
+    <div className="absolute bottom-4 right-4 sm:bottom-8 sm:right-8 z-20 pointer-events-auto">
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="ghost"
-            className={`${
-              isMobile 
-                ? 'w-12 h-12 p-0 rounded-full' // Larger touch target on mobile
-                : 'w-8 h-8 p-0 rounded-md' // Smaller on desktop
-            } ${blendedButtonClasses} transition-all duration-300 ${
-              theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
-            } ${isMobile ? 'cursor-pointer active:scale-95' : 'cursor-pointer hover:bg-white/10'}`}
+            style={{ color: uiColor }}
             onClick={(e) => {
               e.stopPropagation();
-              if (!isMobile) {
-                // On desktop, clicking shows the tooltip longer or could trigger other actions
-                // For now, we'll just prevent the click from bubbling up
-              }
+              // Button behavior - on mobile this provides haptic feedback
+              // On desktop, the tooltip provides the information
             }}
+            className={`${blendedButtonClasses} transition-all duration-300 animate-fade-in ${
+              isMobile 
+                ? 'w-12 h-12 active:scale-95' // Larger touch target on mobile with press feedback
+                : 'w-10 h-10 hover:scale-105' // Slightly smaller on desktop with hover effect
+            }`}
+            size="icon"
             aria-label="Information"
           >
-            <Info className={`${isMobile ? 'w-6 h-6' : 'w-4 h-4'}`} />
+            <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
           </Button>
         </TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side="left" className="max-w-xs">
           <div className="text-sm space-y-1">
             <p>Click anywhere or press Enter to begin your journey</p>
             <p>Press Space to toggle between day and night themes</p>
