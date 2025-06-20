@@ -201,16 +201,19 @@ const HomePageContent = () => {
           </p>
         </div>
 
-        {/* Bottom info icon/button */}
+        {/* Bottom info button - improved mobile experience */}
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center opacity-70 hover:opacity-100 transition-opacity duration-300 pointer-events-auto">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
-                size="icon"
-                className={`w-6 h-6 p-0 ${
+                className={`${
+                  isMobile 
+                    ? 'w-12 h-12 p-0 rounded-full' // Larger touch target on mobile
+                    : 'w-8 h-8 p-0 rounded-md' // Smaller on desktop
+                } ${blendedButtonClasses} transition-all duration-300 ${
                   theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
-                } ${isMobile ? 'cursor-default' : 'cursor-pointer hover:bg-white/10'}`}
+                } ${isMobile ? 'cursor-pointer active:scale-95' : 'cursor-pointer hover:bg-white/10'}`}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!isMobile) {
@@ -218,9 +221,9 @@ const HomePageContent = () => {
                     // For now, we'll just prevent the click from bubbling up
                   }
                 }}
-                disabled={isMobile}
+                aria-label="Information"
               >
-                <Info className="w-4 h-4" />
+                <Info className={`${isMobile ? 'w-6 h-6' : 'w-4 h-4'}`} />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
