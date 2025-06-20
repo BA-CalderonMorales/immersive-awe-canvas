@@ -44,6 +44,8 @@ const ExperienceLogic = () => {
     setIsSettingsOpen,
     isUiHidden,
     setIsUiHidden,
+    isGrabMode,
+    setIsGrabMode,
     showUiHint,
     setShowUiHint,
     hintShownRef,
@@ -140,6 +142,8 @@ const ExperienceLogic = () => {
         onToggleSettings={setIsSettingsOpen}
         isUiHidden={isUiHidden}
         onToggleUiHidden={() => setIsUiHidden((h) => !h)}
+        isGrabMode={isGrabMode}
+        onToggleGrabMode={() => setIsGrabMode((g) => !g)}
         showUiHint={showUiHint}
       />
 
@@ -149,6 +153,7 @@ const ExperienceLogic = () => {
         handleGoHome={handleGoHome}
         handleCopyCode={handleCopyCode}
         toggleObjectLock={toggleObjectLock}
+        toggleGrabMode={() => setIsGrabMode(g => !g)}
         handleToggleShortcuts={handleToggleShortcuts}
         setIsSearchOpen={setIsSearchOpen}
         setIsHelpOpen={setIsHelpOpen}

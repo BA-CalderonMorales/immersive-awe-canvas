@@ -12,6 +12,7 @@ interface HotkeyActionCallbacks {
   copyCode: () => void;
   toggleUi: () => void;
   toggleLock: () => void;
+  toggleGrabMode: () => void;
   toggleShortcuts: () => void;
 }
 
@@ -32,6 +33,11 @@ export const useHotkeyActions = (callbacks: HotkeyActionCallbacks) => {
     logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_lock' });
   }, [callbacks]);
 
+  const handleToggleGrabMode = useCallback(() => {
+    callbacks.toggleGrabMode();
+    logEvent({ eventType: 'keyboard_shortcut', eventSource: 'toggle_grab' });
+  }, [callbacks]);
+
   const handleOpenHelp = useCallback(() => {
     callbacks.openHelp();
     logEvent({ eventType: 'keyboard_shortcut', eventSource: 'open_help' });
@@ -46,6 +52,7 @@ export const useHotkeyActions = (callbacks: HotkeyActionCallbacks) => {
     handleToggleTheme,
     handleToggleShortcuts,
     handleToggleLock,
+    handleToggleGrabMode,
     handleOpenHelp,
     handleToggleSettings,
     changeWorld: callbacks.changeWorld,

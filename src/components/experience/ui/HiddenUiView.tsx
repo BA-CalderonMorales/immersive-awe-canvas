@@ -1,24 +1,44 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye, ChevronDown, ChevronUp, Pointer, Info } from "lucide-react";
+import { Eye, ChevronDown, ChevronUp, Pointer, Info, Hand } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
 
 interface HiddenUiViewProps {
   onToggleUiHidden: () => void;
+  onToggleGrabMode: () => void;
+  isGrabMode: boolean;
   showUiHint?: boolean;
   uiColor: string;
   theme: 'day' | 'night';
 }
 
-const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
+const HiddenUiView = ({ onToggleUiHidden, onToggleGrabMode, isGrabMode, showUiHint, uiColor, theme }: HiddenUiViewProps) => {
   const isMobile = useIsMobile();
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
   return (
     <>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className="fixed top-4 left-4 z-50 pointer-events-auto">
+            <Button
+              size="icon"
+              aria-label="Toggle Grab Mode"
+              onClick={onToggleGrabMode}
+              className="bg-black/30 hover:bg-black/50 text-white shadow-md cursor-pointer"
+              style={{ color: uiColor }}
+            >
+              <Hand className="w-6 h-6" />
+            </Button>
+          </div>
+        </TooltipTrigger>
+        <TooltipContent side="bottom">
+          <p>{isGrabMode ? 'Disable Grab' : 'Enable Grab'} (Press B)</p>
+        </TooltipContent>
+      </Tooltip>
       <Tooltip open={showUiHint}>
         <TooltipTrigger asChild>
           <div className="fixed top-4 right-4 z-50 pointer-events-auto">
@@ -88,6 +108,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                 <p>Press <span className="font-bold">P</span> to go to the previous world</p>
                 <p>Press <span className="font-bold">Space</span> to change the time of day</p>
                 <p>Press <span className="font-bold">.</span> to freeze or unfreeze objects</p>
+                <p>Press <span className="font-bold">B</span> to toggle grab mode</p>
                 <p>Press <span className="font-bold">V</span> to show or hide the interface</p>
                 <p>Press <span className="font-bold">E</span> to open scene settings</p>
                 <p>Press <span className="font-bold">S</span> to search for worlds</p>

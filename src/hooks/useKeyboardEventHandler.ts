@@ -12,6 +12,7 @@ interface KeyboardEventHandlerProps {
   onCopyCode: () => void;
   onToggleUi: () => void;
   onToggleLock: () => void;
+  onToggleGrabMode: () => void;
   onToggleShortcuts: () => void;
   enabled: boolean;
 }
@@ -115,6 +116,13 @@ export const useKeyboardEventHandler = ({
           onToggleUi();
         }
         break;
+
+      case 'KeyB':
+        if (!typing) {
+          event.preventDefault();
+          onToggleGrabMode();
+        }
+        break;
       
       case 'Period':
         if (!typing) {
@@ -134,6 +142,7 @@ export const useKeyboardEventHandler = ({
     onCopyCode,
     onToggleUi,
     onToggleLock,
+    onToggleGrabMode,
     onToggleShortcuts,
   ]);
 

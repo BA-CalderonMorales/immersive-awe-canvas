@@ -8,9 +8,11 @@ import DynamicObject from './DynamicObject';
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
   isLocked: boolean;
+  isGrabMode?: boolean;
+  onToggleGrabMode?: () => void;
 }
 
-const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
+const DynamicWorld = ({ sceneConfig, isLocked, isGrabMode = false, onToggleGrabMode }: DynamicWorldProps) => {
   const { theme } = useExperience();
   const { type, day, night } = sceneConfig;
 
@@ -24,7 +26,7 @@ const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
     <>
       <DynamicLights lights={themeConfig.lights} />
       <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
-      <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
+      <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} isGrabMode={isGrabMode} onToggleGrabMode={onToggleGrabMode} />
     </>
   );
 };

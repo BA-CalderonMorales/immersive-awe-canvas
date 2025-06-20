@@ -13,6 +13,7 @@ interface HotkeyCallbacks {
   copyCode: () => void;
   toggleUi: () => void;
   toggleLock: () => void;
+  toggleGrabMode: () => void;
   toggleShortcuts: () => void;
 }
 
@@ -33,6 +34,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
     onCopyCode: actions.copyCode,
     onToggleUi: actions.toggleUi,
     onToggleLock: actions.handleToggleLock,
+    onToggleGrabMode: actions.handleToggleGrabMode,
     onToggleShortcuts: actions.handleToggleShortcuts,
     enabled,
   });

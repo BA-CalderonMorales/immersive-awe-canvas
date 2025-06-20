@@ -8,16 +8,17 @@ type WorldContainerProps = {
   children: React.ReactNode;
   onToggleLock?: () => void;
   isLocked: boolean;
+  isGrabMode?: boolean;
 };
 
-const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
+const WorldContainer = ({ children, onToggleLock, isLocked, isGrabMode = false }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
 
   return (
     <Canvas 
       camera={{ position: [0, 0, 5], fov: 75 }} 
       onDoubleClick={onToggleLock}
-      style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      style={{ cursor: isDragging ? 'grabbing' : isGrabMode ? 'grab' : 'auto' }}
       onPointerDown={() => setIsDragging(true)}
       onPointerUp={() => setIsDragging(false)}
       onPointerLeave={() => setIsDragging(false)}
@@ -32,6 +33,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
         autoRotateSpeed={0.5}
         minDistance={2}
         maxDistance={25}
+        enabled={!isGrabMode}
         onStart={() => setIsDragging(true)}
         onEnd={() => setIsDragging(false)}
       />

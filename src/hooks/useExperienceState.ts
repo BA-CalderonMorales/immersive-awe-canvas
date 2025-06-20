@@ -12,6 +12,7 @@ export const useExperienceState = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUiHidden, setIsUiHidden] = useState(true);
+  const [isGrabMode, setIsGrabMode] = useState(false);
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
 
@@ -53,6 +54,8 @@ export const useExperienceState = () => {
     setIsSettingsOpen,
     isUiHidden,
     setIsUiHidden,
+    isGrabMode,
+    setIsGrabMode,
     showUiHint,
     setShowUiHint,
     hintShownRef,

@@ -10,6 +10,7 @@ interface ExperienceHotkeysProps {
   handleGoHome: () => void;
   handleCopyCode: () => void;
   toggleObjectLock: () => void;
+  toggleGrabMode: () => void;
   handleToggleShortcuts: () => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsHelpOpen: (open: boolean) => void;
@@ -28,6 +29,7 @@ const ExperienceHotkeys = ({
   handleGoHome,
   handleCopyCode,
   toggleObjectLock,
+  toggleGrabMode,
   handleToggleShortcuts,
   setIsSearchOpen,
   setIsHelpOpen,
@@ -76,6 +78,7 @@ const ExperienceHotkeys = ({
       copyCode: handleCopyCode,
       toggleUi: () => setIsUiHidden(o => !o),
       toggleLock: toggleObjectLock,
+      toggleGrabMode: toggleGrabMode,
       toggleShortcuts: handleToggleShortcuts
     },
     enabled: !isHelpOpen && !isSearchOpen && !isSettingsOpen,

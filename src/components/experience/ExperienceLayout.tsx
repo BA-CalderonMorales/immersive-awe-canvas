@@ -10,6 +10,8 @@ interface ExperienceLayoutProps {
   currentWorldIndex: number;
   isObjectLocked: boolean;
   onToggleObjectLock: () => void;
+  isGrabMode: boolean;
+  onToggleGrabMode?: () => void;
   isSettingsOpen: boolean;
   isMobile: boolean;
   onUpdateSceneConfig: (config: SceneConfig) => void;
@@ -21,6 +23,8 @@ const ExperienceLayout = ({
   currentWorldIndex,
   isObjectLocked,
   onToggleObjectLock,
+  isGrabMode,
+  onToggleGrabMode,
   isSettingsOpen,
   isMobile,
   onUpdateSceneConfig,
@@ -28,12 +32,14 @@ const ExperienceLayout = ({
   if (isMobile) {
     return (
       <div className="w-full h-full">
-        <WorldView 
-          sceneConfig={editableSceneConfig} 
-          isTransitioning={isTransitioning} 
-          worldIndex={currentWorldIndex} 
-          isLocked={isObjectLocked} 
-          onToggleLock={onToggleObjectLock} 
+        <WorldView
+          sceneConfig={editableSceneConfig}
+          isTransitioning={isTransitioning}
+          worldIndex={currentWorldIndex}
+          isLocked={isObjectLocked}
+          onToggleLock={onToggleObjectLock}
+          isGrabMode={isGrabMode}
+          onToggleGrabMode={onToggleGrabMode}
         />
       </div>
     );
