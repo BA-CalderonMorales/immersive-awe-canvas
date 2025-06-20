@@ -1,4 +1,5 @@
 
+
 -- Update the Crystalline Spire world to have better fog backgrounds for both day and night modes
 UPDATE public.worlds 
 SET scene_config = '{
@@ -8,19 +9,19 @@ SET scene_config = '{
     "material": { "roughness": 0.3, "metalness": 0.9, "materialType": "standard" }, 
     "background": { 
       "type": "fog", 
-      "color": "#F0F8FF", 
-      "near": 5, 
-      "far": 50,
-      "density": 0.02
+      "color": "#B8D4E3", 
+      "near": 8, 
+      "far": 40,
+      "density": 0.04
     }, 
     "lights": [
-      { "type": "ambient", "intensity": 1.2 }, 
-      { "type": "directional", "position": [5, 15, 5], "intensity": 1.5 }
+      { "type": "ambient", "intensity": 0.8 }, 
+      { "type": "directional", "position": [5, 15, 5], "intensity": 1.0 }
     ],
     "extras": [
-      { "type": "cloud", "position": [-10, 8, -30], "speed": 0.05, "opacity": 0.3, "segments": 20 },
-      { "type": "cloud", "position": [15, 12, -25], "speed": 0.08, "opacity": 0.25, "segments": 25 },
-      { "type": "cloud", "position": [0, 5, -40], "speed": 0.06, "opacity": 0.2, "segments": 30 }
+      { "type": "cloud", "position": [-10, 8, -30], "speed": 0.05, "opacity": 0.4, "segments": 20 },
+      { "type": "cloud", "position": [15, 12, -25], "speed": 0.08, "opacity": 0.35, "segments": 25 },
+      { "type": "cloud", "position": [0, 5, -40], "speed": 0.06, "opacity": 0.3, "segments": 30 }
     ]
   },
   "night": { 
@@ -46,3 +47,4 @@ SET scene_config = '{
   }
 }'::jsonb 
 WHERE name = 'Crystalline Spire';
+
