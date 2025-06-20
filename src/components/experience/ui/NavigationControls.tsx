@@ -7,11 +7,15 @@ interface NavigationControlsProps {
   uiColor: string;
   onChangeWorld: (direction: 'next' | 'prev') => void;
   isTransitioning: boolean;
+  theme: 'day' | 'night';
 }
 
-const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning }: NavigationControlsProps) => {
+const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: NavigationControlsProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
-  const uiStyle = { color: uiColor };
+  
+  // Use black text/icons in day mode for better visibility against bright backgrounds
+  const textColor = theme === 'day' ? '#000000' : uiColor;
+  const uiStyle = { color: textColor };
 
   return (
     <>

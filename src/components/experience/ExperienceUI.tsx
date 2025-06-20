@@ -103,6 +103,7 @@ const ExperienceUI = ({
         uiColor={uiColor}
         onChangeWorld={handleChangeWorld}
         isTransitioning={isTransitioning}
+        theme={theme}
       />
 
       <BottomBar 
@@ -115,6 +116,7 @@ const ExperienceUI = ({
         editableSceneConfig={editableSceneConfig}
         onUpdateSceneConfig={onUpdateSceneConfig}
         onShowHelp={handleShowHelp}
+        theme={theme}
       />
 
       {!isMobile && (
