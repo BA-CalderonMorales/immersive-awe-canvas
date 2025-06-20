@@ -1,5 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import { sanitizeLogData } from './security';
 
 export const logEvent = async ({
   eventType,
@@ -11,13 +12,19 @@ export const logEvent = async ({
   metadata?: Record<string, any>;
 }) => {
   try {
+    // Sanitize all inputs
+    const sanitizedEventType = eventType?.slice(0, 100) || 'unknown';
+    const sanitizedEventSource = eventSource?.slice(0, 100);
+    const sanitizedMetadata = metadata ? sanitizeLogData(metadata) : null;
+
     const { error } = await supabase.from('logs').insert([
       {
-        event_type: eventType,
-        event_source: eventSource,
-        metadata: metadata,
+        event_type: sanitizedEventType,
+        event_source: sanitizedEventSource,
+        metadata: sanitizedMetadata,
       },
     ]);
+    
     if (error) {
       console.error('Error logging event:', error.message);
     }
