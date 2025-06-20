@@ -30,6 +30,18 @@ This project is a web-based application that allows users to explore and customi
     bun run dev
     ```
 This will start the application, and you can view it in your browser at the local address provided.
+
+5.  **Create a production build:**
+    ```bash
+    bun run build
+    ```
+    The compiled files will be output to the `dist/` directory.
+
+6.  **Preview the production build:**
+    ```bash
+    bun run preview
+    ```
+    This command serves the built app locally so you can verify everything looks correct.
 </details>
 
 <details>
