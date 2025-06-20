@@ -9,6 +9,7 @@ interface DistortionSphereObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isGrabMode: boolean; // unused but for API consistency
 }
 
 const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {

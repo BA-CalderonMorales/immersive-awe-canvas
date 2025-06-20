@@ -9,10 +9,11 @@ interface WorldViewProps {
   isTransitioning: boolean;
   worldIndex: number;
   isLocked: boolean;
+  isGrabMode: boolean;
   onToggleLock: () => void;
 }
 
-const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggleLock }: WorldViewProps) => {
+const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, isGrabMode, onToggleLock }: WorldViewProps) => {
   return (
     <div
       key={worldIndex}
@@ -20,7 +21,7 @@ const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggl
     >
       <WorldContainer onToggleLock={onToggleLock} isLocked={isLocked}>
         <KeyboardControls />
-        <DynamicWorld sceneConfig={sceneConfig} isLocked={isLocked} />
+        <DynamicWorld sceneConfig={sceneConfig} isLocked={isLocked} isGrabMode={isGrabMode} />
       </WorldContainer>
     </div>
   );

@@ -9,6 +9,7 @@ import DynamicMaterial from '../materials/DynamicMaterial';
 interface TorusKnotObjectProps {
   themeConfig: SceneThemeConfig;
   isLocked: boolean;
+  isGrabMode: boolean; // unused but for API consistency
 }
 
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {

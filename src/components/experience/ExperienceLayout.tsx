@@ -9,6 +9,7 @@ interface ExperienceLayoutProps {
   isTransitioning: boolean;
   currentWorldIndex: number;
   isObjectLocked: boolean;
+  isGrabMode: boolean;
   onToggleObjectLock: () => void;
   isSettingsOpen: boolean;
   isMobile: boolean;
@@ -20,6 +21,7 @@ const ExperienceLayout = ({
   isTransitioning,
   currentWorldIndex,
   isObjectLocked,
+  isGrabMode,
   onToggleObjectLock,
   isSettingsOpen,
   isMobile,
@@ -28,12 +30,13 @@ const ExperienceLayout = ({
   if (isMobile) {
     return (
       <div className="w-full h-full">
-        <WorldView 
-          sceneConfig={editableSceneConfig} 
-          isTransitioning={isTransitioning} 
-          worldIndex={currentWorldIndex} 
-          isLocked={isObjectLocked} 
-          onToggleLock={onToggleObjectLock} 
+        <WorldView
+          sceneConfig={editableSceneConfig}
+          isTransitioning={isTransitioning}
+          worldIndex={currentWorldIndex}
+          isLocked={isObjectLocked}
+          isGrabMode={isGrabMode}
+          onToggleLock={onToggleObjectLock}
         />
       </div>
     );
@@ -43,12 +46,13 @@ const ExperienceLayout = ({
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>
         <div className="w-full h-full relative">
-          <WorldView 
-            sceneConfig={editableSceneConfig} 
-            isTransitioning={isTransitioning} 
-            worldIndex={currentWorldIndex} 
-            isLocked={isObjectLocked} 
-            onToggleLock={onToggleObjectLock} 
+          <WorldView
+            sceneConfig={editableSceneConfig}
+            isTransitioning={isTransitioning}
+            worldIndex={currentWorldIndex}
+            isLocked={isObjectLocked}
+            isGrabMode={isGrabMode}
+            onToggleLock={onToggleObjectLock}
           />
         </div>
       </ResizablePanel>

@@ -9,6 +9,7 @@ interface MorphingIcosahedronObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isGrabMode: boolean; // unused but for API consistency
 }
 
 const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: MorphingIcosahedronObjectProps) => {

@@ -10,6 +10,7 @@ interface WobbleFieldObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isGrabMode: boolean; // unused but for API consistency
 }
 
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {

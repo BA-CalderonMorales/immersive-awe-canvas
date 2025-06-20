@@ -6,28 +6,32 @@ import DistortionSphereObject from './objects/DistortionSphereObject';
 import MorphingIcosahedronObject from './objects/MorphingIcosahedronObject';
 import WavyGridObject from './objects/WavyGridObject';
 import CrystallineSpireObject from './objects/CrystallineSpireObject';
+import PhysicsPlaygroundObject from './objects/PhysicsPlaygroundObject';
 
 interface DynamicObjectProps {
   type: SceneConfig['type'];
   themeConfig: SceneThemeConfig;
   isLocked: boolean;
+  isGrabMode: boolean;
 }
 
-const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
+const DynamicObject = ({ type, themeConfig, isLocked, isGrabMode }: DynamicObjectProps) => {
   const { mainObjectColor, material } = themeConfig;
   switch (type) {
     case 'TorusKnot':
-      return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} />;
+      return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} isGrabMode={isGrabMode} />;
     case 'WobbleField':
-      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isGrabMode={isGrabMode} />;
     case 'CrystallineSpire':
-      return <CrystallineSpireObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <CrystallineSpireObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isGrabMode={isGrabMode} />;
     case 'DistortionSphere':
-      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isGrabMode={isGrabMode} />;
     case 'MorphingIcosahedron':
-      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isGrabMode={isGrabMode} />;
     case 'WavyGrid':
-      return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isGrabMode={isGrabMode} />;
+    case 'PhysicsPlayground':
+      return <PhysicsPlaygroundObject isGrabMode={isGrabMode} />;
     default:
       return null;
   }

@@ -13,6 +13,7 @@ interface CrystallineSpireObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isGrabMode: boolean; // unused but for API consistency
 }
 
 const CrystallineSpireObject = ({ color, materialConfig, isLocked }: CrystallineSpireObjectProps) => {

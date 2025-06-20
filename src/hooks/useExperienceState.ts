@@ -13,6 +13,7 @@ export const useExperienceState = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isUiHidden, setIsUiHidden] = useState(true);
   const [showUiHint, setShowUiHint] = useState(false);
+  const [isGrabMode, setIsGrabMode] = useState(false);
   const hintShownRef = useRef(false);
 
   const toggleObjectLock = useCallback(() => {
@@ -43,6 +44,8 @@ export const useExperienceState = () => {
     setEditableSceneConfig,
     isObjectLocked,
     toggleObjectLock,
+    isGrabMode,
+    setIsGrabMode,
     currentWorldId,
     setCurrentWorldId,
     isHelpOpen,
