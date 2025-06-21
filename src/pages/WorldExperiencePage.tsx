@@ -21,7 +21,7 @@ const WorldExperiencePage = () => {
   return (
 
     <ExperienceProvider>
-      <ExperienceContent initialWorldSlug={world.slug} />
+      <ExperienceContent key={world.slug} initialWorldSlug={world.slug} />
     </ExperienceProvider>
   
   );

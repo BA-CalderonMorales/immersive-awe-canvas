@@ -53,7 +53,10 @@ const SceneContent = ({ theme }: { theme: 'day' | 'night' }) => {
 
 const BackgroundScene = ({ theme = 'night' }: { theme?: 'day' | 'night' }) => {
   return (
-    <Canvas camera={{ position: [0, 0, 8], fov: 75 }}>
+    <Canvas
+      camera={{ position: [0, 0, 8], fov: 75 }}
+      className="w-full h-full"
+    >
       <SceneContent theme={theme} />
     </Canvas>
   );

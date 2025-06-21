@@ -21,10 +21,14 @@ interface ExperienceLogicProps {
 }
 
 const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
+
   const navigate = useNavigate();
   const location = useLocation();
+  const { theme, toggleTheme } = useExperience();
+  const isMobile = useIsMobile();
   
   const {
+
     worlds,
     isLoading,
     isError,
@@ -34,19 +38,22 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     changeWorld,
     jumpToWorld,
     jumpToWorldBySlug,
+
   } = useWorlds(initialWorldSlug);
-  
-  const { theme, toggleTheme } = useExperience();
-  const isMobile = useIsMobile();
   
   // Sync URL with current world
   useEffect(() => {
+
     if (worldData && worldData.slug) {
+
       const expectedPath = `/experience/${worldData.slug}`;
+
       if (location.pathname !== expectedPath) {
         navigate(expectedPath, { replace: true });
       }
+
     }
+
   }, [worldData, location.pathname, navigate]);
 
   const handleChangeWorld = (direction: 'next' | 'prev') => {
@@ -58,6 +65,7 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   };
 
   const {
+
     editableSceneConfig,
     setEditableSceneConfig,
     isObjectLocked,
@@ -76,23 +84,31 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     setShowUiHint,
     hintShownRef,
     handleCopyCode,
+
   } = useExperienceState();
 
   const {
+
     showEntryTransition,
     showWorldTransition,
     handleEntryTransitionEnd,
     handleWorldTransitionEnd,
+
   } = useExperienceTransitions(isTransitioning);
 
   const {
+
     handleGoHome,
     handleToggleShortcuts,
+
   } = useExperienceCallbacks();
 
   const {
+
     handleEntryTransitionEndWithHint,
+
   } = useExperienceEffects({
+
     worldData,
     currentWorldId,
     setEditableSceneConfig,
@@ -102,37 +118,53 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     hintShownRef,
     setShowUiHint,
     handleEntryTransitionEnd,
+
   });
 
   const uiColor = useMemo(() => {
+
     if (!worldData) return 'white';
     const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
     return color || 'white';
+
   }, [worldData, theme]);
 
   if (isLoading) {
+
     return <LoadingOverlay message="Summoning Worlds..." />;
+
   }
 
   if (isError) {
+
     return <LoadingOverlay message="Could not connect to the multiverse." />;
+
   }
   
   if (!worldData) {
+
     return <LoadingOverlay message="No worlds found." />;
+
   }
 
   if (!editableSceneConfig) {
+
     return <LoadingOverlay message="Initializing Scene..." />;
+
   }
 
   if (!isSceneConfig(worldData.scene_config)) {
+
      return <LoadingOverlay message="World data is incomplete or corrupted." />;
+
   }
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+
+    <div className="w-screen h-screen relative overflow-hidden bg-black">
+
       <AnimatePresence mode="wait">
+
         <motion.div
           key={worldData.slug}
           initial={{ opacity: 0, scale: 0.95 }}
@@ -141,6 +173,7 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
           transition={{ duration: 0.5, ease: "easeInOut" }}
           className="w-full h-full"
         >
+
           <ExperienceTransitions
             showEntryTransition={showEntryTransition}
             showWorldTransition={showWorldTransition}
@@ -197,10 +230,15 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
             worlds={worlds}
             jumpToWorld={handleJumpToWorld}
           />
+
         </motion.div>
+
       </AnimatePresence>
+
     </div>
+
   );
+
 };
 
 export default ExperienceLogic;
