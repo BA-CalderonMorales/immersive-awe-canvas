@@ -8,11 +8,9 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import type { Database } from "@/integrations/supabase/types";
+import type { World } from "@/types/world";
 import { Globe } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-
-type World = Database['public']['Tables']['worlds']['Row'];
 
 interface WorldSearchDialogProps {
   isOpen: boolean;

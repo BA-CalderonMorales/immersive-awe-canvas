@@ -1,18 +1,24 @@
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+import type { World } from "@/types/world";
+import { slugify } from "@/lib/slugify";
+import { FEATURE_WORLD_SLUGS, PUBLIC_WORLD_LIMIT } from "@/config/featureFlags";
 
-type World = Database['public']['Tables']['worlds']['Row'];
 
 const fetchWorlds = async (): Promise<World[]> => {
-  const { data, error } = await supabase.from('worlds').select('*').order('id', { ascending: true });
+  const { data, error } = await supabase
+    .from('worlds')
+    .select('*')
+    .order('id', { ascending: true });
   if (error) throw new Error(error.message);
-  return data || [];
+  const withSlugs = (data || []).map((w) => ({ ...w, slug: slugify(w.name) }));
+  const filtered = withSlugs.filter((w) => FEATURE_WORLD_SLUGS.includes(w.slug));
+  return filtered.slice(0, PUBLIC_WORLD_LIMIT);
 };
 
-export const useWorlds = () => {
+export const useWorlds = (initialSlug?: string) => {
   const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -20,6 +26,15 @@ export const useWorlds = () => {
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
   });
+
+  // Sync current index with slug from route when worlds load
+  useEffect(() => {
+    if (!initialSlug || !worlds) return;
+    const idx = worlds.findIndex((w) => w.slug === initialSlug);
+    if (idx !== -1) {
+      setCurrentWorldIndex(idx);
+    }
+  }, [initialSlug, worlds]);
 
   const worldData = useMemo(() => {
     if (!worlds || worlds.length === 0) return null;
