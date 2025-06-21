@@ -131,7 +131,7 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   }
 
   return (
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="w-screen h-screen relative overflow-hidden bg-black">
       <AnimatePresence mode="wait">
         <motion.div
           key={worldData.slug}
