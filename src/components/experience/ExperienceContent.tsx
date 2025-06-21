@@ -2,10 +2,14 @@
 import { KeyboardShortcutsProvider } from "@/context/KeyboardShortcutsContext";
 import ExperienceLogic from "./ExperienceLogic";
 
-const ExperienceContent = () => {
+interface ExperienceContentProps {
+  initialSlug?: string;
+}
+
+const ExperienceContent = ({ initialSlug }: ExperienceContentProps) => {
   return (
     <KeyboardShortcutsProvider>
-      <ExperienceLogic />
+      <ExperienceLogic initialSlug={initialSlug} />
     </KeyboardShortcutsProvider>
   );
 };

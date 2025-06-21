@@ -3,6 +3,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { SceneConfig } from "@/types/scene";
 import WorldView from "./WorldView";
 import SceneSettingsPanel from "./SceneSettingsPanel";
+import { AnimatePresence } from "framer-motion";
 
 interface ExperienceLayoutProps {
   editableSceneConfig: SceneConfig;
@@ -28,13 +29,15 @@ const ExperienceLayout = ({
   if (isMobile) {
     return (
       <div className="w-full h-full">
-        <WorldView 
-          sceneConfig={editableSceneConfig} 
-          isTransitioning={isTransitioning} 
-          worldIndex={currentWorldIndex} 
-          isLocked={isObjectLocked} 
-          onToggleLock={onToggleObjectLock} 
-        />
+        <AnimatePresence mode="wait">
+          <WorldView
+            sceneConfig={editableSceneConfig}
+            isTransitioning={isTransitioning}
+            worldIndex={currentWorldIndex}
+            isLocked={isObjectLocked}
+            onToggleLock={onToggleObjectLock}
+          />
+        </AnimatePresence>
       </div>
     );
   }
@@ -43,13 +46,15 @@ const ExperienceLayout = ({
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>
         <div className="w-full h-full relative">
-          <WorldView 
-            sceneConfig={editableSceneConfig} 
-            isTransitioning={isTransitioning} 
-            worldIndex={currentWorldIndex} 
-            isLocked={isObjectLocked} 
-            onToggleLock={onToggleObjectLock} 
-          />
+          <AnimatePresence mode="wait">
+            <WorldView
+              sceneConfig={editableSceneConfig}
+              isTransitioning={isTransitioning}
+              worldIndex={currentWorldIndex}
+              isLocked={isObjectLocked}
+              onToggleLock={onToggleObjectLock}
+            />
+          </AnimatePresence>
         </div>
       </ResizablePanel>
       {isSettingsOpen && (

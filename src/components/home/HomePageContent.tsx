@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { useExperience } from "@/hooks/useExperience";
+import { FIRST_WORLD_SLUG } from "@/lib/featureFlags";
 import { useEffect, useState, useCallback } from "react";
 import TransitionSplash from "@/components/TransitionSplash";
 import ThemeToggle from "./ThemeToggle";
@@ -22,7 +23,7 @@ const HomePageContent = () => {
     setShowSplash(true);
     
     setTimeout(() => {
-      navigate("/experience");
+      navigate(`/experience/${FIRST_WORLD_SLUG}`);
     }, 1850);
   }, [isLeaving, navigate]);
 
