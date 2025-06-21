@@ -10,11 +10,11 @@ const WorldExperiencePage = () => {
   const { data: world, isLoading, isError } = useWorldBySlug(worldSlug || '');
 
   if (isLoading) {
-    return <LoadingOverlay message="Loading world..." />;
+    return <LoadingOverlay message="Loading world..." theme="night" />;
   }
 
   if (isError || !world) {
-    return <Navigate to="/experience" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return (

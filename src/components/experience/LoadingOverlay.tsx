@@ -1,15 +1,14 @@
+
 import TransitionSplash from "@/components/TransitionSplash";
-import { useExperience } from "@/hooks/useExperience";
 
 interface LoadingOverlayProps {
   message?: string;
+  theme?: "day" | "night";
 }
 
-const LoadingOverlay = ({ message }: LoadingOverlayProps) => {
-  // fallback for message
-  const { theme } = useExperience?.() || { theme: "day" };
+const LoadingOverlay = ({ message, theme = "day" }: LoadingOverlayProps) => {
   return (
-    <TransitionSplash show={true} theme={theme || "day"}>
+    <TransitionSplash show={true} theme={theme}>
       {/* You can show {message} if desired for debugging */}
     </TransitionSplash>
   );

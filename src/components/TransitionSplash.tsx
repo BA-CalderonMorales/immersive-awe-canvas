@@ -26,8 +26,7 @@ const containerVariants = {
   exit: { 
     opacity: 0,
     transition: {
-      duration: 0.8,
-      ease: [0.4, 0.0, 0.6, 1]
+      duration: 0.8
     }
   }
 };
@@ -52,8 +51,7 @@ const textVariants = {
     opacity: 1, 
     y: 0,
     transition: {
-      duration: 0.6,
-      ease: [0.4, 0.0, 0.2, 1]
+      duration: 0.6
     }
   }
 };
