@@ -14,7 +14,11 @@ import ExperienceHotkeys from "./ExperienceHotkeys";
 import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
 
-const ExperienceLogic = () => {
+interface ExperienceLogicProps {
+  slug?: string;
+}
+
+const ExperienceLogic = ({ slug }: ExperienceLogicProps) => {
   const {
     worlds,
     isLoading,
@@ -24,7 +28,7 @@ const ExperienceLogic = () => {
     isTransitioning,
     changeWorld,
     jumpToWorld,
-  } = useWorlds();
+  } = useWorlds(slug);
   
   const { theme, toggleTheme } = useExperience();
   const isMobile = useIsMobile();

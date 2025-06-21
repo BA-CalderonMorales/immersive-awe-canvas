@@ -1,5 +1,6 @@
 
 import { useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import ExperienceContent from "@/components/experience/ExperienceContent";
 
@@ -11,12 +12,12 @@ const ExperiencePage = () => {
   
   }, []);
 
+  const { slug } = useParams<{ slug?: string }>();
+
   return (
-  
     <ExperienceProvider>
-      <ExperienceContent />
+      <ExperienceContent slug={slug} />
     </ExperienceProvider>
-  
   );
 
 };

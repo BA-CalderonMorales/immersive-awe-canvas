@@ -1,8 +1,10 @@
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { slugify } from "@/lib/utils";
+import { isFeatureEnabled } from "@/lib/features";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
@@ -12,7 +14,7 @@ const fetchWorlds = async (): Promise<World[]> => {
   return data || [];
 };
 
-export const useWorlds = () => {
+export const useWorlds = (initialSlug?: string) => {
   const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -20,6 +22,15 @@ export const useWorlds = () => {
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
   });
+
+  useEffect(() => {
+    if (!initialSlug || !worlds || worlds.length === 0) return;
+    if (!isFeatureEnabled('slug_routes')) return;
+    const index = worlds.findIndex(w => slugify(w.name) === initialSlug);
+    if (index !== -1) {
+      setCurrentWorldIndex(index);
+    }
+  }, [initialSlug, worlds]);
 
   const worldData = useMemo(() => {
     if (!worlds || worlds.length === 0) return null;

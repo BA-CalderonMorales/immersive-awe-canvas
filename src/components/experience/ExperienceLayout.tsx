@@ -2,6 +2,7 @@
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { SceneConfig } from "@/types/scene";
 import WorldView from "./WorldView";
+import { AnimatePresence } from "framer-motion";
 import SceneSettingsPanel from "./SceneSettingsPanel";
 
 interface ExperienceLayoutProps {
@@ -28,13 +29,16 @@ const ExperienceLayout = ({
   if (isMobile) {
     return (
       <div className="w-full h-full">
-        <WorldView 
-          sceneConfig={editableSceneConfig} 
-          isTransitioning={isTransitioning} 
-          worldIndex={currentWorldIndex} 
-          isLocked={isObjectLocked} 
-          onToggleLock={onToggleObjectLock} 
-        />
+        <AnimatePresence mode="wait">
+          <WorldView
+            key={currentWorldIndex}
+            sceneConfig={editableSceneConfig}
+            isTransitioning={isTransitioning}
+            worldIndex={currentWorldIndex}
+            isLocked={isObjectLocked}
+            onToggleLock={onToggleObjectLock}
+          />
+        </AnimatePresence>
       </div>
     );
   }
@@ -42,15 +46,18 @@ const ExperienceLayout = ({
   return (
     <ResizablePanelGroup direction="horizontal">
       <ResizablePanel>
-        <div className="w-full h-full relative">
-          <WorldView 
-            sceneConfig={editableSceneConfig} 
-            isTransitioning={isTransitioning} 
-            worldIndex={currentWorldIndex} 
-            isLocked={isObjectLocked} 
-            onToggleLock={onToggleObjectLock} 
-          />
-        </div>
+          <div className="w-full h-full relative">
+            <AnimatePresence mode="wait">
+              <WorldView
+                key={currentWorldIndex}
+                sceneConfig={editableSceneConfig}
+                isTransitioning={isTransitioning}
+                worldIndex={currentWorldIndex}
+                isLocked={isObjectLocked}
+                onToggleLock={onToggleObjectLock}
+              />
+            </AnimatePresence>
+          </div>
       </ResizablePanel>
       {isSettingsOpen && (
         <>
