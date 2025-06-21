@@ -37,9 +37,11 @@ export const useExperienceEffects = ({
         if (isSettingsOpen) {
           setIsSettingsOpen(false);
         }
+
+        handleEntryTransitionEnd();
       }
     }
-  }, [worldData, currentWorldId, isSettingsOpen, setEditableSceneConfig, setCurrentWorldId, setIsSettingsOpen]);
+  }, [worldData, currentWorldId, isSettingsOpen, setEditableSceneConfig, setCurrentWorldId, setIsSettingsOpen, handleEntryTransitionEnd]);
 
   // Settings escape key effect
   useEffect(() => {
