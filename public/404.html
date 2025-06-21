@@ -18,7 +18,12 @@
   </head>
 
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      sessionStorage.setItem(
+        "redirectPath",
+        location.pathname + location.search + location.hash
+      );
+      window.location.replace("/immersive-awe-canvas/");
+    </script>
   </body>
 </html>
