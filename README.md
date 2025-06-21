@@ -2,7 +2,8 @@
 
 A creative coding playground for crafting beautiful, interactive 3D worlds right in your browser.
 
-**Deployed Site:** [https://ba-calderonmorales.github.io/immersive-awe-canvas/](https://ba-calderonmorales.github.io/immersive-awe-canvas/)
+**QA (may be buggy at times):** [immersive-awe-canvas: qa](https://ba-calderonmorales.github.io/immersive-awe-canvas/)
+**PROD:** [immersive-awe-canvas: prod](https://immersive-awe-canvas.lovable.app)
 
 <details>
 <summary><b>What is this?</b></summary>
