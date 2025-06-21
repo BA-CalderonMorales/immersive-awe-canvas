@@ -1,5 +1,6 @@
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
 import { isSceneConfig } from "@/lib/typeguards";
@@ -13,8 +14,16 @@ import LoadingOverlay from "./LoadingOverlay";
 import ExperienceHotkeys from "./ExperienceHotkeys";
 import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
+import { motion, AnimatePresence } from "framer-motion";
 
-const ExperienceLogic = () => {
+interface ExperienceLogicProps {
+  initialWorldSlug?: string;
+}
+
+const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  
   const {
     worlds,
     isLoading,
@@ -24,11 +33,30 @@ const ExperienceLogic = () => {
     isTransitioning,
     changeWorld,
     jumpToWorld,
-  } = useWorlds();
+    jumpToWorldBySlug,
+  } = useWorlds(initialWorldSlug);
   
   const { theme, toggleTheme } = useExperience();
   const isMobile = useIsMobile();
   
+  // Sync URL with current world
+  useEffect(() => {
+    if (worldData && worldData.slug) {
+      const expectedPath = `/experience/${worldData.slug}`;
+      if (location.pathname !== expectedPath) {
+        navigate(expectedPath, { replace: true });
+      }
+    }
+  }, [worldData, location.pathname, navigate]);
+
+  const handleChangeWorld = (direction: 'next' | 'prev') => {
+    changeWorld(direction);
+  };
+
+  const handleJumpToWorld = (index: number) => {
+    jumpToWorld(index);
+  };
+
   const {
     editableSceneConfig,
     setEditableSceneConfig,
@@ -104,62 +132,73 @@ const ExperienceLogic = () => {
 
   return (
     <div className="w-full h-full relative overflow-hidden bg-black">
-      <ExperienceTransitions
-        showEntryTransition={showEntryTransition}
-        showWorldTransition={showWorldTransition}
-        theme={theme}
-        onEntryTransitionEnd={handleEntryTransitionEndWithHint}
-        onWorldTransitionEnd={handleWorldTransitionEnd}
-      />
-      
-      <ExperienceLayout
-        editableSceneConfig={editableSceneConfig}
-        isTransitioning={isTransitioning}
-        currentWorldIndex={currentWorldIndex}
-        isObjectLocked={isObjectLocked}
-        onToggleObjectLock={toggleObjectLock}
-        isSettingsOpen={isSettingsOpen}
-        isMobile={isMobile}
-        onUpdateSceneConfig={setEditableSceneConfig}
-      />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={worldData.slug}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.05 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="w-full h-full"
+        >
+          <ExperienceTransitions
+            showEntryTransition={showEntryTransition}
+            showWorldTransition={showWorldTransition}
+            theme={theme}
+            onEntryTransitionEnd={handleEntryTransitionEndWithHint}
+            onWorldTransitionEnd={handleWorldTransitionEnd}
+          />
+          
+          <ExperienceLayout
+            editableSceneConfig={editableSceneConfig}
+            isTransitioning={isTransitioning}
+            currentWorldIndex={currentWorldIndex}
+            isObjectLocked={isObjectLocked}
+            onToggleObjectLock={toggleObjectLock}
+            isSettingsOpen={isSettingsOpen}
+            isMobile={isMobile}
+            onUpdateSceneConfig={setEditableSceneConfig}
+          />
 
-      <ExperienceUI
-        worldName={worldData.name}
-        theme={theme}
-        isTransitioning={isTransitioning}
-        editableSceneConfig={editableSceneConfig}
-        onToggleTheme={toggleTheme}
-        onChangeWorld={changeWorld}
-        onCopyCode={handleCopyCode}
-        onUpdateSceneConfig={setEditableSceneConfig}
-        onShowHelp={() => setIsHelpOpen(true)}
-        onGoHome={handleGoHome}
-        onShowSearch={() => setIsSearchOpen(true)}
-        uiColor={uiColor}
-        isSettingsOpen={isSettingsOpen}
-        onToggleSettings={setIsSettingsOpen}
-        isUiHidden={isUiHidden}
-        onToggleUiHidden={() => setIsUiHidden((h) => !h)}
-        showUiHint={showUiHint}
-      />
+          <ExperienceUI
+            worldName={worldData.name}
+            theme={theme}
+            isTransitioning={isTransitioning}
+            editableSceneConfig={editableSceneConfig}
+            onToggleTheme={toggleTheme}
+            onChangeWorld={handleChangeWorld}
+            onCopyCode={handleCopyCode}
+            onUpdateSceneConfig={setEditableSceneConfig}
+            onShowHelp={() => setIsHelpOpen(true)}
+            onGoHome={handleGoHome}
+            onShowSearch={() => setIsSearchOpen(true)}
+            uiColor={uiColor}
+            isSettingsOpen={isSettingsOpen}
+            onToggleSettings={setIsSettingsOpen}
+            isUiHidden={isUiHidden}
+            onToggleUiHidden={() => setIsUiHidden((h) => !h)}
+            showUiHint={showUiHint}
+          />
 
-      <ExperienceHotkeys
-        toggleTheme={toggleTheme}
-        changeWorld={changeWorld}
-        handleGoHome={handleGoHome}
-        handleCopyCode={handleCopyCode}
-        toggleObjectLock={toggleObjectLock}
-        handleToggleShortcuts={handleToggleShortcuts}
-        setIsSearchOpen={setIsSearchOpen}
-        setIsHelpOpen={setIsHelpOpen}
-        setIsSettingsOpen={setIsSettingsOpen}
-        setIsUiHidden={setIsUiHidden}
-        isHelpOpen={isHelpOpen}
-        isSearchOpen={isSearchOpen}
-        isSettingsOpen={isSettingsOpen}
-        worlds={worlds}
-        jumpToWorld={jumpToWorld}
-      />
+          <ExperienceHotkeys
+            toggleTheme={toggleTheme}
+            changeWorld={handleChangeWorld}
+            handleGoHome={handleGoHome}
+            handleCopyCode={handleCopyCode}
+            toggleObjectLock={toggleObjectLock}
+            handleToggleShortcuts={handleToggleShortcuts}
+            setIsSearchOpen={setIsSearchOpen}
+            setIsHelpOpen={setIsHelpOpen}
+            setIsSettingsOpen={setIsSettingsOpen}
+            setIsUiHidden={setIsUiHidden}
+            isHelpOpen={isHelpOpen}
+            isSearchOpen={isSearchOpen}
+            isSettingsOpen={isSettingsOpen}
+            worlds={worlds}
+            jumpToWorld={handleJumpToWorld}
+          />
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

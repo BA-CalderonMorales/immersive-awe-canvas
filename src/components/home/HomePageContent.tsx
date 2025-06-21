@@ -3,11 +3,26 @@ import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { useExperience } from "@/hooks/useExperience";
 import { useEffect, useState, useCallback } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import TransitionSplash from "@/components/TransitionSplash";
 import ThemeToggle from "./ThemeToggle";
 import MainTitle from "./MainTitle";
 import FloatingElements from "./FloatingElements";
 import InfoButton from "./InfoButton";
+
+const fetchFirstFeaturedWorld = async () => {
+  const { data, error } = await supabase
+    .from('worlds')
+    .select('slug')
+    .eq('is_featured', true)
+    .order('id', { ascending: true })
+    .limit(1)
+    .single();
+  
+  if (error) throw new Error(error.message);
+  return data;
+};
 
 const HomePageContent = () => {
   const navigate = useNavigate();
@@ -15,16 +30,21 @@ const HomePageContent = () => {
   const [isLeaving, setIsLeaving] = useState(false);
   const [showSplash, setShowSplash] = useState(false);
 
+  const { data: firstWorld } = useQuery({
+    queryKey: ['firstWorld'],
+    queryFn: fetchFirstFeaturedWorld,
+  });
+
   const handleStartJourney = useCallback(() => {
-    if (isLeaving) return;
+    if (isLeaving || !firstWorld) return;
     
     setIsLeaving(true);
     setShowSplash(true);
     
     setTimeout(() => {
-      navigate("/experience");
+      navigate(`/experience/${firstWorld.slug}`);
     }, 1850);
-  }, [isLeaving, navigate]);
+  }, [isLeaving, navigate, firstWorld]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {

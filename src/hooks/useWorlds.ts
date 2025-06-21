@@ -7,18 +7,52 @@ import type { Database } from "@/integrations/supabase/types";
 type World = Database['public']['Tables']['worlds']['Row'];
 
 const fetchWorlds = async (): Promise<World[]> => {
-  const { data, error } = await supabase.from('worlds').select('*').order('id', { ascending: true });
+  const { data, error } = await supabase
+    .from('worlds')
+    .select('*')
+    .eq('is_featured', true)
+    .order('id', { ascending: true });
   if (error) throw new Error(error.message);
   return data || [];
 };
 
-export const useWorlds = () => {
+const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
+  const { data, error } = await supabase
+    .from('worlds')
+    .select('*')
+    .eq('slug', slug)
+    .eq('is_featured', true)
+    .single();
+  if (error) {
+    if (error.code === 'PGRST116') return null; // Not found
+    throw new Error(error.message);
+  }
+  return data;
+};
+
+export const useWorlds = (initialSlug?: string) => {
   const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const { data: worlds, isLoading, isError } = useQuery<World[]>({
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
+  });
+
+  const { data: initialWorld } = useQuery<World | null>({
+    queryKey: ['world', initialSlug],
+    queryFn: () => initialSlug ? fetchWorldBySlug(initialSlug) : Promise.resolve(null),
+    enabled: !!initialSlug,
+  });
+
+  // Set initial world index based on slug
+  useState(() => {
+    if (initialWorld && worlds) {
+      const index = worlds.findIndex(w => w.slug === initialWorld.slug);
+      if (index !== -1) {
+        setCurrentWorldIndex(index);
+      }
+    }
   });
 
   const worldData = useMemo(() => {
@@ -39,7 +73,7 @@ export const useWorlds = () => {
         return newIndex;
       });
       setIsTransitioning(false);
-    }, 1000); // Transition time
+    }, 1000);
   }, [isTransitioning, worlds]);
 
   const jumpToWorld = useCallback((index: number) => {
@@ -51,8 +85,16 @@ export const useWorlds = () => {
     setTimeout(() => {
       setCurrentWorldIndex(index);
       setIsTransitioning(false);
-    }, 1000); // Transition time
+    }, 1000);
   }, [isTransitioning, worlds, currentWorldIndex]);
+
+  const jumpToWorldBySlug = useCallback((slug: string) => {
+    if (!worlds) return;
+    const index = worlds.findIndex(w => w.slug === slug);
+    if (index !== -1) {
+      jumpToWorld(index);
+    }
+  }, [worlds, jumpToWorld]);
 
   return {
     worlds,
@@ -63,5 +105,15 @@ export const useWorlds = () => {
     isTransitioning,
     changeWorld,
     jumpToWorld,
+    jumpToWorldBySlug,
+    initialWorld,
   };
+};
+
+export const useWorldBySlug = (slug: string) => {
+  return useQuery<World | null>({
+    queryKey: ['world', slug],
+    queryFn: () => fetchWorldBySlug(slug),
+    enabled: !!slug,
+  });
 };

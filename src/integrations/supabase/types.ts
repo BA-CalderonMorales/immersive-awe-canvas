@@ -38,8 +38,10 @@ export type Database = {
           created_at: string
           description: string | null
           id: number
+          is_featured: boolean | null
           name: string
           scene_config: Json | null
+          slug: string | null
           ui_day_color: string | null
           ui_night_color: string | null
         }
@@ -47,8 +49,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          is_featured?: boolean | null
           name: string
           scene_config?: Json | null
+          slug?: string | null
           ui_day_color?: string | null
           ui_night_color?: string | null
         }
@@ -56,8 +60,10 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          is_featured?: boolean | null
           name?: string
           scene_config?: Json | null
+          slug?: string | null
           ui_day_color?: string | null
           ui_night_color?: string | null
         }
