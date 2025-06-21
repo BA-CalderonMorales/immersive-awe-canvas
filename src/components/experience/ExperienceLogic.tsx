@@ -1,5 +1,6 @@
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
 import { isSceneConfig } from "@/lib/typeguards";
@@ -14,7 +15,12 @@ import ExperienceHotkeys from "./ExperienceHotkeys";
 import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
 
-const ExperienceLogic = () => {
+interface ExperienceLogicProps {
+  initialSlug?: string;
+}
+
+const ExperienceLogic = ({ initialSlug }: ExperienceLogicProps) => {
+  const navigate = useNavigate();
   const {
     worlds,
     isLoading,
@@ -24,7 +30,7 @@ const ExperienceLogic = () => {
     isTransitioning,
     changeWorld,
     jumpToWorld,
-  } = useWorlds();
+  } = useWorlds(initialSlug);
   
   const { theme, toggleTheme } = useExperience();
   const isMobile = useIsMobile();
@@ -81,6 +87,13 @@ const ExperienceLogic = () => {
     const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
     return color || 'white';
   }, [worldData, theme]);
+
+  // Update the URL when the current world changes
+  useEffect(() => {
+    if (worldData) {
+      navigate(`/experience/${worldData.slug}`, { replace: true });
+    }
+  }, [worldData, navigate]);
 
   if (isLoading) {
     return <LoadingOverlay message="Summoning Worlds..." />;

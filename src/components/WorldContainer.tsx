@@ -14,8 +14,9 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
   const [isDragging, setIsDragging] = useState(false);
 
   return (
-    <Canvas 
-      camera={{ position: [0, 0, 5], fov: 75 }} 
+    <Canvas
+      className="w-full h-full"
+      camera={{ position: [0, 0, 5], fov: 75 }}
       onDoubleClick={onToggleLock}
       style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
       onPointerDown={() => setIsDragging(true)}

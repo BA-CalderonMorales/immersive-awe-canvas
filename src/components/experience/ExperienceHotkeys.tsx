@@ -1,6 +1,7 @@
 
 import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
 import { useEffect } from "react";
+import type { World } from "@/types/world";
 import HelpDialog from "@/components/dialogs/HelpDialog";
 import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 
@@ -18,7 +19,7 @@ interface ExperienceHotkeysProps {
   isHelpOpen: boolean;
   isSearchOpen: boolean;
   isSettingsOpen: boolean;
-  worlds: any[];
+  worlds: World[];
   jumpToWorld: (worldId: number) => void;
 }
 

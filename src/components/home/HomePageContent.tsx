@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import BackgroundScene from "@/components/BackgroundScene";
 import { useExperience } from "@/hooks/useExperience";
 import { useEffect, useState, useCallback } from "react";
+import { FEATURE_WORLD_SLUGS } from "@/config/featureFlags";
 import TransitionSplash from "@/components/TransitionSplash";
 import ThemeToggle from "./ThemeToggle";
 import MainTitle from "./MainTitle";
@@ -22,7 +23,8 @@ const HomePageContent = () => {
     setShowSplash(true);
     
     setTimeout(() => {
-      navigate("/experience");
+      const firstSlug = FEATURE_WORLD_SLUGS[0];
+      navigate(firstSlug ? `/experience/${firstSlug}` : "/experience");
     }, 1850);
   }, [isLeaving, navigate]);
 
