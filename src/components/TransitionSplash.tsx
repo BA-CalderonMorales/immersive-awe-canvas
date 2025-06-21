@@ -27,7 +27,7 @@ const containerVariants = {
     opacity: 0,
     transition: {
       duration: 0.8,
-      ease: "easeInOut"
+      ease: [0.4, 0.0, 0.6, 1]
     }
   }
 };
@@ -39,7 +39,7 @@ const logoVariants = {
     opacity: 1, 
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
       stiffness: 100,
       damping: 15
     }
@@ -53,7 +53,7 @@ const textVariants = {
     y: 0,
     transition: {
       duration: 0.6,
-      ease: "easeOut"
+      ease: [0.4, 0.0, 0.2, 1]
     }
   }
 };
