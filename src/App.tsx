@@ -22,6 +22,7 @@ const basename = import.meta.env.BASE_URL;
 
 const rootRoute = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   component: () => <Outlet />,
+  notFoundComponent: NotFound,
 });
 
 const indexRoute = createRoute({
@@ -32,7 +33,7 @@ const indexRoute = createRoute({
 
 const worldRoute = createRoute({
   getParentRoute: () => rootRoute,
-  path: '/experience/$worldSlug',
+  path: 'experience/$worldSlug',
   component: WorldExperiencePage,
   loader: async ({ params }) => {
     await queryClient.ensureQueryData({
@@ -43,13 +44,7 @@ const worldRoute = createRoute({
   },
 });
 
-const notFoundRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '*',
-  component: NotFound,
-});
-
-const routeTree = rootRoute.addChildren([indexRoute, worldRoute, notFoundRoute]);
+const routeTree = rootRoute.addChildren([indexRoute, worldRoute]);
 
 const router = createRouter({
   routeTree,
