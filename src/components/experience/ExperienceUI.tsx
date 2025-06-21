@@ -29,6 +29,7 @@ interface ExperienceUIProps {
 }
 
 const ExperienceUI = ({
+
   worldName,
   theme,
   isTransitioning,
@@ -46,49 +47,69 @@ const ExperienceUI = ({
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
+
 }: ExperienceUIProps) => {
+
   const isMobile = useIsMobile();
 
   const handleToggleTheme = () => {
+
     onToggleTheme();
     logEvent({ eventType: 'button_click', eventSource: 'toggle_theme', metadata: { to_theme: theme === 'day' ? 'night' : 'day' } });
+
   };
 
   const handleGoHome = () => {
+
     onGoHome();
     logEvent({ eventType: 'button_click', eventSource: 'go_home' });
+
   };
 
   const handleChangeWorld = (direction: 'next' | 'prev') => {
+
     onChangeWorld(direction);
     logEvent({ eventType: 'button_click', eventSource: 'change_world', metadata: { direction } });
+
   };
   
   const handleShowSearch = () => {
+
     onShowSearch();
     logEvent({ eventType: 'button_click', eventSource: 'show_search' });
+
   };
   
   const handleShowHelp = () => {
+
     onShowHelp();
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
+
   };
 
   if (isUiHidden) {
+
     return (
+
       <TooltipProvider>
+
         <HiddenUiView 
           onToggleUiHidden={onToggleUiHidden}
           showUiHint={showUiHint}
           uiColor={uiColor}
           theme={theme}
         />
+
       </TooltipProvider>
+
     );
+
   }
 
   return (
+
     <TooltipProvider>
+
       <TopBar 
         worldName={worldName}
         uiColor={uiColor}
@@ -127,8 +148,11 @@ const ExperienceUI = ({
           Press SPACE to change time of day
         </div>
       )}
+
     </TooltipProvider>
+
   );
+
 };
 
 export default ExperienceUI;
