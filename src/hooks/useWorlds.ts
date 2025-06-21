@@ -1,5 +1,5 @@
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
@@ -46,14 +46,14 @@ export const useWorlds = (initialSlug?: string) => {
   });
 
   // Set initial world index based on slug
-  useState(() => {
+  useEffect(() => {
     if (initialWorld && worlds) {
       const index = worlds.findIndex(w => w.slug === initialWorld.slug);
       if (index !== -1) {
         setCurrentWorldIndex(index);
       }
     }
-  });
+  }, [initialWorld, worlds]);
 
   const worldData = useMemo(() => {
     if (!worlds || worlds.length === 0) return null;
