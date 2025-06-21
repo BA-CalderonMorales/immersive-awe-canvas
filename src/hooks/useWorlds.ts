@@ -20,7 +20,7 @@ const fetchWorlds = async (): Promise<World[]> => {
 
 };
 
-const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
+export const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
   
   const { data, error } = await supabase
     .from('worlds')

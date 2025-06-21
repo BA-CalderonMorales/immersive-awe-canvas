@@ -1,6 +1,6 @@
 
 import { useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
 import { useKeyboardShortcuts } from '@/context/KeyboardShortcutsContext';
 import { logEvent } from '@/lib/logger';
 

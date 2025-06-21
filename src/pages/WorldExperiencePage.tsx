@@ -1,4 +1,4 @@
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate } from "@tanstack/react-router";
 import { ExperienceProvider } from "@/context/ExperienceContext";
 import ExperienceContent from "@/components/experience/ExperienceContent";
 import { useWorldBySlug } from "@/hooks/useWorlds";

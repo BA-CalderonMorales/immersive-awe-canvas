@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import BackgroundScene from "@/components/BackgroundScene";
 import { useExperience } from "@/hooks/useExperience";
 import { useEffect, useState, useCallback } from "react";

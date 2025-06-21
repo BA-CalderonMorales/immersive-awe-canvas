@@ -1,6 +1,6 @@
 
 import { useMemo, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "@tanstack/react-router";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
 import { isSceneConfig } from "@/lib/typeguards";

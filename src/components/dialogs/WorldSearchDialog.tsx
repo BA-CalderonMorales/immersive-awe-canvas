@@ -8,7 +8,7 @@ import {
   CommandItem,
 } from "@/components/ui/command";
 import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { Database } from "@/integrations/supabase/types";
 import { Globe } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
