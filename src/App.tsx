@@ -22,15 +22,15 @@ const App = () => (
       
       <Sonner />
       
-      <BrowserRouter basename={basename}>
-  
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/experience/:worldSlug" element={<WorldExperiencePage />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      
-      </BrowserRouter>
+      <div className="w-full h-full">
+        <BrowserRouter basename={basename}>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/experience/:worldSlug" element={<WorldExperiencePage />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
     
     </TooltipProvider>
   
