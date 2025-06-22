@@ -100,7 +100,7 @@ const BottomBar = ({
                 </DrawerTrigger>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Scene Settings (E)</p>
+                <p>Scene Settings (Esc)</p>
               </TooltipContent>
             </Tooltip>
             <DrawerContent>
@@ -129,7 +129,7 @@ const BottomBar = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Scene Settings (E)</p>
+              <p>Scene Settings (Esc)</p>
             </TooltipContent>
           </Tooltip>
         )}
@@ -155,3 +155,4 @@ const BottomBar = ({
 };
 
 export default BottomBar;
+

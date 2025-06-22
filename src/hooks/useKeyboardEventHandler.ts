@@ -95,7 +95,7 @@ export const useKeyboardEventHandler = ({
         }
         break;
       
-      case 'KeyE':
+      case 'Escape':
         if (!typing) {
           event.preventDefault();
           onToggleSettings();
@@ -139,3 +139,4 @@ export const useKeyboardEventHandler = ({
 
   return { handleKeyDown };
 };
+

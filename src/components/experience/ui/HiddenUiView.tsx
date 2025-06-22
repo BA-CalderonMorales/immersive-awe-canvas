@@ -17,6 +17,11 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const isMobile = useIsMobile();
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
+  // Use consistent button styling matching the main UI
+  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
+  const textColor = theme === 'day' ? '#000000' : uiColor;
+  const uiStyle = { color: textColor };
+
   return (
     <>
       <Tooltip open={showUiHint}>
@@ -26,8 +31,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               size="icon"
               aria-label="Show UI"
               onClick={onToggleUiHidden}
-              className="bg-black/30 hover:bg-black/50 text-white shadow-md cursor-pointer"
-              style={{ color: uiColor }}
+              className={`${blendedButtonClasses} shadow-md cursor-pointer`}
+              style={uiStyle}
             >
               <Pointer className="w-6 h-6" />
             </Button>
@@ -46,13 +51,11 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-6 h-6 p-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 backdrop-blur-sm rounded-md transition-colors ${
-                  theme === 'day' ? 'text-emerald-600 hover:text-emerald-800' : 'text-blue-300 hover:text-blue-100'
-                } ${isMobile ? 'cursor-default' : 'cursor-pointer'}`}
+                className={`w-6 h-6 p-0 ${blendedButtonClasses} backdrop-blur-sm rounded-md transition-colors ${isMobile ? 'cursor-default' : 'cursor-pointer'}`}
+                style={uiStyle}
                 onClick={(e) => {
                   e.stopPropagation();
                   if (!isMobile) {
-                    // On desktop, make it feel interactive by toggling the shortcuts visibility
                     toggleExpanded();
                   }
                 }}
@@ -96,7 +99,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                 <p>Press <span className="font-bold">Space</span> to change the time of day</p>
                 <p>Press <span className="font-bold">.</span> to freeze or unfreeze objects</p>
                 <p>Press <span className="font-bold">V</span> to show or hide the interface</p>
-                <p>Press <span className="font-bold">E</span> to open scene settings</p>
+                <p>Press <span className="font-bold">Esc</span> to open scene settings</p>
                 <p>Press <span className="font-bold">S</span> to search for worlds</p>
                 <p>Press <span className="font-bold">H</span> to open the help guide</p>
                 <p>Press <span className="font-bold">G</span> to return to the home page</p>
@@ -111,3 +114,4 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 };
 
 export default HiddenUiView;
+
