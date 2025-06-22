@@ -161,7 +161,7 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
 
   return (
 
-    <div className="w-full h-full relative overflow-hidden bg-black">
+    <div className="fixed inset-0 overflow-hidden bg-black">
 
       <AnimatePresence mode="wait">
 
