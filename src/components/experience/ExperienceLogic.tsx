@@ -1,4 +1,3 @@
-
 import { useMemo, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useWorlds } from "@/hooks/useWorlds";
@@ -21,14 +20,12 @@ interface ExperienceLogicProps {
 }
 
 const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
-
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useExperience();
   const isMobile = useIsMobile();
   
   const {
-
     worlds,
     isLoading,
     isError,
@@ -38,34 +35,49 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     changeWorld,
     jumpToWorld,
     jumpToWorldBySlug,
-
   } = useWorlds(initialWorldSlug);
   
   // Sync URL with current world
   useEffect(() => {
-
     if (worldData && worldData.slug) {
-
       const expectedPath = `/experience/${worldData.slug}`;
-
       if (location.pathname !== expectedPath) {
+        console.log('Updating URL to:', expectedPath);
         navigate(expectedPath, { replace: true });
       }
-
     }
-
   }, [worldData, location.pathname, navigate]);
 
   const handleChangeWorld = (direction: 'next' | 'prev') => {
+    if (!worlds || worlds.length === 0) return;
+    
+    const currentIndex = currentWorldIndex;
+    const nextIndex = direction === 'next' 
+      ? (currentIndex + 1) % worlds.length
+      : (currentIndex - 1 + worlds.length) % worlds.length;
+    
+    const nextWorld = worlds[nextIndex];
+    if (nextWorld && nextWorld.slug) {
+      console.log('Navigating to world:', nextWorld.slug);
+      navigate(`/experience/${nextWorld.slug}`);
+    }
+    
     changeWorld(direction);
   };
 
   const handleJumpToWorld = (index: number) => {
+    if (!worlds || !worlds[index]) return;
+    
+    const world = worlds[index];
+    if (world.slug) {
+      console.log('Jumping to world:', world.slug);
+      navigate(`/experience/${world.slug}`);
+    }
+    
     jumpToWorld(index);
   };
 
   const {
-
     editableSceneConfig,
     setEditableSceneConfig,
     isObjectLocked,
@@ -84,31 +96,23 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     setShowUiHint,
     hintShownRef,
     handleCopyCode,
-
   } = useExperienceState();
 
   const {
-
     showEntryTransition,
     showWorldTransition,
     handleEntryTransitionEnd,
     handleWorldTransitionEnd,
-
   } = useExperienceTransitions(isTransitioning);
 
   const {
-
     handleGoHome,
     handleToggleShortcuts,
-
   } = useExperienceCallbacks();
 
   const {
-
     handleEntryTransitionEndWithHint,
-
   } = useExperienceEffects({
-
     worldData,
     currentWorldId,
     setEditableSceneConfig,
@@ -118,62 +122,45 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     hintShownRef,
     setShowUiHint,
     handleEntryTransitionEnd,
-
   });
 
   const uiColor = useMemo(() => {
-
     if (!worldData) return 'white';
     const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
     return color || 'white';
-
   }, [worldData, theme]);
 
   if (isLoading) {
-
-    return <LoadingOverlay message="Summoning Worlds..." />;
-
+    return <LoadingOverlay message="Summoning Worlds..." theme="night" />;
   }
 
   if (isError) {
-
-    return <LoadingOverlay message="Could not connect to the multiverse." />;
-
+    return <LoadingOverlay message="Could not connect to the multiverse." theme="night" />;
   }
   
   if (!worldData) {
-
-    return <LoadingOverlay message="No worlds found." />;
-
+    return <LoadingOverlay message="No worlds found." theme="night" />;
   }
 
   if (!editableSceneConfig) {
-
-    return <LoadingOverlay message="Initializing Scene..." />;
-
+    return <LoadingOverlay message="Initializing Scene..." theme="night" />;
   }
 
   if (!isSceneConfig(worldData.scene_config)) {
-
-     return <LoadingOverlay message="World data is incomplete or corrupted." />;
-
+     return <LoadingOverlay message="World data is incomplete or corrupted." theme="night" />;
   }
 
   return (
-
-    <div className="w-full h-full relative overflow-hidden bg-black">
-
+    <div className="fixed inset-0 w-screen h-screen overflow-hidden bg-black">
       <AnimatePresence mode="wait">
-
         <motion.div
           key={worldData.slug}
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.05 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="w-full h-full"
+          className="fixed inset-0 w-screen h-screen"
         >
-
           <ExperienceTransitions
             showEntryTransition={showEntryTransition}
             showWorldTransition={showWorldTransition}
@@ -230,15 +217,10 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
             worlds={worlds}
             jumpToWorld={handleJumpToWorld}
           />
-
         </motion.div>
-
       </AnimatePresence>
-
     </div>
-
   );
-
 };
 
 export default ExperienceLogic;

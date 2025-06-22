@@ -1,10 +1,10 @@
+
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { SceneConfig } from "@/types/scene";
 import WorldView from "./WorldView";
 import SceneSettingsPanel from "./SceneSettingsPanel";
 
 interface ExperienceLayoutProps {
-
   editableSceneConfig: SceneConfig;
   isTransitioning: boolean;
   currentWorldIndex: number;
@@ -13,11 +13,9 @@ interface ExperienceLayoutProps {
   isSettingsOpen: boolean;
   isMobile: boolean;
   onUpdateSceneConfig: (config: SceneConfig) => void;
-
 }
 
 const ExperienceLayout = ({
-
   editableSceneConfig,
   isTransitioning,
   currentWorldIndex,
@@ -26,15 +24,11 @@ const ExperienceLayout = ({
   isSettingsOpen,
   isMobile,
   onUpdateSceneConfig,
-
 }: ExperienceLayoutProps) => {
 
   if (isMobile) {
-
     return (
-
-      <div className="w-full h-full">
-
+      <div className="fixed inset-0 w-screen h-screen overflow-hidden">
         <WorldView 
           sceneConfig={editableSceneConfig} 
           isTransitioning={isTransitioning} 
@@ -42,21 +36,14 @@ const ExperienceLayout = ({
           isLocked={isObjectLocked} 
           onToggleLock={onToggleObjectLock} 
         />
-
       </div>
-
     );
-
   }
 
   return (
-
-    <ResizablePanelGroup direction="horizontal">
-
+    <ResizablePanelGroup direction="horizontal" className="fixed inset-0 w-screen h-screen">
       <ResizablePanel>
-
-        <div className="w-full h-full relative">
-
+        <div className="w-full h-full relative overflow-hidden">
           <WorldView 
             sceneConfig={editableSceneConfig} 
             isTransitioning={isTransitioning} 
@@ -64,29 +51,19 @@ const ExperienceLayout = ({
             isLocked={isObjectLocked} 
             onToggleLock={onToggleObjectLock} 
           />
-
         </div>
-
       </ResizablePanel>
 
       {isSettingsOpen && (
-
         <>
-
           <ResizableHandle withHandle />
-
           <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
             <SceneSettingsPanel sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
           </ResizablePanel>
-
         </>
-
       )}
-
     </ResizablePanelGroup>
-
   );
-
 };
 
 export default ExperienceLayout;
