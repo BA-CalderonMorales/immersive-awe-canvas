@@ -16,7 +16,7 @@ const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggl
   return (
     <div
       key={worldIndex}
-      className={`fixed inset-0 w-screen h-screen transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
+      className={`absolute inset-0 w-full h-full transition-all duration-1000 ${isTransitioning ? 'opacity-0 scale-95' : 'opacity-100 scale-100'}`}
     >
       <WorldContainer onToggleLock={onToggleLock} isLocked={isLocked}>
         <KeyboardControls />

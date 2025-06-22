@@ -5,7 +5,6 @@ import { useExperienceState } from "@/hooks/useExperienceState";
 import { useExperienceTransitions } from "@/hooks/useExperienceTransitions";
 import { useExperienceCallbacks } from "@/hooks/useExperienceCallbacks";
 import { useExperienceEffects } from "@/hooks/useExperienceEffects";
-import { useUrlSync } from "@/hooks/useUrlSync";
 import { useWorldNavigation } from "@/hooks/useWorldNavigation";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceContainer from "./ExperienceContainer";
@@ -24,18 +23,13 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     worldData,
     currentWorldIndex,
     isTransitioning,
-    changeWorld,
     jumpToWorld,
   } = useWorlds(initialWorldSlug);
-  
-  // Sync URL with current world
-  useUrlSync({ worldData });
 
   // Handle world navigation
   const { handleChangeWorld, handleJumpToWorld } = useWorldNavigation({
     worlds,
     currentWorldIndex,
-    changeWorld,
     jumpToWorld,
   });
 

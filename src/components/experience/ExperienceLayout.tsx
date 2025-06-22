@@ -28,7 +28,7 @@ const ExperienceLayout = ({
 
   if (isMobile) {
     return (
-      <div className="fixed inset-0 w-screen h-screen overflow-hidden">
+      <div className="absolute inset-0 w-full h-full">
         <WorldView 
           sceneConfig={editableSceneConfig} 
           isTransitioning={isTransitioning} 
@@ -41,9 +41,9 @@ const ExperienceLayout = ({
   }
 
   return (
-    <ResizablePanelGroup direction="horizontal" className="fixed inset-0 w-screen h-screen">
+    <ResizablePanelGroup direction="horizontal" className="absolute inset-0 w-full h-full">
       <ResizablePanel>
-        <div className="w-full h-full relative overflow-hidden">
+        <div className="w-full h-full relative">
           <WorldView 
             sceneConfig={editableSceneConfig} 
             isTransitioning={isTransitioning} 
