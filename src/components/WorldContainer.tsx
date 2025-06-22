@@ -1,5 +1,5 @@
 
-import { Suspense, useState } from 'react';
+import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
@@ -12,41 +12,81 @@ type WorldContainerProps = {
 
 const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      if (containerRef.current) {
+        const { clientWidth, clientHeight } = containerRef.current;
+        setDimensions({ width: clientWidth, height: clientHeight });
+      }
+    };
+
+    // Initial size calculation
+    updateDimensions();
+
+    // Listen for resize events
+    const resizeObserver = new ResizeObserver(updateDimensions);
+    if (containerRef.current) {
+      resizeObserver.observe(containerRef.current);
+    }
+
+    // Also listen for window resize as fallback
+    window.addEventListener('resize', updateDimensions);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateDimensions);
+    };
+  }, []);
 
   return (
-    <div className="absolute inset-0 w-full h-full">
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 75 }}
-        onDoubleClick={onToggleLock}
-        style={{
-          cursor: isDragging ? 'grabbing' : 'grab',
-          width: '100%',
-          height: '100%',
-          display: 'block'
-        }}
-        onPointerDown={() => setIsDragging(true)}
-        onPointerUp={() => setIsDragging(false)}
-        onPointerLeave={() => setIsDragging(false)}
-      >
-        <Suspense fallback={null}>
-          {children}
-        </Suspense>
+    <div 
+      ref={containerRef}
+      className="w-full h-full"
+      style={{ 
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden'
+      }}
+    >
+      {dimensions.width > 0 && dimensions.height > 0 && (
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 75 }}
+          onDoubleClick={onToggleLock}
+          style={{
+            cursor: isDragging ? 'grabbing' : 'grab',
+            width: '100%',
+            height: '100%',
+            display: 'block'
+          }}
+          onPointerDown={() => setIsDragging(true)}
+          onPointerUp={() => setIsDragging(false)}
+          onPointerLeave={() => setIsDragging(false)}
+          resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
+          dpr={[1, 2]}
+        >
+          <Suspense fallback={null}>
+            {children}
+          </Suspense>
 
-        <OrbitControls
-          enableZoom={true}
-          enablePan={false}
-          autoRotate={!isLocked}
-          autoRotateSpeed={0.5}
-          minDistance={2}
-          maxDistance={25}
-          onStart={() => setIsDragging(true)}
-          onEnd={() => setIsDragging(false)}
-        />
+          <OrbitControls
+            enableZoom={true}
+            enablePan={false}
+            autoRotate={!isLocked}
+            autoRotateSpeed={0.5}
+            minDistance={2}
+            maxDistance={25}
+            onStart={() => setIsDragging(true)}
+            onEnd={() => setIsDragging(false)}
+          />
 
-        <EffectComposer>
-          <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} height={300} intensity={0.7} />
-        </EffectComposer>
-      </Canvas>
+          <EffectComposer>
+            <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} height={300} intensity={0.7} />
+          </EffectComposer>
+        </Canvas>
+      )}
     </div>
   );
 };

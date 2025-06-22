@@ -28,7 +28,14 @@ const ExperienceLayout = ({
 
   if (isMobile) {
     return (
-      <div className="absolute inset-0 w-full h-full">
+      <div 
+        className="w-full h-full"
+        style={{ 
+          position: 'absolute',
+          inset: 0,
+          overflow: 'hidden'
+        }}
+      >
         <WorldView 
           sceneConfig={editableSceneConfig} 
           isTransitioning={isTransitioning} 
@@ -41,9 +48,17 @@ const ExperienceLayout = ({
   }
 
   return (
-    <ResizablePanelGroup direction="horizontal" className="absolute inset-0 w-full h-full">
+    <ResizablePanelGroup 
+      direction="horizontal" 
+      className="w-full h-full"
+      style={{ 
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden'
+      }}
+    >
       <ResizablePanel>
-        <div className="w-full h-full relative">
+        <div className="w-full h-full relative overflow-hidden">
           <WorldView 
             sceneConfig={editableSceneConfig} 
             isTransitioning={isTransitioning} 
