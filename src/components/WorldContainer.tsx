@@ -22,8 +22,8 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
       onDoubleClick={onToggleLock}
       style={{
         cursor: isDragging ? 'grabbing' : 'grab',
-        width: '100%',
-        height: '100%'
+        width: '100dvw',
+        height: '100dvh'
       }}
       onPointerDown={() => setIsDragging(true)}
       onPointerUp={() => setIsDragging(false)}
