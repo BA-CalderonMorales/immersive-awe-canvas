@@ -12,6 +12,16 @@ interface InfoButtonProps {
   isFirstVisit?: boolean;
 }
 
+interface BaseInstructions {
+  primary: string;
+  secondary: string;
+  tertiary: string;
+}
+
+interface FirstVisitInstructions extends BaseInstructions {
+  welcome: string;
+}
+
 const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false }: InfoButtonProps) => {
   const isMobile = useIsMobile();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
@@ -44,8 +54,8 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
     }
   };
 
-  const getInstructions = () => {
-    const baseInstructions = {
+  const getInstructions = (): BaseInstructions | FirstVisitInstructions => {
+    const baseInstructions: BaseInstructions = {
       primary: isMobile 
         ? "Drag to look around, pinch to zoom"
         : "Click and drag to explore, scroll to zoom",
@@ -100,7 +110,7 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
             sideOffset={8}
           >
             <div className="space-y-3">
-              {isFirstVisit && instructions.welcome && (
+              {isFirstVisit && 'welcome' in instructions && (
                 <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
                   <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                     theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
