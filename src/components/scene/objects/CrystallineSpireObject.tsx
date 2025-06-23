@@ -1,4 +1,3 @@
-
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -30,7 +29,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
 
   // Stable material config that doesn't cause re-renders on theme changes
   const stableMaterialConfig = useMemo(() => ({
-    materialType: materialConfig.materialType,
+    materialType: materialConfig.materialType || 'standard' as const,
     roughness: materialConfig.roughness || 0.5,
     metalness: materialConfig.metalness || 0.5,
     transparent: true,
@@ -128,7 +127,6 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
         <EnergyWeb 
           color={color}
           materialConfig={stableMaterialConfig}
-          theme={theme}
         />
       </group>
 
@@ -138,7 +136,6 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
           fragment={fragment}
           color={color}
           materialConfig={stableMaterialConfig}
-          theme={theme}
           onRef={(ref) => {
             if (ref) orbitalRefs.current[index] = ref;
           }}
