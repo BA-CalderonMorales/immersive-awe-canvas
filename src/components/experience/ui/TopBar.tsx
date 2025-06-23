@@ -25,6 +25,7 @@ interface TopBarProps {
   onGoHome: () => void;
   isTransitioning: boolean;
   isMobile: boolean;
+  onShowHelp: () => void;
 }
 
 interface BaseInstructions {
@@ -37,7 +38,7 @@ interface FirstVisitInstructions extends BaseInstructions {
   welcome: string;
 }
 
-const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, isMobile }: TopBarProps) => {
+const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, isMobile, onShowHelp }: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   
   // Use black text in day mode for better visibility against bright backgrounds
@@ -78,6 +79,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
   const handleInfoClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowOnboardingPulse(false);
+    onShowHelp();
     
     if (isMobile) {
       setIsInfoTooltipOpen(!isInfoTooltipOpen);
@@ -161,19 +163,15 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
         <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>
           <TooltipTrigger asChild>
             <Button
-              style={{ color: uiColor }}
+              style={uiStyle}
               onClick={handleInfoClick}
               className={`${blendedButtonClasses} transition-all duration-300 ${
                 showOnboardingPulse ? 'animate-pulse ring-2 ring-blue-400/50' : ''
-              } ${
-                isMobile 
-                  ? 'w-12 h-12 active:scale-95'
-                  : 'w-10 h-10 hover:scale-105'
               } flex-shrink-0`}
               size="icon"
               aria-label="Information and Controls"
             >
-              <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
+              <Info className="w-4 h-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent 

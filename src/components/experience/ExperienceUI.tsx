@@ -106,6 +106,7 @@ const ExperienceUI = ({
         onToggleTheme={handleToggleTheme}
         theme={theme}
         onGoHome={handleGoHome}
+        onShowHelp={handleShowHelp}
         isTransitioning={false}
         isMobile={isMobile}
       />
