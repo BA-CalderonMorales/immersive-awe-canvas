@@ -1,4 +1,3 @@
-
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -34,7 +33,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
     // Ensure consistent material properties across theme changes
     transparent: true,
     opacity: materialConfig.opacity || 0.9,
-  }), [materialConfig.type, materialConfig.roughness, materialConfig.metalness, theme]);
+  }), [materialConfig.materialType, materialConfig.roughness, materialConfig.metalness, theme]);
 
   // Gentle, meditative animation
   const getGentlePulse = (time: number) => {
