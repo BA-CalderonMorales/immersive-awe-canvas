@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { SceneConfig } from '@/types/scene';
 import { toast } from 'sonner';
 import { logEvent } from '@/lib/logger';
@@ -11,9 +11,25 @@ export const useExperienceState = () => {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isUiHidden, setIsUiHidden] = useState(true);
+  
+  // Initialize UI hidden state from localStorage
+  const [isUiHidden, setIsUiHidden] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('uiHidden');
+      return saved ? JSON.parse(saved) : true; // Default to hidden (true)
+    }
+    return true;
+  });
+  
   const [showUiHint, setShowUiHint] = useState(false);
   const hintShownRef = useRef(false);
+
+  // Persist UI visibility state to localStorage whenever it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('uiHidden', JSON.stringify(isUiHidden));
+    }
+  }, [isUiHidden]);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {

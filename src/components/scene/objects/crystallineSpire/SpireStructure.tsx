@@ -1,5 +1,5 @@
 
-import { useRef } from 'react';
+import { useRef, useMemo } from 'react';
 import { Group } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
@@ -16,6 +16,31 @@ interface SpireStructureProps {
 const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStructureProps) => {
   const { theme } = useExperience();
 
+  // Memoize material configurations to prevent unnecessary re-renders
+  const bodyMaterialConfig = useMemo(() => ({
+    ...materialConfig,
+    transparent: true,
+    opacity: formation.type === 'main' ? 0.9 : 0.7,
+    emissive: color,
+    emissiveIntensity: theme === 'day' ? 0.1 : 0.3,
+    wireframe: false
+  }), [materialConfig, formation.type, color, theme]);
+
+  const tipMaterialConfig = useMemo(() => ({
+    ...materialConfig,
+    transparent: true,
+    opacity: 0.95,
+    emissive: color,
+    emissiveIntensity: theme === 'day' ? 0.2 : 0.5
+  }), [materialConfig, color, theme]);
+
+  const ringMaterialConfig = useMemo(() => ({
+    ...materialConfig,
+    transparent: true,
+    opacity: theme === 'day' ? 0.4 : 0.6,
+    wireframe: true
+  }), [materialConfig, theme]);
+
   return (
     <group
       ref={onRef}
@@ -26,14 +51,7 @@ const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStruct
       <mesh position={[0, formation.height / 2, 0]}>
         <cylinderGeometry args={[formation.radius * 0.2, formation.radius, formation.height, formation.segments]} />
         <DynamicMaterial
-          materialConfig={{
-            ...materialConfig,
-            transparent: true,
-            opacity: formation.type === 'main' ? 0.9 : 0.7,
-            emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.1 : 0.3,
-            wireframe: false
-          }}
+          materialConfig={bodyMaterialConfig}
           color={color}
         />
       </mesh>
@@ -42,13 +60,7 @@ const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStruct
       <mesh position={[0, formation.height, 0]}>
         <coneGeometry args={[formation.radius * 0.3, formation.height * 0.4, formation.segments]} />
         <DynamicMaterial
-          materialConfig={{
-            ...materialConfig,
-            transparent: true,
-            opacity: 0.95,
-            emissive: color,
-            emissiveIntensity: theme === 'day' ? 0.2 : 0.5
-          }}
+          materialConfig={tipMaterialConfig}
           color={color}
         />
       </mesh>
@@ -58,12 +70,7 @@ const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStruct
         <mesh position={[0, formation.height * 0.7, 0]}>
           <torusGeometry args={[formation.radius * 1.5, formation.radius * 0.05, 8, 16]} />
           <DynamicMaterial
-            materialConfig={{
-              ...materialConfig,
-              transparent: true,
-              opacity: theme === 'day' ? 0.4 : 0.6,
-              wireframe: true
-            }}
+            materialConfig={ringMaterialConfig}
             color={color}
           />
         </mesh>
