@@ -1,24 +1,29 @@
+
+import { useParams, Navigate } from "react-router-dom";
 import { KeyboardShortcutsProvider } from "@/context/KeyboardShortcutsContext";
+import { useWorldBySlug } from "@/hooks/useWorlds";
+import LoadingOverlay from "./LoadingOverlay";
 import ExperienceLogic from "./ExperienceLogic";
 
-interface ExperienceContentProps {
+const ExperienceContent = () => {
+  const { worldSlug } = useParams<{ worldSlug: string }>();
+  
+  // Validate the world exists before rendering
+  const { data: world, isLoading, isError } = useWorldBySlug(worldSlug || '');
 
-  initialWorldSlug?: string;
+  if (isLoading) {
+    return <LoadingOverlay message="Loading world..." theme="night" />;
+  }
 
-}
-
-const ExperienceContent = ({ initialWorldSlug }: ExperienceContentProps) => {
+  if (isError || !world) {
+    return <Navigate to="/experience/genesis-torus" replace />;
+  }
 
   return (
-
     <KeyboardShortcutsProvider>
-
-      <ExperienceLogic initialWorldSlug={initialWorldSlug} />
-
+      <ExperienceLogic key={world.slug} initialWorldSlug={world.slug} />
     </KeyboardShortcutsProvider>
-
   );
-
 };
 
 export default ExperienceContent;

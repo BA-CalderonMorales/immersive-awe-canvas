@@ -3,10 +3,12 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useState, useEffect } from "react";
 import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
+import InfoButton from "../home/InfoButton";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -47,12 +49,26 @@ const ExperienceUI = ({
   onToggleUiHidden,
   showUiHint = false,
 }: ExperienceUIProps) => {
-
   const isMobile = useIsMobile();
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
 
+  // Detect first visit
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedExperience');
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem('hasVisitedExperience', 'true');
+    }
+  }, []);
+
+  // Event handlers with logging
   const handleToggleTheme = () => {
     onToggleTheme();
-    logEvent({ eventType: 'button_click', eventSource: 'toggle_theme', metadata: { to_theme: theme === 'day' ? 'night' : 'day' } });
+    logEvent({ 
+      eventType: 'button_click', 
+      eventSource: 'toggle_theme', 
+      metadata: { to_theme: theme === 'day' ? 'night' : 'day' } 
+    });
   };
 
   const handleGoHome = () => {
@@ -62,7 +78,11 @@ const ExperienceUI = ({
 
   const handleChangeWorld = (direction: 'next' | 'prev') => {
     onChangeWorld(direction);
-    logEvent({ eventType: 'button_click', eventSource: 'change_world', metadata: { direction } });
+    logEvent({ 
+      eventType: 'button_click', 
+      eventSource: 'change_world', 
+      metadata: { direction } 
+    });
   };
   
   const handleShowSearch = () => {
@@ -88,8 +108,11 @@ const ExperienceUI = ({
     );
   }
 
+  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
+
   return (
     <TooltipProvider>
+      {/* Top navigation bar */}
       <TopBar 
         worldName={worldName}
         uiColor={uiColor}
@@ -97,17 +120,19 @@ const ExperienceUI = ({
         onToggleTheme={handleToggleTheme}
         theme={theme}
         onGoHome={handleGoHome}
-        isTransitioning={false} // Always show UI buttons
+        isTransitioning={false}
         isMobile={isMobile}
       />
       
+      {/* World navigation controls */}
       <NavigationControls 
         uiColor={uiColor}
         onChangeWorld={handleChangeWorld}
-        isTransitioning={false} // Always show navigation buttons
+        isTransitioning={false}
         theme={theme}
       />
 
+      {/* Bottom action bar */}
       <BottomBar 
         uiColor={uiColor}
         onCopyCode={onCopyCode}
@@ -121,6 +146,15 @@ const ExperienceUI = ({
         theme={theme}
       />
 
+      {/* Enhanced info button with onboarding */}
+      <InfoButton 
+        theme={theme}
+        uiColor={uiColor}
+        blendedButtonClasses={blendedButtonClasses}
+        isFirstVisit={isFirstVisit}
+      />
+
+      {/* Keyboard hint for desktop */}
       {!isMobile && (
         <div 
           style={{ color: theme === 'day' ? '#000000' : uiColor }} 
@@ -134,4 +168,3 @@ const ExperienceUI = ({
 };
 
 export default ExperienceUI;
-

@@ -3,39 +3,68 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface InfoButtonProps {
   theme: 'day' | 'night';
   uiColor: string;
   blendedButtonClasses: string;
+  isFirstVisit?: boolean;
 }
 
-const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) => {
+const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false }: InfoButtonProps) => {
   const isMobile = useIsMobile();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
+
+  // Show subtle onboarding hint for first-time visitors
+  useEffect(() => {
+    if (isFirstVisit) {
+      const timer = setTimeout(() => {
+        setShowOnboardingPulse(true);
+        
+        // Auto-hide pulse after a few seconds
+        const hideTimer = setTimeout(() => {
+          setShowOnboardingPulse(false);
+        }, 5000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isFirstVisit]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setShowOnboardingPulse(false);
+    
     if (isMobile) {
-      // On mobile, toggle tooltip visibility when clicked
       setIsTooltipOpen(!isTooltipOpen);
     }
   };
 
-  // Device-appropriate messaging
   const getInstructions = () => {
-    if (isMobile) {
+    const baseInstructions = {
+      primary: isMobile 
+        ? "Drag to look around, pinch to zoom"
+        : "Click and drag to explore, scroll to zoom",
+      secondary: isMobile
+        ? "Use navigation arrows to discover new worlds"
+        : "Press N/P or use arrows to travel between worlds",
+      tertiary: isMobile
+        ? "Tap the theme button to switch day/night"
+        : "Press Space or theme button to toggle day/night"
+    };
+
+    if (isFirstVisit) {
       return {
-        primary: "Tap anywhere on the screen to begin your journey",
-        secondary: "Use the theme button (top right) to switch between day and night"
-      };
-    } else {
-      return {
-        primary: "Click anywhere or press Enter to begin your journey",
-        secondary: "Press Space or use the theme button to toggle between day and night"
+        ...baseInstructions,
+        welcome: "Welcome to your journey through immersive worlds!"
       };
     }
+
+    return baseInstructions;
   };
 
   const instructions = getInstructions();
@@ -48,13 +77,15 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) =
             <Button
               style={{ color: uiColor }}
               onClick={handleClick}
-              className={`${blendedButtonClasses} transition-all duration-300 animate-fade-in ${
+              className={`${blendedButtonClasses} transition-all duration-300 ${
+                showOnboardingPulse ? 'animate-pulse ring-2 ring-blue-400/50' : ''
+              } ${
                 isMobile 
-                  ? 'w-12 h-12 active:scale-95' // Larger touch target on mobile with press feedback
-                  : 'w-10 h-10 hover:scale-105' // Slightly smaller on desktop with hover effect
+                  ? 'w-12 h-12 active:scale-95'
+                  : 'w-10 h-10 hover:scale-105'
               }`}
               size="icon"
-              aria-label="Information"
+              aria-label="Information and Controls"
             >
               <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
             </Button>
@@ -69,6 +100,17 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) =
             sideOffset={8}
           >
             <div className="space-y-3">
+              {isFirstVisit && instructions.welcome && (
+                <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                    theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
+                  }`} />
+                  <p className="text-sm font-semibold leading-relaxed">
+                    {instructions.welcome}
+                  </p>
+                </div>
+              )}
+              
               <div className="flex items-start gap-2">
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                   theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
@@ -77,12 +119,22 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses }: InfoButtonProps) =
                   {instructions.primary}
                 </p>
               </div>
+              
               <div className="flex items-start gap-2">
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                   theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
                 }`} />
                 <p className="text-sm leading-relaxed opacity-90">
                   {instructions.secondary}
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm leading-relaxed opacity-90">
+                  {instructions.tertiary}
                 </p>
               </div>
             </div>
