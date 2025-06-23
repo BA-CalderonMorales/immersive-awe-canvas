@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee } from "lucide-react";
+import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee, Info } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,6 +13,8 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { useState, useEffect } from "react";
 
 interface TopBarProps {
   worldName: string;
@@ -25,12 +27,87 @@ interface TopBarProps {
   isMobile: boolean;
 }
 
+interface BaseInstructions {
+  primary: string;
+  secondary: string;
+  tertiary: string;
+}
+
+interface FirstVisitInstructions extends BaseInstructions {
+  welcome: string;
+}
+
 const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, isMobile }: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   
   // Use black text in day mode for better visibility against bright backgrounds
   const textColor = theme === 'day' ? '#000000' : uiColor;
   const uiStyle = { color: textColor };
+
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
+
+  // Detect first visit
+  useEffect(() => {
+    const hasVisited = localStorage.getItem('hasVisitedExperience');
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem('hasVisitedExperience', 'true');
+    }
+  }, []);
+
+  // Show subtle onboarding hint for first-time visitors
+  useEffect(() => {
+    if (isFirstVisit) {
+      const timer = setTimeout(() => {
+        setShowOnboardingPulse(true);
+        
+        // Auto-hide pulse after a few seconds
+        const hideTimer = setTimeout(() => {
+          setShowOnboardingPulse(false);
+        }, 5000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isFirstVisit]);
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowOnboardingPulse(false);
+    
+    if (isMobile) {
+      setIsInfoTooltipOpen(!isInfoTooltipOpen);
+    }
+  };
+
+  const getInstructions = (): BaseInstructions | FirstVisitInstructions => {
+    const baseInstructions: BaseInstructions = {
+      primary: isMobile 
+        ? "Drag to look around, pinch to zoom"
+        : "Click and drag to explore, scroll to zoom",
+      secondary: isMobile
+        ? "Use navigation arrows to discover new worlds"
+        : "Press N/P or use arrows to travel between worlds",
+      tertiary: isMobile
+        ? "Tap the theme button to switch day/night"
+        : "Press Space or theme button to toggle day/night"
+    };
+
+    if (isFirstVisit) {
+      return {
+        ...baseInstructions,
+        welcome: "Welcome to your journey through immersive worlds!"
+      };
+    }
+
+    return baseInstructions;
+  };
+
+  const instructions = getInstructions();
 
   return (
     <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
@@ -80,6 +157,75 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
+
+        <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>
+          <TooltipTrigger asChild>
+            <Button
+              style={{ color: uiColor }}
+              onClick={handleInfoClick}
+              className={`${blendedButtonClasses} transition-all duration-300 ${
+                showOnboardingPulse ? 'animate-pulse ring-2 ring-blue-400/50' : ''
+              } ${
+                isMobile 
+                  ? 'w-12 h-12 active:scale-95'
+                  : 'w-10 h-10 hover:scale-105'
+              } flex-shrink-0`}
+              size="icon"
+              aria-label="Information and Controls"
+            >
+              <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent 
+            side="bottom" 
+            className={`max-w-xs p-4 rounded-lg shadow-2xl border-0 ${
+              theme === 'day' 
+                ? 'bg-white/95 text-gray-800 backdrop-blur-md' 
+                : 'bg-gray-900/95 text-gray-100 backdrop-blur-md'
+            }`}
+            sideOffset={8}
+          >
+            <div className="space-y-3">
+              {isFirstVisit && 'welcome' in instructions && (
+                <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
+                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                    theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
+                  }`} />
+                  <p className="text-sm font-semibold leading-relaxed">
+                    {instructions.welcome}
+                  </p>
+                </div>
+              )}
+              
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm font-medium leading-relaxed">
+                  {instructions.primary}
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm leading-relaxed opacity-90">
+                  {instructions.secondary}
+                </p>
+              </div>
+              
+              <div className="flex items-start gap-2">
+                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
+                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
+                }`} />
+                <p className="text-sm leading-relaxed opacity-90">
+                  {instructions.tertiary}
+                </p>
+              </div>
+            </div>
+          </TooltipContent>
+        </Tooltip>
       </div>
       <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
         <Tooltip>
@@ -136,4 +282,3 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
 };
 
 export default TopBar;
-

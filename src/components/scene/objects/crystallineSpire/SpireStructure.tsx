@@ -1,8 +1,7 @@
 
-import { useRef, useMemo } from 'react';
+import { useMemo } from 'react';
 import { Group } from 'three';
 import { MaterialConfig } from '@/types/scene';
-import { useExperience } from '@/hooks/useExperience';
 import DynamicMaterial from '../../materials/DynamicMaterial';
 import { SpireFormation } from './useSpireFormations';
 
@@ -10,13 +9,12 @@ interface SpireStructureProps {
   formation: SpireFormation;
   color: string;
   materialConfig: MaterialConfig;
+  theme: 'day' | 'night';
   onRef: (ref: Group | null) => void;
 }
 
-const SpireStructure = ({ formation, color, materialConfig, onRef }: SpireStructureProps) => {
-  const { theme } = useExperience();
-
-  // Memoize material configurations to prevent unnecessary re-renders
+const SpireStructure = ({ formation, color, materialConfig, theme, onRef }: SpireStructureProps) => {
+  // Stable material configurations that don't change on theme switching
   const bodyMaterialConfig = useMemo(() => ({
     ...materialConfig,
     transparent: true,

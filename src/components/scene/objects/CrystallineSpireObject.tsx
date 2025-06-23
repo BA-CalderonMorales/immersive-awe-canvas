@@ -1,3 +1,4 @@
+
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -23,17 +24,18 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const { theme } = useExperience();
   const timeRef = useRef(0);
 
-  // Memoize formations and fragments to prevent unnecessary recreations
-  const spireFormations = useMemo(() => useSpireFormations(), []);
-  const crystalFragments = useMemo(() => useCrystalFragments(), []);
+  // Static formations and fragments - avoid recreating on theme change
+  const spireFormations = useSpireFormations();
+  const crystalFragments = useCrystalFragments();
 
-  // Memoize material config to prevent flickering on theme changes
+  // Stable material config that doesn't cause re-renders on theme changes
   const stableMaterialConfig = useMemo(() => ({
-    ...materialConfig,
-    // Ensure consistent material properties across theme changes
+    materialType: materialConfig.materialType,
+    roughness: materialConfig.roughness || 0.5,
+    metalness: materialConfig.metalness || 0.5,
     transparent: true,
     opacity: materialConfig.opacity || 0.9,
-  }), [materialConfig.materialType, materialConfig.roughness, materialConfig.metalness, theme]);
+  }), [materialConfig.materialType, materialConfig.roughness, materialConfig.metalness, materialConfig.opacity]);
 
   // Gentle, meditative animation
   const getGentlePulse = (time: number) => {
@@ -112,10 +114,11 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
       <group ref={mainGroupRef}>
         {spireFormations.map((formation, index) => (
           <SpireStructure
-            key={`spire-${index}-${theme}`}
+            key={index}
             formation={formation}
             color={color}
             materialConfig={stableMaterialConfig}
+            theme={theme}
             onRef={(ref) => {
               if (ref) spireRefs.current[index] = ref;
             }}
@@ -123,18 +126,19 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
         ))}
         
         <EnergyWeb 
-          key={`energy-web-${theme}`}
-          color={color} 
-          materialConfig={stableMaterialConfig} 
+          color={color}
+          materialConfig={stableMaterialConfig}
+          theme={theme}
         />
       </group>
 
       {crystalFragments.map((fragment, index) => (
         <CrystalFragmentComponent
-          key={`fragment-${index}-${theme}`}
+          key={index}
           fragment={fragment}
           color={color}
           materialConfig={stableMaterialConfig}
+          theme={theme}
           onRef={(ref) => {
             if (ref) orbitalRefs.current[index] = ref;
           }}

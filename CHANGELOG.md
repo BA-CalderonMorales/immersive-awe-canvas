@@ -1,3 +1,4 @@
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -35,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - GitHub Actions workflow (`.github/workflows/build-and-deploy.yml`) to automatically build and deploy the application to GitHub Pages on pushes to the `main` branch.
 - Configuration in `vite.config.ts` to set the `base` path for production builds, enabling correct asset loading on GitHub Pages.
 - Updated `src/App.tsx` to configure `BrowserRouter` with a dynamic `basename` to ensure correct client-side routing on GitHub Pages.
+- **Persistent UI State:** UI visibility preferences are now preserved across world navigation using localStorage.
+- **Enhanced Info Button:** Moved info button to top bar next to heart icon with improved onboarding experience for first-time users.
+- **Stable Crystalline Spire Rendering:** Fixed theme switching issues that caused visual artifacts in the Crystalline Spire world.
 
 ### Changed
 - Refactored `ExperiencePage` for clarity, moving logic to the `useWorlds` hook.
@@ -53,6 +57,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Swapped "Wobble Field" and "Distortion Sphere" worlds.
 - Enhanced the "Distortion Sphere" visual effect to be more dynamic and interactive.
 - Redesigned the "Liking is Coming Soon" modal for a cleaner look and a stronger call to action.
+- **Improved UI Layout:** Info button relocated to top bar for better accessibility and consistent user experience.
+- **Optimized Material Handling:** Simplified material configuration system to prevent rendering issues during theme changes.
 
 ### Fixed
 - Fixed a TypeScript error in `vite.config.ts` that caused build failures.
@@ -68,6 +74,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Corrected styling for dropdown menus in the scene editor panel to ensure they are not transparent.
 - Fixed a build error related to a missing `BackgroundConfig` type import.
 - Fixed an issue causing asset loading failures (404 errors) on the deployed GitHub Pages site.
+- **Fixed UI State Persistence:** UI visibility state is now properly maintained when navigating between worlds.
+- **Fixed Crystalline Spire Theme Switching:** Resolved rendering artifacts and disappearing elements when switching between day/night themes.
+- **Fixed TypeScript Errors:** Resolved property access errors in material configuration handling.
 
 ### Removed
 - Deleted unused CSS and TypeScript files.
+- **Removed Duplicate Info Button:** Consolidated info functionality into the top bar, removing the separate bottom-left info button component.
+
