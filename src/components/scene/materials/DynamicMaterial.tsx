@@ -20,40 +20,38 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         256
     );
 
-    // Base material properties optimized for performance
-    const baseProps = {
-        color: color,
-        wireframe: materialConfig.wireframe || false,
-        transparent: materialConfig.transparent || false,
-        opacity: materialConfig.opacity || 1.0,
+    // Safer base material properties to prevent undefined uniforms
+    const safeBaseProps = {
+        color: color || '#ffffff',
+        wireframe: Boolean(materialConfig.wireframe),
+        transparent: Boolean(materialConfig.transparent),
+        opacity: typeof materialConfig.opacity === 'number' ? materialConfig.opacity : 1.0,
     };
 
-    // Enhanced unlit properties for better visual quality
-    const unlitProps = {
-        ...baseProps,
-        emissive: materialConfig.emissive || color,
-        emissiveIntensity: materialConfig.emissiveIntensity || 0.2,
+    // Enhanced unlit properties with safety checks
+    const safeUnlitProps = {
+        ...safeBaseProps,
+        // Only set emissive if we have valid values to prevent undefined uniforms
+        ...(materialConfig.emissive && {
+            emissive: materialConfig.emissive,
+            emissiveIntensity: typeof materialConfig.emissiveIntensity === 'number' 
+                ? materialConfig.emissiveIntensity 
+                : 0.2
+        })
     };
 
-    // Performance-optimized material selection
+    // Performance-optimized material selection with safety checks
     switch (materialConfig.materialType) {
         case 'matcap':
-            return <meshMatcapMaterial {...baseProps} matcap={matcap} />;
-        
-        case 'basic':
-            return <meshBasicMaterial {...unlitProps} />;
+            return <meshMatcapMaterial {...safeBaseProps} matcap={matcap} />;
         
         case 'normal':
-            return <meshNormalMaterial {...baseProps} />;
+            return <meshNormalMaterial {...safeBaseProps} />;
         
-        // All other materials default to optimized basic material
-        case 'toon':
-        case 'lambert':
-        case 'phong':
-        case 'physical':
-        case 'standard':
+        case 'basic':
         default:
-            return <meshBasicMaterial {...unlitProps} />;
+            // Default to basic material for best performance and compatibility
+            return <meshBasicMaterial {...safeUnlitProps} />;
     }
 };
 

@@ -7,7 +7,7 @@ import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -49,33 +49,34 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
-  const [isUIComponentsReady, setIsUIComponentsReady] = useState(false);
-  const [forceRender, setForceRender] = useState(0);
+  const [isComponentsMounted, setIsComponentsMounted] = useState(false);
+  const [forceRenderKey, setForceRenderKey] = useState(0);
   const mountedRef = useRef(true);
 
-  // Enhanced UI persistence system
+  // UI Persistence System Block
   useEffect(() => {
-    // Force re-render to ensure all components are properly mounted
-    const initTimer = setTimeout(() => {
+    // Ensure components are properly mounted and persistent
+    const mountTimer = setTimeout(() => {
       if (mountedRef.current) {
-        setIsUIComponentsReady(true);
+        setIsComponentsMounted(true);
+        setForceRenderKey(prev => prev + 1);
       }
-    }, 50);
+    }, 100);
 
-    // Additional render cycle to fix any rendering issues
-    const renderTimer = setTimeout(() => {
+    // Secondary render cycle for extra reliability
+    const persistenceTimer = setTimeout(() => {
       if (mountedRef.current) {
-        setForceRender(prev => prev + 1);
+        setForceRenderKey(prev => prev + 1);
       }
-    }, 200);
+    }, 300);
     
     return () => {
-      clearTimeout(initTimer);
-      clearTimeout(renderTimer);
+      clearTimeout(mountTimer);
+      clearTimeout(persistenceTimer);
     };
-  }, [worldName, theme]);
+  }, [worldName, theme, editableSceneConfig]);
 
-  // Cleanup on unmount
+  // Component Cleanup Block
   useEffect(() => {
     return () => {
       mountedRef.current = false;
@@ -83,40 +84,42 @@ const ExperienceUI = ({
   }, []);
 
   // Event Handler Block - Centralized event management
-  const handleToggleTheme = () => {
-    onToggleTheme();
-    logEvent({ 
-      eventType: 'button_click', 
-      eventSource: 'toggle_theme', 
-      metadata: { to_theme: theme === 'day' ? 'night' : 'day' } 
-    });
-  };
+  const eventHandlers = useMemo(() => ({
+    handleToggleTheme: () => {
+      onToggleTheme();
+      logEvent({ 
+        eventType: 'button_click', 
+        eventSource: 'toggle_theme', 
+        metadata: { to_theme: theme === 'day' ? 'night' : 'day' } 
+      });
+    },
 
-  const handleGoHome = () => {
-    onGoHome();
-    logEvent({ eventType: 'button_click', eventSource: 'go_home' });
-  };
+    handleGoHome: () => {
+      onGoHome();
+      logEvent({ eventType: 'button_click', eventSource: 'go_home' });
+    },
 
-  const handleChangeWorld = (direction: 'next' | 'prev') => {
-    onChangeWorld(direction);
-    logEvent({ 
-      eventType: 'button_click', 
-      eventSource: 'change_world', 
-      metadata: { direction } 
-    });
-  };
-  
-  const handleShowSearch = () => {
-    onShowSearch();
-    logEvent({ eventType: 'button_click', eventSource: 'show_search' });
-  };
-  
-  const handleShowHelp = () => {
-    onShowHelp();
-    logEvent({ eventType: 'button_click', eventSource: 'show_help' });
-  };
+    handleChangeWorld: (direction: 'next' | 'prev') => {
+      onChangeWorld(direction);
+      logEvent({ 
+        eventType: 'button_click', 
+        eventSource: 'change_world', 
+        metadata: { direction } 
+      });
+    },
+    
+    handleShowSearch: () => {
+      onShowSearch();
+      logEvent({ eventType: 'button_click', eventSource: 'show_search' });
+    },
+    
+    handleShowHelp: () => {
+      onShowHelp();
+      logEvent({ eventType: 'button_click', eventSource: 'show_help' });
+    }
+  }), [onToggleTheme, onGoHome, onChangeWorld, onShowSearch, onShowHelp, theme]);
 
-  // Hidden UI State Rendering
+  // Hidden UI State Rendering Block
   if (isUiHidden) {
     return (
       <TooltipProvider>
@@ -130,46 +133,51 @@ const ExperienceUI = ({
     );
   }
 
+  // Main UI Rendering Block
   return (
     <TooltipProvider>
-      {/* Primary Navigation Bar - Always Persistent */}
-      <TopBar 
-        worldName={worldName}
-        uiColor={uiColor}
-        onToggleUiHidden={onToggleUiHidden}
-        onToggleTheme={handleToggleTheme}
-        theme={theme}
-        onGoHome={handleGoHome}
-        onShowHelp={handleShowHelp}
-        isTransitioning={isTransitioning}
-        isMobile={isMobile}
-      />
+      {/* Top Navigation Bar - Always Persistent */}
+      <div key={`top-bar-${forceRenderKey}`}>
+        <TopBar 
+          worldName={worldName}
+          uiColor={uiColor}
+          onToggleUiHidden={onToggleUiHidden}
+          onToggleTheme={eventHandlers.handleToggleTheme}
+          theme={theme}
+          onGoHome={eventHandlers.handleGoHome}
+          onShowHelp={eventHandlers.handleShowHelp}
+          isTransitioning={isTransitioning}
+          isMobile={isMobile}
+        />
+      </div>
       
       {/* World Navigation System - Always Persistent */}
-      <NavigationControls 
-        uiColor={uiColor}
-        onChangeWorld={handleChangeWorld}
-        isTransitioning={isTransitioning}
-        theme={theme}
-      />
+      <div key={`navigation-${forceRenderKey}`}>
+        <NavigationControls 
+          uiColor={uiColor}
+          onChangeWorld={eventHandlers.handleChangeWorld}
+          isTransitioning={isTransitioning}
+          theme={theme}
+        />
+      </div>
 
       {/* Bottom Action Bar - Enhanced Persistence System */}
-      <div key={`bottom-bar-${forceRender}`}>
+      <div key={`bottom-bar-${forceRenderKey}-${isComponentsMounted}`}>
         <BottomBar 
           uiColor={uiColor}
           onCopyCode={onCopyCode}
-          onShowSearch={handleShowSearch}
+          onShowSearch={eventHandlers.handleShowSearch}
           isMobile={isMobile}
           isSettingsOpen={isSettingsOpen}
           onToggleSettings={onToggleSettings}
           editableSceneConfig={editableSceneConfig}
           onUpdateSceneConfig={onUpdateSceneConfig}
-          onShowHelp={handleShowHelp}
+          onShowHelp={eventHandlers.handleShowHelp}
           theme={theme}
         />
       </div>
 
-      {/* Desktop Interaction Hint */}
+      {/* Desktop Interaction Hint Block */}
       {!isMobile && (
         <div 
           style={{ color: theme === 'day' ? '#000000' : uiColor }} 

@@ -16,137 +16,220 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   const { theme } = useExperience();
   const isMobile = useIsMobile();
 
-  // Configuration update utility
+  // Configuration Update Utility Block
   const updateConfig = (updater: (config: SceneConfig) => void) => {
     const newConfig = JSON.parse(JSON.stringify(sceneConfig));
     updater(newConfig);
     onUpdate(newConfig);
   };
 
-  // Enhanced GUI styling system
-  const applyEnhancedStyling = (gui: GUI) => {
+  // Enhanced GUI Styling System Block
+  const applyModernStyling = (gui: GUI) => {
     const style = document.createElement('style');
     style.textContent = `
-      /* Base GUI Container Styling */
+      /* === BASE GUI CONTAINER STYLING === */
       .lil-gui {
-        --background-color: hsl(var(--background)/0.95);
+        --background-color: hsl(var(--background)/0.98);
         --text-color: hsl(var(--foreground));
-        --title-background-color: hsl(var(--muted)/0.8);
-        --title-text-color: hsl(var(--muted-foreground));
+        --title-background-color: hsl(var(--primary)/0.1);
+        --title-text-color: hsl(var(--primary));
         --widget-color: hsl(var(--primary));
-        --hover-color: hsl(var(--accent));
+        --hover-color: hsl(var(--primary)/0.1);
         --focus-color: hsl(var(--ring));
         --number-color: hsl(var(--primary));
-        --string-color: hsl(var(--secondary));
+        --string-color: hsl(var(--muted-foreground));
         
         font-family: ui-sans-serif, system-ui, sans-serif;
-        border-radius: 12px;
-        backdrop-filter: blur(12px);
-        border: 1px solid hsl(var(--border)/0.5);
-        box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+        border-radius: 16px;
+        backdrop-filter: blur(16px);
+        border: 2px solid hsl(var(--border));
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        font-size: ${isMobile ? '16px' : '14px'};
       }
       
-      /* Enhanced Controller Styling */
+      /* === CONTROLLER STYLING BLOCK === */
       .lil-gui .controller {
-        border-radius: 6px;
-        margin: 3px 0;
-        padding: 2px 4px;
-        transition: all 0.2s ease;
+        border-radius: 10px;
+        margin: 6px 0;
+        padding: 8px 12px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        border: 1px solid transparent;
+        background: hsl(var(--muted)/0.05);
       }
       
       .lil-gui .controller:hover {
-        background: hsl(var(--accent)/0.1);
+        background: hsl(var(--accent)/0.15);
+        border-color: hsl(var(--border));
+        transform: translateY(-1px);
       }
       
-      /* Improved Range Slider Styling */
+      /* === ENHANCED SLIDER STYLING BLOCK === */
       .lil-gui .controller input[type="range"] {
-        height: 24px;
-        border-radius: 12px;
-        background: hsl(var(--muted)/0.3);
+        height: ${isMobile ? '32px' : '28px'};
+        border-radius: 16px;
+        background: linear-gradient(to right, hsl(var(--primary)/0.2) 0%, hsl(var(--muted)/0.3) 100%);
         cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
-      }
-      
-      .lil-gui .controller input[type="range"]::-webkit-slider-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        background: hsl(var(--primary));
-        border: 2px solid hsl(var(--background));
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        cursor: pointer;
-        -webkit-appearance: none;
-        appearance: none;
-        transition: all 0.2s ease;
-      }
-      
-      .lil-gui .controller input[type="range"]::-webkit-slider-thumb:hover {
-        transform: scale(1.1);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      }
-      
-      .lil-gui .controller input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border-radius: 10px;
-        background: hsl(var(--primary));
-        border: 2px solid hsl(var(--background));
-        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-        cursor: pointer;
-      }
-      
-      /* Enhanced Folder Styling */
-      .lil-gui .folder > .title {
-        background: hsl(var(--muted)/0.6);
-        border-radius: 6px;
-        margin-bottom: 6px;
-        padding: 8px 12px;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-      
-      .lil-gui .folder > .title:hover {
-        background: hsl(var(--muted)/0.8);
-      }
-      
-      /* Color Picker Enhancements */
-      .lil-gui .controller .color input[type="color"] {
-        border-radius: 6px;
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         border: 2px solid hsl(var(--border));
         transition: all 0.2s ease;
       }
       
-      /* Select Dropdown Styling */
-      .lil-gui .controller select {
-        border-radius: 6px;
-        border: 1px solid hsl(var(--border));
-        background: hsl(var(--background));
-        color: hsl(var(--foreground));
-        padding: 4px 8px;
+      .lil-gui .controller input[type="range"]:hover {
+        box-shadow: inset 0 2px 8px rgba(0,0,0,0.15), 0 0 0 2px hsl(var(--ring)/0.2);
+        transform: scale(1.02);
       }
       
-      /* Mobile-specific adjustments */
+      .lil-gui .controller input[type="range"]::-webkit-slider-thumb {
+        width: ${isMobile ? '28px' : '24px'};
+        height: ${isMobile ? '28px' : '24px'};
+        border-radius: 50%;
+        background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%);
+        border: 3px solid hsl(var(--background));
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25), 0 0 0 1px hsl(var(--border));
+        cursor: grab;
+        -webkit-appearance: none;
+        appearance: none;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      
+      .lil-gui .controller input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.15);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 3px hsl(var(--ring)/0.3);
+      }
+      
+      .lil-gui .controller input[type="range"]::-webkit-slider-thumb:active {
+        cursor: grabbing;
+        transform: scale(1.1);
+      }
+      
+      .lil-gui .controller input[type="range"]::-moz-range-thumb {
+        width: ${isMobile ? '28px' : '24px'};
+        height: ${isMobile ? '28px' : '24px'};
+        border-radius: 50%;
+        background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)/0.8) 100%);
+        border: 3px solid hsl(var(--background));
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        cursor: grab;
+      }
+      
+      /* === BUTTON STYLING BLOCK === */
+      .lil-gui .controller button,
+      .lil-gui .controller select {
+        border-radius: 8px;
+        border: 2px solid hsl(var(--border));
+        background: hsl(var(--background));
+        color: hsl(var(--foreground));
+        padding: ${isMobile ? '12px 16px' : '10px 14px'};
+        font-weight: 600;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        min-height: ${isMobile ? '48px' : '40px'};
+        cursor: pointer;
+      }
+      
+      .lil-gui .controller button:hover,
+      .lil-gui .controller select:hover {
+        background: hsl(var(--accent));
+        border-color: hsl(var(--primary));
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      }
+      
+      .lil-gui .controller button:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      }
+      
+      /* === FOLDER STYLING BLOCK === */
+      .lil-gui .folder > .title {
+        background: linear-gradient(135deg, hsl(var(--primary)/0.1) 0%, hsl(var(--muted)/0.1) 100%);
+        border-radius: 12px;
+        margin-bottom: 12px;
+        padding: ${isMobile ? '16px 20px' : '12px 16px'};
+        font-weight: 700;
+        font-size: ${isMobile ? '18px' : '16px'};
+        transition: all 0.3s ease;
+        border: 1px solid hsl(var(--border));
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      }
+      
+      .lil-gui .folder > .title:hover {
+        background: linear-gradient(135deg, hsl(var(--primary)/0.15) 0%, hsl(var(--muted)/0.15) 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      }
+      
+      /* === COLOR PICKER STYLING BLOCK === */
+      .lil-gui .controller .color input[type="color"] {
+        border-radius: 12px;
+        border: 3px solid hsl(var(--border));
+        transition: all 0.2s ease;
+        width: ${isMobile ? '60px' : '50px'};
+        height: ${isMobile ? '60px' : '50px'};
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      }
+      
+      .lil-gui .controller .color input[type="color"]:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        border-color: hsl(var(--primary));
+      }
+      
+      /* === CHECKBOX STYLING BLOCK === */
+      .lil-gui .controller input[type="checkbox"] {
+        width: ${isMobile ? '28px' : '24px'};
+        height: ${isMobile ? '28px' : '24px'};
+        cursor: pointer;
+        accent-color: hsl(var(--primary));
+      }
+      
+      /* === MOBILE OPTIMIZATIONS BLOCK === */
       ${isMobile ? `
         .lil-gui {
-          font-size: 14px;
+          font-size: 16px;
+          max-height: 50vh;
+          overflow-y: auto;
+        }
+        
+        .lil-gui .controller {
+          padding: 12px 16px;
+          margin: 8px 0;
         }
         
         .lil-gui .controller input[type="range"] {
-          height: 28px;
           touch-action: manipulation;
-        }
-        
-        .lil-gui .controller input[type="range"]::-webkit-slider-thumb {
-          width: 24px;
-          height: 24px;
+          min-height: 44px;
         }
         
         .lil-gui .folder > .title {
-          padding: 10px 12px;
-          font-size: 15px;
+          font-size: 18px;
+          padding: 16px 20px;
+        }
+        
+        /* Ensure touch targets are at least 44px */
+        .lil-gui .controller button,
+        .lil-gui .controller select,
+        .lil-gui .controller input {
+          min-height: 44px;
+          min-width: 44px;
         }
       ` : ''}
+      
+      /* === ACCESSIBILITY ENHANCEMENTS BLOCK === */
+      .lil-gui .controller:focus-within {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+      }
+      
+      .lil-gui .controller input:focus,
+      .lil-gui .controller button:focus,
+      .lil-gui .controller select:focus {
+        outline: 2px solid hsl(var(--ring));
+        outline-offset: 2px;
+      }
     `;
     document.head.appendChild(style);
   };
@@ -155,86 +238,77 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   const setupMainObjectControls = (gui: GUI, themeConfig: any) => {
     const mainFolder = gui.addFolder('🎨 Main Object');
     
-    // Color Control
+    // Color Control with Enhanced UX
     mainFolder.addColor(themeConfig, 'mainObjectColor')
-      .name('Color')
+      .name('Object Color')
       .onChange((value: string) => {
         updateConfig(config => { config[theme].mainObjectColor = value; });
       });
 
     // Material Configuration Block
     if (themeConfig.material) {
-      const materialFolder = mainFolder.addFolder('⚡ Material Properties');
+      const materialFolder = mainFolder.addFolder('⚡ Material Settings');
       const material = themeConfig.material;
       
-      // Material Type Selection
-      materialFolder.add(material, 'materialType', [
-        'basic', 'matcap', 'normal', 'standard', 'physical', 'toon', 'lambert', 'phong'
-      ]).name('Material Type').onChange(value => {
+      // Material Type with Better Labels
+      materialFolder.add(material, 'materialType', {
+        'Basic (Fast)': 'basic',
+        'MatCap (Stylized)': 'matcap', 
+        'Normal (Debug)': 'normal'
+      }).name('Material Type').onChange(value => {
         updateConfig(c => { c[theme].material.materialType = value; });
       });
 
-      // Core Material Properties
+      // Core Properties with Descriptive Names
       if (material.wireframe !== undefined) {
         materialFolder.add(material, 'wireframe')
-          .name('Wireframe Mode')
+          .name('Show Wireframe')
           .onChange(value => updateConfig(c => { c[theme].material.wireframe = value; }));
       }
 
       if (material.opacity !== undefined) {
         materialFolder.add(material, 'opacity', 0, 1, 0.01)
-          .name('Opacity')
+          .name('Transparency')
           .onChange(value => updateConfig(c => { c[theme].material.opacity = value; }));
       }
 
       if (material.emissiveIntensity !== undefined) {
         materialFolder.add(material, 'emissiveIntensity', 0, 3, 0.01)
-          .name('Glow Intensity')
+          .name('Glow Strength')
           .onChange(value => updateConfig(c => { c[theme].material.emissiveIntensity = value; }));
       }
 
-      // Advanced Material Properties
-      if (material.materialType === 'standard' || material.materialType === 'physical') {
-        if (material.roughness !== undefined) {
-          materialFolder.add(material, 'roughness', 0, 1, 0.01)
-            .name('Surface Roughness')
-            .onChange(value => updateConfig(c => { c[theme].material.roughness = value; }));
-        }
-        if (material.metalness !== undefined) {
-          materialFolder.add(material, 'metalness', 0, 1, 0.01)
-            .name('Metallic Factor')
-            .onChange(value => updateConfig(c => { c[theme].material.metalness = value; }));
-        }
-      }
-
-      // Matcap Texture Selection
+      // MatCap Selection
       if (material.materialType === 'matcap') {
-        materialFolder.add(material, 'matcapTexture', ['chrome', 'purple', 'gold'])
-          .name('Matcap Style')
+        materialFolder.add(material, 'matcapTexture', {
+          'Chrome': 'chrome',
+          'Purple': 'purple', 
+          'Gold': 'gold'
+        }).name('MatCap Style')
           .onChange(value => updateConfig(c => { c[theme].material.matcapTexture = value; }));
       }
 
       materialFolder.open();
     }
 
-    // Geometry-Specific Controls
+    // Geometry-Specific Controls Block
     if (sceneConfig.type === 'TorusKnot' && themeConfig.torusKnot) {
-      const geometryFolder = mainFolder.addFolder('🔮 Torus Knot Shape');
+      const geometryFolder = mainFolder.addFolder('🔮 Shape Parameters');
       const torusKnot = themeConfig.torusKnot;
       
       if (torusKnot.p !== undefined) {
         geometryFolder.add(torusKnot, 'p', 1, 20, 1)
-          .name('P Parameter')
+          .name('P Value (Complexity)')
           .onChange(value => updateConfig(c => { c[theme].torusKnot!.p = value; }));
       }
       if (torusKnot.q !== undefined) {
         geometryFolder.add(torusKnot, 'q', 1, 20, 1)
-          .name('Q Parameter')
+          .name('Q Value (Twist)')
           .onChange(value => updateConfig(c => { c[theme].torusKnot!.q = value; }));
       }
       if (torusKnot.radius !== undefined) {
         geometryFolder.add(torusKnot, 'radius', 0.1, 5, 0.01)
-          .name('Base Radius')
+          .name('Base Size')
           .onChange(value => updateConfig(c => { c[theme].torusKnot!.radius = value; }));
       }
       
@@ -249,30 +323,30 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const lightsFolder = gui.addFolder('💡 Lighting System');
     
     themeConfig.lights.forEach((light: any, index: number) => {
-      const lightFolder = lightsFolder.addFolder(`${getLightIcon(light.type)} ${light.type} Light ${index + 1}`);
+      const lightFolder = lightsFolder.addFolder(`${getLightIcon(light.type)} ${light.type} Light`);
       
       if (light.intensity !== undefined) {
         lightFolder.add(light, 'intensity', 0, 10, 0.01)
-          .name('Brightness')
+          .name('Light Power')
           .onChange(value => updateConfig(c => { c[theme].lights[index].intensity = value; }));
       }
       
       if (light.color !== undefined) {
         lightFolder.addColor(light, 'color')
-          .name('Light Color')
+          .name('Light Tint')
           .onChange(value => updateConfig(c => { c[theme].lights[index].color = value; }));
       }
       
       if (light.position) {
         const posFolder = lightFolder.addFolder('📍 Position');
         posFolder.add(light.position, '0', -200, 200, 1)
-          .name('X Position')
+          .name('Left ↔ Right')
           .onChange(v => updateConfig(c => { c[theme].lights[index].position![0] = v; }));
         posFolder.add(light.position, '1', -200, 200, 1)
-          .name('Y Position')
+          .name('Down ↔ Up')
           .onChange(v => updateConfig(c => { c[theme].lights[index].position![1] = v; }));
         posFolder.add(light.position, '2', -200, 200, 1)
-          .name('Z Position')
+          .name('Back ↔ Forward')
           .onChange(v => updateConfig(c => { c[theme].lights[index].position![2] = v; }));
         posFolder.open();
       }
@@ -285,19 +359,28 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
 
   // Background Environment Configuration Block
   const setupBackgroundControls = (gui: GUI, themeConfig: any) => {
-    const backgroundFolder = gui.addFolder('🌍 Background Environment');
+    const backgroundFolder = gui.addFolder('🌍 Environment');
     const bg = themeConfig.background;
     
-    // Background Type Selection
-    backgroundFolder.add(bg, 'type', [
-      'color', 'gradient', 'stars', 'sparkles', 'sky', 'fog', 
-      'environment', 'noise', 'plasma', 'aurora', 'void'
-    ]).name('Environment Type').onChange(value => {
+    // Background Type with Better Labels
+    backgroundFolder.add(bg, 'type', {
+      'Solid Color': 'color',
+      'Color Gradient': 'gradient', 
+      'Starfield': 'stars',
+      'Sparkles': 'sparkles',
+      'Sky Dome': 'sky',
+      'Fog Effect': 'fog',
+      'HDRI Environment': 'environment',
+      'Noise Pattern': 'noise',
+      'Plasma Effect': 'plasma',
+      'Aurora Lights': 'aurora',
+      'Deep Void': 'void'
+    }).name('Background Type').onChange(value => {
       updateConfig(c => {
         const background = c[theme].background;
         background.type = value;
         
-        // Intelligent default configurations
+        // Smart defaults for different background types
         const defaults = {
           environment: { preset: 'night', blur: 0.5 },
           gradient: { colorTop: '#ff6b6b', colorBottom: '#4ecdc4', speed: 0.1 },
@@ -320,19 +403,27 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     backgroundFolder.open();
   };
 
-  // Background-Specific Configuration Helper
+  // Background-Specific Configuration Helper Block
   const setupBackgroundSpecificControls = (folder: GUI, bg: any) => {
     switch (bg.type) {
       case 'environment':
         if (bg.preset !== undefined) {
-          folder.add(bg, 'preset', [
-            'apartment', 'city', 'dawn', 'forest', 'lobby', 
-            'night', 'park', 'studio', 'sunset', 'warehouse'
-          ]).name('Environment Preset').onChange(v => updateConfig(c => { c[theme].background.preset = v; }));
+          folder.add(bg, 'preset', {
+            'Modern Apartment': 'apartment',
+            'City Skyline': 'city',
+            'Dawn Sky': 'dawn',
+            'Forest': 'forest',
+            'Hotel Lobby': 'lobby',
+            'Night Sky': 'night',
+            'City Park': 'park',
+            'Photo Studio': 'studio',
+            'Sunset': 'sunset',
+            'Warehouse': 'warehouse'
+          }).name('Environment').onChange(v => updateConfig(c => { c[theme].background.preset = v; }));
         }
         if (bg.blur !== undefined) {
           folder.add(bg, 'blur', 0, 1, 0.01)
-            .name('Environment Blur')
+            .name('Blur Amount')
             .onChange(v => updateConfig(c => { c[theme].background.blur = v; }));
         }
         break;
@@ -363,7 +454,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         }
         if (bg.radius !== undefined) {
           folder.add(bg, 'radius', 10, 500, 1)
-            .name('Star Field Radius')
+            .name('Field Radius')
             .onChange(v => updateConfig(c => { c[theme].background.radius = v; }));
         }
         if (bg.speed !== undefined) {
@@ -399,7 +490,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         }
         if (bg.density !== undefined) {
           folder.add(bg, 'density', 0, 0.1, 0.001)
-            .name('Fog Density')
+            .name('Fog Thickness')
             .onChange(v => updateConfig(c => { c[theme].background.density = v; }));
         }
         break;
@@ -417,6 +508,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     return icons[type as keyof typeof icons] || '💡';
   };
 
+  // Main Effect Block - GUI Setup and Cleanup
   useEffect(() => {
     if (!containerRef.current) return;
 
@@ -428,12 +520,12 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     // Create optimized GUI instance
     const gui = new GUI({ 
       container: containerRef.current,
-      width: isMobile ? Math.min(window.innerWidth * 0.45, 300) : 350,
+      width: isMobile ? Math.min(window.innerWidth * 0.9, 350) : 380,
       title: isMobile ? '' : 'Scene Editor'
     });
     
     guiRef.current = gui;
-    applyEnhancedStyling(gui);
+    applyModernStyling(gui);
 
     const themeConfig = sceneConfig[theme];
 
