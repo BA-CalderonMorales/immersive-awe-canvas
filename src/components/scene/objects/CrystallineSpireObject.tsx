@@ -28,15 +28,15 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const spireFormations = useSpireFormations();
   const crystalFragments = useCrystalFragments();
 
-  // Fixed material config that works with our material system
+  // FIXED: Stable material config that prevents re-renders and ensures all required properties
   const stableMaterialConfig = useMemo(() => ({
     materialType: 'basic' as const,
     transparent: true,
-    opacity: materialConfig.opacity || 0.9,
-    emissive: color,
+    opacity: 0.9,
+    emissive: color || '#ffffff',
     emissiveIntensity: theme === 'day' ? 0.3 : 0.6,
     wireframe: false
-  }), [materialConfig.opacity, color, theme]);
+  }), [color, theme]);
 
   // Gentle, meditative animation
   const getGentlePulse = (time: number) => {

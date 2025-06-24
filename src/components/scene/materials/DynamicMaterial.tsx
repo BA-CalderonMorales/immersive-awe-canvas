@@ -20,24 +20,19 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         256
     );
 
-    // Safer base material properties to prevent undefined uniforms
+    // FIXED: Ensure all properties are always defined to prevent undefined uniforms
     const safeBaseProps = {
         color: color || '#ffffff',
         wireframe: Boolean(materialConfig.wireframe),
         transparent: Boolean(materialConfig.transparent),
-        opacity: typeof materialConfig.opacity === 'number' ? materialConfig.opacity : 1.0,
+        opacity: typeof materialConfig.opacity === 'number' ? Math.max(0, Math.min(1, materialConfig.opacity)) : 1.0,
     };
 
-    // Enhanced unlit properties with safety checks
+    // FIXED: Always provide emissive properties to prevent undefined uniforms error
     const safeUnlitProps = {
         ...safeBaseProps,
-        // Only set emissive if we have valid values to prevent undefined uniforms
-        ...(materialConfig.emissive && {
-            emissive: materialConfig.emissive,
-            emissiveIntensity: typeof materialConfig.emissiveIntensity === 'number' 
-                ? materialConfig.emissiveIntensity 
-                : 0.2
-        })
+        emissive: materialConfig.emissive || '#000000',
+        emissiveIntensity: typeof materialConfig.emissiveIntensity === 'number' ? materialConfig.emissiveIntensity : 0.0
     };
 
     // Performance-optimized material selection with safety checks
@@ -52,16 +47,16 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
             return (
                 <meshStandardMaterial 
                     {...safeBaseProps}
-                    roughness={materialConfig.roughness || 0.5}
-                    metalness={materialConfig.metalness || 0.5}
+                    roughness={typeof materialConfig.roughness === 'number' ? materialConfig.roughness : 0.5}
+                    metalness={typeof materialConfig.metalness === 'number' ? materialConfig.metalness : 0.5}
                     emissive={materialConfig.emissive || '#000000'}
-                    emissiveIntensity={materialConfig.emissiveIntensity || 0}
+                    emissiveIntensity={typeof materialConfig.emissiveIntensity === 'number' ? materialConfig.emissiveIntensity : 0}
                 />
             );
         
         case 'basic':
         default:
-            // Default to basic material for best performance and compatibility
+            // FIXED: Always provide complete uniform set to prevent Three.js errors
             return <meshBasicMaterial {...safeUnlitProps} />;
     }
 };

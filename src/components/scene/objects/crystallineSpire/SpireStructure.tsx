@@ -14,12 +14,12 @@ interface SpireStructureProps {
 }
 
 const SpireStructure = ({ formation, color, materialConfig, theme, onRef }: SpireStructureProps) => {
-  // Stable material configurations that don't change on theme switching
+  // FIXED: Stable material configurations with all required properties
   const bodyMaterialConfig = useMemo(() => ({
     materialType: 'basic' as const,
     transparent: true,
     opacity: formation.type === 'main' ? 0.9 : 0.7,
-    emissive: color,
+    emissive: color || '#ffffff',
     emissiveIntensity: theme === 'day' ? 0.2 : 0.4,
     wireframe: false
   }), [formation.type, color, theme]);
@@ -28,8 +28,9 @@ const SpireStructure = ({ formation, color, materialConfig, theme, onRef }: Spir
     materialType: 'basic' as const,
     transparent: true,
     opacity: 0.95,
-    emissive: color,
-    emissiveIntensity: theme === 'day' ? 0.3 : 0.6
+    emissive: color || '#ffffff',
+    emissiveIntensity: theme === 'day' ? 0.3 : 0.6,
+    wireframe: false
   }), [color, theme]);
 
   const ringMaterialConfig = useMemo(() => ({
@@ -37,7 +38,7 @@ const SpireStructure = ({ formation, color, materialConfig, theme, onRef }: Spir
     transparent: true,
     opacity: theme === 'day' ? 0.4 : 0.6,
     wireframe: true,
-    emissive: color,
+    emissive: color || '#ffffff',
     emissiveIntensity: theme === 'day' ? 0.1 : 0.3
   }), [color, theme]);
 
