@@ -7,7 +7,7 @@ import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -49,18 +49,40 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
-  const [isUIReady, setIsUIReady] = useState(false);
+  const [isUIComponentsReady, setIsUIComponentsReady] = useState(false);
+  const [forceRender, setForceRender] = useState(0);
+  const mountedRef = useRef(true);
 
-  // Ensure UI components are ready after transitions
+  // Enhanced UI persistence system
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsUIReady(true);
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [worldName]);
+    // Force re-render to ensure all components are properly mounted
+    const initTimer = setTimeout(() => {
+      if (mountedRef.current) {
+        setIsUIComponentsReady(true);
+      }
+    }, 50);
 
-  // Event handlers with proper logging
+    // Additional render cycle to fix any rendering issues
+    const renderTimer = setTimeout(() => {
+      if (mountedRef.current) {
+        setForceRender(prev => prev + 1);
+      }
+    }, 200);
+    
+    return () => {
+      clearTimeout(initTimer);
+      clearTimeout(renderTimer);
+    };
+  }, [worldName, theme]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      mountedRef.current = false;
+    };
+  }, []);
+
+  // Event Handler Block - Centralized event management
   const handleToggleTheme = () => {
     onToggleTheme();
     logEvent({ 
@@ -94,7 +116,7 @@ const ExperienceUI = ({
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
   };
 
-  // Hidden UI state
+  // Hidden UI State Rendering
   if (isUiHidden) {
     return (
       <TooltipProvider>
@@ -110,7 +132,7 @@ const ExperienceUI = ({
 
   return (
     <TooltipProvider>
-      {/* Top navigation bar - always persistent */}
+      {/* Primary Navigation Bar - Always Persistent */}
       <TopBar 
         worldName={worldName}
         uiColor={uiColor}
@@ -123,7 +145,7 @@ const ExperienceUI = ({
         isMobile={isMobile}
       />
       
-      {/* World navigation controls - persistent */}
+      {/* World Navigation System - Always Persistent */}
       <NavigationControls 
         uiColor={uiColor}
         onChangeWorld={handleChangeWorld}
@@ -131,8 +153,8 @@ const ExperienceUI = ({
         theme={theme}
       />
 
-      {/* Bottom action bar - ensure persistence with proper state management */}
-      {isUIReady && (
+      {/* Bottom Action Bar - Enhanced Persistence System */}
+      <div key={`bottom-bar-${forceRender}`}>
         <BottomBar 
           uiColor={uiColor}
           onCopyCode={onCopyCode}
@@ -145,9 +167,9 @@ const ExperienceUI = ({
           onShowHelp={handleShowHelp}
           theme={theme}
         />
-      )}
+      </div>
 
-      {/* Keyboard hint for desktop */}
+      {/* Desktop Interaction Hint */}
       {!isMobile && (
         <div 
           style={{ color: theme === 'day' ? '#000000' : uiColor }} 

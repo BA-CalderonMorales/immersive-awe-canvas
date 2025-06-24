@@ -8,48 +8,51 @@ interface DynamicMaterialProps {
 }
 
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
-    // Matcap textures for unlit shading performance
+    // Matcap texture configuration for unlit performance
     const MATCAP_TEXTURES = {
         chrome: '3B3C3F_DAD9D5_929290_ABACA8',
         purple: '4F439F_A28BE5_8570D6_7765C9',
         gold: '5A492B_DEC583_987D4D_AC9C74',
     };
     
-    const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
+    const [matcap] = useMatcapTexture(
+        MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 
+        256
+    );
 
-    // Common properties optimized for performance
-    const commonProps = {
+    // Base material properties optimized for performance
+    const baseProps = {
         color: color,
-        wireframe: materialConfig.wireframe,
-        transparent: materialConfig.transparent,
-        opacity: materialConfig.opacity,
+        wireframe: materialConfig.wireframe || false,
+        transparent: materialConfig.transparent || false,
+        opacity: materialConfig.opacity || 1.0,
     };
 
-    // Unlit material properties for better performance
+    // Enhanced unlit properties for better visual quality
     const unlitProps = {
-        ...commonProps,
+        ...baseProps,
         emissive: materialConfig.emissive || color,
-        emissiveIntensity: materialConfig.emissiveIntensity || 0.3,
+        emissiveIntensity: materialConfig.emissiveIntensity || 0.2,
     };
 
-    // Use unlit materials for better performance across devices
+    // Performance-optimized material selection
     switch (materialConfig.materialType) {
         case 'matcap':
-            return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
+            return <meshMatcapMaterial {...baseProps} matcap={matcap} />;
         
         case 'basic':
             return <meshBasicMaterial {...unlitProps} />;
         
         case 'normal':
-            return <meshNormalMaterial {...commonProps} />;
+            return <meshNormalMaterial {...baseProps} />;
         
+        // All other materials default to optimized basic material
         case 'toon':
         case 'lambert':
         case 'phong':
         case 'physical':
         case 'standard':
         default:
-            // Default to basic material with emissive properties for unlit look
             return <meshBasicMaterial {...unlitProps} />;
     }
 };
