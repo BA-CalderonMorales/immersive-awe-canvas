@@ -55,13 +55,12 @@ const CrystalFragmentComponent = ({ fragment, color, materialConfig, onRef }: Cr
         {getCrystalGeometryComponent(fragment.geometry)}
         <DynamicMaterial
           materialConfig={{
-            ...materialConfig,
+            materialType: 'basic',
             transparent: true,
             opacity: 0.8 + Math.sin(fragment.phaseOffset) * 0.1,
             emissive: crystalColor,
-            emissiveIntensity: theme === 'day' ? 0.2 : 0.5,
-            roughness: 0.1,
-            metalness: 0.1
+            emissiveIntensity: theme === 'day' ? 0.3 : 0.6,
+            wireframe: false
           }}
           color={crystalColor}
         />
@@ -72,11 +71,11 @@ const CrystalFragmentComponent = ({ fragment, color, materialConfig, onRef }: Cr
         <octahedronGeometry args={[0.5, 0]} />
         <DynamicMaterial
           materialConfig={{
-            ...materialConfig,
+            materialType: 'basic',
             transparent: true,
-            opacity: theme === 'day' ? 0.1 : 0.3,
+            opacity: theme === 'day' ? 0.2 : 0.4,
             emissive: crystalColor,
-            emissiveIntensity: theme === 'day' ? 0.5 : 1.0,
+            emissiveIntensity: theme === 'day' ? 0.6 : 1.0,
             wireframe: false
           }}
           color={crystalColor}
@@ -88,11 +87,12 @@ const CrystalFragmentComponent = ({ fragment, color, materialConfig, onRef }: Cr
         <sphereGeometry args={[1, 4, 4]} />
         <DynamicMaterial
           materialConfig={{
-            ...materialConfig,
+            materialType: 'basic',
             transparent: true,
-            opacity: theme === 'day' ? 0.6 : 0.9,
+            opacity: theme === 'day' ? 0.7 : 0.9,
             emissive: crystalColor,
-            emissiveIntensity: theme === 'day' ? 1.0 : 2.0
+            emissiveIntensity: theme === 'day' ? 1.2 : 2.0,
+            wireframe: false
           }}
           color={crystalColor}
         />

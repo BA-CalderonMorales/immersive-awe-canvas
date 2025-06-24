@@ -16,7 +16,7 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
     };
     
     const [matcap] = useMatcapTexture(
-        MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 
+        MATCAP_TEXTURES[materialConfig.matcapTexture as keyof typeof MATCAP_TEXTURES] || MATCAP_TEXTURES.chrome, 
         256
     );
 
@@ -47,6 +47,17 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         
         case 'normal':
             return <meshNormalMaterial {...safeBaseProps} />;
+        
+        case 'standard':
+            return (
+                <meshStandardMaterial 
+                    {...safeBaseProps}
+                    roughness={materialConfig.roughness || 0.5}
+                    metalness={materialConfig.metalness || 0.5}
+                    emissive={materialConfig.emissive || '#000000'}
+                    emissiveIntensity={materialConfig.emissiveIntensity || 0}
+                />
+            );
         
         case 'basic':
         default:

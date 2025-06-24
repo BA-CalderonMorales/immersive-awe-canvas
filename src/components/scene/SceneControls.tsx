@@ -23,7 +23,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     onUpdate(newConfig);
   };
 
-  // Enhanced GUI Styling System Block
+  // Enhanced GUI Styling System Block - Fixed jiggle and improved UX
   const applyModernStyling = (gui: GUI) => {
     const style = document.createElement('style');
     style.textContent = `
@@ -45,40 +45,52 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         border: 2px solid hsl(var(--border));
         box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         font-size: ${isMobile ? '16px' : '14px'};
+        font-weight: 500;
+        position: relative;
+        overflow: hidden;
       }
       
-      /* === CONTROLLER STYLING BLOCK === */
+      /* === CONTROLLER STYLING BLOCK - FIXED JIGGLE ISSUE === */
       .lil-gui .controller {
         border-radius: 10px;
         margin: 6px 0;
-        padding: 8px 12px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 10px 14px;
         border: 1px solid transparent;
         background: hsl(var(--muted)/0.05);
+        transition: background-color 0.2s ease, border-color 0.2s ease;
+        /* FIXED: Remove transform on hover to prevent jiggle */
+        position: relative;
+        min-height: ${isMobile ? '48px' : '40px'};
+        display: flex;
+        align-items: center;
       }
       
       .lil-gui .controller:hover {
         background: hsl(var(--accent)/0.15);
         border-color: hsl(var(--border));
-        transform: translateY(-1px);
+        /* REMOVED: transform: translateY(-1px); - this caused the jiggle */
       }
       
-      /* === ENHANCED SLIDER STYLING BLOCK === */
+      /* === ENHANCED SLIDER STYLING BLOCK - IMPROVED CLICK ANYWHERE === */
       .lil-gui .controller input[type="range"] {
         height: ${isMobile ? '32px' : '28px'};
         border-radius: 16px;
-        background: linear-gradient(to right, hsl(var(--primary)/0.2) 0%, hsl(var(--muted)/0.3) 100%);
+        background: linear-gradient(to right, hsl(var(--primary)/0.3) 0%, hsl(var(--muted)/0.3) 100%);
         cursor: pointer;
         -webkit-appearance: none;
         appearance: none;
         box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         border: 2px solid hsl(var(--border));
         transition: all 0.2s ease;
+        width: 100%;
+        /* IMPROVED: Better click area */
+        position: relative;
+        z-index: 1;
       }
       
       .lil-gui .controller input[type="range"]:hover {
         box-shadow: inset 0 2px 8px rgba(0,0,0,0.15), 0 0 0 2px hsl(var(--ring)/0.2);
-        transform: scale(1.02);
+        /* REMOVED: transform: scale(1.02); - prevented smooth interaction */
       }
       
       .lil-gui .controller input[type="range"]::-webkit-slider-thumb {
@@ -91,17 +103,19 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         cursor: grab;
         -webkit-appearance: none;
         appearance: none;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        z-index: 2;
       }
       
       .lil-gui .controller input[type="range"]::-webkit-slider-thumb:hover {
-        transform: scale(1.15);
+        transform: scale(1.1);
         box-shadow: 0 6px 20px rgba(0,0,0,0.3), 0 0 0 3px hsl(var(--ring)/0.3);
       }
       
       .lil-gui .controller input[type="range"]::-webkit-slider-thumb:active {
         cursor: grabbing;
-        transform: scale(1.1);
+        transform: scale(1.05);
       }
       
       .lil-gui .controller input[type="range"]::-moz-range-thumb {
@@ -114,7 +128,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         cursor: grab;
       }
       
-      /* === BUTTON STYLING BLOCK === */
+      /* === BUTTON STYLING BLOCK - FIXED DROPDOWN JIGGLE === */
       .lil-gui .controller button,
       .lil-gui .controller select {
         border-radius: 8px;
@@ -123,26 +137,30 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         color: hsl(var(--foreground));
         padding: ${isMobile ? '12px 16px' : '10px 14px'};
         font-weight: 600;
-        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: background-color 0.2s ease, border-color 0.2s ease;
         box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         min-height: ${isMobile ? '48px' : '40px'};
         cursor: pointer;
+        width: 100%;
+        font-size: ${isMobile ? '16px' : '14px'};
+        /* FIXED: Prevent layout shift */
+        position: relative;
       }
       
       .lil-gui .controller button:hover,
       .lil-gui .controller select:hover {
         background: hsl(var(--accent));
         border-color: hsl(var(--primary));
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        /* REMOVED: transform and extra box-shadow to prevent jiggle */
       }
       
-      .lil-gui .controller button:active {
-        transform: translateY(0);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      .lil-gui .controller button:active,
+      .lil-gui .controller select:active {
+        background: hsl(var(--accent)/0.8);
+        /* REMOVED: transform to prevent jump */
       }
       
-      /* === FOLDER STYLING BLOCK === */
+      /* === FOLDER STYLING BLOCK - STABLE POSITIONING === */
       .lil-gui .folder > .title {
         background: linear-gradient(135deg, hsl(var(--primary)/0.1) 0%, hsl(var(--muted)/0.1) 100%);
         border-radius: 12px;
@@ -150,15 +168,17 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         padding: ${isMobile ? '16px 20px' : '12px 16px'};
         font-weight: 700;
         font-size: ${isMobile ? '18px' : '16px'};
-        transition: all 0.3s ease;
+        transition: background-color 0.2s ease;
         border: 1px solid hsl(var(--border));
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        cursor: pointer;
+        /* FIXED: Prevent layout shift on hover */
+        position: relative;
       }
       
       .lil-gui .folder > .title:hover {
         background: linear-gradient(135deg, hsl(var(--primary)/0.15) 0%, hsl(var(--muted)/0.15) 100%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        /* REMOVED: transform to prevent jiggle */
       }
       
       /* === COLOR PICKER STYLING BLOCK === */
@@ -186,17 +206,27 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         accent-color: hsl(var(--primary));
       }
       
+      /* === PROFESSIONAL LABEL STYLING === */
+      .lil-gui .controller .name {
+        font-weight: 600;
+        color: hsl(var(--foreground));
+        margin-right: 12px;
+        min-width: ${isMobile ? '120px' : '100px'};
+        font-size: ${isMobile ? '16px' : '14px'};
+      }
+      
       /* === MOBILE OPTIMIZATIONS BLOCK === */
       ${isMobile ? `
         .lil-gui {
           font-size: 16px;
           max-height: 50vh;
           overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
         }
         
         .lil-gui .controller {
-          padding: 12px 16px;
-          margin: 8px 0;
+          padding: 14px 18px;
+          margin: 10px 0;
         }
         
         .lil-gui .controller input[type="range"] {
@@ -206,15 +236,20 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         
         .lil-gui .folder > .title {
           font-size: 18px;
-          padding: 16px 20px;
+          padding: 18px 22px;
         }
         
         /* Ensure touch targets are at least 44px */
         .lil-gui .controller button,
         .lil-gui .controller select,
         .lil-gui .controller input {
-          min-height: 44px;
-          min-width: 44px;
+          min-height: 48px;
+          min-width: 48px;
+        }
+        
+        /* Better mobile scrolling */
+        .lil-gui .children {
+          max-height: none;
         }
       ` : ''}
       
@@ -222,6 +257,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
       .lil-gui .controller:focus-within {
         outline: 2px solid hsl(var(--ring));
         outline-offset: 2px;
+        border-radius: 12px;
       }
       
       .lil-gui .controller input:focus,
@@ -229,6 +265,17 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
       .lil-gui .controller select:focus {
         outline: 2px solid hsl(var(--ring));
         outline-offset: 2px;
+      }
+      
+      /* === SMOOTH INTERACTION BLOCK === */
+      .lil-gui * {
+        box-sizing: border-box;
+      }
+      
+      .lil-gui .controller input,
+      .lil-gui .controller button,
+      .lil-gui .controller select {
+        will-change: auto;
       }
     `;
     document.head.appendChild(style);
@@ -254,6 +301,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
       materialFolder.add(material, 'materialType', {
         'Basic (Fast)': 'basic',
         'MatCap (Stylized)': 'matcap', 
+        'Standard (Realistic)': 'standard',
         'Normal (Debug)': 'normal'
       }).name('Material Type').onChange(value => {
         updateConfig(c => { c[theme].material.materialType = value; });
@@ -276,6 +324,21 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         materialFolder.add(material, 'emissiveIntensity', 0, 3, 0.01)
           .name('Glow Strength')
           .onChange(value => updateConfig(c => { c[theme].material.emissiveIntensity = value; }));
+      }
+
+      // Standard Material Properties
+      if (material.materialType === 'standard') {
+        if (material.roughness !== undefined) {
+          materialFolder.add(material, 'roughness', 0, 1, 0.01)
+            .name('Surface Roughness')
+            .onChange(value => updateConfig(c => { c[theme].material.roughness = value; }));
+        }
+        
+        if (material.metalness !== undefined) {
+          materialFolder.add(material, 'metalness', 0, 1, 0.01)
+            .name('Metallic Look')
+            .onChange(value => updateConfig(c => { c[theme].material.metalness = value; }));
+        }
       }
 
       // MatCap Selection
@@ -311,6 +374,11 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
           .name('Base Size')
           .onChange(value => updateConfig(c => { c[theme].torusKnot!.radius = value; }));
       }
+      if (torusKnot.tube !== undefined) {
+        geometryFolder.add(torusKnot, 'tube', 0.01, 1, 0.01)
+          .name('Tube Thickness')
+          .onChange(value => updateConfig(c => { c[theme].torusKnot!.tube = value; }));
+      }
       
       geometryFolder.open();
     }
@@ -318,7 +386,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     mainFolder.open();
   };
 
-  // Lighting System Configuration Block
+  // Lighting System Configuration Block - TONED DOWN DEFAULTS
   const setupLightingControls = (gui: GUI, themeConfig: any) => {
     const lightsFolder = gui.addFolder('💡 Lighting System');
     
@@ -326,7 +394,8 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
       const lightFolder = lightsFolder.addFolder(`${getLightIcon(light.type)} ${light.type} Light`);
       
       if (light.intensity !== undefined) {
-        lightFolder.add(light, 'intensity', 0, 10, 0.01)
+        // FIXED: Reduced default max intensity from 10 to 5 for less brightness
+        lightFolder.add(light, 'intensity', 0, 5, 0.01)
           .name('Light Power')
           .onChange(value => updateConfig(c => { c[theme].lights[index].intensity = value; }));
       }
@@ -357,7 +426,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     lightsFolder.open();
   };
 
-  // Background Environment Configuration Block
+  // Background Environment Configuration Block - EXPANDED
   const setupBackgroundControls = (gui: GUI, themeConfig: any) => {
     const backgroundFolder = gui.addFolder('🌍 Environment');
     const bg = themeConfig.background;
@@ -403,7 +472,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     backgroundFolder.open();
   };
 
-  // Background-Specific Configuration Helper Block
+  // Background-Specific Configuration Helper Block - EXPANDED
   const setupBackgroundSpecificControls = (folder: GUI, bg: any) => {
     switch (bg.type) {
       case 'environment':
@@ -462,6 +531,11 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
             .name('Motion Speed')
             .onChange(v => updateConfig(c => { c[theme].background.speed = v; }));
         }
+        if (bg.factor !== undefined) {
+          folder.add(bg, 'factor', 1, 10, 0.1)
+            .name('Star Brightness')
+            .onChange(v => updateConfig(c => { c[theme].background.factor = v; }));
+        }
         break;
         
       case 'sparkles':
@@ -480,6 +554,11 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
             .name('Animation Speed')
             .onChange(v => updateConfig(c => { c[theme].background.speed = v; }));
         }
+        if (bg.opacity !== undefined) {
+          folder.add(bg, 'opacity', 0, 1, 0.01)
+            .name('Sparkle Opacity')
+            .onChange(v => updateConfig(c => { c[theme].background.opacity = v; }));
+        }
         break;
         
       case 'fog':
@@ -492,6 +571,60 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
           folder.add(bg, 'density', 0, 0.1, 0.001)
             .name('Fog Thickness')
             .onChange(v => updateConfig(c => { c[theme].background.density = v; }));
+        }
+        if (bg.near !== undefined) {
+          folder.add(bg, 'near', 0.1, 50, 0.1)
+            .name('Fog Start Distance')
+            .onChange(v => updateConfig(c => { c[theme].background.near = v; }));
+        }
+        if (bg.far !== undefined) {
+          folder.add(bg, 'far', 10, 1000, 10)
+            .name('Fog End Distance')
+            .onChange(v => updateConfig(c => { c[theme].background.far = v; }));
+        }
+        break;
+        
+      case 'noise':
+        if (bg.noiseScale !== undefined) {
+          folder.add(bg, 'noiseScale', 1, 50, 0.1)
+            .name('Noise Scale')
+            .onChange(v => updateConfig(c => { c[theme].background.noiseScale = v; }));
+        }
+        if (bg.noiseIntensity !== undefined) {
+          folder.add(bg, 'noiseIntensity', 0, 2, 0.01)
+            .name('Noise Intensity')
+            .onChange(v => updateConfig(c => { c[theme].background.noiseIntensity = v; }));
+        }
+        if (bg.noiseSpeed !== undefined) {
+          folder.add(bg, 'noiseSpeed', 0, 1, 0.01)
+            .name('Animation Speed')
+            .onChange(v => updateConfig(c => { c[theme].background.noiseSpeed = v; }));
+        }
+        break;
+        
+      case 'plasma':
+        if (bg.plasmaSpeed !== undefined) {
+          folder.add(bg, 'plasmaSpeed', 0, 5, 0.01)
+            .name('Plasma Speed')
+            .onChange(v => updateConfig(c => { c[theme].background.plasmaSpeed = v; }));
+        }
+        if (bg.plasmaIntensity !== undefined) {
+          folder.add(bg, 'plasmaIntensity', 0, 2, 0.01)
+            .name('Plasma Intensity')
+            .onChange(v => updateConfig(c => { c[theme].background.plasmaIntensity = v; }));
+        }
+        break;
+        
+      case 'aurora':
+        if (bg.auroraSpeed !== undefined) {
+          folder.add(bg, 'auroraSpeed', 0, 2, 0.01)
+            .name('Aurora Speed')
+            .onChange(v => updateConfig(c => { c[theme].background.auroraSpeed = v; }));
+        }
+        if (bg.auroraIntensity !== undefined) {
+          folder.add(bg, 'auroraIntensity', 0, 5, 0.01)
+            .name('Aurora Intensity')
+            .onChange(v => updateConfig(c => { c[theme].background.auroraIntensity = v; }));
         }
         break;
     }
