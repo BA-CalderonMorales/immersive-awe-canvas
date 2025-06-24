@@ -39,12 +39,11 @@ const EnergyWeb = ({ color, materialConfig }: EnergyWebProps) => {
             <cylinderGeometry args={[0.01, 0.01, distance, 6]} />
             <DynamicMaterial
               materialConfig={{
-                materialType: 'basic',
+                ...materialConfig,
                 transparent: true,
-                opacity: theme === 'day' ? 0.4 : 0.6,
+                opacity: theme === 'day' ? 0.3 : 0.5,
                 emissive: color,
-                emissiveIntensity: theme === 'day' ? 0.8 : 1.2,
-                wireframe: false
+                emissiveIntensity: 0.6
               }}
               color={color}
             />

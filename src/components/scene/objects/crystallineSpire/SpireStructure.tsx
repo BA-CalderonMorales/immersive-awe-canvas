@@ -14,33 +14,30 @@ interface SpireStructureProps {
 }
 
 const SpireStructure = ({ formation, color, materialConfig, theme, onRef }: SpireStructureProps) => {
-  // FIXED: Stable material configurations with all required properties
+  // Stable material configurations that don't change on theme switching
   const bodyMaterialConfig = useMemo(() => ({
-    materialType: 'basic' as const,
+    ...materialConfig,
     transparent: true,
     opacity: formation.type === 'main' ? 0.9 : 0.7,
-    emissive: color || '#ffffff',
-    emissiveIntensity: theme === 'day' ? 0.2 : 0.4,
+    emissive: color,
+    emissiveIntensity: theme === 'day' ? 0.1 : 0.3,
     wireframe: false
-  }), [formation.type, color, theme]);
+  }), [materialConfig, formation.type, color, theme]);
 
   const tipMaterialConfig = useMemo(() => ({
-    materialType: 'basic' as const,
+    ...materialConfig,
     transparent: true,
     opacity: 0.95,
-    emissive: color || '#ffffff',
-    emissiveIntensity: theme === 'day' ? 0.3 : 0.6,
-    wireframe: false
-  }), [color, theme]);
+    emissive: color,
+    emissiveIntensity: theme === 'day' ? 0.2 : 0.5
+  }), [materialConfig, color, theme]);
 
   const ringMaterialConfig = useMemo(() => ({
-    materialType: 'basic' as const,
+    ...materialConfig,
     transparent: true,
     opacity: theme === 'day' ? 0.4 : 0.6,
-    wireframe: true,
-    emissive: color || '#ffffff',
-    emissiveIntensity: theme === 'day' ? 0.1 : 0.3
-  }), [color, theme]);
+    wireframe: true
+  }), [materialConfig, theme]);
 
   return (
     <group

@@ -1,4 +1,3 @@
-
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
@@ -28,15 +27,14 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const spireFormations = useSpireFormations();
   const crystalFragments = useCrystalFragments();
 
-  // FIXED: Stable material config that prevents re-renders and ensures all required properties
+  // Stable material config that doesn't cause re-renders on theme changes
   const stableMaterialConfig = useMemo(() => ({
-    materialType: 'basic' as const,
+    materialType: materialConfig.materialType || 'standard' as const,
+    roughness: materialConfig.roughness || 0.5,
+    metalness: materialConfig.metalness || 0.5,
     transparent: true,
-    opacity: 0.9,
-    emissive: color || '#ffffff',
-    emissiveIntensity: theme === 'day' ? 0.3 : 0.6,
-    wireframe: false
-  }), [color, theme]);
+    opacity: materialConfig.opacity || 0.9,
+  }), [materialConfig.materialType, materialConfig.roughness, materialConfig.metalness, materialConfig.opacity]);
 
   // Gentle, meditative animation
   const getGentlePulse = (time: number) => {

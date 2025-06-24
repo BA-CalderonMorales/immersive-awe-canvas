@@ -1,5 +1,7 @@
 
 import { MaterialConfig } from '@/types/scene';
+import { useThree } from '@react-three/fiber';
+import * as THREE from 'three';
 import { useMatcapTexture } from '@react-three/drei';
 
 interface DynamicMaterialProps {
@@ -8,56 +10,71 @@ interface DynamicMaterialProps {
 }
 
 const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
-    // Matcap texture configuration for unlit performance
+    const { gl } = useThree();
+
+    // Re-usable gradient maps for toon material
+    const fiveTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 64, 64, 64, 128, 128, 128, 192, 192, 192, 255, 255, 255]), 5, 1, THREE.RedFormat, THREE.UnsignedByteType);
+    fiveTone.minFilter = THREE.NearestFilter;
+    fiveTone.magFilter = THREE.NearestFilter;
+    fiveTone.needsUpdate = true;
+    
+    const threeTone = new THREE.DataTexture(new Uint8Array([0, 0, 0, 128, 128, 128, 255, 255, 255]), 3, 1, THREE.RedFormat, THREE.UnsignedByteType);
+    threeTone.minFilter = THREE.NearestFilter;
+    threeTone.magFilter = THREE.NearestFilter;
+    threeTone.needsUpdate = true;
+
     const MATCAP_TEXTURES = {
         chrome: '3B3C3F_DAD9D5_929290_ABACA8',
         purple: '4F439F_A28BE5_8570D6_7765C9',
         gold: '5A492B_DEC583_987D4D_AC9C74',
     };
     
-    const [matcap] = useMatcapTexture(
-        MATCAP_TEXTURES[materialConfig.matcapTexture as keyof typeof MATCAP_TEXTURES] || MATCAP_TEXTURES.chrome, 
-        256
-    );
+    const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
 
-    // FIXED: Ensure all properties are always defined to prevent undefined uniforms
-    const safeBaseProps = {
-        color: color || '#ffffff',
-        wireframe: Boolean(materialConfig.wireframe),
-        transparent: Boolean(materialConfig.transparent),
-        opacity: typeof materialConfig.opacity === 'number' ? Math.max(0, Math.min(1, materialConfig.opacity)) : 1.0,
+    const commonProps = {
+        color: color,
+        wireframe: materialConfig.wireframe,
+        emissive: materialConfig.emissive,
+        emissiveIntensity: materialConfig.emissiveIntensity,
+        transparent: materialConfig.transparent,
+        opacity: materialConfig.opacity,
     };
 
-    // FIXED: Always provide emissive properties to prevent undefined uniforms error
-    const safeUnlitProps = {
-        ...safeBaseProps,
-        emissive: materialConfig.emissive || '#000000',
-        emissiveIntensity: typeof materialConfig.emissiveIntensity === 'number' ? materialConfig.emissiveIntensity : 0.0
-    };
-
-    // Performance-optimized material selection with safety checks
     switch (materialConfig.materialType) {
+        case 'physical':
+            return <meshPhysicalMaterial
+                {...commonProps}
+                roughness={materialConfig.roughness}
+                metalness={materialConfig.metalness}
+                clearcoat={materialConfig.clearcoat}
+                clearcoatRoughness={materialConfig.clearcoatRoughness}
+                ior={materialConfig.ior}
+                thickness={materialConfig.thickness}
+                specularIntensity={materialConfig.specularIntensity}
+                specularColor={materialConfig.specularColor}
+            />;
+        case 'toon':
+            return <meshToonMaterial
+                {...commonProps}
+                gradientMap={materialConfig.gradientMap === 'five' ? fiveTone : threeTone}
+            />;
         case 'matcap':
-            return <meshMatcapMaterial {...safeBaseProps} matcap={matcap} />;
-        
+            return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
+        case 'lambert':
+            return <meshLambertMaterial {...commonProps} />;
+        case 'phong':
+            return <meshPhongMaterial {...commonProps} shininess={materialConfig.shininess} specular={materialConfig.specularColor} />;
         case 'normal':
-            return <meshNormalMaterial {...safeBaseProps} />;
-        
-        case 'standard':
-            return (
-                <meshStandardMaterial 
-                    {...safeBaseProps}
-                    roughness={typeof materialConfig.roughness === 'number' ? materialConfig.roughness : 0.5}
-                    metalness={typeof materialConfig.metalness === 'number' ? materialConfig.metalness : 0.5}
-                    emissive={materialConfig.emissive || '#000000'}
-                    emissiveIntensity={typeof materialConfig.emissiveIntensity === 'number' ? materialConfig.emissiveIntensity : 0}
-                />
-            );
-        
+            return <meshNormalMaterial {...commonProps} />;
         case 'basic':
+            return <meshBasicMaterial {...commonProps} />;
+        case 'standard':
         default:
-            // FIXED: Always provide complete uniform set to prevent Three.js errors
-            return <meshBasicMaterial {...safeUnlitProps} />;
+            return <meshStandardMaterial
+                {...commonProps}
+                roughness={materialConfig.roughness}
+                metalness={materialConfig.metalness}
+            />;
     }
 };
 
