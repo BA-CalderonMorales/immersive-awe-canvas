@@ -79,11 +79,11 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
   const handleInfoClick = (e: React.MouseEvent) => {
     e.stopPropagation();
     setShowOnboardingPulse(false);
-    onShowHelp();
     
     if (isMobile) {
       setIsInfoTooltipOpen(!isInfoTooltipOpen);
     }
+    // Removed the onShowHelp() call - info button should only show tooltip
   };
 
   const getInstructions = (): BaseInstructions | FirstVisitInstructions => {
