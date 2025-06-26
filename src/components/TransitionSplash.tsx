@@ -20,39 +20,81 @@ const containerVariants = {
   visible: { 
     opacity: 1,
     transition: {
-      duration: 0.4,
-      ease: "easeOut"
+      duration: 0.5,
+      ease: [0.25, 0.8, 0.25, 1] as const
     }
   },
   exit: { 
     opacity: 0,
     transition: {
-      duration: 0.6,
-      ease: "easeIn"
+      duration: 0.4,
+      ease: [0.4, 0, 0.6, 1] as const
     }
   }
 };
 
-const contentVariants = {
-  hidden: { scale: 0.9, opacity: 0, y: 20 },
+const iconVariants = {
+  hidden: { scale: 0.8, opacity: 0, y: 20 },
   visible: { 
     scale: 1, 
     opacity: 1, 
     y: 0,
     transition: {
-      type: "spring",
+      type: "spring" as const,
+      stiffness: 300,
+      damping: 30,
+      delay: 0.1
+    }
+  },
+  exit: {
+    scale: 0.9,
+    opacity: 0,
+    y: -10,
+    transition: {
+      duration: 0.2,
+      ease: [0.4, 0, 1, 1] as const
+    }
+  }
+};
+
+const textVariants = {
+  hidden: { scale: 0.9, opacity: 0, y: 15 },
+  visible: { 
+    scale: 1, 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      type: "spring" as const,
       stiffness: 200,
       damping: 25,
-      delay: 0.1
+      delay: 0.2
     }
   },
   exit: {
     scale: 0.95,
     opacity: 0,
-    y: -10,
+    y: -5,
+    transition: {
+      duration: 0.15,
+      ease: [0.4, 0, 1, 1] as const
+    }
+  }
+};
+
+const backgroundVariants = {
+  hidden: { opacity: 0 },
+  visible: { 
+    opacity: 1,
+    transition: {
+      duration: 0.4,
+      ease: [0.25, 0.8, 0.25, 1] as const
+    }
+  },
+  exit: { 
+    opacity: 0,
     transition: {
       duration: 0.3,
-      ease: "easeIn"
+      ease: [0.4, 0, 0.6, 1] as const
     }
   }
 };
@@ -70,9 +112,15 @@ export default function TransitionSplash({
     if (children) return children;
 
     return (
-      <motion.div className="flex flex-col items-center">
+      <motion.div 
+        className="flex flex-col items-center"
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+      >
         <motion.div 
-          variants={contentVariants}
+          variants={iconVariants}
           className="mb-6"
         >
           {type === "app-entry" ? (
@@ -93,7 +141,7 @@ export default function TransitionSplash({
         </motion.div>
         
         <motion.h2
-          variants={contentVariants}
+          variants={textVariants}
           className={`text-center font-medium text-base md:text-lg tracking-wide ${
             theme === "day" ? "text-slate-800" : "text-blue-200"
           }`}
@@ -114,19 +162,12 @@ export default function TransitionSplash({
         <motion.div
           className="fixed inset-0 z-[9999] flex items-center justify-center"
           style={{ background: backgrounds[theme] }}
-          variants={containerVariants}
+          variants={backgroundVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
         >
-          <motion.div
-            variants={contentVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            {getDefaultContent()}
-          </motion.div>
+          {getDefaultContent()}
         </motion.div>
       )}
     </AnimatePresence>
