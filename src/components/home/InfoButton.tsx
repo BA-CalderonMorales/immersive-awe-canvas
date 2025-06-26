@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 
 interface InfoButtonProps {
   theme: 'day' | 'night';
@@ -12,22 +12,50 @@ interface InfoButtonProps {
   isFirstVisit?: boolean;
 }
 
-interface InstructionSet {
+interface BaseInstructions {
   primary: string;
   secondary: string;
   tertiary: string;
-  welcome?: string;
+}
+
+interface FirstVisitInstructions extends BaseInstructions {
+  welcome: string;
 }
 
 const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false }: InfoButtonProps) => {
   const isMobile = useIsMobile();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // Memoize instructions to prevent unnecessary recalculations
-  const instructions = useMemo((): InstructionSet => {
-    const baseInstructions = {
+  // Show subtle onboarding hint for first-time visitors
+  useEffect(() => {
+    if (isFirstVisit) {
+      const timer = setTimeout(() => {
+        setShowOnboardingPulse(true);
+        
+        // Auto-hide pulse after a few seconds
+        const hideTimer = setTimeout(() => {
+          setShowOnboardingPulse(false);
+        }, 5000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isFirstVisit]);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowOnboardingPulse(false);
+    
+    if (isMobile) {
+      setIsTooltipOpen(!isTooltipOpen);
+    }
+  };
+
+  const getInstructions = (): BaseInstructions | FirstVisitInstructions => {
+    const baseInstructions: BaseInstructions = {
       primary: isMobile 
         ? "Drag to look around, pinch to zoom"
         : "Click and drag to explore, scroll to zoom",
@@ -47,40 +75,9 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
     }
 
     return baseInstructions;
-  }, [isFirstVisit, isMobile]);
-
-  // Stable initialization
-  useEffect(() => {
-    if (!hasInitialized) {
-      setHasInitialized(true);
-    }
-  }, [hasInitialized]);
-
-  // Show onboarding pulse with stable timing
-  useEffect(() => {
-    if (isFirstVisit && hasInitialized) {
-      const timer = setTimeout(() => {
-        setShowOnboardingPulse(true);
-        
-        const hideTimer = setTimeout(() => {
-          setShowOnboardingPulse(false);
-        }, 5000);
-        
-        return () => clearTimeout(hideTimer);
-      }, 2000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isFirstVisit, hasInitialized]);
-
-  const handleClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowOnboardingPulse(false);
-    
-    if (isMobile) {
-      setIsTooltipOpen(!isTooltipOpen);
-    }
   };
+
+  const instructions = getInstructions();
 
   return (
     <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-20 pointer-events-auto">
@@ -113,7 +110,7 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
             sideOffset={8}
           >
             <div className="space-y-3">
-              {instructions.welcome && (
+              {isFirstVisit && 'welcome' in instructions && (
                 <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
                   <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                     theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'

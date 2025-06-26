@@ -1,5 +1,5 @@
 
-import { useMemo, useState, useEffect } from "react";
+import { useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -74,28 +74,12 @@ const ExperienceContainer = ({
   handleWorldTransitionEnd,
 }: ExperienceContainerProps) => {
   const isMobile = useIsMobile();
-  const [showBlurTransition, setShowBlurTransition] = useState(true);
 
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
     const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
     return color || 'white';
   }, [worldData, theme]);
-
-  const handleBlurTransitionEnd = () => {
-    setShowBlurTransition(false);
-  };
-
-  // Reset blur transition on world change
-  useEffect(() => {
-    if (isTransitioning) {
-      setShowBlurTransition(true);
-      const timer = setTimeout(() => {
-        setShowBlurTransition(false);
-      }, 600);
-      return () => clearTimeout(timer);
-    }
-  }, [isTransitioning, worldData?.slug]);
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
@@ -118,19 +102,17 @@ const ExperienceContainer = ({
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 1.02 }}
           transition={{ 
-            duration: 0.8, 
-            ease: [0.25, 0.8, 0.25, 1]
+            duration: 0.6, 
+            ease: [0.25, 0.8, 0.25, 1] // Custom bezier for smooth feel
           }}
           className="absolute inset-0 w-full h-full"
         >
           <ExperienceTransitions
             showEntryTransition={showEntryTransition}
             showWorldTransition={showWorldTransition}
-            showBlurTransition={showBlurTransition}
             theme={theme}
             onEntryTransitionEnd={handleEntryTransitionEndWithHint}
             onWorldTransitionEnd={handleWorldTransitionEnd}
-            onBlurTransitionEnd={handleBlurTransitionEnd}
           />
           
           <ExperienceLayout
