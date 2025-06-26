@@ -29,20 +29,26 @@ const WorldTransition = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
           <motion.div 
-            className="flex flex-col items-center space-y-4"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 1.1, opacity: 0 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
+            className="flex flex-col items-center space-y-6"
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: -10 }}
+            transition={{ 
+              duration: 0.5, 
+              ease: "easeOut",
+              type: "spring",
+              stiffness: 200,
+              damping: 25
+            }}
           >
             {/* Loading spinner */}
             <motion.div
-              className="w-8 h-8 border-2 rounded-full"
+              className="w-10 h-10 border-2 rounded-full"
               style={{ 
-                borderColor: `${textColor}30`,
+                borderColor: `${textColor}20`,
                 borderTopColor: textColor
               }}
               animate={{ rotate: 360 }}
@@ -52,10 +58,10 @@ const WorldTransition = ({
             {/* Loading message */}
             <motion.p
               style={{ color: textColor }}
-              className="text-sm font-medium tracking-wide"
+              className="text-sm font-medium tracking-wide text-center"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
+              transition={{ delay: 0.2, duration: 0.4 }}
             >
               {loadingMessage}
             </motion.p>

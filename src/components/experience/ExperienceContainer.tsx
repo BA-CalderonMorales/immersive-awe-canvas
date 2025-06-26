@@ -82,15 +82,15 @@ const ExperienceContainer = ({
   }, [worldData, theme]);
 
   if (!worldData) {
-    return <LoadingOverlay message="No worlds found." theme="night" />;
+    return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
   }
 
   if (!editableSceneConfig) {
-    return <LoadingOverlay message="Initializing Scene..." theme="night" />;
+    return <LoadingOverlay message="Initializing experience..." theme={theme} />;
   }
 
   if (!isSceneConfig(worldData.scene_config)) {
-     return <LoadingOverlay message="World data is incomplete or corrupted." theme="night" />;
+     return <LoadingOverlay message="Preparing world data..." theme={theme} />;
   }
 
   return (
@@ -98,10 +98,13 @@ const ExperienceContainer = ({
       <AnimatePresence mode="wait">
         <motion.div
           key={worldData.slug}
-          initial={{ opacity: 0, scale: 0.95 }}
+          initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.05 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          exit={{ opacity: 0, scale: 1.02 }}
+          transition={{ 
+            duration: 0.6, 
+            ease: [0.25, 0.8, 0.25, 1] // Custom bezier for smooth feel
+          }}
           className="absolute inset-0 w-full h-full"
         >
           <ExperienceTransitions

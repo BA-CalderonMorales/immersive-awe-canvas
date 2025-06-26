@@ -10,7 +10,6 @@ export const useExperienceTransitions = (isTransitioning: boolean) => {
     setShowEntryTransition(false);
     if (!hintShownRef.current) {
       hintShownRef.current = true;
-      // This will be handled by the parent component
     }
   };
 
@@ -21,6 +20,17 @@ export const useExperienceTransitions = (isTransitioning: boolean) => {
   useEffect(() => {
     if (isTransitioning) {
       setShowWorldTransition(true);
+      // Add slight delay to prevent jarring transition
+      const timer = setTimeout(() => {
+        setShowWorldTransition(true);
+      }, 50);
+      return () => clearTimeout(timer);
+    } else {
+      // Smooth transition out
+      const timer = setTimeout(() => {
+        setShowWorldTransition(false);
+      }, 100);
+      return () => clearTimeout(timer);
     }
   }, [isTransitioning]);
 
