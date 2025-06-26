@@ -12,24 +12,40 @@ export const useExperienceState = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
-  // Initialize UI hidden state from localStorage
+  // Stable UI state management
   const [isUiHidden, setIsUiHidden] = useState(() => {
     if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('uiHidden');
-      return saved ? JSON.parse(saved) : true; // Default to hidden (true)
+      try {
+        const saved = localStorage.getItem('uiHidden');
+        return saved ? JSON.parse(saved) : true;
+      } catch {
+        return true;
+      }
     }
     return true;
   });
   
   const [showUiHint, setShowUiHint] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
   const hintShownRef = useRef(false);
 
-  // Persist UI visibility state to localStorage whenever it changes
+  // Stable localStorage persistence
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('uiHidden', JSON.stringify(isUiHidden));
+    if (hasInitialized && typeof window !== 'undefined') {
+      try {
+        localStorage.setItem('uiHidden', JSON.stringify(isUiHidden));
+      } catch (error) {
+        console.warn('Failed to save UI state to localStorage:', error);
+      }
     }
-  }, [isUiHidden]);
+  }, [isUiHidden, hasInitialized]);
+
+  // Initialize once
+  useEffect(() => {
+    if (!hasInitialized) {
+      setHasInitialized(true);
+    }
+  }, [hasInitialized]);
 
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
@@ -41,17 +57,23 @@ export const useExperienceState = () => {
 
   const handleCopyCode = useCallback(() => {
     if (!editableSceneConfig) return;
-    const codeString = JSON.stringify(editableSceneConfig, null, 2);
-    navigator.clipboard.writeText(codeString)
-      .then(() => {
-        toast.success("Scene configuration copied to clipboard!");
-        logEvent({ eventType: 'action', eventSource: 'copy_code_success' });
-      })
-      .catch(err => {
-        console.error('Failed to copy text: ', err);
-        toast.error("Failed to copy configuration.");
-        logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
-      });
+    
+    try {
+      const codeString = JSON.stringify(editableSceneConfig, null, 2);
+      navigator.clipboard.writeText(codeString)
+        .then(() => {
+          toast.success("Scene configuration copied to clipboard!");
+          logEvent({ eventType: 'action', eventSource: 'copy_code_success' });
+        })
+        .catch(err => {
+          console.error('Failed to copy text: ', err);
+          toast.error("Failed to copy configuration.");
+          logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
+        });
+    } catch (error) {
+      console.error('Failed to serialize config:', error);
+      toast.error("Failed to prepare configuration for copying.");
+    }
   }, [editableSceneConfig]);
 
   return {
