@@ -14,7 +14,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 interface TopBarProps {
   worldName: string;
@@ -28,14 +28,11 @@ interface TopBarProps {
   onShowHelp: () => void;
 }
 
-interface BaseInstructions {
+interface InstructionSet {
   primary: string;
   secondary: string;
   tertiary: string;
-}
-
-interface FirstVisitInstructions extends BaseInstructions {
-  welcome: string;
+  welcome?: string;
 }
 
 const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, isMobile, onShowHelp }: TopBarProps) => {
@@ -45,49 +42,15 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
   const textColor = theme === 'day' ? '#000000' : uiColor;
   const uiStyle = { color: textColor };
 
+  // Stable state management to prevent flickering
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
+  const [hasInitialized, setHasInitialized] = useState(false);
 
-  // Detect first visit
-  useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisitedExperience');
-    if (!hasVisited) {
-      setIsFirstVisit(true);
-      localStorage.setItem('hasVisitedExperience', 'true');
-    }
-  }, []);
-
-  // Show subtle onboarding hint for first-time visitors
-  useEffect(() => {
-    if (isFirstVisit) {
-      const timer = setTimeout(() => {
-        setShowOnboardingPulse(true);
-        
-        // Auto-hide pulse after a few seconds
-        const hideTimer = setTimeout(() => {
-          setShowOnboardingPulse(false);
-        }, 5000);
-        
-        return () => clearTimeout(hideTimer);
-      }, 2000);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [isFirstVisit]);
-
-  const handleInfoClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowOnboardingPulse(false);
-    
-    if (isMobile) {
-      setIsInfoTooltipOpen(!isInfoTooltipOpen);
-    }
-    // Removed the onShowHelp() call - info button should only show tooltip
-  };
-
-  const getInstructions = (): BaseInstructions | FirstVisitInstructions => {
-    const baseInstructions: BaseInstructions = {
+  // Memoize instructions to prevent unnecessary recalculations
+  const instructions = useMemo((): InstructionSet => {
+    const baseInstructions = {
       primary: isMobile 
         ? "Drag to look around, pinch to zoom"
         : "Click and drag to explore, scroll to zoom",
@@ -107,9 +70,45 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
     }
 
     return baseInstructions;
-  };
+  }, [isFirstVisit, isMobile]);
 
-  const instructions = getInstructions();
+  // Initialize first visit state only once
+  useEffect(() => {
+    if (!hasInitialized) {
+      const hasVisited = localStorage.getItem('hasVisitedExperience');
+      if (!hasVisited) {
+        setIsFirstVisit(true);
+        localStorage.setItem('hasVisitedExperience', 'true');
+      }
+      setHasInitialized(true);
+    }
+  }, [hasInitialized]);
+
+  // Handle onboarding pulse with stable timing
+  useEffect(() => {
+    if (isFirstVisit && hasInitialized) {
+      const timer = setTimeout(() => {
+        setShowOnboardingPulse(true);
+        
+        const hideTimer = setTimeout(() => {
+          setShowOnboardingPulse(false);
+        }, 5000);
+        
+        return () => clearTimeout(hideTimer);
+      }, 2000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isFirstVisit, hasInitialized]);
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowOnboardingPulse(false);
+    
+    if (isMobile) {
+      setIsInfoTooltipOpen(!isInfoTooltipOpen);
+    }
+  };
 
   return (
     <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
@@ -119,6 +118,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
             {worldName}
           </h2>
         )}
+        
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button
@@ -184,7 +184,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
             sideOffset={8}
           >
             <div className="space-y-3">
-              {isFirstVisit && 'welcome' in instructions && (
+              {instructions.welcome && (
                 <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
                   <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                     theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
@@ -225,6 +225,7 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
           </TooltipContent>
         </Tooltip>
       </div>
+      
       <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
         <Tooltip>
           <TooltipTrigger asChild>
