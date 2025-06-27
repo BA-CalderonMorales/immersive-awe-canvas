@@ -13,8 +13,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 interface TopBarProps {
   worldName: string;
@@ -35,7 +34,17 @@ interface InstructionSet {
   welcome?: string;
 }
 
-const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, onGoHome, isTransitioning, isMobile, onShowHelp }: TopBarProps) => {
+const TopBar = ({ 
+  worldName, 
+  uiColor, 
+  onToggleUiHidden, 
+  onToggleTheme, 
+  theme, 
+  onGoHome, 
+  isTransitioning, 
+  isMobile, 
+  onShowHelp 
+}: TopBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   
   // Use black text in day mode for better visibility against bright backgrounds
@@ -43,10 +52,10 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
   const uiStyle = { color: textColor };
 
   // Stable state management to prevent flickering
+  const [isInitialized, setIsInitialized] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
 
   // Memoize instructions to prevent unnecessary recalculations
   const instructions = useMemo((): InstructionSet => {
@@ -72,21 +81,21 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
     return baseInstructions;
   }, [isFirstVisit, isMobile]);
 
-  // Initialize first visit state only once
+  // Initialize first visit state only once on mount
   useEffect(() => {
-    if (!hasInitialized) {
+    if (!isInitialized) {
       const hasVisited = localStorage.getItem('hasVisitedExperience');
       if (!hasVisited) {
         setIsFirstVisit(true);
         localStorage.setItem('hasVisitedExperience', 'true');
       }
-      setHasInitialized(true);
+      setIsInitialized(true);
     }
-  }, [hasInitialized]);
+  }, [isInitialized]);
 
   // Handle onboarding pulse with stable timing
   useEffect(() => {
-    if (isFirstVisit && hasInitialized) {
+    if (isFirstVisit && isInitialized) {
       const timer = setTimeout(() => {
         setShowOnboardingPulse(true);
         
@@ -99,20 +108,28 @@ const TopBar = ({ worldName, uiColor, onToggleUiHidden, onToggleTheme, theme, on
       
       return () => clearTimeout(timer);
     }
-  }, [isFirstVisit, hasInitialized]);
+  }, [isFirstVisit, isInitialized]);
 
-  const handleInfoClick = (e: React.MouseEvent) => {
+  const handleInfoClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
     setShowOnboardingPulse(false);
     
     if (isMobile) {
       setIsInfoTooltipOpen(!isInfoTooltipOpen);
     }
-  };
+  }, [isMobile, isInfoTooltipOpen]);
 
   return (
-    <div style={uiStyle} className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-      <div key={worldName} className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
+    <div 
+      style={uiStyle} 
+      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${
+        isTransitioning ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      <div 
+        key={worldName} 
+        className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4"
+      >
         {!isMobile && (
           <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
             {worldName}

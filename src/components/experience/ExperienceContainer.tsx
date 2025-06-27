@@ -1,5 +1,5 @@
 
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
 import { useIsMobile } from "@/hooks/use-mobile";

@@ -1,6 +1,14 @@
 
 import { Button } from "@/components/ui/button";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   Drawer,
   DrawerContent,
   DrawerDescription,
@@ -85,10 +93,10 @@ const BottomBar = ({
       {/* Right side: Settings, Help */}
       <div className="flex gap-2 pointer-events-auto">
         {isMobile ? (
-          <Drawer shouldScaleBackground={false} open={isSettingsOpen} onOpenChange={onToggleSettings}>
+          <Sheet open={isSettingsOpen} onOpenChange={onToggleSettings}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <DrawerTrigger asChild>
+                <SheetTrigger asChild>
                   <Button
                     style={uiStyle}
                     className={blendedButtonClasses}
@@ -97,24 +105,24 @@ const BottomBar = ({
                   >
                     <Settings />
                   </Button>
-                </DrawerTrigger>
+                </SheetTrigger>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Scene Settings (Esc)</p>
               </TooltipContent>
             </Tooltip>
-            <DrawerContent>
-              <DrawerHeader className="text-left">
-                <DrawerTitle>Customize Scene</DrawerTitle>
-                <DrawerDescription>
+            <SheetContent side="bottom" className="h-[60vh]">
+              <SheetHeader className="text-left">
+                <SheetTitle>Customize Scene</SheetTitle>
+                <SheetDescription>
                   Tweak the live parameters of the scene. Your changes can be copied.
-                </DrawerDescription>
-              </DrawerHeader>
-              <div className="p-4">
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-4 h-full overflow-y-auto">
                 <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
               </div>
-            </DrawerContent>
-          </Drawer>
+            </SheetContent>
+          </Sheet>
         ) : (
           <Tooltip>
             <TooltipTrigger asChild>
@@ -155,4 +163,3 @@ const BottomBar = ({
 };
 
 export default BottomBar;
-
