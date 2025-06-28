@@ -76,11 +76,34 @@ const ExperienceContainer = ({
   const isMobile = useIsMobile();
   const [showBlurTransition, setShowBlurTransition] = useState(false);
 
+  // Fix: Ensure uiColor updates properly when theme changes by adding explicit logging and dependency tracking
   const uiColor = useMemo(() => {
-    if (!worldData) return 'white';
-    const color = theme === 'day' ? worldData.ui_day_color : worldData.ui_night_color;
-    return color || 'white';
-  }, [worldData, theme]);
+    if (!worldData) {
+      console.log('ExperienceContainer - No worldData, using white');
+      return 'white';
+    }
+    
+    const dayColor = worldData.ui_day_color;
+    const nightColor = worldData.ui_night_color;
+    const selectedColor = theme === 'day' ? dayColor : nightColor;
+    const finalColor = selectedColor || 'white';
+    
+    console.log('ExperienceContainer - uiColor calculation:', {
+      worldSlug: worldData.slug,
+      theme,
+      dayColor,
+      nightColor,
+      selectedColor,
+      finalColor
+    });
+    
+    return finalColor;
+  }, [worldData, theme, worldData?.ui_day_color, worldData?.ui_night_color]);
+
+  // Add effect to log when uiColor changes
+  useEffect(() => {
+    console.log('ExperienceContainer - uiColor changed to:', uiColor, 'for theme:', theme);
+  }, [uiColor, theme]);
 
   const handleBlurTransitionEnd = () => {
     setShowBlurTransition(false);
