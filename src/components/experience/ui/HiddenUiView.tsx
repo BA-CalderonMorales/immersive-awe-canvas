@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { Eye, ChevronDown, ChevronUp, Pointer, Info } from "lucide-react";
+import { Eye, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
@@ -35,7 +35,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               className={`${blendedButtonClasses} shadow-md cursor-pointer`}
               style={uiStyle}
             >
-              <Pointer className="w-6 h-6" />
+              <Eye className="w-6 h-6" />
             </Button>
           </div>
         </TooltipTrigger>
@@ -115,4 +115,3 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 };
 
 export default HiddenUiView;
-
