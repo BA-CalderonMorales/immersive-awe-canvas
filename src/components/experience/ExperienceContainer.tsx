@@ -74,7 +74,7 @@ const ExperienceContainer = ({
   handleWorldTransitionEnd,
 }: ExperienceContainerProps) => {
   const isMobile = useIsMobile();
-  const [showBlurTransition, setShowBlurTransition] = useState(true);
+  const [showBlurTransition, setShowBlurTransition] = useState(false);
 
   const uiColor = useMemo(() => {
     if (!worldData) return 'white';
@@ -86,16 +86,16 @@ const ExperienceContainer = ({
     setShowBlurTransition(false);
   };
 
-  // Reset blur transition on world change
+  // Only show blur transition during world changes, not on initial load
   useEffect(() => {
-    if (isTransitioning) {
+    if (isTransitioning && !showEntryTransition) {
       setShowBlurTransition(true);
       const timer = setTimeout(() => {
         setShowBlurTransition(false);
-      }, 600);
+      }, 300);
       return () => clearTimeout(timer);
     }
-  }, [isTransitioning, worldData?.slug]);
+  }, [isTransitioning, showEntryTransition]);
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
