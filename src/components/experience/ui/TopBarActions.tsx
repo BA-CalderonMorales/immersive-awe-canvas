@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { EyeOff, Sun, Moon, Home } from "lucide-react";
+import { EyeOff, Sun, Moon } from "lucide-react";
 import LikeDialog from "./LikeDialog";
 
 interface TopBarActionsProps {
@@ -9,7 +9,6 @@ interface TopBarActionsProps {
   blendedButtonClasses: string;
   onToggleUiHidden: () => void;
   onToggleTheme: () => void;
-  onGoHome: () => void;
   theme: 'day' | 'night';
 }
 
@@ -18,7 +17,6 @@ const TopBarActions = ({
   blendedButtonClasses,
   onToggleUiHidden,
   onToggleTheme,
-  onGoHome,
   theme,
 }: TopBarActionsProps) => {
   return (
@@ -59,22 +57,6 @@ const TopBarActions = ({
         uiStyle={uiStyle}
         blendedButtonClasses={blendedButtonClasses}
       />
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            style={uiStyle}
-            onClick={onGoHome}
-            className={blendedButtonClasses}
-            size="icon"
-            aria-label="Go Home"
-          >
-            <Home />
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Go Home (G)</p>
-        </TooltipContent>
-      </Tooltip>
     </div>
   );
 };

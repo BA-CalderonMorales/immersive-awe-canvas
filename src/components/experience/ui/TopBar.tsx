@@ -1,7 +1,11 @@
+
 import { useState, useEffect } from "react";
 import { useInstructions } from "@/hooks/useInstructions";
 import InfoTooltip from "./InfoTooltip";
 import TopBarActions from "./TopBarActions";
+import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { Home } from "lucide-react";
 
 interface TopBarProps {
   worldName: string;
@@ -65,6 +69,23 @@ const TopBar = ({
       }`}
     >
       <div className="flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              style={uiStyle}
+              onClick={onGoHome}
+              className={blendedButtonClasses}
+              size="icon"
+              aria-label="Go Home"
+            >
+              <Home />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Go Home (G)</p>
+          </TooltipContent>
+        </Tooltip>
+
         {!isMobile && (
           <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
             {worldName}
@@ -89,7 +110,6 @@ const TopBar = ({
         blendedButtonClasses={blendedButtonClasses}
         onToggleUiHidden={onToggleUiHidden}
         onToggleTheme={onToggleTheme}
-        onGoHome={onGoHome}
         theme={theme}
       />
     </div>
