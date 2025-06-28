@@ -47,16 +47,18 @@ export const githubIssueSchema = z.object({
 });
 
 // Scene settings validation schema
+import { HEX_COLOR_REGEX } from './utils';
+
 export const sceneSettingsSchema = z.object({
   mainObjectColor: z.string()
-    .regex(/^#[0-9A-Fa-f]{6}$/, 'Invalid color format'),
+    .regex(HEX_COLOR_REGEX, 'Invalid color format'),
   
   material: z.object({
     materialType: z.enum(['standard', 'physical', 'toon', 'lambert', 'phong', 'normal', 'basic', 'matcap']).optional(),
     wireframe: z.boolean().optional(),
     roughness: z.number().min(0).max(1).optional(),
     metalness: z.number().min(0).max(1).optional(),
-    emissive: z.string().regex(/^#[0-9A-Fa-f]{6}$/).optional(),
+    emissive: z.string().regex(HEX_COLOR_REGEX).optional(),
     emissiveIntensity: z.number().min(0).max(10).optional(),
     transparent: z.boolean().optional(),
     opacity: z.number().min(0).max(1).optional(),

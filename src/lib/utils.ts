@@ -20,3 +20,9 @@ export function darkenColor(hex: string, amount: number): string {
   const b = Math.max(0, Math.round((num & 0xff) * (1 - amount)))
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
 }
+
+export const HEX_COLOR_REGEX = /^#(?:[0-9a-fA-F]{3}){1,2}$/
+
+export function isValidHexColor(color: string): boolean {
+  return HEX_COLOR_REGEX.test(color)
+}

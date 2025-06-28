@@ -108,6 +108,7 @@ If you find this project useful and want to support future development, consider
     -   `C`: Copy Scene Configuration
 -   **Live Scene Editor:** Click the settings icon to open a control panel (`lil-gui`) and adjust scene parameters like colors, materials, and object properties in real-time. The editor appears in a resizable side panel on desktop and a drawer on mobile. Now with more controls for materials and environment backgrounds!
 -   **Copy Configuration:** Easily copy the JSON configuration of your customized scene to your clipboard.
+-   **Input Validation:** Scene editor checks that color values are valid hex strings.
 -   **Supabase Integration:** World data is fetched from a Supabase backend.
 -   **Responsive UI:** The interface is designed to work across different screen sizes with optimized layouts for mobile and desktop.
 -   **Stable Rendering:** Improved theme switching without visual artifacts or rendering issues.

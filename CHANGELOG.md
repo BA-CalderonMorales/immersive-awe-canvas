@@ -33,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Informational modal in scene settings panel with usage tips.
 - Added zoom controls via mouse wheel/pinch and set zoom limits.
 - Added several new "environment" presets for scene backgrounds (sunset, dawn, night, etc.).
+- Validation helper `isValidHexColor` for consistent color checks.
 - GitHub Actions workflow (`.github/workflows/build-and-deploy.yml`) to automatically build and deploy the application to GitHub Pages on pushes to the `main` branch.
 - Configuration in `vite.config.ts` to set the `base` path for production builds, enabling correct asset loading on GitHub Pages.
 - Updated `src/App.tsx` to configure `BrowserRouter` with a dynamic `basename` to ensure correct client-side routing on GitHub Pages.
