@@ -36,7 +36,7 @@ const InfoTooltip = ({
 }: InfoTooltipProps) => {
   const [isStable, setIsStable] = useState(false);
 
-  // Ensure component is stable before showing animations
+  // Ensure component is stable before enabling interactions
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsStable(true);
@@ -45,6 +45,8 @@ const InfoTooltip = ({
   }, []);
 
   const handleInfoClick = useCallback((e: React.MouseEvent) => {
+    if (!isStable) return;
+    
     e.stopPropagation();
     if (setShowOnboardingPulse) {
       setShowOnboardingPulse(false);
@@ -53,21 +55,7 @@ const InfoTooltip = ({
     if (isMobile && setIsInfoTooltipOpen) {
       setIsInfoTooltipOpen(!isInfoTooltipOpen);
     }
-  }, [isMobile, isInfoTooltipOpen, setIsInfoTooltipOpen, setShowOnboardingPulse]);
-
-  if (!isStable) {
-    return (
-      <Button
-        style={uiStyle}
-        className={`${blendedButtonClasses} flex-shrink-0`}
-        size="icon"
-        aria-label="Information and Controls"
-        disabled
-      >
-        <Info className="w-4 h-4" />
-      </Button>
-    );
-  }
+  }, [isMobile, isInfoTooltipOpen, setIsInfoTooltipOpen, setShowOnboardingPulse, isStable]);
 
   return (
     <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>
@@ -76,8 +64,10 @@ const InfoTooltip = ({
           style={uiStyle}
           onClick={handleInfoClick}
           className={`${blendedButtonClasses} transition-all duration-300 ${
-            showOnboardingPulse ? 'animate-pulse ring-2 ring-blue-400/50' : ''
-          } flex-shrink-0`}
+            showOnboardingPulse && isStable ? 'animate-pulse ring-2 ring-blue-400/50' : ''
+          } flex-shrink-0 ${
+            isStable ? 'opacity-100' : 'opacity-70 pointer-events-none'
+          }`}
           size="icon"
           aria-label="Information and Controls"
         >

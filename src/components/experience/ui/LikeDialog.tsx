@@ -22,7 +22,7 @@ interface LikeDialogProps {
 const LikeDialog = ({ uiStyle, blendedButtonClasses }: LikeDialogProps) => {
   const [isStable, setIsStable] = useState(false);
 
-  // Ensure component is stable before showing
+  // Ensure component is stable before enabling interactions
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsStable(true);
@@ -30,28 +30,17 @@ const LikeDialog = ({ uiStyle, blendedButtonClasses }: LikeDialogProps) => {
     return () => clearTimeout(timer);
   }, []);
 
-  if (!isStable) {
-    return (
-      <Button
-        style={uiStyle}
-        className={`transition-colors duration-300 ${blendedButtonClasses} flex-shrink-0`}
-        size="icon"
-        aria-label="Like this project"
-        disabled
-      >
-        <Heart className="fill-current" />
-      </Button>
-    );
-  }
-
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
           style={uiStyle}
-          className={`transition-colors duration-300 ${blendedButtonClasses} flex-shrink-0`}
+          className={`transition-all duration-300 ${blendedButtonClasses} flex-shrink-0 ${
+            isStable ? 'opacity-100' : 'opacity-70 pointer-events-none'
+          }`}
           size="icon"
           aria-label="Like this project"
+          disabled={!isStable}
         >
           <Heart className="fill-current" />
         </Button>
