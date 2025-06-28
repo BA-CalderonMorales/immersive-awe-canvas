@@ -96,6 +96,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                   variant="ghost"
                   size="icon"
                   className="w-4 h-4 p-0 hover:bg-transparent"
+                  style={{ color: uiColor }}
                 >
                   {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
                 </Button>
