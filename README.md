@@ -46,6 +46,13 @@ This will start the application, and you can view it in your browser at the loca
     This command serves the built app locally so you can verify everything looks correct.
 </details>
 
+### Running Tests
+
+```bash
+npm test
+npm run typecheck
+```
+
 <details>
 <summary><b>Deployment</b></summary>
 
