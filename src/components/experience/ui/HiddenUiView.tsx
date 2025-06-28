@@ -19,7 +19,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
   // Use consistent button styling matching the main UI
-  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 shadow-lg backdrop-blur-sm";
+  const blendedButtonClasses = "border-0 bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
@@ -39,15 +39,14 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
       {/* Show UI Button - Top Right - ALWAYS VISIBLE */}
-      <div className="absolute top-4 right-4 pointer-events-auto">
+      <div className="absolute top-4 right-4 pointer-events-auto z-[60]">
         <Tooltip open={showUiHint}>
           <TooltipTrigger asChild>
             <Button
               size="icon"
               aria-label="Show UI"
               onClick={handleToggleUi}
-              className={`${blendedButtonClasses} cursor-pointer`}
-              style={uiStyle}
+              className={`${blendedButtonClasses} cursor-pointer text-white`}
             >
               <Eye className="w-6 h-6" />
             </Button>
@@ -60,14 +59,13 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 
       {/* Info icon/button - Bottom Left - ALWAYS VISIBLE ON DESKTOP */}
       {!isMobile && (
-        <div className="absolute bottom-4 left-4 pointer-events-auto">
+        <div className="absolute bottom-4 left-4 pointer-events-auto z-[60]">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer`}
-                style={uiStyle}
+                className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer text-white`}
                 onClick={handleInfoClick}
               >
                 <Info className="w-5 h-5" />
@@ -83,8 +81,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
       {/* Keyboard shortcuts panel - Only show on desktop/tablet when visible */}
       {!isMobile && isVisible && (
         <div
-          className={`absolute bottom-4 left-4 pointer-events-auto text-xs font-mono rounded-md shadow-lg backdrop-blur-sm min-w-[280px] ${
-            theme === 'day' ? 'bg-white/40 text-black border border-gray-200/50' : 'bg-black/40 text-slate-200 border border-gray-700/50'
+          className={`absolute bottom-4 left-4 pointer-events-auto text-xs font-mono rounded-md shadow-lg backdrop-blur-sm min-w-[280px] z-[60] ${
+            theme === 'day' ? 'bg-white/90 text-black border border-gray-200/50' : 'bg-black/90 text-slate-200 border border-gray-700/50'
           }`}
         >
           <Collapsible open={isExpanded} onOpenChange={toggleExpanded}>
