@@ -35,14 +35,14 @@ const TopBar = ({
   const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
-  // Simplified state management
+  // Simple state management - always show buttons
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
 
   const instructions = useInstructions(isFirstVisit, isMobile);
 
-  // Check for first visit only once
+  // Check for first visit
   useEffect(() => {
     const hasVisited = localStorage.getItem('hasVisitedExperience');
     if (!hasVisited) {
@@ -50,18 +50,14 @@ const TopBar = ({
       localStorage.setItem('hasVisitedExperience', 'true');
       
       // Show onboarding pulse after a short delay
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         setShowOnboardingPulse(true);
         
         // Hide pulse after 5 seconds
-        const hideTimer = setTimeout(() => {
+        setTimeout(() => {
           setShowOnboardingPulse(false);
         }, 5000);
-        
-        return () => clearTimeout(hideTimer);
       }, 2000);
-      
-      return () => clearTimeout(timer);
     }
   }, []);
 
@@ -72,10 +68,7 @@ const TopBar = ({
         isTransitioning ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <div 
-        key={worldName} 
-        className="animate-fade-in [animation-delay:0.5s] flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4"
-      >
+      <div className="flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
         {!isMobile && (
           <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
             {worldName}
