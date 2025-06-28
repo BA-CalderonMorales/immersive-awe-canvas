@@ -49,7 +49,7 @@ const ExperienceUI = ({
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
 
-  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
+  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint, 'uiColor:', uiColor);
 
   // Event handlers with logging
   const handleToggleTheme = () => {
@@ -141,7 +141,7 @@ const ExperienceUI = ({
           {/* Keyboard hint for desktop */}
           {!isMobile && (
             <div 
-              style={{ color: theme === 'day' ? '#000000' : uiColor }} 
+              style={{ color: uiColor }} 
               className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
             >
               Press SPACE to change time of day

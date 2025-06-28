@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface LikeDialogProps {
-  uiStyle: { color: string };
+  uiStyle: { color: string; borderColor: string };
   blendedButtonClasses: string;
 }
 

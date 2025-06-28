@@ -4,7 +4,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { EyeOff, Sun, Moon, Home } from "lucide-react";
 
 interface TopBarActionsProps {
-  uiStyle: { color: string };
+  uiStyle: { color: string; borderColor: string };
   blendedButtonClasses: string;
   onToggleUiHidden: () => void;
   onToggleTheme: () => void;

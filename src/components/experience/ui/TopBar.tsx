@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { getContrastingTextColor } from "@/lib/utils";
 import { useInstructions } from "@/hooks/useInstructions";
 import LikeDialog from "./LikeDialog";
 import InfoTooltip from "./InfoTooltip";
@@ -29,11 +28,10 @@ const TopBar = ({
   isMobile, 
   onShowHelp 
 }: TopBarProps) => {
-  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
+  const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   
-  // Use black text in day mode and choose high-contrast color at night
-  const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
-  const uiStyle = { color: textColor };
+  // Use scene-specific UI colors for proper contrast
+  const uiStyle = { color: uiColor, borderColor: uiColor };
 
   // Simple state management - always show buttons
   const [isFirstVisit, setIsFirstVisit] = useState(false);

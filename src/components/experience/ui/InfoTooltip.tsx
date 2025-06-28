@@ -12,7 +12,7 @@ interface InstructionSet {
 }
 
 interface InfoTooltipProps {
-  uiStyle: { color: string };
+  uiStyle: { color: string; borderColor: string };
   blendedButtonClasses: string;
   showOnboardingPulse: boolean;
   isInfoTooltipOpen: boolean;
