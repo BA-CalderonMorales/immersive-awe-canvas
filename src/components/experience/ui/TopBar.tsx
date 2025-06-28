@@ -1,19 +1,9 @@
 
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { EyeOff, Sun, Moon, Home, Heart, Link, Coffee, Info } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
+import { useInstructions } from "@/hooks/useInstructions";
+import LikeDialog from "./LikeDialog";
+import InfoTooltip from "./InfoTooltip";
+import TopBarActions from "./TopBarActions";
 
 interface TopBarProps {
   worldName: string;
@@ -25,13 +15,6 @@ interface TopBarProps {
   isTransitioning: boolean;
   isMobile: boolean;
   onShowHelp: () => void;
-}
-
-interface InstructionSet {
-  primary: string;
-  secondary: string;
-  tertiary: string;
-  welcome?: string;
 }
 
 const TopBar = ({ 
@@ -51,51 +34,21 @@ const TopBar = ({
   const textColor = theme === 'day' ? '#000000' : uiColor;
   const uiStyle = { color: textColor };
 
-  // Stable state management to prevent flickering
-  const [isInitialized, setIsInitialized] = useState(false);
+  // Simplified state management
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
 
-  // Memoize instructions to prevent unnecessary recalculations
-  const instructions = useMemo((): InstructionSet => {
-    const baseInstructions = {
-      primary: isMobile 
-        ? "Drag to look around, pinch to zoom"
-        : "Click and drag to explore, scroll to zoom",
-      secondary: isMobile
-        ? "Use navigation arrows to discover new worlds"
-        : "Press N/P or use arrows to travel between worlds",
-      tertiary: isMobile
-        ? "Tap the theme button to switch day/night"
-        : "Press Space or theme button to toggle day/night"
-    };
-
-    if (isFirstVisit) {
-      return {
-        ...baseInstructions,
-        welcome: "Welcome to your journey through immersive worlds!"
-      };
-    }
-
-    return baseInstructions;
-  }, [isFirstVisit, isMobile]);
+  const instructions = useInstructions(isFirstVisit, isMobile);
 
   // Initialize first visit state only once on mount
   useEffect(() => {
-    if (!isInitialized) {
-      const hasVisited = localStorage.getItem('hasVisitedExperience');
-      if (!hasVisited) {
-        setIsFirstVisit(true);
-        localStorage.setItem('hasVisitedExperience', 'true');
-      }
-      setIsInitialized(true);
-    }
-  }, [isInitialized]);
-
-  // Handle onboarding pulse with stable timing
-  useEffect(() => {
-    if (isFirstVisit && isInitialized) {
+    const hasVisited = localStorage.getItem('hasVisitedExperience');
+    if (!hasVisited) {
+      setIsFirstVisit(true);
+      localStorage.setItem('hasVisitedExperience', 'true');
+      
+      // Show onboarding pulse for first-time visitors
       const timer = setTimeout(() => {
         setShowOnboardingPulse(true);
         
@@ -108,16 +61,7 @@ const TopBar = ({
       
       return () => clearTimeout(timer);
     }
-  }, [isFirstVisit, isInitialized]);
-
-  const handleInfoClick = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation();
-    setShowOnboardingPulse(false);
-    
-    if (isMobile) {
-      setIsInfoTooltipOpen(!isInfoTooltipOpen);
-    }
-  }, [isMobile, isInfoTooltipOpen]);
+  }, []);
 
   return (
     <div 
@@ -136,163 +80,32 @@ const TopBar = ({
           </h2>
         )}
         
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              style={uiStyle}
-              className={`transition-colors duration-300 ${blendedButtonClasses} flex-shrink-0`}
-              size="icon"
-              aria-label="Like this project"
-            >
-              <Heart className="fill-current" />
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                  <Heart className="h-6 w-6 text-primary" />
-              </div>
-              <div className="text-center">
-                  <AlertDialogTitle>Like this project?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                      This is a passion project by one developer. Features like saving and sharing worlds are on the roadmap. Your support helps bring them to life!
-                  </AlertDialogDescription>
-              </div>
-            </AlertDialogHeader>
-            <div className="grid gap-4 py-4">
-                <AlertDialogAction asChild>
-                    <a href="https://buymeacoffee.com/brandoncalderonmorales" target="_blank" rel="noopener noreferrer">
-                        <Coffee className="mr-2" /> Buy me a coffee
-                    </a>
-                </AlertDialogAction>
-                <AlertDialogAction asChild>
-                    <a href="https://www.linkedin.com/in/bcalderonmorales-cmoe/" target="_blank" rel="noopener noreferrer">
-                        <Link className="mr-2" /> Connect on LinkedIn
-                    </a>
-                </AlertDialogAction>
-            </div>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Maybe later</AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <LikeDialog 
+          uiStyle={uiStyle}
+          blendedButtonClasses={blendedButtonClasses}
+        />
 
-        <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              onClick={handleInfoClick}
-              className={`${blendedButtonClasses} transition-all duration-300 ${
-                showOnboardingPulse ? 'animate-pulse ring-2 ring-blue-400/50' : ''
-              } flex-shrink-0`}
-              size="icon"
-              aria-label="Information and Controls"
-            >
-              <Info className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent 
-            side="bottom" 
-            className={`max-w-xs p-4 rounded-lg shadow-2xl border-0 ${
-              theme === 'day' 
-                ? 'bg-white/95 text-gray-800 backdrop-blur-md' 
-                : 'bg-gray-900/95 text-gray-100 backdrop-blur-md'
-            }`}
-            sideOffset={8}
-          >
-            <div className="space-y-3">
-              {instructions.welcome && (
-                <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
-                  <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                    theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
-                  }`} />
-                  <p className="text-sm font-semibold leading-relaxed">
-                    {instructions.welcome}
-                  </p>
-                </div>
-              )}
-              
-              <div className="flex items-start gap-2">
-                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
-                }`} />
-                <p className="text-sm font-medium leading-relaxed">
-                  {instructions.primary}
-                </p>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
-                }`} />
-                <p className="text-sm leading-relaxed opacity-90">
-                  {instructions.secondary}
-                </p>
-              </div>
-              
-              <div className="flex items-start gap-2">
-                <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
-                  theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
-                }`} />
-                <p className="text-sm leading-relaxed opacity-90">
-                  {instructions.tertiary}
-                </p>
-              </div>
-            </div>
-          </TooltipContent>
-        </Tooltip>
+        <InfoTooltip 
+          uiStyle={uiStyle}
+          blendedButtonClasses={blendedButtonClasses}
+          showOnboardingPulse={showOnboardingPulse}
+          isInfoTooltipOpen={isInfoTooltipOpen}
+          setIsInfoTooltipOpen={setIsInfoTooltipOpen}
+          setShowOnboardingPulse={setShowOnboardingPulse}
+          isMobile={isMobile}
+          instructions={instructions}
+          theme={theme}
+        />
       </div>
       
-      <div className="flex items-center gap-2 pointer-events-auto flex-shrink-0">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              size="icon"
-              aria-label="Hide UI"
-              onClick={onToggleUiHidden}
-              className={blendedButtonClasses}
-              style={uiStyle}
-            >
-              <EyeOff className="w-6 h-6" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Hide UI (V)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              onClick={onToggleTheme}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Toggle Theme"
-            >
-              {theme === 'day' ? <Moon /> : <Sun />}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Toggle Theme (Space)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              onClick={onGoHome}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Go Home"
-            >
-              <Home />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Go Home (G)</p>
-          </TooltipContent>
-        </Tooltip>
-      </div>
+      <TopBarActions 
+        uiStyle={uiStyle}
+        blendedButtonClasses={blendedButtonClasses}
+        onToggleUiHidden={onToggleUiHidden}
+        onToggleTheme={onToggleTheme}
+        onGoHome={onGoHome}
+        theme={theme}
+      />
     </div>
   );
 };
