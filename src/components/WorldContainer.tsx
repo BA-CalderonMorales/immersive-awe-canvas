@@ -53,7 +53,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
     >
       {dimensions.width > 0 && dimensions.height > 0 && (
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 75 }}
+          camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
           style={{
             cursor: isDragging ? 'grabbing' : 'grab',
@@ -76,8 +76,8 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             enablePan={false}
             autoRotate={!isLocked}
             autoRotateSpeed={0.5}
-            minDistance={2}
-            maxDistance={25}
+            minDistance={8}
+            maxDistance={50}
             onStart={() => setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
           />
