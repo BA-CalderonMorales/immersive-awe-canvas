@@ -4,6 +4,7 @@ import { SceneConfig } from '@/types/scene';
 import DynamicBackground from './DynamicBackground';
 import DynamicLights from './DynamicLights';
 import DynamicObject from './DynamicObject';
+import ObjectManager from './ObjectManager';
 
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
@@ -25,6 +26,7 @@ const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
       <DynamicLights lights={themeConfig.lights} />
       <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
       <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
+      <ObjectManager sceneConfig={sceneConfig} isLocked={isLocked} />
     </>
   );
 };
