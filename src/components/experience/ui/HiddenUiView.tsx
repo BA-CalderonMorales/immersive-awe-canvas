@@ -19,63 +19,63 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
   // Use consistent button styling matching the main UI
-  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
+  const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60 shadow-lg backdrop-blur-sm";
   const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
+  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible);
+
   return (
-    <>
-      <Tooltip open={showUiHint}>
-        <TooltipTrigger asChild>
-          <div className="fixed top-4 right-4 z-50 pointer-events-auto">
+    <div className="fixed inset-0 z-50 pointer-events-none">
+      {/* Show UI Button - Top Right */}
+      <div className="absolute top-4 right-4 pointer-events-auto">
+        <Tooltip open={showUiHint}>
+          <TooltipTrigger asChild>
             <Button
               size="icon"
               aria-label="Show UI"
               onClick={onToggleUiHidden}
-              className={`${blendedButtonClasses} shadow-md cursor-pointer`}
+              className={`${blendedButtonClasses} cursor-pointer`}
               style={uiStyle}
             >
               <Eye className="w-6 h-6" />
             </Button>
-          </div>
-        </TooltipTrigger>
-        <TooltipContent side="bottom" className="pointer-events-none">
-          <p>Show UI (Press V)</p>
-        </TooltipContent>
-      </Tooltip>
+          </TooltipTrigger>
+          <TooltipContent side="bottom" className="pointer-events-none">
+            <p>Show UI (Press V)</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
 
-      {/* Info icon/button when shortcuts are hidden */}
+      {/* Info icon/button - Bottom Left */}
       {!isMobile && !isVisible && (
-        <div className="fixed bottom-4 left-4 z-50 pointer-events-auto">
+        <div className="absolute bottom-4 left-4 pointer-events-auto">
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-6 h-6 p-0 ${blendedButtonClasses} backdrop-blur-sm rounded-md transition-colors ${isMobile ? 'cursor-default' : 'cursor-pointer'}`}
+                className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer`}
                 style={uiStyle}
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!isMobile) {
-                    toggleExpanded();
-                  }
+                  toggleExpanded();
                 }}
-                disabled={isMobile}
               >
-                <Info className="w-4 h-4" />
+                <Info className="w-5 h-5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{isMobile ? 'Press M to show keyboard shortcuts menu' : 'Click to show keyboard shortcuts or press M'}</p>
+              <p>Click to show keyboard shortcuts or press M</p>
             </TooltipContent>
           </Tooltip>
         </div>
       )}
       
-      {/* Only show shortcuts on desktop/tablet when visible */}
+      {/* Keyboard shortcuts panel - Only show on desktop/tablet when visible */}
       {!isMobile && isVisible && (
         <div
-          className={`fixed bottom-4 left-4 z-50 pointer-events-auto text-xs font-mono rounded-md shadow-lg backdrop-blur-sm min-w-[280px] ${
+          className={`absolute bottom-4 left-4 pointer-events-auto text-xs font-mono rounded-md shadow-lg backdrop-blur-sm min-w-[280px] ${
             theme === 'day' ? 'bg-white/40 text-black border border-gray-200/50' : 'bg-black/40 text-slate-200 border border-gray-700/50'
           }`}
         >
@@ -110,7 +110,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
           </Collapsible>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
