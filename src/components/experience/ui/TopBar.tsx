@@ -73,11 +73,6 @@ const TopBar = ({
           </h2>
         )}
         
-        <LikeDialog 
-          uiStyle={uiStyle}
-          blendedButtonClasses={blendedButtonClasses}
-        />
-
         <InfoTooltip 
           uiStyle={uiStyle}
           blendedButtonClasses={blendedButtonClasses}

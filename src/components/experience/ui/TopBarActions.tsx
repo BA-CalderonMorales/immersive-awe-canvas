@@ -1,7 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { EyeOff, Sun, Moon, Home } from "lucide-react";
+import { EyeOff, Sun, Moon, Home, Heart } from "lucide-react";
+import LikeDialog from "./LikeDialog";
 
 interface TopBarActionsProps {
   uiStyle: { color: string; borderColor: string };
@@ -70,6 +71,10 @@ const TopBarActions = ({
           <p>Go Home (G)</p>
         </TooltipContent>
       </Tooltip>
+      <LikeDialog 
+        uiStyle={uiStyle}
+        blendedButtonClasses={blendedButtonClasses}
+      />
     </div>
   );
 };
