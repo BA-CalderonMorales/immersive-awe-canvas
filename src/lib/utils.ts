@@ -20,3 +20,7 @@ export function darkenColor(hex: string, amount: number): string {
   const b = Math.max(0, Math.round((num & 0xff) * (1 - amount)))
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`
 }
+
+export function isHexColor(value: string): boolean {
+  return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value)
+}

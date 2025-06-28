@@ -111,6 +111,7 @@ If you find this project useful and want to support future development, consider
 -   **Supabase Integration:** World data is fetched from a Supabase backend.
 -   **Responsive UI:** The interface is designed to work across different screen sizes with optimized layouts for mobile and desktop.
 -   **Stable Rendering:** Improved theme switching without visual artifacts or rendering issues.
+-   **Color Utilities:** Functions to lighten, darken, and validate hex colors.
 </details>
 
 <details>
