@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lightenColor, darkenColor, isHexColor } from './utils';
+import { lightenColor, darkenColor, isHexColor, getContrastingTextColor } from './utils';
 
 describe('color utilities', () => {
   it('lightens black by 50%', () => {
@@ -15,5 +15,13 @@ describe('color utilities', () => {
     expect(isHexColor('#123ABC')).toBe(true);
     expect(isHexColor('123456')).toBe(false);
     expect(isHexColor('#12G')).toBe(false);
+  });
+
+  it('returns black text for light backgrounds', () => {
+    expect(getContrastingTextColor('#ffffff')).toBe('#000000');
+  });
+
+  it('returns white text for dark backgrounds', () => {
+    expect(getContrastingTextColor('#000000')).toBe('#ffffff');
   });
 });

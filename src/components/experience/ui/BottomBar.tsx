@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SceneControls from "@/components/scene/SceneControls";
+import { getContrastingTextColor } from "@/lib/utils";
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search } from "lucide-react";
 
@@ -48,8 +49,8 @@ const BottomBar = ({
 }: BottomBarProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   
-  // Use black text/icons in day mode for better visibility against bright backgrounds
-  const textColor = theme === 'day' ? '#000000' : uiColor;
+  // Use black text/icons in day mode and choose high-contrast color at night
+  const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
   return (

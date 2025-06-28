@@ -5,6 +5,7 @@ import { Eye, ChevronDown, ChevronUp, Pointer, Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
+import { getContrastingTextColor } from "@/lib/utils";
 
 interface HiddenUiViewProps {
   onToggleUiHidden: () => void;
@@ -19,7 +20,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 
   // Use consistent button styling matching the main UI
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
-  const textColor = theme === 'day' ? '#000000' : uiColor;
+  const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
   return (
