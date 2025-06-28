@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState, useEffect } from "react";
 
 interface InstructionSet {
   primary: string;
@@ -34,14 +34,40 @@ const InfoTooltip = ({
   instructions,
   theme,
 }: InfoTooltipProps) => {
+  const [isStable, setIsStable] = useState(false);
+
+  // Ensure component is stable before showing animations
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsStable(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleInfoClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
-    setShowOnboardingPulse(false);
+    if (setShowOnboardingPulse) {
+      setShowOnboardingPulse(false);
+    }
     
-    if (isMobile) {
+    if (isMobile && setIsInfoTooltipOpen) {
       setIsInfoTooltipOpen(!isInfoTooltipOpen);
     }
   }, [isMobile, isInfoTooltipOpen, setIsInfoTooltipOpen, setShowOnboardingPulse]);
+
+  if (!isStable) {
+    return (
+      <Button
+        style={uiStyle}
+        className={`${blendedButtonClasses} flex-shrink-0`}
+        size="icon"
+        aria-label="Information and Controls"
+        disabled
+      >
+        <Info className="w-4 h-4" />
+      </Button>
+    );
+  }
 
   return (
     <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>

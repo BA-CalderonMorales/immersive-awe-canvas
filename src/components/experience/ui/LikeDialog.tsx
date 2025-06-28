@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Heart, Coffee, Link } from "lucide-react";
+import { useState, useEffect } from "react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +20,30 @@ interface LikeDialogProps {
 }
 
 const LikeDialog = ({ uiStyle, blendedButtonClasses }: LikeDialogProps) => {
+  const [isStable, setIsStable] = useState(false);
+
+  // Ensure component is stable before showing
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsStable(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!isStable) {
+    return (
+      <Button
+        style={uiStyle}
+        className={`transition-colors duration-300 ${blendedButtonClasses} flex-shrink-0`}
+        size="icon"
+        aria-label="Like this project"
+        disabled
+      >
+        <Heart className="fill-current" />
+      </Button>
+    );
+  }
+
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

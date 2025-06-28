@@ -34,21 +34,29 @@ const TopBar = ({
   const textColor = theme === 'day' ? '#000000' : uiColor;
   const uiStyle = { color: textColor };
 
-  // Simplified state management
+  // Stable state management with proper initialization
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
 
   const instructions = useInstructions(isFirstVisit, isMobile);
 
-  // Initialize first visit state only once on mount
+  // Initialize first visit state with stable timing
   useEffect(() => {
-    const hasVisited = localStorage.getItem('hasVisitedExperience');
-    if (!hasVisited) {
-      setIsFirstVisit(true);
-      localStorage.setItem('hasVisitedExperience', 'true');
-      
-      // Show onboarding pulse for first-time visitors
+    if (!isInitialized) {
+      const hasVisited = localStorage.getItem('hasVisitedExperience');
+      if (!hasVisited) {
+        setIsFirstVisit(true);
+        localStorage.setItem('hasVisitedExperience', 'true');
+      }
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
+
+  // Show onboarding pulse with stable timing
+  useEffect(() => {
+    if (isFirstVisit && isInitialized) {
       const timer = setTimeout(() => {
         setShowOnboardingPulse(true);
         
@@ -61,7 +69,7 @@ const TopBar = ({
       
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [isFirstVisit, isInitialized]);
 
   return (
     <div 
