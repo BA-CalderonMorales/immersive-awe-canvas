@@ -35,29 +35,29 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     
     switch (object.type) {
       case 'box':
-        return <boxGeometry args={args} />;
+        return <boxGeometry args={args as [number?, number?, number?, number?, number?, number?]} />;
       case 'sphere':
-        return <sphereGeometry args={args} />;
+        return <sphereGeometry args={args as [number?, number?, number?, number?, number?, number?, number?]} />;
       case 'cylinder':
-        return <cylinderGeometry args={args} />;
+        return <cylinderGeometry args={args as [number?, number?, number?, number?, number?, boolean?, number?, number?]} />;
       case 'cone':
-        return <coneGeometry args={args} />;
+        return <coneGeometry args={args as [number?, number?, number?, number?, boolean?, number?, number?]} />;
       case 'torus':
-        return <torusGeometry args={args} />;
+        return <torusGeometry args={args as [number?, number?, number?, number?, number?]} />;
       case 'dodecahedron':
-        return <dodecahedronGeometry args={args} />;
+        return <dodecahedronGeometry args={args as [number?, number?]} />;
       case 'icosahedron':
-        return <icosahedronGeometry args={args} />;
+        return <icosahedronGeometry args={args as [number?, number?]} />;
       case 'octahedron':
-        return <octahedronGeometry args={args} />;
+        return <octahedronGeometry args={args as [number?, number?]} />;
       case 'tetrahedron':
-        return <tetrahedronGeometry args={args} />;
+        return <tetrahedronGeometry args={args as [number?, number?]} />;
       case 'plane':
-        return <planeGeometry args={args} />;
+        return <planeGeometry args={args as [number?, number?, number?, number?]} />;
       case 'ring':
-        return <ringGeometry args={args} />;
+        return <ringGeometry args={args as [number?, number?, number?, number?, number?, number?]} />;
       case 'torusKnot':
-        return <torusKnotGeometry args={args} />;
+        return <torusKnotGeometry args={args as [number?, number?, number?, number?, number?, number?]} />;
       default:
         return <boxGeometry args={[1, 1, 1]} />;
     }
@@ -130,20 +130,20 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   );
 };
 
-const getGeometryArgs = (type: SceneObject['type']): any[] => {
+const getGeometryArgs = (type: SceneObject['type']): number[] => {
   switch (type) {
-    case 'box': return [1, 1, 1];
-    case 'sphere': return [0.5, 32, 32];
-    case 'cylinder': return [0.5, 0.5, 1, 32];
-    case 'cone': return [0.5, 1, 32];
-    case 'torus': return [0.4, 0.1, 16, 100];
-    case 'dodecahedron': return [0.5, 0];
-    case 'icosahedron': return [0.5, 0];
-    case 'octahedron': return [0.5, 0];
-    case 'tetrahedron': return [0.5, 0];
-    case 'plane': return [1, 1];
-    case 'ring': return [0.2, 0.5, 32];
-    case 'torusKnot': return [0.4, 0.15, 128, 16];
+    case 'box': return [1, 1, 1]; // width, height, depth
+    case 'sphere': return [0.5, 32, 32]; // radius, widthSegments, heightSegments
+    case 'cylinder': return [0.5, 0.5, 1, 32]; // radiusTop, radiusBottom, height, radialSegments
+    case 'cone': return [0.5, 1, 32]; // radius, height, radialSegments
+    case 'torus': return [0.4, 0.1, 16, 100]; // radius, tube, radialSegments, tubularSegments
+    case 'dodecahedron': return [0.5, 0]; // radius, detail
+    case 'icosahedron': return [0.5, 0]; // radius, detail
+    case 'octahedron': return [0.5, 0]; // radius, detail
+    case 'tetrahedron': return [0.5, 0]; // radius, detail
+    case 'plane': return [1, 1]; // width, height
+    case 'ring': return [0.2, 0.5, 32]; // innerRadius, outerRadius, thetaSegments
+    case 'torusKnot': return [0.4, 0.15, 128, 16]; // radius, tube, tubularSegments, radialSegments
     default: return [1, 1, 1];
   }
 };
