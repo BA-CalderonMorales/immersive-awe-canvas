@@ -49,6 +49,8 @@ const ExperienceUI = ({
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
 
+  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
+
   // Event handlers with logging
   const handleToggleTheme = () => {
     onToggleTheme();
@@ -83,64 +85,67 @@ const ExperienceUI = ({
     logEvent({ eventType: 'button_click', eventSource: 'show_help' });
   };
 
-  if (isUiHidden) {
-    return (
-      <TooltipProvider>
+  const handleToggleUiHidden = () => {
+    console.log('ExperienceUI - handleToggleUiHidden called');
+    onToggleUiHidden();
+  };
+
+  return (
+    <TooltipProvider>
+      {isUiHidden ? (
         <HiddenUiView 
-          onToggleUiHidden={onToggleUiHidden}
+          onToggleUiHidden={handleToggleUiHidden}
           showUiHint={showUiHint}
           uiColor={uiColor}
           theme={theme}
         />
-      </TooltipProvider>
-    );
-  }
+      ) : (
+        <>
+          {/* Top navigation bar */}
+          <TopBar 
+            worldName={worldName}
+            uiColor={uiColor}
+            onToggleUiHidden={handleToggleUiHidden}
+            onToggleTheme={handleToggleTheme}
+            theme={theme}
+            onGoHome={handleGoHome}
+            onShowHelp={handleShowHelp}
+            isTransitioning={false}
+            isMobile={isMobile}
+          />
+          
+          {/* World navigation controls */}
+          <NavigationControls 
+            uiColor={uiColor}
+            onChangeWorld={handleChangeWorld}
+            isTransitioning={false}
+            theme={theme}
+          />
 
-  return (
-    <TooltipProvider>
-      {/* Top navigation bar */}
-      <TopBar 
-        worldName={worldName}
-        uiColor={uiColor}
-        onToggleUiHidden={onToggleUiHidden}
-        onToggleTheme={handleToggleTheme}
-        theme={theme}
-        onGoHome={handleGoHome}
-        onShowHelp={handleShowHelp}
-        isTransitioning={false}
-        isMobile={isMobile}
-      />
-      
-      {/* World navigation controls */}
-      <NavigationControls 
-        uiColor={uiColor}
-        onChangeWorld={handleChangeWorld}
-        isTransitioning={false}
-        theme={theme}
-      />
+          {/* Bottom action bar */}
+          <BottomBar 
+            uiColor={uiColor}
+            onCopyCode={onCopyCode}
+            onShowSearch={handleShowSearch}
+            isMobile={isMobile}
+            isSettingsOpen={isSettingsOpen}
+            onToggleSettings={onToggleSettings}
+            editableSceneConfig={editableSceneConfig}
+            onUpdateSceneConfig={onUpdateSceneConfig}
+            onShowHelp={handleShowHelp}
+            theme={theme}
+          />
 
-      {/* Bottom action bar */}
-      <BottomBar 
-        uiColor={uiColor}
-        onCopyCode={onCopyCode}
-        onShowSearch={handleShowSearch}
-        isMobile={isMobile}
-        isSettingsOpen={isSettingsOpen}
-        onToggleSettings={onToggleSettings}
-        editableSceneConfig={editableSceneConfig}
-        onUpdateSceneConfig={onUpdateSceneConfig}
-        onShowHelp={handleShowHelp}
-        theme={theme}
-      />
-
-      {/* Keyboard hint for desktop */}
-      {!isMobile && (
-        <div 
-          style={{ color: theme === 'day' ? '#000000' : uiColor }} 
-          className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
-        >
-          Press SPACE to change time of day
-        </div>
+          {/* Keyboard hint for desktop */}
+          {!isMobile && (
+            <div 
+              style={{ color: theme === 'day' ? '#000000' : uiColor }} 
+              className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
+            >
+              Press SPACE to change time of day
+            </div>
+          )}
+        </>
       )}
     </TooltipProvider>
   );

@@ -23,18 +23,29 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
-  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible);
+  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible, 'isMobile:', isMobile);
+
+  const handleToggleUi = () => {
+    console.log('HiddenUiView - handleToggleUi called');
+    onToggleUiHidden();
+  };
+
+  const handleInfoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    console.log('HiddenUiView - handleInfoClick called');
+    toggleExpanded();
+  };
 
   return (
     <div className="fixed inset-0 z-50 pointer-events-none">
-      {/* Show UI Button - Top Right */}
+      {/* Show UI Button - Top Right - ALWAYS VISIBLE */}
       <div className="absolute top-4 right-4 pointer-events-auto">
         <Tooltip open={showUiHint}>
           <TooltipTrigger asChild>
             <Button
               size="icon"
               aria-label="Show UI"
-              onClick={onToggleUiHidden}
+              onClick={handleToggleUi}
               className={`${blendedButtonClasses} cursor-pointer`}
               style={uiStyle}
             >
@@ -47,8 +58,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         </Tooltip>
       </div>
 
-      {/* Info icon/button - Bottom Left */}
-      {!isMobile && !isVisible && (
+      {/* Info icon/button - Bottom Left - ALWAYS VISIBLE ON DESKTOP */}
+      {!isMobile && (
         <div className="absolute bottom-4 left-4 pointer-events-auto">
           <Tooltip>
             <TooltipTrigger asChild>
@@ -57,10 +68,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
                 size="icon"
                 className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer`}
                 style={uiStyle}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  toggleExpanded();
-                }}
+                onClick={handleInfoClick}
               >
                 <Info className="w-5 h-5" />
               </Button>
