@@ -5,7 +5,6 @@ import { Eye, ChevronDown, ChevronUp, Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
-import { getContrastingTextColor } from "@/lib/utils";
 
 interface HiddenUiViewProps {
   onToggleUiHidden: () => void;
@@ -18,12 +17,14 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const isMobile = useIsMobile();
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
-  // Use consistent button styling matching the main UI
-  const blendedButtonClasses = "border-0 bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
-  const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
-  const uiStyle = { color: textColor };
+  // Use scene-specific UI colors for proper contrast
+  const buttonStyle = { 
+    color: uiColor,
+    borderColor: uiColor 
+  };
+  const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
 
-  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible, 'isMobile:', isMobile);
+  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible, 'isMobile:', isMobile, 'uiColor:', uiColor);
 
   const handleToggleUi = () => {
     console.log('HiddenUiView - handleToggleUi called');
@@ -46,7 +47,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               size="icon"
               aria-label="Show UI"
               onClick={handleToggleUi}
-              className={`${blendedButtonClasses} cursor-pointer text-white`}
+              className={`${blendedButtonClasses} cursor-pointer`}
+              style={buttonStyle}
             >
               <Eye className="w-6 h-6" />
             </Button>
@@ -65,7 +67,8 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
               <Button
                 variant="ghost"
                 size="icon"
-                className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer text-white`}
+                className={`w-8 h-8 p-0 ${blendedButtonClasses} rounded-md transition-colors cursor-pointer`}
+                style={buttonStyle}
                 onClick={handleInfoClick}
               >
                 <Info className="w-5 h-5" />
