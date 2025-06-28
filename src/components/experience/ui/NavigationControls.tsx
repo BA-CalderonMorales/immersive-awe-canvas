@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { getContrastingTextColor } from "@/lib/utils";
 
 interface NavigationControlsProps {
   uiColor: string;
@@ -13,8 +14,8 @@ interface NavigationControlsProps {
 const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: NavigationControlsProps) => {
   const blendedButtonClasses = "border-0 bg-black/40 hover:bg-black/60 dark:bg-white/40 dark:hover:bg-white/60";
   
-  // Use black text/icons in day mode for better visibility against bright backgrounds
-  const textColor = theme === 'day' ? '#000000' : uiColor;
+  // Use black text/icons in day mode and choose high-contrast color at night
+  const textColor = theme === 'day' ? '#000000' : getContrastingTextColor(uiColor);
   const uiStyle = { color: textColor };
 
   return (

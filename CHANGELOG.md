@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added several new "environment" presets for scene backgrounds (sunset, dawn, night, etc.).
 - GitHub Actions workflow (`.github/workflows/build-and-deploy.yml`) to automatically build and deploy the application to GitHub Pages on pushes to the `main` branch.
 - Added `isHexColor` utility to validate hex color strings.
+- Added `getContrastingTextColor` utility to automatically choose black or white text based on background color.
 - Configuration in `vite.config.ts` to set the `base` path for production builds, enabling correct asset loading on GitHub Pages.
 - Updated `src/App.tsx` to configure `BrowserRouter` with a dynamic `basename` to ensure correct client-side routing on GitHub Pages.
 - **Persistent UI State:** UI visibility preferences are now preserved across world navigation using localStorage.

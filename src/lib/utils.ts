@@ -24,3 +24,12 @@ export function darkenColor(hex: string, amount: number): string {
 export function isHexColor(value: string): boolean {
   return /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/.test(value)
 }
+
+export function getContrastingTextColor(hex: string): string {
+  const normalized = hex.replace('#', '')
+  const r = parseInt(normalized.length === 3 ? normalized[0] + normalized[0] : normalized.slice(0, 2), 16)
+  const g = parseInt(normalized.length === 3 ? normalized[1] + normalized[1] : normalized.slice(2, 4), 16)
+  const b = parseInt(normalized.length === 3 ? normalized[2] + normalized[2] : normalized.slice(4, 6), 16)
+  const yiq = (r * 299 + g * 587 + b * 114) / 1000
+  return yiq >= 128 ? '#000000' : '#ffffff'
+}
