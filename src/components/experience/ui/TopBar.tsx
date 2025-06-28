@@ -1,7 +1,5 @@
-
 import { useState, useEffect } from "react";
 import { useInstructions } from "@/hooks/useInstructions";
-import LikeDialog from "./LikeDialog";
 import InfoTooltip from "./InfoTooltip";
 import TopBarActions from "./TopBarActions";
 
@@ -73,11 +71,6 @@ const TopBar = ({
           </h2>
         )}
         
-        <LikeDialog 
-          uiStyle={uiStyle}
-          blendedButtonClasses={blendedButtonClasses}
-        />
-
         <InfoTooltip 
           uiStyle={uiStyle}
           blendedButtonClasses={blendedButtonClasses}

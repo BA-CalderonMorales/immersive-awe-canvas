@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { EyeOff, Sun, Moon, Home } from "lucide-react";
+import LikeDialog from "./LikeDialog";
 
 interface TopBarActionsProps {
   uiStyle: { color: string; borderColor: string };
@@ -54,6 +55,10 @@ const TopBarActions = ({
           <p>Toggle Theme (Space)</p>
         </TooltipContent>
       </Tooltip>
+      <LikeDialog 
+        uiStyle={uiStyle}
+        blendedButtonClasses={blendedButtonClasses}
+      />
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
