@@ -93,6 +93,11 @@ const ExperienceUI = ({
     onToggleUiHidden();
   };
 
+  const handleShowObjectControls = () => {
+    console.log('Object controls button clicked');
+    // For now, just log the action - actual implementation would open a panel
+  };
+
   return (
     <TooltipProvider>
       {/* Always render HiddenUiView - it manages its own visibility */}
@@ -139,6 +144,7 @@ const ExperienceUI = ({
             onUpdateSceneConfig={onUpdateSceneConfig}
             onShowHelp={handleShowHelp}
             theme={theme}
+            onShowObjectControls={handleShowObjectControls}
           />
 
           {/* Keyboard hint for desktop */}
