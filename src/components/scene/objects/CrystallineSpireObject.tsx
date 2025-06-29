@@ -1,10 +1,11 @@
 import { useRef, useMemo } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Group } from 'three';
+import { Group, DoubleSide } from 'three';
 import { useSpireFormations } from './crystallineSpire/useSpireFormations';
 import { useCrystalFragments } from './crystallineSpire/useCrystalFragments';
 import { useExperience } from '@/hooks/useExperience';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import SpireStructure from './crystallineSpire/SpireStructure';
 import CrystalFragmentComponent from './crystallineSpire/CrystalFragmentComponent';
 import EnergyWeb from './crystallineSpire/EnergyWeb';
@@ -23,6 +24,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const orbitalRefs = useRef<Group[]>([]);
   const { mouse } = useThree();
   const { theme } = useExperience();
+  const { isDragEnabled } = useSceneObjectsContext();
   const timeRef = useRef(0);
 
   // Static formations and fragments - avoid recreating on theme change
@@ -131,6 +133,13 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
           color={color}
           materialConfig={stableMaterialConfig}
         />
+
+        {isDragEnabled && (
+          <mesh>
+            <sphereGeometry args={[6, 32, 16]} />
+            <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.3} side={DoubleSide} />
+          </mesh>
+        )}
       </group>
 
       {crystalFragments.map((fragment, index) => (
