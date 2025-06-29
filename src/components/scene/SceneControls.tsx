@@ -9,7 +9,7 @@ import { MaterialControlsBuilder } from './controls/MaterialControlsBuilder';
 import { LightControlsBuilder } from './controls/LightControlsBuilder';
 import { BackgroundControlsBuilder } from './controls/BackgroundControlsBuilder';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ObjectManagerControls from './controls/ObjectManagerControls';
+import ObjectMoveControls from './controls/ObjectMoveControls';
 
 interface SceneControlsProps {
   sceneConfig: SceneConfig;
@@ -112,7 +112,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         </TabsContent>
         
         <TabsContent value="objects" className="h-full p-4">
-          <ObjectManagerControls isOpen={activeTab === "objects"} />
+          <ObjectMoveControls />
         </TabsContent>
       </Tabs>
     </div>
