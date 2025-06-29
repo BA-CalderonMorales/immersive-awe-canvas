@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import ObjectGeometry from './components/ObjectGeometry';
@@ -13,13 +13,6 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-
-  useEffect(() => {
-    if (meshRef.current) {
-      meshRef.current.name = object.id;
-      meshRef.current.userData = { objectId: object.id };
-    }
-  }, [object.id]);
 
   const handleClick = (e: any) => {
     e.stopPropagation();
@@ -41,6 +34,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
   return (
     <mesh
       ref={meshRef}
+      name={object.id}
+      userData={{ objectId: object.id }}
       position={object.position}
       rotation={object.rotation}
       scale={object.scale}

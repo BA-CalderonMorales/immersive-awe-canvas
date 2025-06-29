@@ -19,92 +19,87 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
   const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
   useEffect(() => {
-    // Clean up previous controls instance
     if (controlsRef.current) {
       controlsRef.current.dispose();
-      controlsRef.current = undefined;
     }
 
-    if (!enabled) {
-      return;
+    if (!enabled) return;
+
+    const draggableObjects: THREE.Object3D[] = [];
+    
+    // Find all user-added objects
+    objects.forEach(obj => {
+      const mesh = scene.getObjectByName(obj.id);
+      if (mesh) {
+        draggableObjects.push(mesh);
+      }
+    });
+
+    // Find the main scene object
+    const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
+    if (mainObject && !draggableObjects.some(o => o.uuid === mainObject.uuid)) {
+      draggableObjects.push(mainObject);
     }
 
-    // Defer setup to ensure the scene graph is updated with new objects
-    const setupTimeout = setTimeout(() => {
-      const draggableObjects: THREE.Object3D[] = [];
+    if (draggableObjects.length === 0) return;
+
+    const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
+    controlsRef.current = controls;
+
+    const handleDragStart = (event: any) => {
+      const object = event.object as THREE.Object3D;
+      object.userData.isBeingDragged = true;
       
-      // Find all user-added objects
-      objects.forEach(obj => {
-        const mesh = scene.getObjectByName(obj.id);
-        if (mesh) {
-          draggableObjects.push(mesh);
-        }
-      });
+      const initialPosition = new THREE.Vector3();
+      object.getWorldPosition(initialPosition);
+      const positionInCameraSpace = camera.worldToLocal(initialPosition);
+      initialDepthRef.current.set(object, positionInCameraSpace.z);
 
-      // Find the main scene object
-      const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
-      if (mainObject && !draggableObjects.some(o => o.uuid === mainObject.uuid)) {
-        draggableObjects.push(mainObject);
+      if (object.userData?.objectId) {
+        actions.selectObject(object.userData.objectId);
+      }
+      onDragStart?.();
+    };
+
+    const handleDrag = (event: any) => {
+      const object = event.object as THREE.Object3D;
+      const initialDepth = initialDepthRef.current.get(object);
+
+      if (initialDepth !== undefined) {
+        const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
+        newPositionInCameraSpace.z = initialDepth;
+        
+        const parent = object.parent;
+        if (parent) {
+          const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
+          const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
+          object.position.copy(constrainedPositionLocal);
+        }
       }
 
-      if (draggableObjects.length === 0) return;
+      if (object.userData?.objectId) {
+        const position: [number, number, number] = [object.position.x, object.position.y, object.position.z];
+        actions.updateObject(object.userData.objectId, { position });
+      }
+    };
 
-      const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
-      controlsRef.current = controls;
+    const handleDragEnd = (event: any) => {
+      const object = event.object as THREE.Object3D;
+      if (object.userData) {
+        object.userData.isBeingDragged = false;
+      }
+      initialDepthRef.current.delete(object);
+      onDragEnd?.();
+    };
 
-      const handleDragStart = (event: any) => {
-        const object = event.object as THREE.Object3D;
-        object.userData.isBeingDragged = true;
-        
-        const initialPosition = new THREE.Vector3();
-        object.getWorldPosition(initialPosition);
-        const positionInCameraSpace = camera.worldToLocal(initialPosition);
-        initialDepthRef.current.set(object, positionInCameraSpace.z);
-
-        if (object.userData?.objectId) {
-          actions.selectObject(object.userData.objectId);
-        }
-        onDragStart?.();
-      };
-
-      const handleDrag = (event: any) => {
-        const object = event.object as THREE.Object3D;
-        const initialDepth = initialDepthRef.current.get(object);
-
-        if (initialDepth !== undefined) {
-          const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
-          newPositionInCameraSpace.z = initialDepth;
-          
-          const parent = object.parent;
-          if (parent) {
-            const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
-            const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
-            object.position.copy(constrainedPositionLocal);
-          }
-        }
-
-        if (object.userData?.objectId) {
-          const position: [number, number, number] = [object.position.x, object.position.y, object.position.z];
-          actions.updateObject(object.userData.objectId, { position });
-        }
-      };
-
-      const handleDragEnd = (event: any) => {
-        const object = event.object as THREE.Object3D;
-        if (object.userData) {
-          object.userData.isBeingDragged = false;
-        }
-        initialDepthRef.current.delete(object);
-        onDragEnd?.();
-      };
-
-      controls.addEventListener('dragstart', handleDragStart);
-      controls.addEventListener('drag', handleDrag);
-      controls.addEventListener('dragend', handleDragEnd);
-    }, 0); // A timeout of 0 defers execution until the next event loop tick
+    controls.addEventListener('dragstart', handleDragStart);
+    controls.addEventListener('drag', handleDrag);
+    controls.addEventListener('dragend', handleDragEnd);
 
     return () => {
-      clearTimeout(setupTimeout);
+      if (controlsRef.current) {
+        controlsRef.current.dispose();
+      }
     };
   }, [enabled, objects, camera, gl, scene, actions, onDragStart, onDragEnd]);
 
