@@ -4,8 +4,10 @@ import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
 import { useIsMobile } from "@/hooks/use-mobile";
-import { GuiControlsFactory } from './controls/GuiControlsFactory';
 import { createConfigUpdater } from './controls/ConfigUpdateUtils';
+import { MaterialControlsBuilder } from './controls/MaterialControlsBuilder';
+import { LightControlsBuilder } from './controls/LightControlsBuilder';
+import { BackgroundControlsBuilder } from './controls/BackgroundControlsBuilder';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ObjectManagerControls from './controls/ObjectManagerControls';
 
@@ -33,8 +35,44 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const gui = new GUI({ container: containerRef.current });
     guiRef.current = gui;
 
-    const factory = new GuiControlsFactory(gui, sceneConfig, theme, updateConfig);
-    factory.createAllControls();
+    const themeConfig = sceneConfig[theme];
+
+    // Main Object Controls
+    const mainObjectFolder = gui.addFolder('Main Object');
+    mainObjectFolder.addColor(themeConfig, 'mainObjectColor').onChange((value: string) => {
+      updateConfig(config => { 
+        config[theme].mainObjectColor = value; 
+      });
+    });
+    
+    // Material Controls
+    const materialBuilder = new MaterialControlsBuilder(
+      mainObjectFolder,
+      themeConfig.material,
+      theme,
+      updateConfig
+    );
+    materialBuilder.build();
+
+    mainObjectFolder.open();
+
+    // Light Controls
+    const lightBuilder = new LightControlsBuilder(
+      gui,
+      themeConfig.lights,
+      theme,
+      updateConfig
+    );
+    lightBuilder.build();
+
+    // Background Controls
+    const backgroundBuilder = new BackgroundControlsBuilder(
+      gui,
+      themeConfig.background,
+      theme,
+      updateConfig
+    );
+    backgroundBuilder.build();
 
     return () => {
       if (guiRef.current) {
@@ -42,7 +80,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
         guiRef.current = null;
       }
     };
-  }, [sceneConfig, theme, onUpdate, activeTab]);
+  }, [sceneConfig, theme, onUpdate, activeTab, updateConfig]);
 
   return (
     <div className={`w-full h-full ${isMobile ? "max-h-[72vh] overflow-y-auto modal-scrollbar" : ""}`}>
