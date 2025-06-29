@@ -10,12 +10,11 @@ interface DragControlsProps {
   enabled: boolean;
   onDragStart?: () => void;
   onDragEnd?: () => void;
-  objectRefs: THREE.Object3D[];
 }
 
-const DragControls = ({ enabled, onDragStart, onDragEnd, objectRefs }: DragControlsProps) => {
+const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) => {
   const { camera, gl, scene } = useThree();
-  const { actions } = useSceneObjectsContext();
+  const { objects, actions } = useSceneObjectsContext();
   const controlsRef = useRef<ThreeDragControls>();
   const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
@@ -28,8 +27,16 @@ const DragControls = ({ enabled, onDragStart, onDragEnd, objectRefs }: DragContr
       return;
     }
 
-    const draggableObjects: THREE.Object3D[] = [...objectRefs];
+    const draggableObjects: THREE.Object3D[] = [];
     
+    // Add context objects from the object manager
+    objects.forEach(obj => {
+      const mesh = scene.getObjectByName(obj.id);
+      if (mesh) {
+        draggableObjects.push(mesh);
+      }
+    });
+
     // Add the main scene object
     const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
     if (mainObject) {
@@ -105,7 +112,7 @@ const DragControls = ({ enabled, onDragStart, onDragEnd, objectRefs }: DragContr
       controls.removeEventListener('dragend', handleDragEnd);
       controls.dispose();
     };
-  }, [enabled, objectRefs, camera, gl, scene, actions, onDragStart, onDragEnd]);
+  }, [enabled, objects, camera, gl, scene, actions, onDragStart, onDragEnd]);
 
   return null;
 };
