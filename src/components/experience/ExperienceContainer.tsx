@@ -1,5 +1,4 @@
 
-import { useState, useEffect, useMemo } from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useExperienceUIColor } from "@/hooks/useExperienceUIColor";
 import { useExperienceBlurTransition } from "@/hooks/useExperienceBlurTransition";
@@ -75,21 +74,28 @@ const ExperienceContainer = ({
   const uiColor = useExperienceUIColor(worldData, theme);
   const { showBlurTransition, handleBlurTransitionEnd } = useExperienceBlurTransition(isTransitioning, showEntryTransition);
 
+  console.log('ExperienceContainer rendering - worldData:', worldData?.name, 'editableSceneConfig:', !!editableSceneConfig);
+
   if (!worldData) {
+    console.log('ExperienceContainer - No worldData, showing loading');
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
   }
 
   if (!editableSceneConfig) {
+    console.log('ExperienceContainer - No editableSceneConfig, showing loading');
     return <LoadingOverlay message="Initializing experience..." theme={theme} />;
   }
 
   if (!isSceneConfig(worldData.scene_config)) {
-     return <LoadingOverlay message="Preparing world data..." theme={theme} />;
+    console.log('ExperienceContainer - Invalid scene_config, showing loading');
+    return <LoadingOverlay message="Preparing world data..." theme={theme} />;
   }
 
   // Get the main object color from the current theme config
   const themeConfig = theme === 'day' ? editableSceneConfig.day : editableSceneConfig.night;
   const mainObjectColor = themeConfig?.mainObjectColor || '#ffffff';
+
+  console.log('ExperienceContainer - Rendering full experience for world:', worldData.name);
 
   return (
     <div className="w-full h-screen relative overflow-hidden bg-black">

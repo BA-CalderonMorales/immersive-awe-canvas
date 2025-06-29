@@ -11,33 +11,37 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 const basename = import.meta.env.BASE_URL;
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      
-      <BrowserRouter basename={basename}>
-        <Routes>
-          {/* Redirect root to first world */}
-          <Route path="/" element={<Navigate to="/experience/genesis-torus" replace />} />
-          
-          {/* Main experience route */}
-          <Route 
-            path="/experience/:worldSlug" 
-            element={
-              <ExperienceProvider>
-                <ExperienceLogic />
-              </ExperienceProvider>
-            } 
-          />
-          
-          {/* Fallback */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+const App = () => {
+  console.log('App component rendering');
+  
+  return (
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        
+        <BrowserRouter basename={basename}>
+          <Routes>
+            {/* Redirect root to first world */}
+            <Route path="/" element={<Navigate to="/experience/genesis-torus" replace />} />
+            
+            {/* Main experience route */}
+            <Route 
+              path="/experience/:worldSlug" 
+              element={
+                <ExperienceProvider>
+                  <ExperienceLogic />
+                </ExperienceProvider>
+              } 
+            />
+            
+            {/* Fallback */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
