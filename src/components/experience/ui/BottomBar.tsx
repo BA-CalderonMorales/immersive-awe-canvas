@@ -106,7 +106,7 @@ const BottomBar = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Toggle Drag Controls (D)</p>
+              <p>Toggle Drag Controls (Z)</p>
             </TooltipContent>
             </Tooltip>
         )}

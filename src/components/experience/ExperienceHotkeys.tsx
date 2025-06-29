@@ -66,10 +66,10 @@ const ExperienceHotkeys = ({
     return () => window.removeEventListener('keydown', handleMKey);
   }, [handleToggleShortcuts]);
 
-  // Handle D key for drag toggle
+  // Handle Z key for drag toggle
   useEffect(() => {
-    const handleDKey = (event: KeyboardEvent) => {
-      if (event.code === 'KeyD' && onToggleDrag) {
+    const handleZKey = (event: KeyboardEvent) => {
+      if (event.code === 'KeyZ' && onToggleDrag) {
         // Check if user is typing
         const activeEl = document.activeElement;
         const isTyping = activeEl && (
@@ -79,15 +79,15 @@ const ExperienceHotkeys = ({
         );
         
         if (!isTyping && !isHelpOpen && !isSearchOpen && !isSettingsOpen) {
-          console.log('ExperienceHotkeys - D key pressed, toggling drag');
+          console.log('ExperienceHotkeys - Z key pressed, toggling drag');
           event.preventDefault();
           onToggleDrag();
         }
       }
     };
 
-    window.addEventListener('keydown', handleDKey);
-    return () => window.removeEventListener('keydown', handleDKey);
+    window.addEventListener('keydown', handleZKey);
+    return () => window.removeEventListener('keydown', handleZKey);
   }, [onToggleDrag, isHelpOpen, isSearchOpen, isSettingsOpen]);
   
   // Handle all other hotkeys - only when dialogs are closed
