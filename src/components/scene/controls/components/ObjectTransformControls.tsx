@@ -6,14 +6,14 @@ import { toast } from 'sonner';
 
 interface ObjectTransformControlsProps {
   selectedObject: SceneObject;
-  movementMode: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand';
+  movementMode?: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand';
   onUpdateObject: (id: string, updates: Partial<SceneObject>) => void;
   onRemoveObject: (id: string) => void;
 }
 
 const ObjectTransformControls = ({ 
   selectedObject, 
-  movementMode, 
+  movementMode = 'none', 
   onUpdateObject, 
   onRemoveObject 
 }: ObjectTransformControlsProps) => {
