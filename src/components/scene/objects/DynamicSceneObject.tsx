@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Mesh, Vector3, Raycaster, Vector2 } from 'three';
+import { Mesh, Vector3, Raycaster, Vector2, Plane } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
@@ -85,7 +85,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     // Create a plane perpendicular to camera for free movement
     const plane = new Vector3().copy(cameraDirection).normalize();
     const intersects = raycaster.current.ray.intersectPlane(
-      new THREE.Plane(plane, -dragStartPosition.current.dot(plane)),
+      new Plane(plane, -dragStartPosition.current.dot(plane)),
       new Vector3()
     );
     
