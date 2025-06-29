@@ -56,8 +56,8 @@ const BottomBar = ({
   // Use scene-specific UI colors for border only
   const uiStyle = { borderColor: uiColor };
   
-  // For light theme, use white text; for dark theme, use the ui color
-  const textStyle = { color: theme === 'day' ? '#ffffff' : uiColor };
+  // For light theme, use dark text; for dark theme, use the ui color
+  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
@@ -77,7 +77,7 @@ const BottomBar = ({
             <Button
               style={buttonStyle}
               onClick={onCopyCode}
-              className={`transition-opacity duration-300 ${blendedButtonClasses} text-white`}
+              className={`transition-opacity duration-300 ${blendedButtonClasses}`}
               size="icon"
               aria-label="Copy Scene Configuration"
             >
@@ -92,7 +92,7 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={`${blendedButtonClasses} text-white`}
+              className={blendedButtonClasses}
               size="icon"
               aria-label="Search Worlds"
               onClick={onShowSearch}
@@ -108,7 +108,7 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={`${blendedButtonClasses} text-white`}
+              className={blendedButtonClasses}
               size="icon"
               aria-label="Object Controls"
               onClick={onShowObjectControls}
@@ -131,7 +131,7 @@ const BottomBar = ({
                 <SheetTrigger asChild>
                   <Button
                     style={buttonStyle}
-                    className={`${blendedButtonClasses} text-white`}
+                    className={blendedButtonClasses}
                     size="icon"
                     aria-label="Scene Settings"
                   >
@@ -160,7 +160,7 @@ const BottomBar = ({
             <TooltipTrigger asChild>
               <Button
                 style={buttonStyle}
-                className={`${blendedButtonClasses} text-white`}
+                className={blendedButtonClasses}
                 size="icon"
                 aria-label="Scene Settings"
                 onClick={() => onToggleSettings(!isSettingsOpen)}
@@ -177,7 +177,7 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={`${blendedButtonClasses} text-white`}
+              className={blendedButtonClasses}
               size="icon"
               aria-label="Help"
               onClick={onShowHelp}

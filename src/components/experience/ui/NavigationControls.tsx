@@ -19,8 +19,8 @@ const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: 
   // Use scene-specific UI colors for border only
   const uiStyle = { borderColor: uiColor };
   
-  // For light theme, use white text; for dark theme, use the ui color
-  const textStyle = { color: theme === 'day' ? '#ffffff' : uiColor };
+  // For light theme, use dark text; for dark theme, use the ui color
+  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
@@ -31,7 +31,7 @@ const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: 
           <Button
             style={buttonStyle}
             onClick={() => onChangeWorld('prev')}
-            className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses} text-white`}
+            className={`absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
             size="icon"
             aria-label="Previous World"
             disabled={isTransitioning}
@@ -48,7 +48,7 @@ const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: 
           <Button
             style={buttonStyle}
             onClick={() => onChangeWorld('next')}
-            className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses} text-white`}
+            className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10 transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'} ${blendedButtonClasses}`}
             size="icon"
             aria-label="Next World"
             disabled={isTransitioning}
