@@ -1,6 +1,8 @@
 
-import { useRef, useCallback } from 'react';
-import { Vector3, Vector2, Camera } from 'three';
+import { useRef, useCallback, useEffect } from 'react';
+import { Vector3, Camera, Mesh } from 'three';
+import { DragControls } from 'three-stdlib';
+import { useThree } from '@react-three/fiber';
 
 interface DragHandlerProps {
   camera: Camera;
@@ -8,6 +10,7 @@ interface DragHandlerProps {
   onDragEnd: () => void;
   onPositionUpdate: (position: [number, number, number]) => void;
   movementMode: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand';
+  meshRef: React.MutableRefObject<Mesh>;
 }
 
 export const useDragHandler = ({
@@ -15,98 +18,107 @@ export const useDragHandler = ({
   onDragStart,
   onDragEnd,
   onPositionUpdate,
-  movementMode
+  movementMode,
+  meshRef
 }: DragHandlerProps) => {
+  const { gl } = useThree();
+  const dragControlsRef = useRef<DragControls | null>(null);
   const isDragging = useRef(false);
-  const dragStartPosition = useRef(new Vector3());
-  const dragStartMouse = useRef(new Vector2());
-  const currentPosition = useRef(new Vector3());
+  const initialPosition = useRef(new Vector3());
 
-  const startDrag = useCallback((event: any, objectPosition: Vector3) => {
-    if (movementMode === 'none') return;
+  // Initialize DragControls
+  useEffect(() => {
+    if (!meshRef.current) return;
 
-    isDragging.current = true;
-    dragStartPosition.current.copy(objectPosition);
-    currentPosition.current.copy(objectPosition);
-    
-    // Store initial mouse position
-    const rect = event.target.getBoundingClientRect();
-    dragStartMouse.current.set(
-      ((event.clientX - rect.left) / rect.width) * 2 - 1,
-      -((event.clientY - rect.top) / rect.height) * 2 + 1
-    );
+    const objects = [meshRef.current];
+    const controls = new DragControls(objects, camera, gl.domElement);
 
-    onDragStart();
-    console.log('Drag started in mode:', movementMode);
-  }, [movementMode, onDragStart]);
+    // Configure drag behavior based on movement mode
+    controls.addEventListener('dragstart', (event) => {
+      if (movementMode === 'none') return;
+      
+      isDragging.current = true;
+      initialPosition.current.copy(event.object.position);
+      onDragStart();
 
-  const updateDrag = useCallback((event: any) => {
-    if (!isDragging.current || movementMode === 'none') return;
+      // Disable orbit controls during drag
+      window.dispatchEvent(new CustomEvent('object-drag-start'));
+    });
 
-    // Get current mouse position in NDC
-    const rect = event.target.getBoundingClientRect();
-    const currentMouse = new Vector2(
-      ((event.clientX - rect.left) / rect.width) * 2 - 1,
-      -((event.clientY - rect.top) / rect.height) * 2 + 1
-    );
+    controls.addEventListener('drag', (event) => {
+      if (movementMode === 'none' || !isDragging.current) return;
 
-    // Calculate mouse delta
-    const mouseDelta = currentMouse.clone().sub(dragStartMouse.current);
+      const object = event.object;
+      const currentPos = object.position;
+      const initialPos = initialPosition.current;
 
-    // Convert to world space movement
-    const cameraDirection = new Vector3();
-    camera.getWorldDirection(cameraDirection);
-    
-    const cameraUp = camera.up.clone();
-    const cameraRight = new Vector3().crossVectors(cameraDirection, cameraUp).normalize();
+      // Apply movement constraints based on mode
+      switch (movementMode) {
+        case 'x-axis':
+          object.position.set(currentPos.x, initialPos.y, initialPos.z);
+          break;
+        case 'y-axis':
+          object.position.set(initialPos.x, currentPos.y, initialPos.z);
+          break;
+        case 'z-axis':
+          object.position.set(initialPos.x, initialPos.y, currentPos.z);
+          break;
+        case 'freehand':
+          // Allow free movement but apply boundaries
+          const maxDistance = 20;
+          object.position.x = Math.max(-maxDistance, Math.min(maxDistance, currentPos.x));
+          object.position.y = Math.max(-maxDistance, Math.min(maxDistance, currentPos.y));
+          object.position.z = Math.max(-maxDistance, Math.min(maxDistance, currentPos.z));
+          break;
+      }
 
-    // Calculate movement based on camera orientation and mode
-    const moveDistance = 3; // Base movement sensitivity
-    let newPosition = dragStartPosition.current.clone();
+      onPositionUpdate([
+        object.position.x,
+        object.position.y,
+        object.position.z
+      ]);
+    });
 
-    switch (movementMode) {
-      case 'x-axis':
-        // Move along world X-axis
-        newPosition.x += mouseDelta.x * moveDistance;
-        break;
-      case 'y-axis':
-        // Move along world Y-axis
-        newPosition.y -= mouseDelta.y * moveDistance;
-        break;
-      case 'z-axis':
-        // Move along world Z-axis (using horizontal mouse movement)
-        newPosition.z += mouseDelta.x * moveDistance;
-        break;
-      case 'freehand':
-        // Free movement in camera space
-        const rightMovement = cameraRight.clone().multiplyScalar(mouseDelta.x * moveDistance);
-        const upMovement = cameraUp.clone().multiplyScalar(mouseDelta.y * moveDistance);
-        newPosition.add(rightMovement).add(upMovement);
-        break;
+    controls.addEventListener('dragend', () => {
+      if (movementMode === 'none') return;
+      
+      isDragging.current = false;
+      onDragEnd();
+
+      // Re-enable orbit controls after drag
+      window.dispatchEvent(new CustomEvent('object-drag-end'));
+    });
+
+    dragControlsRef.current = controls;
+
+    return () => {
+      controls.dispose();
+    };
+  }, [camera, gl.domElement, movementMode, onDragStart, onDragEnd, onPositionUpdate, meshRef]);
+
+  // Enable/disable controls based on movement mode
+  useEffect(() => {
+    if (dragControlsRef.current) {
+      dragControlsRef.current.enabled = movementMode !== 'none';
     }
+  }, [movementMode]);
 
-    // Boundary checks
-    const maxDistance = 20;
-    newPosition.x = Math.max(-maxDistance, Math.min(maxDistance, newPosition.x));
-    newPosition.y = Math.max(-maxDistance, Math.min(maxDistance, newPosition.y));
-    newPosition.z = Math.max(-maxDistance, Math.min(maxDistance, newPosition.z));
+  const activate = useCallback(() => {
+    if (dragControlsRef.current) {
+      dragControlsRef.current.activate();
+    }
+  }, []);
 
-    currentPosition.current.copy(newPosition);
-    onPositionUpdate([newPosition.x, newPosition.y, newPosition.z]);
-  }, [camera, movementMode, onPositionUpdate]);
-
-  const endDrag = useCallback(() => {
-    if (!isDragging.current) return;
-    
-    isDragging.current = false;
-    onDragEnd();
-    console.log('Drag ended');
-  }, [onDragEnd]);
+  const deactivate = useCallback(() => {
+    if (dragControlsRef.current) {
+      dragControlsRef.current.deactivate();
+    }
+  }, []);
 
   return {
     isDragging: isDragging.current,
-    startDrag,
-    updateDrag,
-    endDrag
+    activate,
+    deactivate,
+    dragControls: dragControlsRef.current
   };
 };

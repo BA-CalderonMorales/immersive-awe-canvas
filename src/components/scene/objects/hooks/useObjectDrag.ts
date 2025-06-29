@@ -1,5 +1,5 @@
 
-import { useState, useRef, MutableRefObject } from 'react';
+import { useState, MutableRefObject } from 'react';
 import { useThree } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
@@ -24,11 +24,10 @@ export const useObjectDrag = ({ object, meshRef, onSelect }: UseObjectDragProps)
   const dragHandler = useDragHandler({
     camera,
     movementMode,
+    meshRef,
     onDragStart: () => {
       setIsDragging(true);
       onSelect();
-      
-      window.dispatchEvent(new CustomEvent('object-drag-start'));
       
       const modeNames = {
         'x-axis': 'X-Axis',
@@ -54,8 +53,6 @@ export const useObjectDrag = ({ object, meshRef, onSelect }: UseObjectDragProps)
     onDragEnd: () => {
       setIsDragging(false);
       
-      window.dispatchEvent(new CustomEvent('object-drag-end'));
-      
       if (meshRef.current) {
         const finalPosition: [number, number, number] = [
           meshRef.current.position.x,
@@ -78,10 +75,7 @@ export const useObjectDrag = ({ object, meshRef, onSelect }: UseObjectDragProps)
       }
     },
     onPositionUpdate: (position) => {
-      if (meshRef.current) {
-        meshRef.current.position.set(...position);
-        setCurrentPosition(position);
-      }
+      setCurrentPosition(position);
     }
   });
 

@@ -25,25 +25,16 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
 
   // Custom hooks for object functionality
   const objectSelection = useObjectSelection({ object, onSelect });
-  const { currentPosition, isDragging, dragHandler } = useObjectDrag({ object, meshRef, onSelect });
+  const { currentPosition, isDragging } = useObjectDrag({ object, meshRef, onSelect });
 
-  // Object interaction handling
+  // Object interaction handling (simplified since DragControls handles dragging)
   const {
     isHovered,
-    handlePointerDown,
-    handlePointerMove,
-    handlePointerUp,
     handlePointerOver,
     handlePointerOut,
     handleClick,
     showLongPressEffect,
-  } = useSimplifiedObjectInteraction(
-    onSelect,
-    (e) => dragHandler.startDrag(e, meshRef.current.position),
-    (e) => dragHandler.updateDrag(e),
-    () => dragHandler.endDrag(),
-    movementMode
-  );
+  } = useSimplifiedObjectInteraction(onSelect, movementMode);
 
   return (
     <ObjectContextMenu
@@ -58,9 +49,6 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
         <mesh
           ref={meshRef}
           onClick={handleClick}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
         >
