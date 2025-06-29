@@ -21,8 +21,42 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isDragging, setIsDragging] = useState(false);
-  const [dragOffset, setDragOffset] = useState(new Vector3());
   const { actions } = useSceneObjectsContext();
+  
+  const handleDragStart = () => {
+    setIsDragging(true);
+    onSelect(); // Select the object when starting to drag
+  };
+  
+  const handleDrag = (delta: Vector3) => {
+    if (meshRef.current) {
+      const newPosition: [number, number, number] = [
+        object.position[0] + delta.x,
+        object.position[1] + delta.y,
+        object.position[2] + delta.z
+      ];
+      
+      // Update the object position immediately for smooth dragging
+      meshRef.current.position.set(...newPosition);
+      
+      // Debounce the context update to avoid too many updates
+      actions.updateObject(object.id, { position: newPosition });
+    }
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    toast.success(`📍 ${object.type} repositioned`, {
+      description: "Object moved to new position",
+      duration: 2000,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(34, 197, 94, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
+  };
   
   const {
     isHovered,
@@ -33,15 +67,15 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     handlePointerOut,
     handleClick,
     showLongPressEffect,
-  } = useObjectInteraction(onSelect);
+  } = useObjectInteraction(onSelect, handleDragStart, handleDrag, handleDragEnd);
 
   useEffect(() => {
-    if (meshRef.current) {
+    if (meshRef.current && !isDragging) {
       meshRef.current.position.set(...object.position);
       meshRef.current.rotation.set(...object.rotation);
       meshRef.current.scale.set(...object.scale);
     }
-  }, [object.position, object.rotation, object.scale]);
+  }, [object.position, object.rotation, object.scale, isDragging]);
 
   useFrame((state) => {
     if (!isLocked && meshRef.current && !isSelected && !isDragging) {
@@ -87,6 +121,16 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   };
 
   const handleDuplicate = () => {
+    const newObject = {
+      ...object,
+      id: `obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+      position: [
+        object.position[0] + 2,
+        object.position[1],
+        object.position[2]
+      ] as [number, number, number]
+    };
+    
     actions.addObject(object.type);
     toast.success(`📋 ${object.type} duplicated`, {
       description: "New object added to scene",
@@ -103,9 +147,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const handleMove = () => {
     console.log('Move mode activated for:', object.id);
     onSelect();
-    setIsDragging(true);
-    toast.info(`🎯 Move mode active for ${object.type}`, {
-      description: "Click and drag to reposition",
+    toast.info(`🎯 Drag to move ${object.type}`, {
+      description: "Long press or Ctrl+drag to reposition",
       duration: 3000,
       style: {
         background: 'rgba(0, 0, 0, 0.9)',

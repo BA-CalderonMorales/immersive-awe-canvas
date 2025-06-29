@@ -52,12 +52,16 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
 
     console.log('Adding new object:', newObject);
 
-    setState(prev => ({
-      ...prev,
-      objects: [...prev.objects, newObject],
-      selectedObjectId: newObject.id,
-      isAddingObject: false,
-    }));
+    setState(prev => {
+      const newState = {
+        ...prev,
+        objects: [...prev.objects, newObject],
+        selectedObjectId: newObject.id,
+        isAddingObject: false,
+      };
+      console.log('New state after adding object:', newState);
+      return newState;
+    });
 
     toast.success(`✨ ${type} added to scene!`, {
       description: "Right-click or long-press for more options",
@@ -72,36 +76,67 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, [mainObjectColor]);
 
   const removeObject = useCallback((id: string) => {
-    const objectToRemove = state.objects.find(obj => obj.id === id);
+    console.log('Removing object with id:', id);
     
-    setState(prev => ({
-      ...prev,
-      objects: prev.objects.filter(obj => obj.id !== id),
-      selectedObjectId: prev.selectedObjectId === id ? null : prev.selectedObjectId,
-    }));
-    
-    if (objectToRemove) {
-      console.log('Removed object:', objectToRemove);
-    }
-  }, [state.objects]);
+    setState(prev => {
+      const objectToRemove = prev.objects.find(obj => obj.id === id);
+      
+      if (!objectToRemove) {
+        console.warn('Object not found for removal:', id);
+        return prev;
+      }
+      
+      const newState = {
+        ...prev,
+        objects: prev.objects.filter(obj => obj.id !== id),
+        selectedObjectId: prev.selectedObjectId === id ? null : prev.selectedObjectId,
+      };
+      
+      console.log('Object removed:', objectToRemove);
+      console.log('New state after removal:', newState);
+      return newState;
+    });
+  }, []);
 
   const updateObject = useCallback((id: string, updates: Partial<SceneObject>) => {
     console.log('Updating object:', id, updates);
     
-    setState(prev => ({
-      ...prev,
-      objects: prev.objects.map(obj => 
-        obj.id === id ? { ...obj, ...updates } : obj
-      ),
-    }));
+    setState(prev => {
+      const objectIndex = prev.objects.findIndex(obj => obj.id === id);
+      
+      if (objectIndex === -1) {
+        console.warn('Object not found for update:', id);
+        return prev;
+      }
+      
+      const updatedObjects = [...prev.objects];
+      updatedObjects[objectIndex] = { ...updatedObjects[objectIndex], ...updates };
+      
+      const newState = {
+        ...prev,
+        objects: updatedObjects,
+      };
+      
+      console.log('Object updated:', updatedObjects[objectIndex]);
+      return newState;
+    });
   }, []);
 
   const selectObject = useCallback((id: string | null) => {
     console.log('Selecting object:', id);
-    setState(prev => ({ ...prev, selectedObjectId: id }));
+    setState(prev => {
+      if (prev.selectedObjectId === id) {
+        return prev; // No change needed
+      }
+      
+      const newState = { ...prev, selectedObjectId: id };
+      console.log('Selection changed to:', id);
+      return newState;
+    });
   }, []);
 
   const clearObjects = useCallback(() => {
+    console.log('Clearing all objects');
     setState(prev => ({
       ...prev,
       objects: [],
@@ -121,7 +156,11 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, []);
 
   const toggleAddMode = useCallback(() => {
-    setState(prev => ({ ...prev, isAddingObject: !prev.isAddingObject }));
+    setState(prev => {
+      const newState = { ...prev, isAddingObject: !prev.isAddingObject };
+      console.log('Add mode toggled:', newState.isAddingObject);
+      return newState;
+    });
   }, []);
 
   const actions: ObjectManagerActions = {
