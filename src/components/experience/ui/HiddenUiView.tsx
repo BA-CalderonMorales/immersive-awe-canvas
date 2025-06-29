@@ -17,12 +17,18 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
   const isMobile = useIsMobile();
   const { isExpanded, toggleExpanded, isVisible } = useKeyboardShortcuts();
 
-  // Use scene-specific UI colors for proper contrast
-  const buttonStyle = { 
-    color: uiColor,
-    borderColor: uiColor 
-  };
-  const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
+  // Use consistent button styling with the main UI
+  const blendedButtonClasses = theme === 'day' 
+    ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
+    : "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
+  
+  // Use scene-specific UI colors for border only
+  const uiStyle = { borderColor: uiColor };
+  
+  // For light theme, use dark text; for dark theme, use the ui color
+  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
+
+  const buttonStyle = { ...uiStyle, ...textStyle };
 
   console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible, 'isMobile:', isMobile, 'uiColor:', uiColor);
 
