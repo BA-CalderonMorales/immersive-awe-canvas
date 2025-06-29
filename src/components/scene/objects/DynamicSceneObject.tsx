@@ -24,11 +24,13 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const [currentPosition, setCurrentPosition] = useState<[number, number, number]>(object.position);
   const { actions } = useSceneObjectsContext();
   const { movementMode } = useMovementMode();
+  const dragAccumulator = useRef(new Vector3(0, 0, 0));
   
   const handleDragStart = () => {
     console.log('Drag started for object:', object.id, 'in mode:', movementMode);
     setIsDragging(true);
     onSelect(); // Select the object when starting to drag
+    dragAccumulator.current.set(0, 0, 0);
     
     const modeNames = {
       'x-axis': 'X-Axis',
@@ -56,10 +58,13 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   
   const handleDrag = (delta: Vector3) => {
     if (meshRef.current && movementMode !== 'none') {
+      // Accumulate the delta for smoother movement
+      dragAccumulator.current.add(delta);
+      
       const newPosition: [number, number, number] = [
-        currentPosition[0] + delta.x,
-        currentPosition[1] + delta.y,
-        currentPosition[2] + delta.z
+        object.position[0] + dragAccumulator.current.x,
+        object.position[1] + dragAccumulator.current.y,
+        object.position[2] + dragAccumulator.current.z
       ];
       
       // Update local position immediately for smooth dragging
@@ -75,11 +80,17 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     setIsDragging(false);
     
     // Update the object position in the context when drag ends
-    if (movementMode !== 'none') {
-      actions.updateObject(object.id, { position: currentPosition });
+    if (movementMode !== 'none' && dragAccumulator.current.length() > 0) {
+      const finalPosition: [number, number, number] = [
+        object.position[0] + dragAccumulator.current.x,
+        object.position[1] + dragAccumulator.current.y,
+        object.position[2] + dragAccumulator.current.z
+      ];
+      
+      actions.updateObject(object.id, { position: finalPosition });
       
       toast.success(`📍 ${object.type} repositioned`, {
-        description: `Position: [${currentPosition.map(n => n.toFixed(1)).join(', ')}]`,
+        description: `Position: [${finalPosition.map(n => n.toFixed(1)).join(', ')}]`,
         duration: 2000,
         style: {
           background: 'rgba(0, 0, 0, 0.9)',
@@ -89,6 +100,9 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
         },
       });
     }
+    
+    // Reset accumulator
+    dragAccumulator.current.set(0, 0, 0);
   };
   
   const {

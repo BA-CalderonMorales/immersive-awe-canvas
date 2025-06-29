@@ -12,6 +12,7 @@ type WorldContainerProps = {
 
 const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
@@ -41,6 +42,28 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
     };
   }, []);
 
+  // Listen for object drag state changes to disable camera controls
+  useEffect(() => {
+    const handleObjectDragStart = () => {
+      console.log('Object drag detected - disabling camera controls');
+      setIsObjectDragging(true);
+    };
+
+    const handleObjectDragEnd = () => {
+      console.log('Object drag ended - enabling camera controls');
+      setIsObjectDragging(false);
+    };
+
+    // Listen for custom events from object interactions
+    window.addEventListener('object-drag-start', handleObjectDragStart);
+    window.addEventListener('object-drag-end', handleObjectDragEnd);
+
+    return () => {
+      window.removeEventListener('object-drag-start', handleObjectDragStart);
+      window.removeEventListener('object-drag-end', handleObjectDragEnd);
+    };
+  }, []);
+
   return (
     <div 
       ref={containerRef}
@@ -66,7 +89,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             display: 'block',
             touchAction: 'none'
           }}
-          onPointerDown={() => setIsDragging(true)}
+          onPointerDown={() => !isObjectDragging && setIsDragging(true)}
           onPointerUp={() => setIsDragging(false)}
           onPointerLeave={() => setIsDragging(false)}
           resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
@@ -79,11 +102,12 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
           <OrbitControls
             enableZoom={true}
             enablePan={false}
-            autoRotate={!isLocked}
+            enableRotate={!isObjectDragging}
+            autoRotate={!isLocked && !isObjectDragging}
             autoRotateSpeed={0.5}
             minDistance={8}
             maxDistance={50}
-            onStart={() => setIsDragging(true)}
+            onStart={() => !isObjectDragging && setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
           />
 
