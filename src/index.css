@@ -188,92 +188,102 @@
   }
 }
 
-/* Enhanced lil-gui styling for both themes */
+/* Enhanced lil-gui styling for both themes with high contrast */
 .lil-gui .controller.color .widget input[type="text"] {
     width: 75px !important;
     text-align: center;
 }
 
-/* Day theme lil-gui styling - Professional neutral colors */
+/* Day theme lil-gui styling - High contrast professional colors */
 [data-theme="day"] .lil-gui,
 .theme-day .lil-gui {
-  background: rgba(248, 250, 252, 0.98) !important;
-  border: 1px solid #cbd5e1 !important;
-  border-radius: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
 }
 
 [data-theme="day"] .lil-gui .title,
 .theme-day .lil-gui .title {
-  color: #1e293b !important;
-  background: rgba(255, 255, 255, 0.95) !important;
-  border-bottom: 1px solid #cbd5e1 !important;
+  color: #111827 !important;
+  background: #f9fafb !important;
+  border-bottom: 1px solid #d1d5db !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="day"] .lil-gui .name,
 .theme-day .lil-gui .name {
-  color: #475569 !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
 }
 
 [data-theme="day"] .lil-gui input,
 .theme-day .lil-gui input {
-  color: #1e293b !important;
+  color: #111827 !important;
   background: #ffffff !important;
-  border: 1px solid #cbd5e1 !important;
+  border: 1px solid #d1d5db !important;
 }
 
 [data-theme="day"] .lil-gui input:focus,
 .theme-day .lil-gui input:focus {
-  border-color: #64748b !important;
-  box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.1) !important;
+  border-color: #6b7280 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.1) !important;
 }
 
-/* Night theme lil-gui styling - Professional neutral colors */
+[data-theme="day"] .lil-gui .controller:hover,
+.theme-day .lil-gui .controller:hover {
+  background: #f3f4f6 !important;
+}
+
+/* Night theme lil-gui styling - High contrast professional colors */
 [data-theme="night"] .lil-gui,
 .theme-night .lil-gui {
-  background: rgba(15, 23, 42, 0.98) !important;
-  border: 1px solid #374151 !important;
-  border-radius: 8px !important;
+  background: #111827 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
 }
 
 [data-theme="night"] .lil-gui .title,
 .theme-night .lil-gui .title {
-  color: #e2e8f0 !important;
-  background: rgba(30, 41, 59, 0.95) !important;
-  border-bottom: 1px solid #374151 !important;
+  color: #f9fafb !important;
+  background: #1f2937 !important;
+  border-bottom: 1px solid #4b5563 !important;
+  font-weight: 600 !important;
 }
 
 [data-theme="night"] .lil-gui .name,
 .theme-night .lil-gui .name {
-  color: #cbd5e1 !important;
+  color: #d1d5db !important;
+  font-weight: 500 !important;
 }
 
 [data-theme="night"] .lil-gui input,
 .theme-night .lil-gui input {
-  color: #f1f5f9 !important;
-  background: #1e293b !important;
-  border: 1px solid #475569 !important;
+  color: #f9fafb !important;
+  background: #1f2937 !important;
+  border: 1px solid #4b5563 !important;
 }
 
 [data-theme="night"] .lil-gui input:focus,
 .theme-night .lil-gui input:focus {
-  border-color: #64748b !important;
-  box-shadow: 0 0 0 2px rgba(100, 116, 139, 0.15) !important;
-}
-
-/* Default styling that works for both themes */
-.lil-gui {
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
-}
-
-.lil-gui .controller {
-  border: none !important;
-}
-
-.lil-gui .controller:hover {
-  background: rgba(0, 0, 0, 0.03) !important;
+  border-color: #6b7280 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(107, 114, 128, 0.15) !important;
 }
 
 [data-theme="night"] .lil-gui .controller:hover,
 .theme-night .lil-gui .controller:hover {
-  background: rgba(100, 116, 139, 0.1) !important;
+  background: rgba(75, 85, 99, 0.1) !important;
+}
+
+/* Default styling that works for both themes */
+.lil-gui {
+  font-family: system-ui, -apple-system, sans-serif !important;
+}
+
+.lil-gui .controller {
+  border: none !important;
+  transition: background-color 0.15s ease !important;
 }
