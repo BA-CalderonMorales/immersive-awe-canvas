@@ -1,10 +1,10 @@
-
 import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh, Vector3 } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useMovementMode } from '@/context/MovementModeContext';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
 import ObjectEffects from './components/ObjectEffects';
@@ -23,26 +23,39 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const [isDragging, setIsDragging] = useState(false);
   const [currentPosition, setCurrentPosition] = useState<[number, number, number]>(object.position);
   const { actions } = useSceneObjectsContext();
+  const { movementMode } = useMovementMode();
   
   const handleDragStart = () => {
-    console.log('Drag started for object:', object.id);
+    console.log('Drag started for object:', object.id, 'in mode:', movementMode);
     setIsDragging(true);
     onSelect(); // Select the object when starting to drag
     
-    toast.info(`🎯 Moving ${object.type}`, {
-      description: "Drag to reposition object",
-      duration: 2000,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(251, 191, 36, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
+    const modeNames = {
+      'x-axis': 'X-Axis',
+      'y-axis': 'Y-Axis',
+      'z-axis': 'Z-Axis',
+      'freehand': 'Freehand',
+      'none': 'Disabled'
+    };
+    
+    if (movementMode !== 'none') {
+      toast.info(`🎯 Moving ${object.type} - ${modeNames[movementMode]}`, {
+        description: movementMode === 'freehand' 
+          ? 'Drag to reposition object freely'
+          : `Drag to move along ${movementMode.split('-')[0].toUpperCase()}-axis`,
+        duration: 2000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    }
   };
   
   const handleDrag = (delta: Vector3) => {
-    if (meshRef.current) {
+    if (meshRef.current && movementMode !== 'none') {
       const newPosition: [number, number, number] = [
         currentPosition[0] + delta.x,
         currentPosition[1] + delta.y,
@@ -53,7 +66,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
       setCurrentPosition(newPosition);
       meshRef.current.position.set(...newPosition);
       
-      console.log('Object dragged to position:', newPosition);
+      console.log(`Object dragged to position in ${movementMode} mode:`, newPosition);
     }
   };
   
@@ -62,18 +75,20 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     setIsDragging(false);
     
     // Update the object position in the context when drag ends
-    actions.updateObject(object.id, { position: currentPosition });
-    
-    toast.success(`📍 ${object.type} repositioned`, {
-      description: "Object moved to new position",
-      duration: 2000,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(34, 197, 94, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
+    if (movementMode !== 'none') {
+      actions.updateObject(object.id, { position: currentPosition });
+      
+      toast.success(`📍 ${object.type} repositioned`, {
+        description: `Position: [${currentPosition.map(n => n.toFixed(1)).join(', ')}]`,
+        duration: 2000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(34, 197, 94, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    }
   };
   
   const {
@@ -85,7 +100,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     handlePointerOut,
     handleClick,
     showLongPressEffect,
-  } = useObjectInteraction(onSelect, handleDragStart, handleDrag, handleDragEnd);
+  } = useObjectInteraction(onSelect, handleDragStart, handleDrag, handleDragEnd, movementMode);
 
   // Update local position when object position changes from outside
   useEffect(() => {

@@ -6,7 +6,8 @@ export const useObjectInteraction = (
   onSelect: () => void,
   onDragStart?: () => void,
   onDrag?: (delta: Vector3) => void,
-  onDragEnd?: () => void
+  onDragEnd?: () => void,
+  movementMode: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand' = 'freehand'
 ) => {
   const [isHovered, setIsHovered] = useState(false);
   const [showLongPressEffect, setShowLongPressEffect] = useState(false);
@@ -28,7 +29,7 @@ export const useObjectInteraction = (
   const handlePointerDown = (e: any) => {
     e.stopPropagation();
     
-    console.log('Object pointer down detected');
+    console.log('Object pointer down detected, movement mode:', movementMode);
     
     const clientX = e.clientX || e.point?.x || 0;
     const clientY = e.clientY || e.point?.y || 0;
@@ -41,14 +42,14 @@ export const useObjectInteraction = (
     // Check if Ctrl key is pressed (for desktop dragging)
     const isCtrlPressed = e.ctrlKey || e.metaKey;
     
-    if (isCtrlPressed) {
+    if (isCtrlPressed && movementMode !== 'none') {
       // Immediate drag mode for desktop with Ctrl
       console.log('Ctrl+drag mode activated immediately');
       setIsDragging(true);
       dragStartRef.current = true;
       setShowLongPressEffect(true);
       onDragStart?.();
-    } else {
+    } else if (movementMode !== 'none') {
       // Start holographic effect immediately for visual feedback
       setShowLongPressEffect(true);
       console.log('Long press timer started for mobile');
@@ -88,17 +89,35 @@ export const useObjectInteraction = (
       }
     }
     
-    // Handle dragging with proper scaling
-    if (isDragging && onDrag) {
+    // Handle dragging with proper scaling based on movement mode
+    if (isDragging && onDrag && movementMode !== 'none') {
       e.stopPropagation();
       
-      const deltaX = (currentX - lastDragPosition.x) * 0.005; // Reduced sensitivity
-      const deltaY = -(currentY - lastDragPosition.y) * 0.005; // Invert Y for 3D space
+      const deltaX = (currentX - lastDragPosition.x) * 0.005;
+      const deltaY = -(currentY - lastDragPosition.y) * 0.005;
       
-      const delta = new Vector3(deltaX, deltaY, 0);
+      let delta = new Vector3(0, 0, 0);
+      
+      // Apply movement constraints based on mode
+      switch (movementMode) {
+        case 'x-axis':
+          delta.set(deltaX, 0, 0);
+          break;
+        case 'y-axis':
+          delta.set(0, deltaY, 0);
+          break;
+        case 'z-axis':
+          // Use horizontal mouse movement for Z-axis
+          delta.set(0, 0, deltaX);
+          break;
+        case 'freehand':
+          delta.set(deltaX, deltaY, 0);
+          break;
+      }
+      
       onDrag(delta);
       
-      console.log('Dragging object with delta:', { deltaX, deltaY });
+      console.log(`Dragging object in ${movementMode} mode with delta:`, delta);
       setLastDragPosition({ x: currentX, y: currentY });
     }
   };

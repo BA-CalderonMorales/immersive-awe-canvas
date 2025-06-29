@@ -1,22 +1,34 @@
-
 import { useState } from 'react';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useMovementMode } from '@/context/MovementModeContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Move, RotateCcw, Scale, Palette, Trash2 } from 'lucide-react';
+import { Separator } from '@/components/ui/separator';
+import { Move, RotateCcw, Scale, Palette, Trash2, ArrowRight, ArrowUp, ArrowDown, Navigation } from 'lucide-react';
 import { toast } from 'sonner';
 
 const ObjectMoveControls = () => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
-  const [moveMode, setMoveMode] = useState(false);
+  const { movementMode, setMovementMode } = useMovementMode();
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
 
-  const handleToggleMoveMode = () => {
-    setMoveMode(!moveMode);
-    if (!moveMode) {
-      toast.info('🎯 Object Move Mode Activated', {
-        description: 'Long press or Ctrl+drag objects to move them',
+  const handleToggleMoveMode = (mode: typeof movementMode) => {
+    const newMode = movementMode === mode ? 'none' : mode;
+    setMovementMode(newMode);
+    
+    if (newMode !== 'none') {
+      const modeNames = {
+        'x-axis': 'X-Axis Movement',
+        'y-axis': 'Y-Axis Movement', 
+        'z-axis': 'Z-Axis Movement',
+        'freehand': 'Freehand Movement'
+      };
+      
+      toast.info(`🎯 ${modeNames[newMode]} Activated`, {
+        description: newMode === 'freehand' 
+          ? 'Long press or Ctrl+drag to move objects freely in 3D space'
+          : `Long press or Ctrl+drag to move objects along the ${mode.split('-')[0].toUpperCase()} axis`,
         duration: 3000,
         style: {
           background: 'rgba(0, 0, 0, 0.9)',
@@ -26,7 +38,7 @@ const ObjectMoveControls = () => {
         },
       });
     } else {
-      toast.success('✅ Move Mode Deactivated', {
+      toast.success('✅ Movement Mode Deactivated', {
         description: 'Normal camera controls restored',
         duration: 2000,
         style: {
@@ -37,6 +49,38 @@ const ObjectMoveControls = () => {
         },
       });
     }
+  };
+
+  const handleMoveObject = (axis: 'x' | 'y' | 'z', direction: number) => {
+    if (!selectedObject) return;
+    
+    const moveAmount = 0.5 * direction;
+    const newPosition: [number, number, number] = [...selectedObject.position];
+    
+    switch (axis) {
+      case 'x':
+        newPosition[0] += moveAmount;
+        break;
+      case 'y':
+        newPosition[1] += moveAmount;
+        break;
+      case 'z':
+        newPosition[2] += moveAmount;
+        break;
+    }
+    
+    actions.updateObject(selectedObject.id, { position: newPosition });
+    
+    toast.success(`📍 Moved along ${axis.toUpperCase()}-axis`, {
+      description: `Position: [${newPosition.map(n => n.toFixed(1)).join(', ')}]`,
+      duration: 1500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(34, 197, 94, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   const handleScaleObject = (factor: number) => {
@@ -116,18 +160,65 @@ const ObjectMoveControls = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {/* Move Mode Toggle */}
-          <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Move Mode</span>
-            <Button
-              onClick={handleToggleMoveMode}
-              variant={moveMode ? "default" : "outline"}
-              size="sm"
-              className={moveMode ? "bg-yellow-600 hover:bg-yellow-700" : "border-cyan-500/50 hover:bg-cyan-500/10"}
-            >
-              {moveMode ? 'Deactivate' : 'Activate'}
-            </Button>
+          {/* Movement Mode Selection */}
+          <div className="space-y-3">
+            <h4 className="text-sm font-medium text-cyan-400">Movement Modes</h4>
+            <div className="grid grid-cols-2 gap-2">
+              <Button
+                onClick={() => handleToggleMoveMode('x-axis')}
+                variant={movementMode === 'x-axis' ? "default" : "outline"}
+                size="sm"
+                className={movementMode === 'x-axis' 
+                  ? "bg-red-600 hover:bg-red-700" 
+                  : "border-red-500/50 hover:bg-red-500/10 text-red-400"
+                }
+              >
+                <ArrowRight className="w-3 h-3 mr-1" />
+                X-Axis
+              </Button>
+              
+              <Button
+                onClick={() => handleToggleMoveMode('y-axis')}
+                variant={movementMode === 'y-axis' ? "default" : "outline"}
+                size="sm"
+                className={movementMode === 'y-axis' 
+                  ? "bg-green-600 hover:bg-green-700" 
+                  : "border-green-500/50 hover:bg-green-500/10 text-green-400"
+                }
+              >
+                <ArrowUp className="w-3 h-3 mr-1" />
+                Y-Axis
+              </Button>
+              
+              <Button
+                onClick={() => handleToggleMoveMode('z-axis')}
+                variant={movementMode === 'z-axis' ? "default" : "outline"}
+                size="sm"
+                className={movementMode === 'z-axis' 
+                  ? "bg-blue-600 hover:bg-blue-700" 
+                  : "border-blue-500/50 hover:bg-blue-500/10 text-blue-400"
+                }
+              >
+                <ArrowDown className="w-3 h-3 mr-1" />
+                Z-Axis
+              </Button>
+              
+              <Button
+                onClick={() => handleToggleMoveMode('freehand')}
+                variant={movementMode === 'freehand' ? "default" : "outline"}
+                size="sm"
+                className={movementMode === 'freehand' 
+                  ? "bg-purple-600 hover:bg-purple-700" 
+                  : "border-purple-500/50 hover:bg-purple-500/10 text-purple-400"
+                }
+              >
+                <Navigation className="w-3 h-3 mr-1" />
+                Freehand
+              </Button>
+            </div>
           </div>
+
+          <Separator className="bg-cyan-500/30" />
 
           {/* Object List */}
           <div className="space-y-2">
@@ -177,6 +268,37 @@ const ObjectMoveControls = () => {
               <h4 className="text-sm font-medium text-cyan-400">
                 Selected: {selectedObject.type}
               </h4>
+              
+              {/* Position Display */}
+              <div className="text-xs text-gray-300 bg-gray-900/50 p-2 rounded">
+                <p>Position: [{selectedObject.position.map(n => n.toFixed(1)).join(', ')}]</p>
+                <p>Scale: [{selectedObject.scale.map(n => n.toFixed(1)).join(', ')}]</p>
+              </div>
+
+              {/* Manual Movement Controls */}
+              {movementMode !== 'none' && movementMode !== 'freehand' && (
+                <div className="space-y-2">
+                  <h5 className="text-xs font-medium text-cyan-300">Manual Movement</h5>
+                  <div className="flex gap-1">
+                    <Button
+                      onClick={() => handleMoveObject(movementMode.split('-')[0] as 'x' | 'y' | 'z', -1)}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400"
+                    >
+                      -0.5
+                    </Button>
+                    <Button
+                      onClick={() => handleMoveObject(movementMode.split('-')[0] as 'x' | 'y' | 'z', 1)}
+                      variant="outline"
+                      size="sm"
+                      className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400"
+                    >
+                      +0.5
+                    </Button>
+                  </div>
+                </div>
+              )}
               
               {/* Scale Controls */}
               <div className="flex gap-2">
@@ -233,10 +355,13 @@ const ObjectMoveControls = () => {
           )}
 
           {/* Instructions */}
-          <div className="text-xs text-gray-400 bg-gray-900/50 p-2 rounded">
-            <p><strong>Desktop:</strong> Ctrl + Drag to move objects</p>
-            <p><strong>Mobile:</strong> Long press (500ms) then drag</p>
-            <p><strong>Select:</strong> Quick tap on any object</p>
+          <div className="text-xs text-gray-400 bg-gray-900/50 p-2 rounded space-y-1">
+            <p><strong>Movement Modes:</strong></p>
+            <p>• <span className="text-red-400">X-Axis:</span> Left/Right movement</p>
+            <p>• <span className="text-green-400">Y-Axis:</span> Up/Down movement</p>
+            <p>• <span className="text-blue-400">Z-Axis:</span> Forward/Backward movement</p>
+            <p>• <span className="text-purple-400">Freehand:</span> 3D movement in all directions</p>
+            <p><strong>Controls:</strong> Long press (mobile) or Ctrl+drag (desktop)</p>
           </div>
         </CardContent>
       </Card>
