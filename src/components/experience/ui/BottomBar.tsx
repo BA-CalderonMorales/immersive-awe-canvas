@@ -17,7 +17,6 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
 
@@ -174,7 +173,7 @@ const BottomBar = ({
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-4 h-full overflow-y-auto">
-                <SceneControls sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
+                <p className="text-sm text-gray-500">Scene controls have been simplified. Use the settings panel to manage objects.</p>
               </div>
             </SheetContent>
           </Sheet>
