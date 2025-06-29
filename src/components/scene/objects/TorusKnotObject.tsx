@@ -45,8 +45,8 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
         color={themeConfig.mainObjectColor} 
       />
       
-      {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
-      {(isDragEnabled || (isHovered && isDragEnabled)) && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered */}
+      {(isDragEnabled || isHovered) && (
         <mesh>
           <torusKnotGeometry args={[1, 0.3, 128, 16]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

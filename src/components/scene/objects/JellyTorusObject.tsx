@@ -51,8 +51,8 @@ const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
         opacity={0.8}
       />
       
-      {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
-      {(isDragEnabled || (isHovered && isDragEnabled)) && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered */}
+      {(isDragEnabled || isHovered) && (
         <mesh>
           <torusGeometry args={[1, 0.4, 16, 100]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

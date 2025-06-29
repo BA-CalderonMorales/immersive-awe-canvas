@@ -51,8 +51,8 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
         <sphereGeometry args={[0.8, 64, 64]} />
         <DynamicMaterial materialConfig={materialConfig} color={color} />
         
-        {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
-        {(isDragEnabled || (isHovered && isDragEnabled)) && (
+        {/* Wireframe overlay - show when drag is enabled or when hovered */}
+        {(isDragEnabled || isHovered) && (
           <mesh>
             <sphereGeometry args={[0.8, 64, 64]} />
             <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
