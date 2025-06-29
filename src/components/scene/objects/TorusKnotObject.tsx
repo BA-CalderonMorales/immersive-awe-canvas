@@ -1,10 +1,11 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneThemeConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
+
+const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface TorusKnotObjectProps {
   themeConfig: SceneThemeConfig;
@@ -17,6 +18,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state) => {
+    if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
       meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
@@ -36,6 +38,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   return (
     <mesh 
       ref={meshRef}
+      name={MAIN_OBJECT_NAME}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >

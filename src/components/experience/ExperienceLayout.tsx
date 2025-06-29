@@ -1,4 +1,3 @@
-
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { SceneConfig } from "@/types/scene";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
@@ -15,6 +14,7 @@ interface ExperienceLayoutProps {
   isSettingsOpen: boolean;
   isMobile: boolean;
   onUpdateSceneConfig: (config: SceneConfig) => void;
+  isDragEnabled: boolean;
 }
 
 const ExperienceLayout = ({
@@ -26,6 +26,7 @@ const ExperienceLayout = ({
   isSettingsOpen,
   isMobile,
   onUpdateSceneConfig,
+  isDragEnabled,
 }: ExperienceLayoutProps) => {
   const { theme } = useExperience();
   const themeConfig = editableSceneConfig[theme];
@@ -33,7 +34,7 @@ const ExperienceLayout = ({
 
   if (isMobile) {
     return (
-      <SceneObjectsProvider mainObjectColor={mainObjectColor}>
+      <SceneObjectsProvider mainObjectColor={mainObjectColor} isDragEnabled={isDragEnabled}>
         <div 
           className="w-full h-full"
           style={{ 
@@ -47,7 +48,8 @@ const ExperienceLayout = ({
             isTransitioning={isTransitioning} 
             worldIndex={currentWorldIndex} 
             isLocked={isObjectLocked} 
-            onToggleLock={onToggleObjectLock} 
+            onToggleLock={onToggleObjectLock}
+            isDragEnabled={isDragEnabled}
           />
         </div>
       </SceneObjectsProvider>
@@ -55,7 +57,7 @@ const ExperienceLayout = ({
   }
 
   return (
-    <SceneObjectsProvider mainObjectColor={mainObjectColor}>
+    <SceneObjectsProvider mainObjectColor={mainObjectColor} isDragEnabled={isDragEnabled}>
       <ResizablePanelGroup 
         direction="horizontal" 
         className="w-full h-full"
@@ -72,7 +74,8 @@ const ExperienceLayout = ({
               isTransitioning={isTransitioning} 
               worldIndex={currentWorldIndex} 
               isLocked={isObjectLocked} 
-              onToggleLock={onToggleObjectLock} 
+              onToggleLock={onToggleObjectLock}
+              isDragEnabled={isDragEnabled}
             />
           </div>
         </ResizablePanel>

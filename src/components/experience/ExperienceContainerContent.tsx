@@ -1,4 +1,3 @@
-
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
 import ExperienceTransitions from "./ExperienceTransitions";
@@ -41,6 +40,8 @@ interface ExperienceContainerContentProps {
   handleEntryTransitionEndWithHint: () => void;
   handleWorldTransitionEnd: () => void;
   isMobile: boolean;
+  isDragEnabled: boolean;
+  onToggleDrag: () => void;
 }
 
 const ExperienceContainerContent = ({
@@ -73,6 +74,8 @@ const ExperienceContainerContent = ({
   handleEntryTransitionEndWithHint,
   handleWorldTransitionEnd,
   isMobile,
+  isDragEnabled,
+  onToggleDrag,
 }: ExperienceContainerContentProps) => {
   const [forceWireframe, setForceWireframe] = useState(false);
 
@@ -129,6 +132,7 @@ const ExperienceContainerContent = ({
           isSettingsOpen={isSettingsOpen}
           isMobile={isMobile}
           onUpdateSceneConfig={setEditableSceneConfig}
+          isDragEnabled={isDragEnabled}
         />
 
         <ExperienceUI
@@ -149,6 +153,8 @@ const ExperienceContainerContent = ({
           isUiHidden={isUiHidden}
           onToggleUiHidden={() => setIsUiHidden((h) => !h)}
           showUiHint={showUiHint}
+          isDragEnabled={isDragEnabled}
+          onToggleDrag={onToggleDrag}
         />
 
         <ExperienceHotkeys
@@ -167,6 +173,7 @@ const ExperienceContainerContent = ({
           isSettingsOpen={isSettingsOpen}
           worlds={worlds}
           jumpToWorld={handleJumpToWorld}
+          onToggleDrag={onToggleDrag}
           onToggleWireframe={handleToggleWireframe}
         />
       </motion.div>

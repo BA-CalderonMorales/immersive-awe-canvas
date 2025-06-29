@@ -1,10 +1,11 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
+
+const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface MorphingIcosahedronObjectProps {
   color: string;
@@ -18,6 +19,7 @@ const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: Morphing
   const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state) => {
+    if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
       meshRef.current.rotation.x = state.clock.elapsedTime * 0.4;
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.6;
@@ -38,6 +40,7 @@ const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: Morphing
   return (
     <mesh 
       ref={meshRef}
+      name={MAIN_OBJECT_NAME}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >

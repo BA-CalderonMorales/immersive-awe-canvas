@@ -1,4 +1,3 @@
-
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
@@ -8,7 +7,7 @@ type WorldContainerProps = {
   children: React.ReactNode;
   onToggleLock?: () => void;
   isLocked: boolean;
-  isDragEnabled?: boolean;
+  isDragEnabled: boolean;
   onDragStateChange?: (isDragging: boolean) => void;
 };
 
@@ -16,7 +15,7 @@ const WorldContainer = ({
   children, 
   onToggleLock, 
   isLocked, 
-  isDragEnabled = false,
+  isDragEnabled,
   onDragStateChange 
 }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -75,7 +74,7 @@ const WorldContainer = ({
           camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
           style={{
-            cursor: isDragging || isObjectDragging ? 'grabbing' : 'grab',
+            cursor: isDragEnabled ? 'move' : (isDragging || isObjectDragging ? 'grabbing' : 'grab'),
             width: '100%',
             height: '100%',
             display: 'block',

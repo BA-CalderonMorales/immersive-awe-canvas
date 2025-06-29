@@ -1,4 +1,3 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
@@ -9,6 +8,8 @@ import InstancedFieldElements from './wobbleField/InstancedFieldElements';
 import EnergyStreams from './wobbleField/EnergyStreams';
 import PortalEffects from './wobbleField/PortalEffects';
 import { generateChaoticField } from './wobbleField/fieldGenerator';
+
+const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface WobbleFieldObjectProps {
   color: string;
@@ -25,6 +26,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   const fieldData = generateChaoticField();
 
   useFrame((state) => {
+    if (groupRef.current?.userData.isBeingDragged) return;
     if (!isLocked && groupRef.current) {
       groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
@@ -43,6 +45,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   return (
     <group 
       ref={groupRef}
+      name={MAIN_OBJECT_NAME}
       onPointerOver={handlePointerEnter}
       onPointerOut={handlePointerLeave}
     >

@@ -1,4 +1,3 @@
-
 import WorldContainer from "@/components/WorldContainer";
 import KeyboardControls from "@/components/controls/KeyboardControls";
 import DynamicWorld from "@/components/scene/DynamicWorld";
@@ -11,11 +10,10 @@ interface WorldViewProps {
   worldIndex: number;
   isLocked: boolean;
   onToggleLock: () => void;
+  isDragEnabled: boolean;
 }
 
-const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggleLock }: WorldViewProps) => {
-  const [isDragEnabled] = useState(false); // This will be controlled by the context
-
+const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggleLock, isDragEnabled }: WorldViewProps) => {
   const handleDragStateChange = (isDragging: boolean) => {
     console.log('Drag state changed:', isDragging);
   };

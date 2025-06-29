@@ -1,4 +1,3 @@
-
 import { useExperience } from "@/hooks/useExperience";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperienceState } from "@/hooks/useExperienceState";
@@ -52,6 +51,8 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     setShowUiHint,
     hintShownRef,
     handleCopyCode,
+    isDragEnabled,
+    toggleDragEnabled,
   } = useExperienceState();
 
   const {
@@ -118,6 +119,8 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
       handleToggleShortcuts={handleToggleShortcuts}
       handleEntryTransitionEndWithHint={handleEntryTransitionEndWithHint}
       handleWorldTransitionEnd={handleWorldTransitionEnd}
+      isDragEnabled={isDragEnabled}
+      onToggleDrag={toggleDragEnabled}
     />
   );
 };

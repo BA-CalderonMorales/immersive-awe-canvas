@@ -9,6 +9,8 @@ import SpireStructure from './crystallineSpire/SpireStructure';
 import CrystalFragmentComponent from './crystallineSpire/CrystalFragmentComponent';
 import EnergyWeb from './crystallineSpire/EnergyWeb';
 
+const MAIN_OBJECT_NAME = 'main-scene-object';
+
 interface CrystallineSpireObjectProps {
   color: string;
   materialConfig: MaterialConfig;
@@ -42,6 +44,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   };
 
   useFrame((state) => {
+    if (mainGroupRef.current?.userData.isBeingDragged) return;
     if (isLocked) return;
     
     timeRef.current = state.clock.getElapsedTime();
@@ -110,7 +113,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
 
   return (
     <>
-      <group ref={mainGroupRef}>
+      <group ref={mainGroupRef} name={MAIN_OBJECT_NAME}>
         {spireFormations.map((formation, index) => (
           <SpireStructure
             key={index}

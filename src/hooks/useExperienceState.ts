@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { SceneConfig } from '@/types/scene';
 import { toast } from 'sonner';
@@ -11,6 +10,7 @@ export const useExperienceState = () => {
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isDragEnabled, setIsDragEnabled] = useState(false);
   
   // Stable UI state management
   const [isUiHidden, setIsUiHidden] = useState(() => {
@@ -80,6 +80,24 @@ export const useExperienceState = () => {
     });
   }, []);
 
+  const toggleDragEnabled = useCallback(() => {
+    setIsDragEnabled(enabled => {
+      const newState = !enabled;
+      toast.info(newState ? "Drag Mode Enabled" : "Drag Mode Disabled", {
+        description: newState ? "You can now move objects" : "Camera rotation re-enabled",
+        duration: 2500,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+      logEvent({ eventType: 'action', eventSource: 'toggle_drag_mode', metadata: { enabled: newState } });
+      return newState;
+    });
+  }, []);
+
   const handleCopyCode = useCallback(() => {
     if (!editableSceneConfig) return;
     
@@ -145,5 +163,7 @@ export const useExperienceState = () => {
     setShowUiHint,
     hintShownRef,
     handleCopyCode,
+    isDragEnabled,
+    toggleDragEnabled,
   };
 };

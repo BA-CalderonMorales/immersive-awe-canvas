@@ -1,10 +1,11 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
+
+const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface WavyGridObjectProps {
   color: string;
@@ -18,6 +19,7 @@ const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps
   const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state) => {
+    if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
       meshRef.current.rotation.z = state.clock.elapsedTime * 0.2;
@@ -37,6 +39,7 @@ const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps
   return (
     <mesh 
       ref={meshRef}
+      name={MAIN_OBJECT_NAME}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >

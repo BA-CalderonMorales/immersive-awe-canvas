@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -23,8 +22,8 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
-  isDragEnabled?: boolean;
-  onToggleDrag?: () => void;
+  isDragEnabled: boolean;
+  onToggleDrag: () => void;
   forceWireframe?: boolean;
   onToggleWireframe?: () => void;
 }
@@ -40,7 +39,7 @@ const BottomBar = ({
   onUpdateSceneConfig,
   onShowHelp,
   theme,
-  isDragEnabled = false,
+  isDragEnabled,
   onToggleDrag,
   forceWireframe = false,
   onToggleWireframe,
@@ -96,24 +95,22 @@ const BottomBar = ({
             <p>Search Worlds (S or Ctrl+K)</p>
           </TooltipContent>
         </Tooltip>
-        {onToggleDrag && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                style={buttonStyle}
-                className={`${blendedButtonClasses} ${isDragEnabled ? 'bg-blue-500/20' : ''}`}
-                size="icon"
-                aria-label="Toggle Drag Controls"
-                onClick={onToggleDrag}
-              >
-                <Move className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle Drag Controls (Z)</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              style={buttonStyle}
+              className={`${blendedButtonClasses} ${isDragEnabled ? 'bg-blue-500/20 text-blue-400' : ''}`}
+              size="icon"
+              aria-label="Toggle Drag Controls"
+              onClick={onToggleDrag}
+            >
+              <Move className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Toggle Drag Controls (Z)</p>
+          </TooltipContent>
+        </Tooltip>
         {onToggleWireframe && (
           <Tooltip>
             <TooltipTrigger asChild>

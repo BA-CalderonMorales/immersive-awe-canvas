@@ -1,10 +1,11 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
+
+const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface DistortionSphereObjectProps {
   color: string;
@@ -18,6 +19,7 @@ const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionS
   const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state) => {
+    if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
       meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
@@ -41,6 +43,7 @@ const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionS
   return (
     <mesh 
       ref={meshRef}
+      name={MAIN_OBJECT_NAME}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >

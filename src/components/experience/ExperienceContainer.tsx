@@ -1,4 +1,3 @@
-
 import { useIsMobile } from "@/hooks/use-mobile";
 import ExperienceContainerContent from "./ExperienceContainerContent";
 
@@ -34,6 +33,8 @@ interface ExperienceContainerProps {
   handleToggleShortcuts: () => void;
   handleEntryTransitionEndWithHint: () => void;
   handleWorldTransitionEnd: () => void;
+  isDragEnabled: boolean;
+  onToggleDrag: () => void;
 }
 
 const ExperienceContainer = (props: ExperienceContainerProps) => {
