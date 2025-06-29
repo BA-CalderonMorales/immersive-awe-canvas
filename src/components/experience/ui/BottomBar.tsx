@@ -10,6 +10,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search, Move, Grid3x3 } from "lucide-react";
+import SceneSettingsPanel from "../SceneSettingsPanel";
 
 interface BottomBarProps {
   uiColor: string;
@@ -152,16 +153,8 @@ const BottomBar = ({
                 <p>Scene Settings (Esc)</p>
               </TooltipContent>
             </Tooltip>
-            <SheetContent side="bottom" className="h-[60vh]">
-              <SheetHeader className="text-left">
-                <SheetTitle>Scene Settings</SheetTitle>
-                <SheetDescription>
-                  Manage objects in the scene
-                </SheetDescription>
-              </SheetHeader>
-              <div className="mt-4 h-full overflow-y-auto">
-                <p className="text-sm text-gray-500">Use the settings panel to manage scene objects.</p>
-              </div>
+            <SheetContent side="bottom" className="h-[75vh] bg-black/95 border-t border-cyan-500/30 p-0">
+              <SceneSettingsPanel sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
             </SheetContent>
           </Sheet>
         ) : (

@@ -1,4 +1,3 @@
-
 import ObjectManager from './ObjectManager';
 import DynamicObject from './DynamicObject';
 import DynamicLights from './DynamicLights';

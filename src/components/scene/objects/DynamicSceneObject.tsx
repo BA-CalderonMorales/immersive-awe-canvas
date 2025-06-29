@@ -1,4 +1,3 @@
-
 import { useRef, useEffect, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
@@ -27,12 +26,14 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
     onSelect();
   };
 
-  const handlePointerEnter = () => {
+  const handlePointerEnter = (e: any) => {
+    e.stopPropagation();
     setIsHovered(true);
     document.body.style.cursor = 'pointer';
   };
 
-  const handlePointerLeave = () => {
+  const handlePointerLeave = (e: any) => {
+    e.stopPropagation();
     setIsHovered(false);
     document.body.style.cursor = 'auto';
   };
