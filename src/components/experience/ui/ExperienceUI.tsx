@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { toast } from "sonner";
 import HiddenUiView from "./HiddenUiView";
 import TopBar from "./TopBar";
@@ -131,68 +129,66 @@ const ExperienceUI = ({
 
   return (
     <TooltipProvider>
-      <SceneObjectsProvider mainObjectColor={uiColor}>
-        {isUiHidden ? (
-          <HiddenUiView 
-            onToggleUiHidden={handleToggleUiHidden}
-            showUiHint={showUiHint}
+      {isUiHidden ? (
+        <HiddenUiView 
+          onToggleUiHidden={handleToggleUiHidden}
+          showUiHint={showUiHint}
+          uiColor={uiColor}
+          theme={theme}
+        />
+      ) : (
+        <>
+          {/* Top navigation bar */}
+          <TopBar 
+            worldName={worldName}
             uiColor={uiColor}
+            onToggleUiHidden={handleToggleUiHidden}
+            onToggleTheme={handleToggleTheme}
+            theme={theme}
+            onGoHome={handleGoHome}
+            onShowHelp={handleShowHelp}
+            isTransitioning={false}
+            isMobile={isMobile}
+            isSettingsOpen={isSettingsOpen}
+          />
+          
+          {/* World navigation controls */}
+          <NavigationControls 
+            uiColor={uiColor}
+            onChangeWorld={handleChangeWorld}
+            isTransitioning={false}
             theme={theme}
           />
-        ) : (
-          <>
-            {/* Top navigation bar */}
-            <TopBar 
-              worldName={worldName}
-              uiColor={uiColor}
-              onToggleUiHidden={handleToggleUiHidden}
-              onToggleTheme={handleToggleTheme}
-              theme={theme}
-              onGoHome={handleGoHome}
-              onShowHelp={handleShowHelp}
-              isTransitioning={false}
-              isMobile={isMobile}
-              isSettingsOpen={isSettingsOpen}
-            />
-            
-            {/* World navigation controls */}
-            <NavigationControls 
-              uiColor={uiColor}
-              onChangeWorld={handleChangeWorld}
-              isTransitioning={false}
-              theme={theme}
-            />
 
-            {/* Bottom action bar */}
-            <BottomBar 
-              uiColor={uiColor}
-              onCopyCode={onCopyCode}
-              onShowSearch={handleShowSearch}
-              isMobile={isMobile}
-              isSettingsOpen={isSettingsOpen}
-              onToggleSettings={onToggleSettings}
-              editableSceneConfig={editableSceneConfig}
-              onUpdateSceneConfig={onUpdateSceneConfig}
-              onShowHelp={handleShowHelp}
-              theme={theme}
-              onToggleObjectMoveMode={handleToggleObjectMoveMode}
-              isObjectMoveMode={isObjectMoveMode}
-            />
+          {/* Bottom action bar */}
+          <BottomBar 
+            uiColor={uiColor}
+            onCopyCode={onCopyCode}
+            onShowSearch={handleShowSearch}
+            isMobile={isMobile}
+            isSettingsOpen={isSettingsOpen}
+            onToggleSettings={onToggleSettings}
+            editableSceneConfig={editableSceneConfig}
+            onUpdateSceneConfig={onUpdateSceneConfig}
+            onShowHelp={handleShowHelp}
+            theme={theme}
+            onToggleObjectMoveMode={handleToggleObjectMoveMode}
+            isObjectMoveMode={isObjectMoveMode}
+          />
 
-            {/* Keyboard hint for desktop */}
-            {!isMobile && (
-              <div 
-                style={{ color: theme === 'day' ? '#000000' : uiColor }} 
-                className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
-                  isSettingsOpen ? 'z-10' : 'z-50'
-                }`}
-              >
-                Press SPACE to change time of day
-              </div>
-            )}
-          </>
-        )}
-      </SceneObjectsProvider>
+          {/* Keyboard hint for desktop */}
+          {!isMobile && (
+            <div 
+              style={{ color: theme === 'day' ? '#000000' : uiColor }} 
+              className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
+                isSettingsOpen ? 'z-10' : 'z-50'
+              }`}
+            >
+              Press SPACE to change time of day
+            </div>
+          )}
+        </>
+      )}
     </TooltipProvider>
   );
 };

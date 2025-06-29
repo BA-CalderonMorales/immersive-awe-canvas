@@ -2,7 +2,6 @@
 import { createContext, useContext, ReactNode } from 'react';
 import { useSceneObjects } from '@/hooks/useSceneObjects';
 import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/sceneObjects';
-import { MovementModeProvider } from './MovementModeContext';
 
 interface SceneObjectsContextType extends ObjectManagerState {
   actions: ObjectManagerActions;
@@ -13,18 +12,16 @@ const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
 
 interface SceneObjectsProviderProps {
   children: ReactNode;
-  mainObjectColor: string;
+  mainObjectColor?: string;
 }
 
-export const SceneObjectsProvider = ({ children, mainObjectColor }: SceneObjectsProviderProps) => {
+export const SceneObjectsProvider = ({ children, mainObjectColor = '#ffffff' }: SceneObjectsProviderProps) => {
   const sceneObjectsData = useSceneObjects(mainObjectColor);
 
   return (
-    <MovementModeProvider>
-      <SceneObjectsContext.Provider value={sceneObjectsData}>
-        {children}
-      </SceneObjectsContext.Provider>
-    </MovementModeProvider>
+    <SceneObjectsContext.Provider value={sceneObjectsData}>
+      {children}
+    </SceneObjectsContext.Provider>
   );
 };
 

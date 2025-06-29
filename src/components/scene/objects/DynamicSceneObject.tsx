@@ -2,13 +2,11 @@
 import { useRef, useEffect, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
-import { useMovementMode } from '@/context/MovementModeContext';
 import { useObjectSelection } from './hooks/useObjectSelection';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
 import ObjectEffects from './components/ObjectEffects';
 import ObjectContextMenu from './components/ObjectContextMenu';
-import ObjectAnimationController from './components/ObjectAnimationController';
 
 interface DynamicSceneObjectProps {
   object: SceneObject;
@@ -17,9 +15,8 @@ interface DynamicSceneObjectProps {
   isLocked: boolean;
 }
 
-const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
+const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
-  const { movementMode } = useMovementMode();
   const [isHovered, setIsHovered] = useState(false);
 
   const objectSelection = useObjectSelection({ object, onSelect });
@@ -34,7 +31,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const handlePointerOver = (e: any) => {
     e.stopPropagation();
     setIsHovered(true);
-    document.body.style.cursor = movementMode !== 'none' ? 'grab' : 'pointer';
+    document.body.style.cursor = 'pointer';
   };
 
   const handlePointerOut = () => {
@@ -76,15 +73,6 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           objectType={object.type}
           meshRef={meshRef}
           showLongPressEffect={false}
-        />
-
-        <ObjectAnimationController
-          meshRef={meshRef}
-          object={object}
-          isSelected={isSelected}
-          isLocked={isLocked}
-          isDragging={false}
-          currentPosition={object.position}
         />
       </group>
     </ObjectContextMenu>

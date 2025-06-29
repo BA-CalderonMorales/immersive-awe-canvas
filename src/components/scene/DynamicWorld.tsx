@@ -5,7 +5,6 @@ import DynamicBackground from './DynamicBackground';
 import DynamicLights from './DynamicLights';
 import DynamicObject from './DynamicObject';
 import ObjectManager from './ObjectManager';
-import { SceneObjectsProvider } from '@/context/SceneObjectsContext';
 
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
@@ -22,15 +21,13 @@ const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
     return null;
   }
 
-  const mainObjectColor = themeConfig.mainObjectColor || '#ffffff';
-
   return (
-    <SceneObjectsProvider mainObjectColor={mainObjectColor}>
+    <>
       <DynamicLights lights={themeConfig.lights} />
       <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
       <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
       <ObjectManager />
-    </SceneObjectsProvider>
+    </>
   );
 };
 
