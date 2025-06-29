@@ -59,8 +59,15 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       isAddingObject: false,
     }));
 
-    toast.success(`✨ ${type} added to scene! Right-click for options.`, {
+    toast.success(`✨ ${type} added to scene!`, {
+      description: "Right-click or long-press for more options",
       duration: 3000,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(34, 197, 94, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
     });
   }, [mainObjectColor]);
 
@@ -74,7 +81,7 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
     }));
     
     if (objectToRemove) {
-      toast.success(`🗑️ ${objectToRemove.type} removed from scene`);
+      console.log('Removed object:', objectToRemove);
     }
   }, [state.objects]);
 
@@ -100,7 +107,17 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       objects: [],
       selectedObjectId: null,
     }));
-    toast.success('🧹 All objects cleared from scene');
+    
+    toast.success('🧹 All objects cleared', {
+      description: "Scene reset to default state",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(251, 191, 36, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   }, []);
 
   const toggleAddMode = useCallback(() => {

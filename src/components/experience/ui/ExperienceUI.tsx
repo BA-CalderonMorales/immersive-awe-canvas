@@ -49,7 +49,10 @@ const ExperienceUI = ({
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
 
-  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint, 'uiColor:', uiColor);
+  console.log('ExperienceUI rendering - theme:', theme, 'uiColor:', uiColor, 'isUiHidden:', isUiHidden);
+
+  // Ensure proper contrast colors - fallback to safe defaults if DB colors aren't working
+  const safeUiColor = uiColor || (theme === 'day' ? '#000000' : '#FFFFFF');
 
   // Event handlers with logging
   const handleToggleTheme = () => {
@@ -96,7 +99,7 @@ const ExperienceUI = ({
       <HiddenUiView 
         onToggleUiHidden={handleToggleUiHidden}
         showUiHint={showUiHint}
-        uiColor={uiColor}
+        uiColor={safeUiColor}
         theme={theme}
       />
       
@@ -106,7 +109,7 @@ const ExperienceUI = ({
           {/* Top navigation bar */}
           <TopBar 
             worldName={worldName}
-            uiColor={uiColor}
+            uiColor={safeUiColor}
             onToggleUiHidden={handleToggleUiHidden}
             onToggleTheme={handleToggleTheme}
             theme={theme}
@@ -118,7 +121,7 @@ const ExperienceUI = ({
           
           {/* World navigation controls */}
           <NavigationControls 
-            uiColor={uiColor}
+            uiColor={safeUiColor}
             onChangeWorld={handleChangeWorld}
             isTransitioning={false}
             theme={theme}
@@ -126,7 +129,7 @@ const ExperienceUI = ({
 
           {/* Bottom action bar - ensure it's always visible */}
           <BottomBar 
-            uiColor={uiColor}
+            uiColor={safeUiColor}
             onCopyCode={onCopyCode}
             onShowSearch={handleShowSearch}
             isMobile={isMobile}
@@ -142,7 +145,7 @@ const ExperienceUI = ({
           {!isMobile && (
             <div 
               style={{ 
-                color: uiColor,
+                color: safeUiColor,
                 zIndex: 50
               }} 
               className="fixed bottom-16 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"

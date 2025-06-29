@@ -50,7 +50,32 @@ export const useExperienceState = () => {
   const toggleObjectLock = useCallback(() => {
     setIsObjectLocked(locked => {
       const newLockState = !locked;
-      toast.info(newLockState ? "Object motion locked" : "Object motion unlocked");
+      
+      // Improved toast notification with better styling and icons
+      if (newLockState) {
+        toast.success("🔒 Object motion locked", {
+          description: "Objects will no longer rotate automatically",
+          duration: 2500,
+          style: {
+            background: 'rgba(0, 0, 0, 0.9)',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(8px)',
+          },
+        });
+      } else {
+        toast.success("🔓 Object motion unlocked", {
+          description: "Objects will resume automatic rotation",
+          duration: 2500,
+          style: {
+            background: 'rgba(0, 0, 0, 0.9)',
+            color: '#fff',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            backdropFilter: 'blur(8px)',
+          },
+        });
+      }
+      
       return newLockState;
     });
   }, []);
@@ -62,17 +87,42 @@ export const useExperienceState = () => {
       const codeString = JSON.stringify(editableSceneConfig, null, 2);
       navigator.clipboard.writeText(codeString)
         .then(() => {
-          toast.success("Scene configuration copied to clipboard!");
+          toast.success("📋 Scene configuration copied!", {
+            description: "Ready to paste into your project",
+            duration: 3000,
+            style: {
+              background: 'rgba(0, 0, 0, 0.9)',
+              color: '#fff',
+              border: '1px solid rgba(34, 197, 94, 0.3)',
+              backdropFilter: 'blur(8px)',
+            },
+          });
           logEvent({ eventType: 'action', eventSource: 'copy_code_success' });
         })
         .catch(err => {
           console.error('Failed to copy text: ', err);
-          toast.error("Failed to copy configuration.");
+          toast.error("❌ Failed to copy configuration", {
+            description: "Please try again",
+            style: {
+              background: 'rgba(0, 0, 0, 0.9)',
+              color: '#fff',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              backdropFilter: 'blur(8px)',
+            },
+          });
           logEvent({ eventType: 'action', eventSource: 'copy_code_failure', metadata: { error: (err as Error).message } });
         });
     } catch (error) {
       console.error('Failed to serialize config:', error);
-      toast.error("Failed to prepare configuration for copying.");
+      toast.error("❌ Failed to prepare configuration", {
+        description: "Configuration could not be serialized",
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
     }
   }, [editableSceneConfig]);
 

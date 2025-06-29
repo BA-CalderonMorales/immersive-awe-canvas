@@ -1,8 +1,8 @@
-
 import { useState, useRef } from 'react';
 
 export const useObjectInteraction = (onSelect: () => void) => {
   const [isHovered, setIsHovered] = useState(false);
+  const [showLongPressEffect, setShowLongPressEffect] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
   const [pointerStartTime, setPointerStartTime] = useState<number>(0);
   const [hasMoved, setHasMoved] = useState(false);
@@ -15,9 +15,13 @@ export const useObjectInteraction = (onSelect: () => void) => {
     setHasMoved(false);
     setStartPosition({ x: e.clientX || e.point?.x || 0, y: e.clientY || e.point?.y || 0 });
     
+    // Start holographic effect immediately for visual feedback
+    setShowLongPressEffect(true);
+    
     const timer = setTimeout(() => {
       if (!hasMoved) {
-        console.log('Long press detected on object');
+        console.log('Long press detected - showing context menu');
+        // Keep the effect visible while context menu is open
         onSelect();
       }
     }, 500);
@@ -33,7 +37,7 @@ export const useObjectInteraction = (onSelect: () => void) => {
       Math.pow(currentY - startPosition.y, 2)
     );
     
-    // If moved more than 10px, cancel long press
+    // If moved more than 10px, cancel long press but keep slight effect
     if (moveDistance > 10) {
       setHasMoved(true);
       if (longPressTimer) {
@@ -53,6 +57,11 @@ export const useObjectInteraction = (onSelect: () => void) => {
       setLongPressTimer(null);
     }
     
+    // Fade out the effect after a short delay
+    setTimeout(() => {
+      setShowLongPressEffect(false);
+    }, 200);
+    
     // If it was a quick tap (less than 200ms) and didn't move much
     if (pointerDuration < 200 && !hasMoved) {
       console.log('Quick tap on object');
@@ -68,6 +77,7 @@ export const useObjectInteraction = (onSelect: () => void) => {
 
   const handlePointerOut = () => {
     setIsHovered(false);
+    setShowLongPressEffect(false);
     document.body.style.cursor = 'auto';
   };
 
@@ -78,6 +88,7 @@ export const useObjectInteraction = (onSelect: () => void) => {
 
   return {
     isHovered,
+    showLongPressEffect,
     handlePointerDown,
     handlePointerMove,
     handlePointerUp,

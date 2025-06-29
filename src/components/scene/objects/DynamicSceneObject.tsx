@@ -1,7 +1,7 @@
 
 import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Mesh } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
@@ -20,7 +20,8 @@ interface DynamicSceneObjectProps {
 
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
-  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragOffset, setDragOffset] = useState(new Vector3());
   const { actions } = useSceneObjectsContext();
   
   const {
@@ -31,6 +32,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     handlePointerOver,
     handlePointerOut,
     handleClick,
+    showLongPressEffect,
   } = useObjectInteraction(onSelect);
 
   useEffect(() => {
@@ -42,14 +44,14 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   }, [object.position, object.rotation, object.scale]);
 
   useFrame((state) => {
-    if (!isLocked && meshRef.current && !isSelected) {
-      // Add subtle rotation when not locked and not selected
+    if (!isLocked && meshRef.current && !isSelected && !isDragging) {
+      // Add subtle rotation when not locked, selected, or being dragged
       meshRef.current.rotation.x += 0.001;
       meshRef.current.rotation.y += 0.002;
     }
 
-    // Add holographic effect for selected objects
-    if (isSelected && meshRef.current) {
+    // Add holographic floating effect for selected objects
+    if (isSelected && meshRef.current && !isDragging) {
       const time = state.clock.getElapsedTime();
       meshRef.current.position.y = object.position[1] + Math.sin(time * 2) * 0.1;
     }
@@ -58,30 +60,76 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const handleEdit = () => {
     console.log('Editing object:', object.id);
     onSelect();
-    toast.success('Object selected for editing');
+    toast.success(`✏️ ${object.type} selected for editing`, {
+      description: "Use the settings panel to modify properties",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(34, 197, 94, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   const handleDelete = () => {
     actions.removeObject(object.id);
-    toast.success(`${object.type} deleted from scene`);
+    toast.success(`🗑️ ${object.type} deleted`, {
+      description: "Object removed from scene",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(239, 68, 68, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   const handleDuplicate = () => {
     actions.addObject(object.type);
-    toast.success(`${object.type} duplicated`);
+    toast.success(`📋 ${object.type} duplicated`, {
+      description: "New object added to scene",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(59, 130, 246, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   const handleMove = () => {
     console.log('Move mode activated for:', object.id);
     onSelect();
-    toast.info('Click and drag to move object');
+    setIsDragging(true);
+    toast.info(`🎯 Move mode active for ${object.type}`, {
+      description: "Click and drag to reposition",
+      duration: 3000,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(251, 191, 36, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   const handleChangeColor = () => {
-    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#8800ff'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     actions.updateObject(object.id, { color: randomColor });
-    toast.success('Color changed!');
+    toast.success(`🎨 Color changed to ${randomColor}`, {
+      description: "Object appearance updated",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: `1px solid ${randomColor}40`,
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
 
   return (
@@ -112,6 +160,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           isHovered={isHovered}
           objectType={object.type}
           meshRef={meshRef}
+          showLongPressEffect={showLongPressEffect}
         />
       </group>
     </ObjectContextMenu>
