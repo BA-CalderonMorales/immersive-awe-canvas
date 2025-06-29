@@ -36,6 +36,7 @@ const ObjectMoveControls = () => {
                 selectedObject={selectedObject}
                 onUpdateObject={actions.updateObject}
                 onRemoveObject={actions.removeObject}
+                movementMode="translate"
               />
             </>
           )}
