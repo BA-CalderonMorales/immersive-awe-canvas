@@ -25,7 +25,7 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
   return (
     <div className="pointer-events-none fixed inset-0 z-30">
       {/* Show UI button hint */}
-      <div className={`absolute ${isMobile ? 'top-6 right-4' : 'top-2 right-4 sm:top-6 sm:right-6'}`}>
+      <div className={`absolute ${isMobile ? 'top-6 right-20' : 'top-2 right-20 sm:top-6 sm:right-24'}`}>
         <div className="animate-fade-in">
           <div className={`
             px-2 py-1 rounded-md backdrop-blur-sm
