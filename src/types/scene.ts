@@ -119,3 +119,14 @@ export type SceneConfig = {
   day: SceneThemeConfig;
   night: SceneThemeConfig;
 };
+
+export type WorldData = {
+  id: string;
+  slug: string;
+  name: string;
+  sceneConfig: SceneConfig;
+  scene_config: any;
+  cameraPosition: [number, number, number];
+  ui_day_color: string;
+  ui_night_color: string;
+};

@@ -1,6 +1,7 @@
-import { DynamicBackground } from "@/components/scene/background/DynamicBackground";
-import { DynamicLights } from "@/components/scene/lights/DynamicLights";
-import { DynamicObject } from "@/components/scene/objects/DynamicObject";
+
+import { DynamicBackground } from "@/components/scene/DynamicBackground";
+import { DynamicLights } from "@/components/scene/DynamicLights";
+import { DynamicObject } from "@/components/scene/DynamicObject";
 import { OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect } from "react";

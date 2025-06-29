@@ -5,7 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ExperienceProvider } from "@/context/ExperienceContext";
-import ExperienceContent from "@/components/experience/ExperienceContent";
+import ExperienceLogic from "@/components/experience/ExperienceLogic";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -27,7 +27,7 @@ const App = () => (
             path="/experience/:worldSlug" 
             element={
               <ExperienceProvider>
-                <ExperienceContent />
+                <ExperienceLogic />
               </ExperienceProvider>
             } 
           />

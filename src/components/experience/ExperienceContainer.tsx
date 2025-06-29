@@ -1,9 +1,14 @@
+
 import { Canvas } from "@react-three/fiber";
+import { useState, useEffect, useMemo } from "react";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
-import ExperienceUI from "./ui/ExperienceUI";
+import { useIsMobile } from "@/hooks/use-mobile";
+import ExperienceUI from "./ExperienceUI";
 import ExperienceContent from "./ExperienceContent";
 import ExperienceTransitions from "./ExperienceTransitions";
+import LoadingOverlay from "./LoadingOverlay";
 import { SceneConfig, WorldData } from "@/types/scene";
+import { isSceneConfig } from "@/lib/typeguards";
 
 interface ExperienceContainerProps {
   worldData: WorldData | null;
@@ -182,7 +187,6 @@ const ExperienceContainer = ({
           onEntryTransitionEnd={handleEntryTransitionEndWithHint}
           onWorldTransitionEnd={handleWorldTransitionEnd}
           theme={theme}
-          currentWorldIndex={currentWorldIndex}
           isHelpOpen={isHelpOpen}
           isSearchOpen={isSearchOpen}
           worlds={worlds}
