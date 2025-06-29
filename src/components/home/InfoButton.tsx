@@ -10,6 +10,7 @@ interface InfoButtonProps {
   uiColor: string;
   blendedButtonClasses: string;
   isFirstVisit?: boolean;
+  onFirstInteraction?: () => void;
 }
 
 interface InstructionSet {
@@ -19,12 +20,19 @@ interface InstructionSet {
   welcome?: string;
 }
 
-const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false }: InfoButtonProps) => {
+const InfoButton = ({ 
+  theme, 
+  uiColor, 
+  blendedButtonClasses, 
+  isFirstVisit = false, 
+  onFirstInteraction 
+}: InfoButtonProps) => {
   const isMobile = useIsMobile();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
   const [isStable, setIsStable] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
+  const hasInteracted = useRef(false);
 
   // Stabilize the component after mount to prevent flickering
   useEffect(() => {
@@ -60,16 +68,16 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
 
   // Show onboarding pulse with stable timing
   useEffect(() => {
-    if (isFirstVisit && isStable) {
+    if (isFirstVisit && isStable && !hasInteracted.current) {
       const timer = setTimeout(() => {
         setShowOnboardingPulse(true);
         
         const hideTimer = setTimeout(() => {
           setShowOnboardingPulse(false);
-        }, 5000);
+        }, 8000); // Show longer for first visit
         
         timeoutRef.current = hideTimer;
-      }, 2000);
+      }, 3500); // Delay to let onboarding hints show first
       
       return () => {
         clearTimeout(timer);
@@ -82,6 +90,13 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
+    
+    // Handle first interaction
+    if (isFirstVisit && !hasInteracted.current) {
+      hasInteracted.current = true;
+      onFirstInteraction?.();
+    }
+    
     setShowOnboardingPulse(false);
     
     if (isMobile) {
