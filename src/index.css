@@ -188,8 +188,92 @@
   }
 }
 
-/* lil-gui override (unchanged) */
+/* Enhanced lil-gui styling for both themes */
 .lil-gui .controller.color .widget input[type="text"] {
     width: 75px !important;
     text-align: center;
+}
+
+/* Day theme lil-gui styling */
+[data-theme="day"] .lil-gui,
+.theme-day .lil-gui {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="day"] .lil-gui .title,
+.theme-day .lil-gui .title {
+  color: #1f2937 !important;
+  background: rgba(249, 250, 251, 0.9) !important;
+  border-bottom: 1px solid #e5e7eb !important;
+}
+
+[data-theme="day"] .lil-gui .name,
+.theme-day .lil-gui .name {
+  color: #374151 !important;
+}
+
+[data-theme="day"] .lil-gui input,
+.theme-day .lil-gui input {
+  color: #1f2937 !important;
+  background: #f9fafb !important;
+  border: 1px solid #d1d5db !important;
+}
+
+[data-theme="day"] .lil-gui input:focus,
+.theme-day .lil-gui input:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1) !important;
+}
+
+/* Night theme lil-gui styling */
+[data-theme="night"] .lil-gui,
+.theme-night .lil-gui {
+  background: rgba(17, 24, 39, 0.95) !important;
+  border: 1px solid rgba(6, 182, 212, 0.3) !important;
+  border-radius: 8px !important;
+}
+
+[data-theme="night"] .lil-gui .title,
+.theme-night .lil-gui .title {
+  color: #06b6d4 !important;
+  background: rgba(17, 24, 39, 0.9) !important;
+  border-bottom: 1px solid rgba(6, 182, 212, 0.2) !important;
+}
+
+[data-theme="night"] .lil-gui .name,
+.theme-night .lil-gui .name {
+  color: #d1d5db !important;
+}
+
+[data-theme="night"] .lil-gui input,
+.theme-night .lil-gui input {
+  color: #ffffff !important;
+  background: #374151 !important;
+  border: 1px solid #4b5563 !important;
+}
+
+[data-theme="night"] .lil-gui input:focus,
+.theme-night .lil-gui input:focus {
+  border-color: #06b6d4 !important;
+  box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.1) !important;
+}
+
+/* Default styling that works for both themes */
+.lil-gui {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+}
+
+.lil-gui .controller {
+  border: none !important;
+}
+
+.lil-gui .controller:hover {
+  background: rgba(0, 0, 0, 0.05) !important;
+}
+
+[data-theme="night"] .lil-gui .controller:hover,
+.theme-night .lil-gui .controller:hover {
+  background: rgba(6, 182, 212, 0.1) !important;
 }

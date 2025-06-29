@@ -32,6 +32,11 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
     });
     guiRef.current = gui;
 
+    // Apply theme class to the GUI element
+    const guiElement = gui.domElement;
+    guiElement.setAttribute('data-theme', theme);
+    guiElement.classList.add(`theme-${theme}`);
+
     const updateConfig = createConfigUpdater(sceneConfig, onUpdate);
 
     // Main Object Color
@@ -52,7 +57,16 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
     };
   }, [sceneConfig, onUpdate, theme, themeConfig]);
 
-  return <div ref={guiContainerRef} className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui_.title]:text-cyan-400 [&_.lil-gui_.name]:text-gray-300 [&_.lil-gui_input]:text-white [&_.lil-gui_input]:bg-gray-800" />;
+  const baseClasses = theme === 'day' 
+    ? '[&_.lil-gui]:bg-white/95 [&_.lil-gui]:border-gray-200 [&_.lil-gui_.title]:text-gray-900 [&_.lil-gui_.name]:text-gray-600 [&_.lil-gui_input]:text-gray-900 [&_.lil-gui_input]:bg-gray-50'
+    : '[&_.lil-gui]:bg-gray-900/95 [&_.lil-gui]:border-cyan-500/30 [&_.lil-gui_.title]:text-cyan-400 [&_.lil-gui_.name]:text-gray-300 [&_.lil-gui_input]:text-white [&_.lil-gui_input]:bg-gray-800';
+
+  return (
+    <div 
+      ref={guiContainerRef} 
+      className={`w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none ${baseClasses}`}
+    />
+  );
 };
 
 export default MainObjectControls;
