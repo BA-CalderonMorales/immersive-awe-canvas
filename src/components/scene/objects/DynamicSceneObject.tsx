@@ -102,12 +102,6 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           onPointerUp={handlePointerUp}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
-          style={{
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            WebkitTouchCallout: 'none',
-            touchAction: 'none',
-          }}
         >
           <ObjectGeometry type={object.type} />
           <ObjectMaterial material={object.material} color={object.color} />
