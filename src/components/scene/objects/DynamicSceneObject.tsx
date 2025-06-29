@@ -1,5 +1,5 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
@@ -13,6 +13,8 @@ interface DynamicSceneObjectProps {
 
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
+  const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (meshRef.current) {
@@ -22,13 +24,33 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   }, [object.position, object.rotation, object.scale]);
 
-  useFrame(() => {
+  useFrame((state) => {
     if (!isLocked && meshRef.current && !isSelected) {
       // Add subtle rotation when not locked and not selected
       meshRef.current.rotation.x += 0.001;
       meshRef.current.rotation.y += 0.002;
     }
+
+    // Add holographic effect for selected objects
+    if (isSelected && meshRef.current) {
+      const time = state.clock.getElapsedTime();
+      meshRef.current.position.y = object.position[1] + Math.sin(time * 2) * 0.1;
+    }
   });
+
+  const handlePointerDown = () => {
+    const timer = setTimeout(() => {
+      onSelect();
+    }, 500); // 500ms for long press
+    setLongPressTimer(timer);
+  };
+
+  const handlePointerUp = () => {
+    if (longPressTimer) {
+      clearTimeout(longPressTimer);
+      setLongPressTimer(null);
+    }
+  };
 
   const renderGeometry = () => {
     const args = getGeometryArgs(object.type);
@@ -102,31 +124,55 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   };
 
   return (
-    <mesh
-      ref={meshRef}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect();
-      }}
-      onPointerOver={(e) => {
-        e.stopPropagation();
-        document.body.style.cursor = 'pointer';
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = 'auto';
-      }}
-    >
-      {renderGeometry()}
-      {renderMaterial()}
+    <group>
+      <mesh
+        ref={meshRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          onSelect();
+        }}
+        onPointerDown={handlePointerDown}
+        onPointerUp={handlePointerUp}
+        onPointerOver={(e) => {
+          e.stopPropagation();
+          setIsHovered(true);
+          document.body.style.cursor = 'pointer';
+        }}
+        onPointerOut={() => {
+          setIsHovered(false);
+          document.body.style.cursor = 'auto';
+        }}
+      >
+        {renderGeometry()}
+        {renderMaterial()}
+      </mesh>
+      
+      {/* Holographic selection effect */}
       {isSelected && (
-        <meshBasicMaterial
-          color="#00ff00"
-          wireframe
-          transparent
-          opacity={0.3}
-        />
+        <mesh ref={meshRef}>
+          {renderGeometry()}
+          <meshBasicMaterial
+            color="#00ffff"
+            wireframe
+            transparent
+            opacity={0.3}
+          />
+        </mesh>
       )}
-    </mesh>
+      
+      {/* Hover effect */}
+      {isHovered && !isSelected && (
+        <mesh ref={meshRef}>
+          {renderGeometry()}
+          <meshBasicMaterial
+            color="#ffffff"
+            wireframe
+            transparent
+            opacity={0.1}
+          />
+        </mesh>
+      )}
+    </group>
   );
 };
 

@@ -1,20 +1,9 @@
 
-import { useSceneObjects } from '@/hooks/useSceneObjects';
-import { SceneConfig } from '@/types/scene';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicSceneObject from './objects/DynamicSceneObject';
-import { useExperience } from '@/hooks/useExperience';
 
-interface ObjectManagerProps {
-  sceneConfig: SceneConfig;
-  isLocked: boolean;
-}
-
-const ObjectManager = ({ sceneConfig, isLocked }: ObjectManagerProps) => {
-  const { theme } = useExperience();
-  const themeConfig = sceneConfig[theme];
-  const mainObjectColor = themeConfig?.mainObjectColor || '#ffffff';
-  
-  const { objects, selectedObjectId, actions } = useSceneObjects(mainObjectColor);
+const ObjectManager = () => {
+  const { objects, selectedObjectId, actions } = useSceneObjectsContext();
 
   return (
     <>
@@ -24,7 +13,7 @@ const ObjectManager = ({ sceneConfig, isLocked }: ObjectManagerProps) => {
           object={object}
           isSelected={object.id === selectedObjectId}
           onSelect={() => actions.selectObject(object.id)}
-          isLocked={isLocked}
+          isLocked={false}
         />
       ))}
     </>

@@ -1,18 +1,16 @@
-
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Plus, Trash2, RotateCcw } from 'lucide-react';
-import { useSceneObjects } from '@/hooks/useSceneObjects';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import { SceneObject } from '@/types/sceneObjects';
 import { Slider } from '@/components/ui/slider';
 
 interface ObjectManagerControlsProps {
   isOpen: boolean;
-  mainObjectColor: string;
 }
 
-const ObjectManagerControls = ({ isOpen, mainObjectColor }: ObjectManagerControlsProps) => {
-  const { objects, selectedObject, isAddingObject, availableGeometries, actions } = useSceneObjects(mainObjectColor);
+const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
+  const { objects, selectedObject, isAddingObject, availableGeometries, actions } = useSceneObjectsContext();
 
   if (!isOpen) return null;
 
@@ -32,14 +30,14 @@ const ObjectManagerControls = ({ isOpen, mainObjectColor }: ObjectManagerControl
       </div>
 
       {isAddingObject && (
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
           {availableGeometries.map((geometry) => (
             <Button
               key={geometry.type}
               size="sm"
               variant="ghost"
               onClick={() => actions.addObject(geometry.type)}
-              className="h-8 text-xs"
+              className="h-10 text-xs whitespace-nowrap"
             >
               {geometry.name}
             </Button>
@@ -66,34 +64,36 @@ const ObjectManagerControls = ({ isOpen, mainObjectColor }: ObjectManagerControl
           )}
         </div>
 
-        {objects.map((object) => (
-          <div
-            key={object.id}
-            className={`p-2 rounded border cursor-pointer ${
-              object.id === selectedObject?.id
-                ? 'border-primary bg-primary/10'
-                : 'border-border hover:bg-accent'
-            }`}
-            onClick={() => actions.selectObject(object.id)}
-          >
-            <div className="flex items-center justify-between">
-              <span className="text-xs font-medium capitalize">
-                {object.type}
-              </span>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  actions.removeObject(object.id);
-                }}
-                className="h-6 w-6 p-0"
-              >
-                <Trash2 className="w-3 h-3" />
-              </Button>
+        <div className="max-h-32 overflow-y-auto space-y-2">
+          {objects.map((object) => (
+            <div
+              key={object.id}
+              className={`p-2 rounded border cursor-pointer transition-all ${
+                object.id === selectedObject?.id
+                  ? 'border-primary bg-primary/10 shadow-md'
+                  : 'border-border hover:bg-accent'
+              }`}
+              onClick={() => actions.selectObject(object.id)}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-medium capitalize">
+                  {object.type}
+                </span>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    actions.removeObject(object.id);
+                  }}
+                  className="h-6 w-6 p-0"
+                >
+                  <Trash2 className="w-3 h-3" />
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {selectedObject && (
