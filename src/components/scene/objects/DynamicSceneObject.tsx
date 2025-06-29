@@ -1,8 +1,10 @@
+
 import { useRef, useEffect, useState } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
-import { Mesh, Vector3, Raycaster, Vector2, Plane } from 'three';
+import { Mesh, Vector3 } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
-import { useObjectInteraction } from './hooks/useObjectInteraction';
+import { useSimplifiedObjectInteraction } from './hooks/useSimplifiedObjectInteraction';
+import { useDragHandler } from './hooks/useDragHandler';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import { useMovementMode } from '@/context/MovementModeContext';
 import ObjectGeometry from './components/ObjectGeometry';
@@ -20,137 +22,81 @@ interface DynamicSceneObjectProps {
 
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
-  const [isDragging, setIsDragging] = useState(false);
   const [currentPosition, setCurrentPosition] = useState<[number, number, number]>(object.position);
+  const [isDragging, setIsDragging] = useState(false);
   const { actions } = useSceneObjectsContext();
   const { movementMode } = useMovementMode();
-  const { camera, gl, scene } = useThree();
-  const dragStartPosition = useRef(new Vector3());
-  const dragPlane = useRef(new Vector3());
-  const raycaster = useRef(new Raycaster());
-  
-  const handleDragStart = (event: any) => {
-    if (movementMode === 'none') return;
-    
-    console.log('Drag started for object:', object.id, 'in mode:', movementMode);
-    setIsDragging(true);
-    onSelect(); // Select the object when starting to drag
-    
-    // Dispatch event to disable orbit controls
-    window.dispatchEvent(new CustomEvent('object-drag-start'));
-    
-    // Store initial position
-    if (meshRef.current) {
-      dragStartPosition.current.copy(meshRef.current.position);
-    }
-    
-    const modeNames = {
-      'x-axis': 'X-Axis',
-      'y-axis': 'Y-Axis',
-      'z-axis': 'Z-Axis',
-      'freehand': 'Freehand',
-      'none': 'Disabled'
-    };
-    
-    toast.info(`🎯 Moving ${object.type} - ${modeNames[movementMode]}`, {
-      description: movementMode === 'freehand' 
-        ? 'Drag to reposition object freely'
-        : `Drag to move along ${movementMode.split('-')[0].toUpperCase()}-axis`,
-      duration: 2000,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(251, 191, 36, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
-  };
-  
-  const handleDrag = (event: any) => {
-    if (!isDragging || !meshRef.current || movementMode === 'none') return;
-    
-    // Get mouse position in normalized device coordinates
-    const mouse = new Vector2();
-    const rect = gl.domElement.getBoundingClientRect();
-    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    
-    // Update raycaster
-    raycaster.current.setFromCamera(mouse, camera);
-    
-    // Calculate movement based on camera orientation and movement mode
-    const cameraDirection = new Vector3();
-    camera.getWorldDirection(cameraDirection);
-    
-    // Create a plane perpendicular to camera for free movement
-    const plane = new Vector3().copy(cameraDirection).normalize();
-    const intersects = raycaster.current.ray.intersectPlane(
-      new Plane(plane, -dragStartPosition.current.dot(plane)),
-      new Vector3()
-    );
-    
-    if (intersects) {
-      const deltaMovement = intersects.clone().sub(dragStartPosition.current);
-      const sensitivity = 0.5;
+  const { camera } = useThree();
+
+  // Drag handler
+  const dragHandler = useDragHandler({
+    camera,
+    movementMode,
+    onDragStart: () => {
+      setIsDragging(true);
+      onSelect();
       
-      let newPosition = new Vector3().copy(dragStartPosition.current);
+      // Disable orbit controls
+      window.dispatchEvent(new CustomEvent('object-drag-start'));
       
-      // Apply movement constraints based on mode
-      switch (movementMode) {
-        case 'x-axis':
-          newPosition.x += deltaMovement.x * sensitivity;
-          break;
-        case 'y-axis':
-          newPosition.y += deltaMovement.y * sensitivity;
-          break;
-        case 'z-axis':
-          newPosition.z += deltaMovement.z * sensitivity;
-          break;
-        case 'freehand':
-          newPosition.add(deltaMovement.multiplyScalar(sensitivity));
-          break;
-      }
+      const modeNames = {
+        'x-axis': 'X-Axis',
+        'y-axis': 'Y-Axis',
+        'z-axis': 'Z-Axis',
+        'freehand': 'Freehand',
+        'none': 'Disabled'
+      };
       
-      // Update mesh position immediately for smooth dragging
-      meshRef.current.position.copy(newPosition);
-      setCurrentPosition([newPosition.x, newPosition.y, newPosition.z]);
-      
-      console.log(`Object dragged to position in ${movementMode} mode:`, newPosition);
-    }
-  };
-  
-  const handleDragEnd = () => {
-    if (!isDragging) return;
-    
-    console.log('Drag ended for object:', object.id);
-    setIsDragging(false);
-    
-    // Dispatch event to re-enable orbit controls
-    window.dispatchEvent(new CustomEvent('object-drag-end'));
-    
-    // Update the object position in the context when drag ends
-    if (movementMode !== 'none' && meshRef.current) {
-      const finalPosition: [number, number, number] = [
-        meshRef.current.position.x,
-        meshRef.current.position.y,
-        meshRef.current.position.z
-      ];
-      
-      actions.updateObject(object.id, { position: finalPosition });
-      
-      toast.success(`📍 ${object.type} repositioned`, {
-        description: `Position: [${finalPosition.map(n => n.toFixed(1)).join(', ')}]`,
+      toast.info(`🎯 Moving ${object.type} - ${modeNames[movementMode]}`, {
+        description: movementMode === 'freehand' 
+          ? 'Drag to reposition object freely'
+          : `Drag to move along ${movementMode.split('-')[0].toUpperCase()}-axis`,
         duration: 2000,
         style: {
           background: 'rgba(0, 0, 0, 0.9)',
           color: '#fff',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
           backdropFilter: 'blur(8px)',
         },
       });
+    },
+    onDragEnd: () => {
+      setIsDragging(false);
+      
+      // Re-enable orbit controls
+      window.dispatchEvent(new CustomEvent('object-drag-end'));
+      
+      // Update object position in context
+      if (meshRef.current) {
+        const finalPosition: [number, number, number] = [
+          meshRef.current.position.x,
+          meshRef.current.position.y,
+          meshRef.current.position.z
+        ];
+        
+        actions.updateObject(object.id, { position: finalPosition });
+        
+        toast.success(`📍 ${object.type} repositioned`, {
+          description: `Position: [${finalPosition.map(n => n.toFixed(1)).join(', ')}]`,
+          duration: 2000,
+          style: {
+            background: 'rgba(0, 0, 0, 0.9)',
+            color: '#fff',
+            border: '1px solid rgba(34, 197, 94, 0.3)',
+            backdropFilter: 'blur(8px)',
+          },
+        });
+      }
+    },
+    onPositionUpdate: (position) => {
+      if (meshRef.current) {
+        meshRef.current.position.set(...position);
+        setCurrentPosition(position);
+      }
     }
-  };
-  
+  });
+
+  // Object interaction
   const {
     isHovered,
     handlePointerDown,
@@ -160,28 +106,32 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     handlePointerOut,
     handleClick,
     showLongPressEffect,
-  } = useObjectInteraction(onSelect, handleDragStart, handleDrag, handleDragEnd, movementMode);
+  } = useSimplifiedObjectInteraction(
+    onSelect,
+    (e) => dragHandler.startDrag(e, meshRef.current.position),
+    (e) => dragHandler.updateDrag(e),
+    () => dragHandler.endDrag(),
+    movementMode
+  );
 
-  // Update local position when object position changes from outside
+  // Update position when object changes from outside
   useEffect(() => {
-    if (!isDragging) {
+    if (!isDragging && meshRef.current) {
       setCurrentPosition(object.position);
-      if (meshRef.current) {
-        meshRef.current.position.set(...object.position);
-        meshRef.current.rotation.set(...object.rotation);
-        meshRef.current.scale.set(...object.scale);
-      }
+      meshRef.current.position.set(...object.position);
+      meshRef.current.rotation.set(...object.rotation);
+      meshRef.current.scale.set(...object.scale);
     }
   }, [object.position, object.rotation, object.scale, isDragging]);
 
   useFrame((state) => {
     if (!isLocked && meshRef.current && !isSelected && !isDragging) {
-      // Add subtle rotation when not locked, selected, or being dragged
+      // Subtle rotation when not locked, selected, or being dragged
       meshRef.current.rotation.x += 0.001;
       meshRef.current.rotation.y += 0.002;
     }
 
-    // Add holographic floating effect for selected objects
+    // Holographic floating effect for selected objects
     if (isSelected && meshRef.current && !isDragging) {
       const time = state.clock.getElapsedTime();
       const baseY = currentPosition[1];
@@ -189,6 +139,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   });
 
+  // Context menu handlers
   const handleEdit = () => {
     console.log('Editing object:', object.id);
     onSelect();

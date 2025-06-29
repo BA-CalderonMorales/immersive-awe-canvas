@@ -14,6 +14,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
   const [isDragging, setIsDragging] = useState(false);
   const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const orbitControlsRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -24,16 +25,13 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
       }
     };
 
-    // Initial size calculation
     updateDimensions();
 
-    // Listen for resize events
     const resizeObserver = new ResizeObserver(updateDimensions);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
-    // Also listen for window resize as fallback
     window.addEventListener('resize', updateDimensions);
 
     return () => {
@@ -42,19 +40,30 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
     };
   }, []);
 
-  // Listen for object drag state changes to disable camera controls
+  // Enhanced object drag state management
   useEffect(() => {
     const handleObjectDragStart = () => {
       console.log('Object drag detected - disabling camera controls');
       setIsObjectDragging(true);
+      
+      // Immediately disable orbit controls
+      if (orbitControlsRef.current) {
+        orbitControlsRef.current.enabled = false;
+      }
     };
 
     const handleObjectDragEnd = () => {
       console.log('Object drag ended - enabling camera controls');
       setIsObjectDragging(false);
+      
+      // Re-enable orbit controls with a small delay to prevent conflicts
+      setTimeout(() => {
+        if (orbitControlsRef.current) {
+          orbitControlsRef.current.enabled = true;
+        }
+      }, 50);
     };
 
-    // Listen for custom events from object interactions
     window.addEventListener('object-drag-start', handleObjectDragStart);
     window.addEventListener('object-drag-end', handleObjectDragEnd);
 
@@ -83,7 +92,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
           camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
           style={{
-            cursor: isDragging ? 'grabbing' : 'grab',
+            cursor: isDragging ? 'grabbing' : isObjectDragging ? 'crosshair' : 'grab',
             width: '100%',
             height: '100%',
             display: 'block',
@@ -100,6 +109,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
           </Suspense>
 
           <OrbitControls
+            ref={orbitControlsRef}
             enableZoom={true}
             enablePan={false}
             enableRotate={!isObjectDragging}
