@@ -1,12 +1,7 @@
 
 import { useState, useEffect } from 'react';
 
-interface UseBlurTransitionManagerProps {
-  isTransitioning: boolean;
-  showEntryTransition: boolean;
-}
-
-export const useBlurTransitionManager = ({ isTransitioning, showEntryTransition }: UseBlurTransitionManagerProps) => {
+export const useBlurTransitionManager = ({ isTransitioning, showEntryTransition }: { isTransitioning: boolean; showEntryTransition: boolean }) => {
   const [showBlurTransition, setShowBlurTransition] = useState(false);
 
   useEffect(() => {

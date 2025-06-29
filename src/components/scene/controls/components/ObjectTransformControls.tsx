@@ -6,14 +6,12 @@ import { toast } from 'sonner';
 
 interface ObjectTransformControlsProps {
   selectedObject: SceneObject;
-  movementMode?: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand';
   onUpdateObject: (id: string, updates: Partial<SceneObject>) => void;
   onRemoveObject: (id: string) => void;
 }
 
 const ObjectTransformControls = ({ 
   selectedObject, 
-  movementMode = 'none', 
   onUpdateObject, 
   onRemoveObject 
 }: ObjectTransformControlsProps) => {
@@ -117,30 +115,75 @@ const ObjectTransformControls = ({
         <p>Scale: [{selectedObject.scale.map(n => n.toFixed(1)).join(', ')}]</p>
       </div>
 
-      {/* Manual Movement Controls */}
-      {movementMode !== 'none' && movementMode !== 'freehand' && (
-        <div className="space-y-2">
-          <h5 className="text-xs font-medium text-cyan-300">Manual Movement</h5>
-          <div className="flex gap-1">
-            <Button
-              onClick={() => handleMoveObject(movementMode.split('-')[0] as 'x' | 'y' | 'z', -1)}
-              variant="outline"
-              size="sm"
-              className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400"
-            >
-              -0.5
-            </Button>
-            <Button
-              onClick={() => handleMoveObject(movementMode.split('-')[0] as 'x' | 'y' | 'z', 1)}
-              variant="outline"
-              size="sm"
-              className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400"
-            >
-              +0.5
-            </Button>
+      {/* Movement Controls */}
+      <div className="space-y-2">
+        <h5 className="text-xs font-medium text-cyan-300">Movement</h5>
+        <div className="grid grid-cols-3 gap-1">
+          <div className="text-center">
+            <p className="text-xs text-gray-400 mb-1">X</p>
+            <div className="flex gap-1">
+              <Button
+                onClick={() => handleMoveObject('x', -1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                -
+              </Button>
+              <Button
+                onClick={() => handleMoveObject('x', 1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                +
+              </Button>
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-gray-400 mb-1">Y</p>
+            <div className="flex gap-1">
+              <Button
+                onClick={() => handleMoveObject('y', -1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                -
+              </Button>
+              <Button
+                onClick={() => handleMoveObject('y', 1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                +
+              </Button>
+            </div>
+          </div>
+          <div className="text-center">
+            <p className="text-xs text-gray-400 mb-1">Z</p>
+            <div className="flex gap-1">
+              <Button
+                onClick={() => handleMoveObject('z', -1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                -
+              </Button>
+              <Button
+                onClick={() => handleMoveObject('z', 1)}
+                variant="outline"
+                size="sm"
+                className="flex-1 border-cyan-500/50 hover:bg-cyan-500/10 text-cyan-400 text-xs"
+              >
+                +
+              </Button>
+            </div>
           </div>
         </div>
-      )}
+      </div>
       
       {/* Scale Controls */}
       <div className="flex gap-2">
