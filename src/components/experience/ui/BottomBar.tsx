@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,7 +10,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move, Grid3x3 } from "lucide-react";
+import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
 
 interface BottomBarProps {
   uiColor: string;
@@ -24,8 +25,6 @@ interface BottomBarProps {
   theme: 'day' | 'night';
   isDragEnabled: boolean;
   onToggleDrag: () => void;
-  forceWireframe?: boolean;
-  onToggleWireframe?: () => void;
 }
 
 const BottomBar = ({
@@ -41,8 +40,6 @@ const BottomBar = ({
   theme,
   isDragEnabled,
   onToggleDrag,
-  forceWireframe = false,
-  onToggleWireframe,
 }: BottomBarProps) => {
   const blendedButtonClasses = theme === 'day' 
     ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
@@ -61,7 +58,7 @@ const BottomBar = ({
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search, Drag Toggle, Wireframe Toggle */}
+      {/* Left side: Copy, Search, Drag Toggle */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -111,24 +108,6 @@ const BottomBar = ({
             <p>Toggle Drag Controls (Z)</p>
           </TooltipContent>
         </Tooltip>
-        {onToggleWireframe && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                style={buttonStyle}
-                className={`${blendedButtonClasses} ${forceWireframe ? 'bg-yellow-500/20' : ''}`}
-                size="icon"
-                aria-label="Toggle Wireframe"
-                onClick={onToggleWireframe}
-              >
-                <Grid3x3 className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle Wireframe (W)</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
       </div>
       
       {/* Right side: Settings, Help */}

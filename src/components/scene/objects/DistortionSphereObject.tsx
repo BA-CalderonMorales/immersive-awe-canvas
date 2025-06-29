@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -16,7 +17,7 @@ interface DistortionSphereObjectProps {
 const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
+  const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
@@ -50,8 +51,8 @@ const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionS
       <sphereGeometry args={[1.2, 64, 64]} />
       <DynamicMaterial materialConfig={materialConfig} color={color} />
       
-      {/* Wireframe overlay - show when drag is enabled, force wireframe is enabled, or when hovered */}
-      {(isDragEnabled || forceWireframe || isHovered) && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered */}
+      {(isDragEnabled || isHovered) && (
         <mesh>
           <sphereGeometry args={[1.2, 64, 64]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

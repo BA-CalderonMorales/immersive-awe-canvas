@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -15,7 +16,7 @@ interface TorusKnotObjectProps {
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
+  const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
@@ -48,8 +49,8 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
         color={themeConfig.mainObjectColor} 
       />
       
-      {/* Wireframe overlay - show when drag is enabled, force wireframe is enabled, or when hovered */}
-      {(isDragEnabled || forceWireframe || isHovered) && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered */}
+      {(isDragEnabled || isHovered) && (
         <mesh>
           <torusKnotGeometry args={[1, 0.3, 128, 16]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
