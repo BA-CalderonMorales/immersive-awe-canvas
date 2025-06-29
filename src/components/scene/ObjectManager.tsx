@@ -5,20 +5,18 @@ import DynamicSceneObject from './objects/DynamicSceneObject';
 const ObjectManager = () => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
 
-  console.log('ObjectManager rendering with objects:', objects.length);
-
   return (
-    <group name="ObjectManager">
+    <>
       {objects.map((object) => (
         <DynamicSceneObject
           key={object.id}
           object={object}
-          isSelected={selectedObjectId === object.id}
+          isSelected={object.id === selectedObjectId}
           onSelect={() => actions.selectObject(object.id)}
           isLocked={false}
         />
       ))}
-    </group>
+    </>
   );
 };
 

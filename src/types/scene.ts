@@ -119,27 +119,3 @@ export type SceneConfig = {
   day: SceneThemeConfig;
   night: SceneThemeConfig;
 };
-
-export type WorldData = {
-  id: string;
-  slug: string;
-  name: string;
-  sceneConfig: SceneConfig;
-  scene_config: any;
-  cameraPosition: [number, number, number];
-  ui_day_color: string;
-  ui_night_color: string;
-};
-
-// Database type from Supabase
-export type DatabaseWorld = {
-  created_at: string;
-  description: string;
-  id: number;
-  is_featured: boolean;
-  name: string;
-  scene_config: any;
-  slug: string;
-  ui_day_color: string;
-  ui_night_color: string;
-};

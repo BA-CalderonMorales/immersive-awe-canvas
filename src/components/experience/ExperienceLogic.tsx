@@ -1,5 +1,4 @@
 
-import { useParams } from "react-router-dom";
 import { useExperience } from "@/hooks/useExperience";
 import { useWorlds } from "@/hooks/useWorlds";
 import { useExperienceState } from "@/hooks/useExperienceState";
@@ -10,11 +9,12 @@ import { useWorldNavigation } from "@/hooks/useWorldNavigation";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceContainer from "./ExperienceContainer";
 
-const ExperienceLogic = () => {
-  const { worldSlug } = useParams<{ worldSlug: string }>();
+interface ExperienceLogicProps {
+  initialWorldSlug?: string;
+}
+
+const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   const { theme, toggleTheme } = useExperience();
-  
-  console.log('ExperienceLogic rendering with worldSlug:', worldSlug);
   
   const {
     worlds,
@@ -24,9 +24,7 @@ const ExperienceLogic = () => {
     currentWorldIndex,
     isTransitioning,
     jumpToWorld,
-  } = useWorlds(worldSlug);
-
-  console.log('ExperienceLogic - worlds:', worlds?.length, 'worldData:', worldData?.name, 'isLoading:', isLoading, 'isError:', isError);
+  } = useWorlds(initialWorldSlug);
 
   // Handle world navigation
   const { handleChangeWorld, handleJumpToWorld } = useWorldNavigation({
@@ -83,21 +81,12 @@ const ExperienceLogic = () => {
   });
 
   if (isLoading) {
-    console.log('ExperienceLogic - showing loading overlay');
     return <LoadingOverlay message="Summoning Worlds..." theme="night" />;
   }
 
   if (isError) {
-    console.log('ExperienceLogic - showing error overlay');
     return <LoadingOverlay message="Could not connect to the multiverse." theme="night" />;
   }
-
-  if (!worldData) {
-    console.log('ExperienceLogic - no world data, showing loading');
-    return <LoadingOverlay message="Discovering worlds..." theme="night" />;
-  }
-
-  console.log('ExperienceLogic - rendering ExperienceContainer with worldData:', worldData.name);
 
   return (
     <ExperienceContainer
