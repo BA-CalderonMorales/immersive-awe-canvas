@@ -1,9 +1,13 @@
+
+import { useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Plus, Trash2, RotateCcw } from 'lucide-react';
+import { Plus, Trash2, RotateCcw, Settings } from 'lucide-react';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import { SceneObject } from '@/types/sceneObjects';
 import { Slider } from '@/components/ui/slider';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
+import ObjectGuiControls from '../objects/components/ObjectGuiControls';
 
 interface ObjectManagerControlsProps {
   isOpen: boolean;
@@ -11,6 +15,7 @@ interface ObjectManagerControlsProps {
 
 const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
   const { objects, selectedObject, isAddingObject, availableGeometries, actions } = useSceneObjectsContext();
+  const guiContainerRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   if (!isOpen) return null;
 
@@ -30,18 +35,21 @@ const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
       </div>
 
       {isAddingObject && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
-          {availableGeometries.map((geometry) => (
-            <Button
-              key={geometry.type}
-              size="sm"
-              variant="ghost"
-              onClick={() => actions.addObject(geometry.type)}
-              className="h-10 text-xs whitespace-nowrap"
-            >
-              {geometry.name}
-            </Button>
-          ))}
+        <div className="p-3 bg-primary/10 border border-primary/20 rounded-lg">
+          <p className="text-xs text-muted-foreground mb-2">Select an object to add:</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 max-h-48 overflow-y-auto">
+            {availableGeometries.map((geometry) => (
+              <Button
+                key={geometry.type}
+                size="sm"
+                variant="ghost"
+                onClick={() => actions.addObject(geometry.type)}
+                className="h-10 text-xs whitespace-nowrap hover:bg-primary/20"
+              >
+                {geometry.name}
+              </Button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -64,34 +72,69 @@ const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
           )}
         </div>
 
-        <div className="max-h-32 overflow-y-auto space-y-2">
+        <div className="max-h-96 overflow-y-auto space-y-2">
           {objects.map((object) => (
-            <div
-              key={object.id}
-              className={`p-2 rounded border cursor-pointer transition-all ${
-                object.id === selectedObject?.id
-                  ? 'border-primary bg-primary/10 shadow-md'
-                  : 'border-border hover:bg-accent'
-              }`}
-              onClick={() => actions.selectObject(object.id)}
-            >
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-medium capitalize">
-                  {object.type}
-                </span>
-                <Button
-                  size="sm"
-                  variant="ghost"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    actions.removeObject(object.id);
-                  }}
-                  className="h-6 w-6 p-0"
-                >
-                  <Trash2 className="w-3 h-3" />
-                </Button>
+            <Collapsible key={object.id}>
+              <div
+                className={`p-2 rounded border cursor-pointer transition-all ${
+                  object.id === selectedObject?.id
+                    ? 'border-primary bg-primary/10 shadow-md'
+                    : 'border-border hover:bg-accent'
+                }`}
+                onClick={() => actions.selectObject(object.id)}
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-medium capitalize">
+                    {object.type} #{object.id.slice(-4)}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <CollapsibleTrigger asChild>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={(e) => e.stopPropagation()}
+                        className="h-6 w-6 p-0"
+                      >
+                        <Settings className="w-3 h-3" />
+                      </Button>
+                    </CollapsibleTrigger>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        actions.removeObject(object.id);
+                      }}
+                      className="h-6 w-6 p-0"
+                    >
+                      <Trash2 className="w-3 h-3" />
+                    </Button>
+                  </div>
+                </div>
               </div>
-            </div>
+              
+              <CollapsibleContent className="mt-2">
+                <div className="bg-background/50 rounded-lg p-2 border">
+                  <div
+                    ref={(el) => { guiContainerRefs.current[object.id] = el; }}
+                    className="
+                      [&_.lil-gui]:static
+                      [&_.lil-gui.root]:w-full
+                      [&_.lil-gui.root]:font-size-xs
+                      [&_.lil-gui]:text-xs
+                      [&_.lil-gui.root_.title]:text-xs
+                      [&_.lil-gui.root_.title]:font-medium
+                      [&_.lil-gui.root_.title]:mb-1
+                    "
+                  />
+                  <ObjectGuiControls
+                    object={object}
+                    onUpdate={(updates) => actions.updateObject(object.id, updates)}
+                    containerRef={guiContainerRefs.current[object.id]}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
           ))}
         </div>
       </div>
@@ -99,7 +142,7 @@ const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
       {selectedObject && (
         <>
           <Separator />
-          <ObjectPropertyControls
+          <QuickObjectControls
             object={selectedObject}
             onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
           />
@@ -109,15 +152,15 @@ const ObjectManagerControls = ({ isOpen }: ObjectManagerControlsProps) => {
   );
 };
 
-interface ObjectPropertyControlsProps {
+interface QuickObjectControlsProps {
   object: SceneObject;
   onUpdate: (updates: Partial<SceneObject>) => void;
 }
 
-const ObjectPropertyControls = ({ object, onUpdate }: ObjectPropertyControlsProps) => {
+const QuickObjectControls = ({ object, onUpdate }: QuickObjectControlsProps) => {
   return (
     <div className="space-y-3">
-      <h4 className="text-xs font-medium">Selected Object Properties</h4>
+      <h4 className="text-xs font-medium">Quick Controls</h4>
       
       <div className="space-y-2">
         <label className="text-xs text-muted-foreground">Position X</label>

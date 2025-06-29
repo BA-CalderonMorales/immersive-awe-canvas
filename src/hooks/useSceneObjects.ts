@@ -50,6 +50,8 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       },
     };
 
+    console.log('Adding new object:', newObject);
+
     setState(prev => ({
       ...prev,
       objects: [...prev.objects, newObject],
@@ -57,19 +59,28 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       isAddingObject: false,
     }));
 
-    toast.success(`Added ${type} to scene`);
+    toast.success(`✨ ${type} added to scene! Right-click for options.`, {
+      duration: 3000,
+    });
   }, [mainObjectColor]);
 
   const removeObject = useCallback((id: string) => {
+    const objectToRemove = state.objects.find(obj => obj.id === id);
+    
     setState(prev => ({
       ...prev,
       objects: prev.objects.filter(obj => obj.id !== id),
       selectedObjectId: prev.selectedObjectId === id ? null : prev.selectedObjectId,
     }));
-    toast.success('Object removed from scene');
-  }, []);
+    
+    if (objectToRemove) {
+      toast.success(`🗑️ ${objectToRemove.type} removed from scene`);
+    }
+  }, [state.objects]);
 
   const updateObject = useCallback((id: string, updates: Partial<SceneObject>) => {
+    console.log('Updating object:', id, updates);
+    
     setState(prev => ({
       ...prev,
       objects: prev.objects.map(obj => 
@@ -79,6 +90,7 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, []);
 
   const selectObject = useCallback((id: string | null) => {
+    console.log('Selecting object:', id);
     setState(prev => ({ ...prev, selectedObjectId: id }));
   }, []);
 
@@ -88,7 +100,7 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       objects: [],
       selectedObjectId: null,
     }));
-    toast.success('All objects cleared');
+    toast.success('🧹 All objects cleared from scene');
   }, []);
 
   const toggleAddMode = useCallback(() => {

@@ -1,12 +1,15 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
 import ObjectEffects from './components/ObjectEffects';
+import ObjectContextMenu from './components/ObjectContextMenu';
+import { toast } from 'sonner';
 
 interface DynamicSceneObjectProps {
   object: SceneObject;
@@ -17,6 +20,9 @@ interface DynamicSceneObjectProps {
 
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const { actions } = useSceneObjectsContext();
+  
   const {
     isHovered,
     handlePointerDown,
@@ -49,28 +55,72 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   });
 
+  const handleEdit = () => {
+    console.log('Editing object:', object.id);
+    onSelect();
+    toast.success('Object selected for editing');
+  };
+
+  const handleDelete = () => {
+    actions.removeObject(object.id);
+    toast.success(`${object.type} deleted from scene`);
+  };
+
+  const handleDuplicate = () => {
+    actions.addObject(object.type);
+    toast.success(`${object.type} duplicated`);
+  };
+
+  const handleMove = () => {
+    console.log('Move mode activated for:', object.id);
+    onSelect();
+    toast.info('Click and drag to move object');
+  };
+
+  const handleChangeColor = () => {
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    actions.updateObject(object.id, { color: randomColor });
+    toast.success('Color changed!');
+  };
+
   return (
-    <group>
-      <mesh
-        ref={meshRef}
-        onClick={handleClick}
-        onPointerDown={handlePointerDown}
-        onPointerMove={handlePointerMove}
-        onPointerUp={handlePointerUp}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
-      >
-        <ObjectGeometry type={object.type} />
-        <ObjectMaterial material={object.material} color={object.color} />
-      </mesh>
-      
-      <ObjectEffects 
-        isSelected={isSelected}
-        isHovered={isHovered}
-        objectType={object.type}
-        meshRef={meshRef}
-      />
-    </group>
+    <ObjectContextMenu
+      object={object}
+      onEdit={handleEdit}
+      onDelete={handleDelete}
+      onDuplicate={handleDuplicate}
+      onMove={handleMove}
+      onChangeColor={handleChangeColor}
+    >
+      <group>
+        <mesh
+          ref={meshRef}
+          onClick={handleClick}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerOver={handlePointerOver}
+          onPointerOut={handlePointerOut}
+          style={{
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none',
+            touchAction: 'none',
+          }}
+        >
+          <ObjectGeometry type={object.type} />
+          <ObjectMaterial material={object.material} color={object.color} />
+        </mesh>
+        
+        <ObjectEffects 
+          isSelected={isSelected}
+          isHovered={isHovered}
+          objectType={object.type}
+          meshRef={meshRef}
+        />
+      </group>
+    </ObjectContextMenu>
   );
 };
 
