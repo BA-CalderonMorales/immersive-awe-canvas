@@ -12,10 +12,10 @@ interface SceneObjectsListProps {
 const SceneObjectsList = ({ objects, selectedObjectId, onSelectObject }: SceneObjectsListProps) => {
   return (
     <div className="space-y-2">
-      <h4 className="text-sm font-medium text-cyan-400">Objects in Scene ({objects.length})</h4>
+      <h4 className="text-sm font-medium text-cyan-400">Objects ({objects.length})</h4>
       <div className="max-h-32 overflow-y-auto space-y-1">
         {objects.length === 0 ? (
-          <p className="text-xs text-gray-400">No objects in scene</p>
+          <p className="text-xs text-gray-400">No objects</p>
         ) : (
           objects.map((object) => (
             <div
@@ -27,10 +27,7 @@ const SceneObjectsList = ({ objects, selectedObjectId, onSelectObject }: SceneOb
               }`}
             >
               <div className="flex items-center gap-2">
-                <Badge 
-                  variant="outline" 
-                  className="text-xs border-cyan-500/30 text-cyan-300"
-                >
+                <Badge variant="outline" className="text-xs border-cyan-500/30 text-cyan-300">
                   {object.type}
                 </Badge>
                 <div 
