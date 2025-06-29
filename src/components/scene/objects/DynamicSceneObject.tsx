@@ -1,5 +1,5 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import ObjectGeometry from './components/ObjectGeometry';
@@ -13,6 +13,7 @@ interface DynamicSceneObjectProps {
 
 const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     if (meshRef.current) {
@@ -26,6 +27,16 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
     onSelect();
   };
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
   return (
     <mesh
       ref={meshRef}
@@ -33,11 +44,26 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
       rotation={object.rotation}
       scale={object.scale}
       onClick={handleClick}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
     >
       <ObjectGeometry type={object.type} />
       <ObjectMaterial material={object.material} color={object.color} />
+      
+      {/* Selection wireframe overlay */}
       {isSelected && (
-        <meshBasicMaterial wireframe color="#00ffff" transparent opacity={0.3} />
+        <mesh>
+          <ObjectGeometry type={object.type} />
+          <meshBasicMaterial wireframe color="#00ff00" transparent opacity={0.5} />
+        </mesh>
+      )}
+      
+      {/* Hover wireframe overlay */}
+      {isHovered && !isSelected && (
+        <mesh>
+          <ObjectGeometry type={object.type} />
+          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.3} />
+        </mesh>
       )}
     </mesh>
   );
