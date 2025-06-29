@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 
 interface InfoButtonProps {
   theme: 'day' | 'night';
@@ -23,7 +23,16 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
   const isMobile = useIsMobile();
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [showOnboardingPulse, setShowOnboardingPulse] = useState(false);
-  const [hasInitialized, setHasInitialized] = useState(false);
+  const [isStable, setIsStable] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  // Stabilize the component after mount to prevent flickering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsStable(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Memoize instructions to prevent unnecessary recalculations
   const instructions = useMemo((): InstructionSet => {
@@ -49,16 +58,9 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
     return baseInstructions;
   }, [isFirstVisit, isMobile]);
 
-  // Stable initialization
-  useEffect(() => {
-    if (!hasInitialized) {
-      setHasInitialized(true);
-    }
-  }, [hasInitialized]);
-
   // Show onboarding pulse with stable timing
   useEffect(() => {
-    if (isFirstVisit && hasInitialized) {
+    if (isFirstVisit && isStable) {
       const timer = setTimeout(() => {
         setShowOnboardingPulse(true);
         
@@ -66,12 +68,17 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
           setShowOnboardingPulse(false);
         }, 5000);
         
-        return () => clearTimeout(hideTimer);
+        timeoutRef.current = hideTimer;
       }, 2000);
       
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        if (timeoutRef.current) {
+          clearTimeout(timeoutRef.current);
+        }
+      };
     }
-  }, [isFirstVisit, hasInitialized]);
+  }, [isFirstVisit, isStable]);
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -82,10 +89,32 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
     }
   };
 
+  if (!isStable) {
+    return (
+      <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-20 pointer-events-auto">
+        <Button
+          style={{ color: uiColor }}
+          className={`${blendedButtonClasses} ${
+            isMobile 
+              ? 'w-12 h-12'
+              : 'w-10 h-10'
+          }`}
+          size="icon"
+          aria-label="Information and Controls"
+        >
+          <Info className={`${isMobile ? 'w-5 h-5' : 'w-4 h-4'}`} />
+        </Button>
+      </div>
+    );
+  }
+
   return (
     <div className="absolute bottom-4 left-4 sm:bottom-8 sm:left-8 z-20 pointer-events-auto">
       <TooltipProvider>
-        <Tooltip open={isMobile ? isTooltipOpen : undefined}>
+        <Tooltip 
+          open={isMobile ? isTooltipOpen : undefined}
+          delayDuration={200}
+        >
           <TooltipTrigger asChild>
             <Button
               style={{ color: uiColor }}
@@ -105,16 +134,17 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
           </TooltipTrigger>
           <TooltipContent 
             side="right" 
-            className={`max-w-xs p-4 rounded-lg shadow-2xl border-0 ${
+            className={`max-w-xs p-4 rounded-lg shadow-xl border ${
               theme === 'day' 
-                ? 'bg-white/95 text-gray-800 backdrop-blur-md' 
-                : 'bg-gray-900/95 text-gray-100 backdrop-blur-md'
-            }`}
+                ? 'bg-white text-gray-900 border-gray-200' 
+                : 'bg-gray-900 text-gray-100 border-gray-700'
+            } z-50`}
             sideOffset={8}
+            avoidCollisions={true}
           >
             <div className="space-y-3">
               {instructions.welcome && (
-                <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
+                <div className="flex items-start gap-3 pb-3 border-b border-gray-200/30 dark:border-gray-700/30">
                   <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                     theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
                   }`} />
@@ -124,7 +154,7 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
                 </div>
               )}
               
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-3">
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                   theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
                 }`} />
@@ -133,7 +163,7 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
                 </p>
               </div>
               
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-3">
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                   theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
                 }`} />
@@ -142,7 +172,7 @@ const InfoButton = ({ theme, uiColor, blendedButtonClasses, isFirstVisit = false
                 </p>
               </div>
               
-              <div className="flex items-start gap-2">
+              <div className="flex items-start gap-3">
                 <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                   theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
                 }`} />

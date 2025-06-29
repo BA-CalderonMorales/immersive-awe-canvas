@@ -17,6 +17,7 @@ interface TopBarProps {
   isTransitioning: boolean;
   isMobile: boolean;
   onShowHelp: () => void;
+  isSettingsOpen?: boolean;
 }
 
 const TopBar = ({ 
@@ -28,12 +29,19 @@ const TopBar = ({
   onGoHome, 
   isTransitioning, 
   isMobile, 
-  onShowHelp 
+  onShowHelp,
+  isSettingsOpen = false
 }: TopBarProps) => {
-  const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
+  // Improved button classes with better contrast
+  const blendedButtonClasses = theme === 'day' 
+    ? "border border-gray-300 bg-white/90 hover:bg-white text-gray-900 backdrop-blur-sm shadow-lg"
+    : "border bg-black/70 hover:bg-black/90 text-white backdrop-blur-sm shadow-lg";
   
-  // Use scene-specific UI colors for proper contrast
-  const uiStyle = { color: uiColor, borderColor: uiColor };
+  // Use scene-specific UI colors for border only
+  const uiStyle = { borderColor: uiColor };
+  
+  // For light theme, use dark text; for dark theme, use the ui color
+  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
 
   // Simple state management - always show buttons
   const [isFirstVisit, setIsFirstVisit] = useState(false);
@@ -61,24 +69,26 @@ const TopBar = ({
     }
   }, []);
 
+  const buttonStyle = { ...uiStyle, ...textStyle };
+
   return (
     <div 
-      style={uiStyle} 
-      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start z-10 transition-opacity duration-300 ${
+      style={textStyle} 
+      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start transition-opacity duration-300 ${
         isTransitioning ? 'opacity-0' : 'opacity-100'
-      }`}
+      } ${isSettingsOpen ? 'z-10' : 'z-50'}`}
     >
       <div className="flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              style={uiStyle}
+              style={buttonStyle}
               onClick={onGoHome}
               className={blendedButtonClasses}
               size="icon"
               aria-label="Go Home"
             >
-              <Home />
+              <Home className="w-4 h-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
@@ -93,7 +103,7 @@ const TopBar = ({
         )}
         
         <InfoTooltip 
-          uiStyle={uiStyle}
+          uiStyle={buttonStyle}
           blendedButtonClasses={blendedButtonClasses}
           showOnboardingPulse={showOnboardingPulse}
           isInfoTooltipOpen={isInfoTooltipOpen}
@@ -106,7 +116,7 @@ const TopBar = ({
       </div>
       
       <TopBarActions 
-        uiStyle={uiStyle}
+        uiStyle={buttonStyle}
         blendedButtonClasses={blendedButtonClasses}
         onToggleUiHidden={onToggleUiHidden}
         onToggleTheme={onToggleTheme}

@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-import { useCallback, useState, useEffect } from "react";
+import { useCallback, useState, useEffect, useRef } from "react";
 
 interface InstructionSet {
   primary: string;
@@ -34,8 +34,20 @@ const InfoTooltip = ({
   instructions,
   theme,
 }: InfoTooltipProps) => {
+  const [isStable, setIsStable] = useState(false);
+  const timeoutRef = useRef<NodeJS.Timeout>();
+
+  // Stabilize the component after mount to prevent flickering
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsStable(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   const handleInfoClick = useCallback((e: React.MouseEvent) => {
     e.stopPropagation();
+    
     if (setShowOnboardingPulse) {
       setShowOnboardingPulse(false);
     }
@@ -45,8 +57,33 @@ const InfoTooltip = ({
     }
   }, [isMobile, isInfoTooltipOpen, setIsInfoTooltipOpen, setShowOnboardingPulse]);
 
+  // Clear any pending timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  if (!isStable) {
+    return (
+      <Button
+        style={uiStyle}
+        className={`${blendedButtonClasses} flex-shrink-0`}
+        size="icon"
+        aria-label="Information and Controls"
+      >
+        <Info className="w-4 h-4" />
+      </Button>
+    );
+  }
+
   return (
-    <Tooltip open={isMobile ? isInfoTooltipOpen : undefined}>
+    <Tooltip 
+      open={isMobile ? isInfoTooltipOpen : undefined}
+      delayDuration={200}
+    >
       <TooltipTrigger asChild>
         <Button
           style={uiStyle}
@@ -62,16 +99,17 @@ const InfoTooltip = ({
       </TooltipTrigger>
       <TooltipContent 
         side="bottom" 
-        className={`max-w-xs p-4 rounded-lg shadow-2xl border-0 ${
+        className={`max-w-xs p-4 rounded-lg shadow-xl border ${
           theme === 'day' 
-            ? 'bg-white/95 text-gray-800 backdrop-blur-md' 
-            : 'bg-gray-900/95 text-gray-100 backdrop-blur-md'
-        }`}
+            ? 'bg-white text-gray-900 border-gray-200' 
+            : 'bg-gray-900 text-gray-100 border-gray-700'
+        } z-50`}
         sideOffset={8}
+        avoidCollisions={true}
       >
         <div className="space-y-3">
           {instructions.welcome && (
-            <div className="flex items-start gap-2 pb-2 border-b border-gray-200/20">
+            <div className="flex items-start gap-3 pb-3 border-b border-gray-200/30 dark:border-gray-700/30">
               <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
                 theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'
               }`} />
@@ -81,7 +119,7 @@ const InfoTooltip = ({
             </div>
           )}
           
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
               theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
             }`} />
@@ -90,7 +128,7 @@ const InfoTooltip = ({
             </p>
           </div>
           
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
               theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
             }`} />
@@ -99,7 +137,7 @@ const InfoTooltip = ({
             </p>
           </div>
           
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-3">
             <div className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${
               theme === 'day' ? 'bg-emerald-500' : 'bg-blue-400'
             }`} />

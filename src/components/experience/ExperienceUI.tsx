@@ -112,6 +112,7 @@ const ExperienceUI = ({
             onShowHelp={handleShowHelp}
             isTransitioning={false}
             isMobile={isMobile}
+            isSettingsOpen={isSettingsOpen}
           />
           
           {/* World navigation controls */}
@@ -120,6 +121,7 @@ const ExperienceUI = ({
             onChangeWorld={handleChangeWorld}
             isTransitioning={false}
             theme={theme}
+            isSettingsOpen={isSettingsOpen}
           />
 
           {/* Bottom action bar */}
@@ -140,7 +142,9 @@ const ExperienceUI = ({
           {!isMobile && (
             <div 
               style={{ color: theme === 'day' ? '#000000' : uiColor }} 
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
+              className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
+                isSettingsOpen ? 'z-10' : 'z-50'
+              }`}
             >
               Press SPACE to change time of day
             </div>
