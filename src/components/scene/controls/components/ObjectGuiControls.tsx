@@ -5,21 +5,25 @@ import { SceneObject } from '@/types/sceneObjects';
 interface ObjectGuiControlsProps {
   object: SceneObject;
   onUpdate: (updates: Partial<SceneObject>) => void;
-  containerRef: HTMLDivElement | null;
 }
 
-const ObjectGuiControls = ({ object, onUpdate, containerRef }: ObjectGuiControlsProps) => {
+const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
+  const guiContainerRef = useRef<HTMLDivElement>(null);
   const guiRef = useRef<GUI | null>(null);
 
   useEffect(() => {
-    if (!containerRef) return;
+    if (!guiContainerRef.current) return;
 
-    // Clean up previous GUI
     if (guiRef.current) {
       guiRef.current.destroy();
     }
 
-    const gui = new GUI({ container: containerRef, title: `${object.type} #${object.id.slice(-4)}` });
+    const gui = new GUI({ 
+      container: guiContainerRef.current, 
+      title: `Properties: ${object.type}`,
+      autoPlace: false,
+      width: '100%'
+    });
     guiRef.current = gui;
 
     // Position controls
@@ -79,7 +83,6 @@ const ObjectGuiControls = ({ object, onUpdate, containerRef }: ObjectGuiControls
       onUpdate({ material: { ...object.material, opacity: value, transparent: value < 1 } });
     });
 
-    // Open folders by default
     positionFolder.open();
     materialFolder.open();
 
@@ -89,9 +92,9 @@ const ObjectGuiControls = ({ object, onUpdate, containerRef }: ObjectGuiControls
         guiRef.current = null;
       }
     };
-  }, [object, onUpdate, containerRef]);
+  }, [object, onUpdate]);
 
-  return null;
+  return <div ref={guiContainerRef} className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui_.title]:text-cyan-400 [&_.lil-gui_.name]:text-gray-300 [&_.lil-gui_input]:text-white [&_.lil-gui_input]:bg-gray-800" />;
 };
 
 export default ObjectGuiControls;

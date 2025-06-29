@@ -1,13 +1,15 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Info } from 'lucide-react';
+import { Settings, Info, Shapes, ChevronsUpDown } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { SceneConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import SceneObjectsList from '../scene/controls/components/SceneObjectsList';
 import ObjectAddPanel from '../scene/controls/components/ObjectAddPanel';
 import ObjectGuiControls from '../scene/controls/components/ObjectGuiControls';
-import { useState, useRef } from 'react';
+import MainObjectControls from '../scene/controls/MainObjectControls';
+import { useState } from 'react';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -18,12 +20,11 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const [isAddingObject, setIsAddingObject] = useState(false);
-  const guiContainerRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="h-full bg-black/95 border-l border-cyan-500/30 overflow-y-auto z-40 relative">
-      <Card className="bg-transparent border-0 text-white">
-        <CardHeader>
+    <div className="h-full bg-black/80 backdrop-blur-md border-l border-cyan-500/30 overflow-y-auto z-40 relative text-white">
+      <Card className="bg-transparent border-0">
+        <CardHeader className="sticky top-0 bg-black/80 backdrop-blur-md z-10 border-b border-cyan-500/20">
           <div className="flex items-center justify-between">
             <CardTitle className="text-cyan-400 flex items-center gap-2">
               <Settings className="w-5 h-5" />
@@ -39,32 +40,55 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
             </Tooltip>
           </div>
           <CardDescription className="text-gray-400">
-            Add, remove, and edit objects in the scene.
+            Modify the main object or add new ones to the scene.
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <ObjectAddPanel 
-            isAddingObject={isAddingObject}
-            onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
-          />
-          <Separator className="bg-cyan-500/30" />
-          <SceneObjectsList
-            objects={objects}
-            selectedObjectId={selectedObjectId}
-            onSelectObject={actions.selectObject}
-          />
+        <CardContent className="p-4 space-y-4">
+          
+          <Collapsible defaultOpen>
+            <CollapsibleTrigger className="w-full flex items-center justify-between p-2 rounded-md hover:bg-cyan-500/10">
+              <h3 className="text-base font-semibold text-cyan-300">Main Scene Object</h3>
+              <ChevronsUpDown className="w-4 h-4 text-cyan-400" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-2">
+              <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
+            </CollapsibleContent>
+          </Collapsible>
 
-          {selectedObject && (
-            <>
-              <Separator className="bg-cyan-500/30" />
-              <div ref={guiContainerRef} className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui_.title]:text-cyan-400 [&_.lil-gui_.name]:text-gray-300 [&_.lil-gui_input]:text-white [&_.lil-gui_input]:bg-gray-800" />
-              <ObjectGuiControls 
-                object={selectedObject}
-                onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
-                containerRef={guiContainerRef.current}
+          <Separator className="bg-cyan-500/30" />
+
+          <Collapsible defaultOpen>
+            <CollapsibleTrigger className="w-full flex items-center justify-between p-2 rounded-md hover:bg-cyan-500/10">
+              <h3 className="text-base font-semibold text-cyan-300 flex items-center gap-2">
+                <Shapes className="w-4 h-4" />
+                Editable Scene Objects
+              </h3>
+              <ChevronsUpDown className="w-4 h-4 text-cyan-400" />
+            </CollapsibleTrigger>
+            <CollapsibleContent className="p-2 space-y-4">
+              <ObjectAddPanel 
+                isAddingObject={isAddingObject}
+                onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
               />
-            </>
-          )}
+              <SceneObjectsList
+                objects={objects}
+                selectedObjectId={selectedObjectId}
+                onSelectObject={actions.selectObject}
+              />
+              {selectedObject ? (
+                <ObjectGuiControls 
+                  object={selectedObject}
+                  onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
+                  containerRef={null} // lil-gui will be managed inside
+                />
+              ) : (
+                <div className="text-center text-xs text-gray-500 py-4">
+                  Select an object to see its properties.
+                </div>
+              )}
+            </CollapsibleContent>
+          </Collapsible>
+
         </CardContent>
       </Card>
     </div>

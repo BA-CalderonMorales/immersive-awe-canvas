@@ -2,14 +2,11 @@ import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move, Grid3x3 } from "lucide-react";
+import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
 import SceneSettingsPanel from "../SceneSettingsPanel";
 
 interface BottomBarProps {
@@ -25,8 +22,6 @@ interface BottomBarProps {
   theme: 'day' | 'night';
   isDragEnabled: boolean;
   onToggleDrag: () => void;
-  forceWireframe?: boolean;
-  onToggleWireframe?: () => void;
 }
 
 const BottomBar = ({
@@ -42,8 +37,6 @@ const BottomBar = ({
   theme,
   isDragEnabled,
   onToggleDrag,
-  forceWireframe = false,
-  onToggleWireframe,
 }: BottomBarProps) => {
   const blendedButtonClasses = theme === 'day' 
     ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
@@ -55,14 +48,12 @@ const BottomBar = ({
 
   return (
     <div 
-      className={`fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 ${
-        isSettingsOpen ? 'z-10' : 'z-50'
-      }`}
+      className={`fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 z-30`}
       style={{ 
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search, Drag Toggle, Wireframe Toggle */}
+      {/* Left side: Copy, Search, Drag Toggle */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -112,24 +103,6 @@ const BottomBar = ({
             <p>Toggle Drag Controls (Z)</p>
           </TooltipContent>
         </Tooltip>
-        {onToggleWireframe && (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                style={buttonStyle}
-                className={`${blendedButtonClasses} ${forceWireframe ? 'bg-yellow-500/20' : ''}`}
-                size="icon"
-                aria-label="Toggle Wireframe"
-                onClick={onToggleWireframe}
-              >
-                <Grid3x3 className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Toggle Wireframe (W)</p>
-            </TooltipContent>
-          </Tooltip>
-        )}
       </div>
       
       {/* Right side: Settings, Help */}
