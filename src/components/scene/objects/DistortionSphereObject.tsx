@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
@@ -16,7 +16,16 @@ interface DistortionSphereObjectProps {
 const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
+  const { isDragEnabled, forceWireframe, objectRefs } = useSceneObjectsContext();
+
+  useEffect(() => {
+    if (meshRef.current) {
+      objectRefs.current.set(MAIN_OBJECT_NAME, meshRef.current);
+    }
+    return () => {
+      objectRefs.current.delete(MAIN_OBJECT_NAME);
+    };
+  }, [objectRefs]);
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;

@@ -1,6 +1,7 @@
 import { useRef, useEffect, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
 
@@ -13,13 +14,18 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
+  const { objectRefs } = useSceneObjectsContext();
 
   useEffect(() => {
     if (meshRef.current) {
       meshRef.current.name = object.id;
       meshRef.current.userData = { objectId: object.id };
+      objectRefs.current.set(object.id, meshRef.current);
     }
-  }, [object.id]);
+    return () => {
+      objectRefs.current.delete(object.id);
+    };
+  }, [object.id, objectRefs]);
 
   const handleClick = (e: any) => {
     e.stopPropagation();

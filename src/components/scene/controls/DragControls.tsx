@@ -4,8 +4,6 @@ import { DragControls as ThreeDragControls } from 'three-stdlib';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import * as THREE from 'three';
 
-const MAIN_OBJECT_NAME = 'main-scene-object';
-
 interface DragControlsProps {
   enabled: boolean;
   onDragStart?: () => void;
@@ -13,13 +11,12 @@ interface DragControlsProps {
 }
 
 const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) => {
-  const { camera, gl, scene } = useThree();
-  const { objects, actions } = useSceneObjectsContext();
+  const { camera, gl } = useThree();
+  const { objects, actions, objectRefs } = useSceneObjectsContext();
   const controlsRef = useRef<ThreeDragControls>();
   const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
   useEffect(() => {
-    // Clean up previous controls instance
     if (controlsRef.current) {
       controlsRef.current.dispose();
       controlsRef.current = undefined;
@@ -29,24 +26,9 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
       return;
     }
 
-    // Defer setup to ensure the scene graph is updated with new objects
     const setupTimeout = setTimeout(() => {
-      const draggableObjects: THREE.Object3D[] = [];
+      const draggableObjects = Array.from(objectRefs.current.values()).filter(Boolean) as THREE.Object3D[];
       
-      // Find all user-added objects
-      objects.forEach(obj => {
-        const mesh = scene.getObjectByName(obj.id);
-        if (mesh) {
-          draggableObjects.push(mesh);
-        }
-      });
-
-      // Find the main scene object
-      const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
-      if (mainObject && !draggableObjects.some(o => o.uuid === mainObject.uuid)) {
-        draggableObjects.push(mainObject);
-      }
-
       if (draggableObjects.length === 0) return;
 
       const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
@@ -101,12 +83,15 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
       controls.addEventListener('dragstart', handleDragStart);
       controls.addEventListener('drag', handleDrag);
       controls.addEventListener('dragend', handleDragEnd);
-    }, 0); // A timeout of 0 defers execution until the next event loop tick
+    }, 0);
 
     return () => {
       clearTimeout(setupTimeout);
+      if (controlsRef.current) {
+        controlsRef.current.dispose();
+      }
     };
-  }, [enabled, objects, camera, gl, scene, actions, onDragStart, onDragEnd]);
+  }, [enabled, objects, camera, gl, actions, objectRefs, onDragStart, onDragEnd]);
 
   return null;
 };

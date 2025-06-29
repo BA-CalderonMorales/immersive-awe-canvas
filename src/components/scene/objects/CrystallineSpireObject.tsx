@@ -1,10 +1,11 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useEffect } from 'react';
 import { MaterialConfig } from '@/types/scene';
 import { useFrame, useThree } from '@react-three/fiber';
 import { Group } from 'three';
 import { useSpireFormations } from './crystallineSpire/useSpireFormations';
 import { useCrystalFragments } from './crystallineSpire/useCrystalFragments';
 import { useExperience } from '@/hooks/useExperience';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import SpireStructure from './crystallineSpire/SpireStructure';
 import CrystalFragmentComponent from './crystallineSpire/CrystalFragmentComponent';
 import EnergyWeb from './crystallineSpire/EnergyWeb';
@@ -23,7 +24,17 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   const orbitalRefs = useRef<Group[]>([]);
   const { mouse } = useThree();
   const { theme } = useExperience();
+  const { objectRefs } = useSceneObjectsContext();
   const timeRef = useRef(0);
+
+  useEffect(() => {
+    if (mainGroupRef.current) {
+      objectRefs.current.set(MAIN_OBJECT_NAME, mainGroupRef.current);
+    }
+    return () => {
+      objectRefs.current.delete(MAIN_OBJECT_NAME);
+    };
+  }, [objectRefs]);
 
   // Static formations and fragments - avoid recreating on theme change
   const spireFormations = useSpireFormations();

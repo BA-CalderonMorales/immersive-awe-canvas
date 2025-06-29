@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
 import { MaterialConfig } from '@/types/scene';
@@ -20,8 +20,17 @@ interface WobbleFieldObjectProps {
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
+  const { isDragEnabled, forceWireframe, objectRefs } = useSceneObjectsContext();
   
+  useEffect(() => {
+    if (groupRef.current) {
+      objectRefs.current.set(MAIN_OBJECT_NAME, groupRef.current);
+    }
+    return () => {
+      objectRefs.current.delete(MAIN_OBJECT_NAME);
+    };
+  }, [objectRefs]);
+
   // Generate field data once
   const fieldData = generateChaoticField();
 
