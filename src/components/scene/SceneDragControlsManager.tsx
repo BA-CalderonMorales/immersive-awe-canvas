@@ -1,29 +1,17 @@
 
-import { useRef, useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useThree } from '@react-three/fiber';
 import { DragControls } from 'three-stdlib';
-import { Mesh } from 'three';
 import { useMovementMode } from '@/context/MovementModeContext';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useSceneDragControlsContext } from '@/context/SceneDragControlsContext';
 
-export const useSceneDragControls = () => {
+const SceneDragControlsManager = () => {
   const { camera, gl } = useThree();
   const { movementMode } = useMovementMode();
-  const { objects, actions } = useSceneObjectsContext();
+  const { actions } = useSceneObjectsContext();
+  const { objectRefs } = useSceneDragControlsContext();
   const dragControlsRef = useRef<DragControls | null>(null);
-  const objectRefs = useRef<Map<string, Mesh>>(new Map());
-
-  // Register object mesh references
-  const registerObject = (id: string, mesh: Mesh) => {
-    objectRefs.current.set(id, mesh);
-    updateDragControls();
-  };
-
-  // Unregister object mesh references
-  const unregisterObject = (id: string) => {
-    objectRefs.current.delete(id);
-    updateDragControls();
-  };
 
   // Update DragControls with current objects
   const updateDragControls = () => {
@@ -41,7 +29,7 @@ export const useSceneDragControls = () => {
       if (movementMode === 'none') return;
       
       // Find which object is being dragged
-      const draggedMesh = event.object as Mesh;
+      const draggedMesh = event.object as any;
       const objectEntry = Array.from(objectRefs.current.entries()).find(
         ([, mesh]) => mesh === draggedMesh
       );
@@ -58,7 +46,7 @@ export const useSceneDragControls = () => {
     controls.addEventListener('drag', (event) => {
       if (movementMode === 'none') return;
 
-      const object = event.object;
+      const object = event.object as any;
       const currentPos = object.position;
 
       // Apply movement constraints based on mode
@@ -104,7 +92,7 @@ export const useSceneDragControls = () => {
       event.object.userData.initialPos = null;
       
       // Update object position in state
-      const draggedMesh = event.object as Mesh;
+      const draggedMesh = event.object as any;
       const objectEntry = Array.from(objectRefs.current.entries()).find(
         ([, mesh]) => mesh === draggedMesh
       );
@@ -130,6 +118,22 @@ export const useSceneDragControls = () => {
     dragControlsRef.current = controls;
   };
 
+  // Update controls when objects change or movement mode changes
+  useEffect(() => {
+    updateDragControls();
+  }, [movementMode]);
+
+  // Re-create controls when objects are added/removed
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (objectRefs.current.size > 0) {
+        updateDragControls();
+      }
+    }, 100);
+
+    return () => clearInterval(timer);
+  }, []);
+
   // Update controls when movement mode changes
   useEffect(() => {
     if (dragControlsRef.current) {
@@ -146,9 +150,7 @@ export const useSceneDragControls = () => {
     };
   }, []);
 
-  return {
-    registerObject,
-    unregisterObject,
-    dragControls: dragControlsRef.current
-  };
+  return null;
 };
+
+export default SceneDragControlsManager;

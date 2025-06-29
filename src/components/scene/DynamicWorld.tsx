@@ -5,6 +5,7 @@ import DynamicBackground from './DynamicBackground';
 import DynamicLights from './DynamicLights';
 import DynamicObject from './DynamicObject';
 import ObjectManager from './ObjectManager';
+import SceneDragControlsManager from './SceneDragControlsManager';
 import { SceneObjectsProvider } from '@/context/SceneObjectsContext';
 
 interface DynamicWorldProps {
@@ -30,6 +31,7 @@ const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
       <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
       <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
       <ObjectManager />
+      <SceneDragControlsManager />
     </SceneObjectsProvider>
   );
 };
