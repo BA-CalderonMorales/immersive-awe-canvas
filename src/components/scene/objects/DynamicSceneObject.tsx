@@ -1,11 +1,11 @@
 
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useMovementMode } from '@/context/MovementModeContext';
+import { useSceneDragControlsContext } from '@/context/SceneDragControlsContext';
 import { useSimplifiedObjectInteraction } from './hooks/useSimplifiedObjectInteraction';
 import { useObjectSelection } from './hooks/useObjectSelection';
-import { useObjectDrag } from './hooks/useObjectDrag';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
 import ObjectEffects from './components/ObjectEffects';
@@ -22,10 +22,28 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const { movementMode } = useMovementMode();
+  const { registerObject, unregisterObject } = useSceneDragControlsContext();
 
   // Custom hooks for object functionality
   const objectSelection = useObjectSelection({ object, onSelect });
-  const { currentPosition, isDragging } = useObjectDrag({ object, meshRef, onSelect });
+
+  // Register/unregister with scene drag controls
+  useEffect(() => {
+    if (meshRef.current) {
+      registerObject(object.id, meshRef.current);
+    }
+
+    return () => {
+      unregisterObject(object.id);
+    };
+  }, [object.id, registerObject, unregisterObject]);
+
+  // Update mesh position when object position changes
+  useEffect(() => {
+    if (meshRef.current) {
+      meshRef.current.position.set(...object.position);
+    }
+  }, [object.position]);
 
   // Object interaction handling (simplified since DragControls handles dragging)
   const {
@@ -48,6 +66,9 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
       <group>
         <mesh
           ref={meshRef}
+          position={object.position}
+          rotation={object.rotation}
+          scale={object.scale}
           onClick={handleClick}
           onPointerOver={handlePointerOver}
           onPointerOut={handlePointerOut}
@@ -69,8 +90,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           object={object}
           isSelected={isSelected}
           isLocked={isLocked}
-          isDragging={isDragging}
-          currentPosition={currentPosition}
+          isDragging={false}
+          currentPosition={object.position}
         />
       </group>
     </ObjectContextMenu>
