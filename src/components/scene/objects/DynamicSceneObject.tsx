@@ -21,31 +21,49 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isDragging, setIsDragging] = useState(false);
+  const [currentPosition, setCurrentPosition] = useState<[number, number, number]>(object.position);
   const { actions } = useSceneObjectsContext();
   
   const handleDragStart = () => {
+    console.log('Drag started for object:', object.id);
     setIsDragging(true);
     onSelect(); // Select the object when starting to drag
+    
+    toast.info(`🎯 Moving ${object.type}`, {
+      description: "Drag to reposition object",
+      duration: 2000,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(251, 191, 36, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
   
   const handleDrag = (delta: Vector3) => {
     if (meshRef.current) {
       const newPosition: [number, number, number] = [
-        object.position[0] + delta.x,
-        object.position[1] + delta.y,
-        object.position[2] + delta.z
+        currentPosition[0] + delta.x,
+        currentPosition[1] + delta.y,
+        currentPosition[2] + delta.z
       ];
       
-      // Update the object position immediately for smooth dragging
+      // Update local position immediately for smooth dragging
+      setCurrentPosition(newPosition);
       meshRef.current.position.set(...newPosition);
       
-      // Debounce the context update to avoid too many updates
-      actions.updateObject(object.id, { position: newPosition });
+      console.log('Object dragged to position:', newPosition);
     }
   };
   
   const handleDragEnd = () => {
+    console.log('Drag ended for object:', object.id);
     setIsDragging(false);
+    
+    // Update the object position in the context when drag ends
+    actions.updateObject(object.id, { position: currentPosition });
+    
     toast.success(`📍 ${object.type} repositioned`, {
       description: "Object moved to new position",
       duration: 2000,
@@ -69,11 +87,15 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     showLongPressEffect,
   } = useObjectInteraction(onSelect, handleDragStart, handleDrag, handleDragEnd);
 
+  // Update local position when object position changes from outside
   useEffect(() => {
-    if (meshRef.current && !isDragging) {
-      meshRef.current.position.set(...object.position);
-      meshRef.current.rotation.set(...object.rotation);
-      meshRef.current.scale.set(...object.scale);
+    if (!isDragging) {
+      setCurrentPosition(object.position);
+      if (meshRef.current) {
+        meshRef.current.position.set(...object.position);
+        meshRef.current.rotation.set(...object.rotation);
+        meshRef.current.scale.set(...object.scale);
+      }
     }
   }, [object.position, object.rotation, object.scale, isDragging]);
 
@@ -87,7 +109,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     // Add holographic floating effect for selected objects
     if (isSelected && meshRef.current && !isDragging) {
       const time = state.clock.getElapsedTime();
-      meshRef.current.position.y = object.position[1] + Math.sin(time * 2) * 0.1;
+      const baseY = currentPosition[1];
+      meshRef.current.position.y = baseY + Math.sin(time * 2) * 0.1;
     }
   });
 
@@ -107,6 +130,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   };
 
   const handleDelete = () => {
+    console.log('Deleting object:', object.id);
     actions.removeObject(object.id);
     toast.success(`🗑️ ${object.type} deleted`, {
       description: "Object removed from scene",
@@ -121,6 +145,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   };
 
   const handleDuplicate = () => {
+    console.log('Duplicating object:', object.id);
     const newObject = {
       ...object,
       id: `obj_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
@@ -132,6 +157,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     };
     
     actions.addObject(object.type);
+    actions.updateObject(newObject.id, newObject);
+    
     toast.success(`📋 ${object.type} duplicated`, {
       description: "New object added to scene",
       duration: 2500,
@@ -163,6 +190,8 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff', '#ff8800', '#8800ff'];
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     actions.updateObject(object.id, { color: randomColor });
+    
+    console.log('Color changed for object:', object.id, 'to:', randomColor);
     toast.success(`🎨 Color changed to ${randomColor}`, {
       description: "Object appearance updated",
       duration: 2500,

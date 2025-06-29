@@ -28,6 +28,8 @@ export const useObjectInteraction = (
   const handlePointerDown = (e: any) => {
     e.stopPropagation();
     
+    console.log('Object pointer down detected');
+    
     const clientX = e.clientX || e.point?.x || 0;
     const clientY = e.clientY || e.point?.y || 0;
     
@@ -41,16 +43,17 @@ export const useObjectInteraction = (
     
     if (isCtrlPressed) {
       // Immediate drag mode for desktop with Ctrl
+      console.log('Ctrl+drag mode activated immediately');
       setIsDragging(true);
       dragStartRef.current = true;
       setShowLongPressEffect(true);
       onDragStart?.();
-      console.log('Starting Ctrl+drag mode');
     } else {
       // Start holographic effect immediately for visual feedback
       setShowLongPressEffect(true);
+      console.log('Long press timer started for mobile');
       
-      // Set up long press timer for mobile
+      // Set up long press timer for mobile (500ms)
       const timer = setTimeout(() => {
         if (!hasMoved) {
           console.log('Long press detected - activating drag mode');
@@ -64,6 +67,8 @@ export const useObjectInteraction = (
   };
 
   const handlePointerMove = (e: any) => {
+    if (!lastDragPosition) return;
+    
     const currentX = e.clientX || e.point?.x || 0;
     const currentY = e.clientY || e.point?.y || 0;
     
@@ -78,18 +83,22 @@ export const useObjectInteraction = (
       
       // Cancel long press if not in drag mode yet
       if (longPressTimer && !isDragging) {
+        console.log('Movement detected, canceling long press timer');
         clearLongPressTimer();
       }
     }
     
-    // Handle dragging
-    if (isDragging && lastDragPosition && onDrag) {
-      const deltaX = (currentX - lastDragPosition.x) * 0.01; // Scale down movement
-      const deltaY = -(currentY - lastDragPosition.y) * 0.01; // Invert Y for 3D space
+    // Handle dragging with proper scaling
+    if (isDragging && onDrag) {
+      e.stopPropagation();
+      
+      const deltaX = (currentX - lastDragPosition.x) * 0.005; // Reduced sensitivity
+      const deltaY = -(currentY - lastDragPosition.y) * 0.005; // Invert Y for 3D space
       
       const delta = new Vector3(deltaX, deltaY, 0);
       onDrag(delta);
       
+      console.log('Dragging object with delta:', { deltaX, deltaY });
       setLastDragPosition({ x: currentX, y: currentY });
     }
   };
@@ -98,6 +107,7 @@ export const useObjectInteraction = (
     e.stopPropagation();
     
     const pointerDuration = Date.now() - pointerStartTime;
+    console.log('Pointer up, duration:', pointerDuration, 'ms');
     
     clearLongPressTimer();
     
@@ -109,14 +119,14 @@ export const useObjectInteraction = (
       console.log('Drag ended');
     }
     
-    // Fade out the effect after a short delay
+    // Fade out the holographic effect after a short delay
     setTimeout(() => {
       setShowLongPressEffect(false);
     }, 200);
     
-    // If it was a quick tap (less than 200ms) and didn't move much
+    // If it was a quick tap (less than 200ms) and didn't move much and wasn't dragging
     if (pointerDuration < 200 && !hasMoved && !dragStartRef.current) {
-      console.log('Quick tap on object');
+      console.log('Quick tap detected - selecting object');
       onSelect();
     }
     
@@ -139,7 +149,9 @@ export const useObjectInteraction = (
 
   const handleClick = (e: any) => {
     e.stopPropagation();
+    // Only select on click if we didn't drag
     if (!hasMoved && !dragStartRef.current) {
+      console.log('Click detected - selecting object');
       onSelect();
     }
   };

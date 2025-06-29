@@ -19,7 +19,7 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SceneControls from "@/components/scene/SceneControls";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search } from "lucide-react";
+import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
 
 interface BottomBarProps {
   uiColor: string;
@@ -32,6 +32,7 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
+  onShowObjectControls?: () => void;
 }
 
 const BottomBar = ({
@@ -45,11 +46,21 @@ const BottomBar = ({
   onUpdateSceneConfig,
   onShowHelp,
   theme,
+  onShowObjectControls,
 }: BottomBarProps) => {
   const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   
   // Use scene-specific UI colors for proper contrast
   const uiStyle = { color: uiColor, borderColor: uiColor };
+
+  const handleObjectControls = () => {
+    if (onShowObjectControls) {
+      onShowObjectControls();
+    } else {
+      // Fallback behavior - open settings with object focus
+      onToggleSettings(true);
+    }
+  };
 
   return (
     <div 
@@ -59,7 +70,7 @@ const BottomBar = ({
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search */}
+      {/* Left side: Copy, Search, Object Controls */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -91,6 +102,22 @@ const BottomBar = ({
           </TooltipTrigger>
           <TooltipContent>
             <p>Search Worlds (S or Ctrl+K)</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              style={uiStyle}
+              className={blendedButtonClasses}
+              size="icon"
+              aria-label="Object Controls"
+              onClick={handleObjectControls}
+            >
+              <Move />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Object Controls (O)</p>
           </TooltipContent>
         </Tooltip>
       </div>

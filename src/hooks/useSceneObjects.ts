@@ -50,21 +50,21 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       },
     };
 
-    console.log('Adding new object:', newObject);
+    console.log('Adding new object:', newObject.type, 'with ID:', newObject.id);
 
     setState(prev => {
       const newState = {
         ...prev,
         objects: [...prev.objects, newObject],
-        selectedObjectId: newObject.id,
+        selectedObjectId: newObject.id, // Auto-select new object
         isAddingObject: false,
       };
-      console.log('New state after adding object:', newState);
+      console.log('New state after adding object. Total objects:', newState.objects.length);
       return newState;
     });
 
     toast.success(`✨ ${type} added to scene!`, {
-      description: "Right-click or long-press for more options",
+      description: "Object ready for interaction",
       duration: 3000,
       style: {
         background: 'rgba(0, 0, 0, 0.9)',
@@ -92,14 +92,24 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
         selectedObjectId: prev.selectedObjectId === id ? null : prev.selectedObjectId,
       };
       
-      console.log('Object removed:', objectToRemove);
-      console.log('New state after removal:', newState);
+      console.log('Object removed:', objectToRemove.type, 'Remaining objects:', newState.objects.length);
       return newState;
+    });
+
+    toast.success(`🗑️ Object removed`, {
+      description: "Object deleted from scene",
+      duration: 2500,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(239, 68, 68, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
     });
   }, []);
 
   const updateObject = useCallback((id: string, updates: Partial<SceneObject>) => {
-    console.log('Updating object:', id, updates);
+    console.log('Updating object:', id, 'with updates:', updates);
     
     setState(prev => {
       const objectIndex = prev.objects.findIndex(obj => obj.id === id);
@@ -117,7 +127,7 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
         objects: updatedObjects,
       };
       
-      console.log('Object updated:', updatedObjects[objectIndex]);
+      console.log('Object updated:', updatedObjects[objectIndex].type);
       return newState;
     });
   }, []);
@@ -126,7 +136,8 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
     console.log('Selecting object:', id);
     setState(prev => {
       if (prev.selectedObjectId === id) {
-        return prev; // No change needed
+        console.log('Object already selected, no change');
+        return prev;
       }
       
       const newState = { ...prev, selectedObjectId: id };
