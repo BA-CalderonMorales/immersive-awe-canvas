@@ -11,7 +11,7 @@ interface JellyTorusObjectProps {
 const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled } = useSceneObjectsContext();
+  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state, delta) => {
     if (!isLocked && meshRef.current) {
@@ -51,8 +51,8 @@ const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
         opacity={0.8}
       />
       
-      {/* Wireframe overlay - show when drag is enabled or when hovered */}
-      {(isDragEnabled || isHovered) && (
+      {/* Wireframe overlay - show when drag is enabled, force wireframe is enabled, or when hovered */}
+      {(isDragEnabled || forceWireframe || isHovered) && (
         <mesh>
           <torusGeometry args={[1, 0.4, 16, 100]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

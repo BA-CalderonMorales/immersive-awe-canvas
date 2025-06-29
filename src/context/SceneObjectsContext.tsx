@@ -1,5 +1,5 @@
 
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { useSceneObjects } from '@/hooks/useSceneObjects';
 import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/sceneObjects';
 
@@ -7,6 +7,8 @@ interface SceneObjectsContextType extends ObjectManagerState {
   actions: ObjectManagerActions;
   selectedObject: SceneObject | null;
   isDragEnabled: boolean;
+  forceWireframe: boolean;
+  setForceWireframe: (force: boolean) => void;
 }
 
 const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
@@ -23,11 +25,14 @@ export const SceneObjectsProvider = ({
   isDragEnabled = false
 }: SceneObjectsProviderProps) => {
   const sceneObjectsData = useSceneObjects(mainObjectColor);
+  const [forceWireframe, setForceWireframe] = useState(false);
 
   return (
     <SceneObjectsContext.Provider value={{
       ...sceneObjectsData,
-      isDragEnabled
+      isDragEnabled,
+      forceWireframe,
+      setForceWireframe
     }}>
       {children}
     </SceneObjectsContext.Provider>

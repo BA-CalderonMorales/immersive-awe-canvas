@@ -6,6 +6,7 @@ import ExperienceLayout from "./ExperienceLayout";
 import ExperienceUI from "./ExperienceUI";
 import ExperienceHotkeys from "./ExperienceHotkeys";
 import LoadingOverlay from "./LoadingOverlay";
+import { useState } from "react";
 
 interface ExperienceContainerContentProps {
   worldData: any;
@@ -73,10 +74,16 @@ const ExperienceContainerContent = ({
   handleWorldTransitionEnd,
   isMobile,
 }: ExperienceContainerContentProps) => {
+  const [forceWireframe, setForceWireframe] = useState(false);
+
   // Direct UI color calculation
   const uiColor = worldData ? 
     (theme === 'day' ? (worldData.ui_day_color || 'white') : (worldData.ui_night_color || 'white')) : 
     'white';
+
+  const handleToggleWireframe = () => {
+    setForceWireframe(!forceWireframe);
+  };
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
@@ -160,6 +167,7 @@ const ExperienceContainerContent = ({
           isSettingsOpen={isSettingsOpen}
           worlds={worlds}
           jumpToWorld={handleJumpToWorld}
+          onToggleWireframe={handleToggleWireframe}
         />
       </motion.div>
     </AnimatePresence>

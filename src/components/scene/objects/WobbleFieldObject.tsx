@@ -19,7 +19,7 @@ interface WobbleFieldObjectProps {
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled } = useSceneObjectsContext();
+  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
   
   // Generate field data once
   const fieldData = generateChaoticField();
@@ -51,8 +51,8 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
         <sphereGeometry args={[0.8, 64, 64]} />
         <DynamicMaterial materialConfig={materialConfig} color={color} />
         
-        {/* Wireframe overlay - show when drag is enabled or when hovered */}
-        {(isDragEnabled || isHovered) && (
+        {/* Wireframe overlay - show when drag is enabled, force wireframe is enabled, or when hovered */}
+        {(isDragEnabled || forceWireframe || isHovered) && (
           <mesh>
             <sphereGeometry args={[0.8, 64, 64]} />
             <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

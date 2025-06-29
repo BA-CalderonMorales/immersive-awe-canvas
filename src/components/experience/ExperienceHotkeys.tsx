@@ -1,4 +1,3 @@
-
 import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
 import { useEffect } from "react";
 import HelpDialog from "@/components/dialogs/HelpDialog";
@@ -21,6 +20,7 @@ interface ExperienceHotkeysProps {
   worlds: any[];
   jumpToWorld: (worldId: number) => void;
   onToggleDrag?: () => void;
+  onToggleWireframe?: () => void;
 }
 
 const ExperienceHotkeys = ({
@@ -40,6 +40,7 @@ const ExperienceHotkeys = ({
   worlds,
   jumpToWorld,
   onToggleDrag,
+  onToggleWireframe,
 }: ExperienceHotkeysProps) => {
   
   // Handle M key separately - should always work
@@ -89,6 +90,30 @@ const ExperienceHotkeys = ({
     window.addEventListener('keydown', handleZKey);
     return () => window.removeEventListener('keydown', handleZKey);
   }, [onToggleDrag, isHelpOpen, isSearchOpen, isSettingsOpen]);
+  
+  // Handle W key for wireframe toggle
+  useEffect(() => {
+    const handleWKey = (event: KeyboardEvent) => {
+      if (event.code === 'KeyW' && onToggleWireframe) {
+        // Check if user is typing
+        const activeEl = document.activeElement;
+        const isTyping = activeEl && (
+          activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.getAttribute('contenteditable') === 'true'
+        );
+        
+        if (!isTyping && !isHelpOpen && !isSearchOpen && !isSettingsOpen) {
+          console.log('ExperienceHotkeys - W key pressed, toggling wireframe');
+          event.preventDefault();
+          onToggleWireframe();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleWKey);
+    return () => window.removeEventListener('keydown', handleWKey);
+  }, [onToggleWireframe, isHelpOpen, isSearchOpen, isSettingsOpen]);
   
   // Handle all other hotkeys - only when dialogs are closed
   useExperienceHotkeys({
