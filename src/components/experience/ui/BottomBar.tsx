@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -6,7 +7,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
+import { Copy, Settings, HelpCircle, Search, Move, Grid3X3 } from "lucide-react";
 import SceneSettingsPanel from "../SceneSettingsPanel";
 
 interface BottomBarProps {
@@ -22,6 +23,8 @@ interface BottomBarProps {
   theme: 'day' | 'night';
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  forceWireframe: boolean;
+  onToggleWireframe: () => void;
 }
 
 const BottomBar = ({
@@ -37,6 +40,8 @@ const BottomBar = ({
   theme,
   isDragEnabled,
   onToggleDrag,
+  forceWireframe,
+  onToggleWireframe,
 }: BottomBarProps) => {
   const blendedButtonClasses = theme === 'day' 
     ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
@@ -53,7 +58,7 @@ const BottomBar = ({
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search, Drag Toggle */}
+      {/* Left side: Copy, Search, Drag Toggle, Wireframe Toggle */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -101,6 +106,22 @@ const BottomBar = ({
           </TooltipTrigger>
           <TooltipContent>
             <p>Toggle Drag Controls (Z)</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              style={buttonStyle}
+              className={`${blendedButtonClasses} ${forceWireframe ? 'bg-green-500/20 text-green-400' : ''}`}
+              size="icon"
+              aria-label="Toggle Wireframe"
+              onClick={onToggleWireframe}
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Toggle Wireframe (W)</p>
           </TooltipContent>
         </Tooltip>
       </div>

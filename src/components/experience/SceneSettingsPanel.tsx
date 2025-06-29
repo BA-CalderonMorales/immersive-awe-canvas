@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Settings, Info, Shapes, ChevronsUpDown } from 'lucide-react';
@@ -79,7 +80,6 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
                 <ObjectGuiControls 
                   object={selectedObject}
                   onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
-                  containerRef={null} // lil-gui will be managed inside
                 />
               ) : (
                 <div className="text-center text-xs text-gray-500 py-4">

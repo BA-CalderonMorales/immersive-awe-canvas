@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneConfig } from '@/types/scene';
@@ -27,7 +28,7 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
       container: guiContainerRef.current, 
       title: 'Main Object Properties',
       autoPlace: false,
-      width: '100%'
+      width: 320
     });
     guiRef.current = gui;
 

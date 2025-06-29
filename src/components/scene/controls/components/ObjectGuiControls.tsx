@@ -1,3 +1,4 @@
+
 import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneObject } from '@/types/sceneObjects';
@@ -22,31 +23,35 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
       container: guiContainerRef.current, 
       title: `Properties: ${object.type}`,
       autoPlace: false,
-      width: '100%'
+      width: 320
     });
     guiRef.current = gui;
 
     // Position controls
     const positionFolder = gui.addFolder('Position');
-    positionFolder.add(object.position, '0', -10, 10, 0.1).name('X').onChange((value: number) => {
+    const positionProxy = { x: object.position[0], y: object.position[1], z: object.position[2] };
+    
+    positionFolder.add(positionProxy, 'x', -10, 10, 0.1).name('X').onChange((value: number) => {
       onUpdate({ position: [value, object.position[1], object.position[2]] });
     });
-    positionFolder.add(object.position, '1', -10, 10, 0.1).name('Y').onChange((value: number) => {
+    positionFolder.add(positionProxy, 'y', -10, 10, 0.1).name('Y').onChange((value: number) => {
       onUpdate({ position: [object.position[0], value, object.position[2]] });
     });
-    positionFolder.add(object.position, '2', -10, 10, 0.1).name('Z').onChange((value: number) => {
+    positionFolder.add(positionProxy, 'z', -10, 10, 0.1).name('Z').onChange((value: number) => {
       onUpdate({ position: [object.position[0], object.position[1], value] });
     });
 
     // Rotation controls
     const rotationFolder = gui.addFolder('Rotation');
-    rotationFolder.add(object.rotation, '0', 0, Math.PI * 2, 0.1).name('X').onChange((value: number) => {
+    const rotationProxy = { x: object.rotation[0], y: object.rotation[1], z: object.rotation[2] };
+    
+    rotationFolder.add(rotationProxy, 'x', 0, Math.PI * 2, 0.1).name('X').onChange((value: number) => {
       onUpdate({ rotation: [value, object.rotation[1], object.rotation[2]] });
     });
-    rotationFolder.add(object.rotation, '1', 0, Math.PI * 2, 0.1).name('Y').onChange((value: number) => {
+    rotationFolder.add(rotationProxy, 'y', 0, Math.PI * 2, 0.1).name('Y').onChange((value: number) => {
       onUpdate({ rotation: [object.rotation[0], value, object.rotation[2]] });
     });
-    rotationFolder.add(object.rotation, '2', 0, Math.PI * 2, 0.1).name('Z').onChange((value: number) => {
+    rotationFolder.add(rotationProxy, 'z', 0, Math.PI * 2, 0.1).name('Z').onChange((value: number) => {
       onUpdate({ rotation: [object.rotation[0], object.rotation[1], value] });
     });
 
