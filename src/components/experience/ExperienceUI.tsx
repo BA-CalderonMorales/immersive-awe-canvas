@@ -5,11 +5,11 @@ import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
+import { toast } from "sonner";
 import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
-import ObjectControlsPanel from "./ui/ObjectControlsPanel";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -51,7 +51,7 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
-  const [isObjectControlsOpen, setIsObjectControlsOpen] = useState(false);
+  const [isObjectMoveMode, setIsObjectMoveMode] = useState(false);
 
   console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
 
@@ -94,13 +94,39 @@ const ExperienceUI = ({
     onToggleUiHidden();
   };
 
-  const handleShowObjectControls = () => {
-    setIsObjectControlsOpen(true);
-    logEvent({ eventType: 'button_click', eventSource: 'show_object_controls' });
-  };
-
-  const handleCloseObjectControls = () => {
-    setIsObjectControlsOpen(false);
+  const handleToggleObjectMoveMode = () => {
+    const newState = !isObjectMoveMode;
+    setIsObjectMoveMode(newState);
+    
+    if (newState) {
+      toast.info('🎯 Object Move Mode Activated', {
+        description: 'Long press or Ctrl+drag objects to move them',
+        duration: 3000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    } else {
+      toast.success('✅ Move Mode Deactivated', {
+        description: 'Normal camera controls restored',
+        duration: 2000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(34, 197, 94, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    }
+    
+    logEvent({ 
+      eventType: 'button_click', 
+      eventSource: 'toggle_object_move_mode', 
+      metadata: { active: newState } 
+    });
   };
 
   return (
@@ -149,15 +175,8 @@ const ExperienceUI = ({
               onUpdateSceneConfig={onUpdateSceneConfig}
               onShowHelp={handleShowHelp}
               theme={theme}
-              onShowObjectControls={handleShowObjectControls}
-            />
-
-            {/* Object Controls Panel */}
-            <ObjectControlsPanel 
-              isOpen={isObjectControlsOpen}
-              onClose={handleCloseObjectControls}
-              isMobile={isMobile}
-              theme={theme}
+              onToggleObjectMoveMode={handleToggleObjectMoveMode}
+              isObjectMoveMode={isObjectMoveMode}
             />
 
             {/* Keyboard hint for desktop */}
@@ -165,7 +184,7 @@ const ExperienceUI = ({
               <div 
                 style={{ color: theme === 'day' ? '#000000' : uiColor }} 
                 className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
-                  isSettingsOpen || isObjectControlsOpen ? 'z-10' : 'z-50'
+                  isSettingsOpen ? 'z-10' : 'z-50'
                 }`}
               >
                 Press SPACE to change time of day
