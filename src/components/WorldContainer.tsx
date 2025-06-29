@@ -48,7 +48,11 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
       style={{ 
         position: 'absolute',
         inset: 0,
-        overflow: 'hidden'
+        overflow: 'hidden',
+        userSelect: 'none',
+        WebkitUserSelect: 'none',
+        WebkitTouchCallout: 'none',
+        touchAction: 'pan-x pan-y'
       }}
     >
       {dimensions.width > 0 && dimensions.height > 0 && (
@@ -59,7 +63,8 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             cursor: isDragging ? 'grabbing' : 'grab',
             width: '100%',
             height: '100%',
-            display: 'block'
+            display: 'block',
+            touchAction: 'none'
           }}
           onPointerDown={() => setIsDragging(true)}
           onPointerUp={() => setIsDragging(false)}
