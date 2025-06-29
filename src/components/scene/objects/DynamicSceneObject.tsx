@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { Mesh, Vector3 } from 'three';
+import { useFrame, useThree } from '@react-three/fiber';
+import { Mesh, Vector3, Raycaster, Vector2 } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useObjectInteraction } from './hooks/useObjectInteraction';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
@@ -24,13 +24,25 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const [currentPosition, setCurrentPosition] = useState<[number, number, number]>(object.position);
   const { actions } = useSceneObjectsContext();
   const { movementMode } = useMovementMode();
-  const dragAccumulator = useRef(new Vector3(0, 0, 0));
+  const { camera, gl, scene } = useThree();
+  const dragStartPosition = useRef(new Vector3());
+  const dragPlane = useRef(new Vector3());
+  const raycaster = useRef(new Raycaster());
   
-  const handleDragStart = () => {
+  const handleDragStart = (event: any) => {
+    if (movementMode === 'none') return;
+    
     console.log('Drag started for object:', object.id, 'in mode:', movementMode);
     setIsDragging(true);
     onSelect(); // Select the object when starting to drag
-    dragAccumulator.current.set(0, 0, 0);
+    
+    // Dispatch event to disable orbit controls
+    window.dispatchEvent(new CustomEvent('object-drag-start'));
+    
+    // Store initial position
+    if (meshRef.current) {
+      dragStartPosition.current.copy(meshRef.current.position);
+    }
     
     const modeNames = {
       'x-axis': 'X-Axis',
@@ -40,51 +52,88 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
       'none': 'Disabled'
     };
     
-    if (movementMode !== 'none') {
-      toast.info(`🎯 Moving ${object.type} - ${modeNames[movementMode]}`, {
-        description: movementMode === 'freehand' 
-          ? 'Drag to reposition object freely'
-          : `Drag to move along ${movementMode.split('-')[0].toUpperCase()}-axis`,
-        duration: 2000,
-        style: {
-          background: 'rgba(0, 0, 0, 0.9)',
-          color: '#fff',
-          border: '1px solid rgba(251, 191, 36, 0.3)',
-          backdropFilter: 'blur(8px)',
-        },
-      });
-    }
+    toast.info(`🎯 Moving ${object.type} - ${modeNames[movementMode]}`, {
+      description: movementMode === 'freehand' 
+        ? 'Drag to reposition object freely'
+        : `Drag to move along ${movementMode.split('-')[0].toUpperCase()}-axis`,
+      duration: 2000,
+      style: {
+        background: 'rgba(0, 0, 0, 0.9)',
+        color: '#fff',
+        border: '1px solid rgba(251, 191, 36, 0.3)',
+        backdropFilter: 'blur(8px)',
+      },
+    });
   };
   
-  const handleDrag = (delta: Vector3) => {
-    if (meshRef.current && movementMode !== 'none') {
-      // Accumulate the delta for smoother movement
-      dragAccumulator.current.add(delta);
+  const handleDrag = (event: any) => {
+    if (!isDragging || !meshRef.current || movementMode === 'none') return;
+    
+    // Get mouse position in normalized device coordinates
+    const mouse = new Vector2();
+    const rect = gl.domElement.getBoundingClientRect();
+    mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    
+    // Update raycaster
+    raycaster.current.setFromCamera(mouse, camera);
+    
+    // Calculate movement based on camera orientation and movement mode
+    const cameraDirection = new Vector3();
+    camera.getWorldDirection(cameraDirection);
+    
+    // Create a plane perpendicular to camera for free movement
+    const plane = new Vector3().copy(cameraDirection).normalize();
+    const intersects = raycaster.current.ray.intersectPlane(
+      new THREE.Plane(plane, -dragStartPosition.current.dot(plane)),
+      new Vector3()
+    );
+    
+    if (intersects) {
+      const deltaMovement = intersects.clone().sub(dragStartPosition.current);
+      const sensitivity = 0.5;
       
-      const newPosition: [number, number, number] = [
-        object.position[0] + dragAccumulator.current.x,
-        object.position[1] + dragAccumulator.current.y,
-        object.position[2] + dragAccumulator.current.z
-      ];
+      let newPosition = new Vector3().copy(dragStartPosition.current);
       
-      // Update local position immediately for smooth dragging
-      setCurrentPosition(newPosition);
-      meshRef.current.position.set(...newPosition);
+      // Apply movement constraints based on mode
+      switch (movementMode) {
+        case 'x-axis':
+          newPosition.x += deltaMovement.x * sensitivity;
+          break;
+        case 'y-axis':
+          newPosition.y += deltaMovement.y * sensitivity;
+          break;
+        case 'z-axis':
+          newPosition.z += deltaMovement.z * sensitivity;
+          break;
+        case 'freehand':
+          newPosition.add(deltaMovement.multiplyScalar(sensitivity));
+          break;
+      }
+      
+      // Update mesh position immediately for smooth dragging
+      meshRef.current.position.copy(newPosition);
+      setCurrentPosition([newPosition.x, newPosition.y, newPosition.z]);
       
       console.log(`Object dragged to position in ${movementMode} mode:`, newPosition);
     }
   };
   
   const handleDragEnd = () => {
+    if (!isDragging) return;
+    
     console.log('Drag ended for object:', object.id);
     setIsDragging(false);
     
+    // Dispatch event to re-enable orbit controls
+    window.dispatchEvent(new CustomEvent('object-drag-end'));
+    
     // Update the object position in the context when drag ends
-    if (movementMode !== 'none' && dragAccumulator.current.length() > 0) {
+    if (movementMode !== 'none' && meshRef.current) {
       const finalPosition: [number, number, number] = [
-        object.position[0] + dragAccumulator.current.x,
-        object.position[1] + dragAccumulator.current.y,
-        object.position[2] + dragAccumulator.current.z
+        meshRef.current.position.x,
+        meshRef.current.position.y,
+        meshRef.current.position.z
       ];
       
       actions.updateObject(object.id, { position: finalPosition });
@@ -100,9 +149,6 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
         },
       });
     }
-    
-    // Reset accumulator
-    dragAccumulator.current.set(0, 0, 0);
   };
   
   const {

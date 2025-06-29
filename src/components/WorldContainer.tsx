@@ -109,6 +109,7 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             maxDistance={50}
             onStart={() => !isObjectDragging && setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
+            makeDefault
           />
 
           <EffectComposer>

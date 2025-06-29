@@ -4,8 +4,8 @@ import { Vector3 } from 'three';
 
 export const useObjectInteraction = (
   onSelect: () => void,
-  onDragStart?: () => void,
-  onDrag?: (delta: Vector3) => void,
+  onDragStart?: (event: any) => void,
+  onDrag?: (event: any) => void,
   onDragEnd?: () => void,
   movementMode: 'none' | 'x-axis' | 'y-axis' | 'z-axis' | 'freehand' = 'freehand'
 ) => {
@@ -16,7 +16,6 @@ export const useObjectInteraction = (
   const [pointerStartTime, setPointerStartTime] = useState<number>(0);
   const [hasMoved, setHasMoved] = useState(false);
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
-  const [lastDragPosition, setLastDragPosition] = useState<{ x: number; y: number } | null>(null);
   const dragStartRef = useRef(false);
   const isDraggingRef = useRef(false);
 
@@ -38,7 +37,6 @@ export const useObjectInteraction = (
     setPointerStartTime(Date.now());
     setHasMoved(false);
     setStartPosition({ x: clientX, y: clientY });
-    setLastDragPosition({ x: clientX, y: clientY });
     
     // Check if Ctrl key is pressed (for desktop dragging)
     const isCtrlPressed = e.ctrlKey || e.metaKey;
@@ -50,7 +48,7 @@ export const useObjectInteraction = (
       isDraggingRef.current = true;
       dragStartRef.current = true;
       setShowLongPressEffect(true);
-      onDragStart?.();
+      onDragStart?.(e);
     } else if (movementMode !== 'none') {
       // Start holographic effect immediately for visual feedback
       setShowLongPressEffect(true);
@@ -63,7 +61,7 @@ export const useObjectInteraction = (
           setIsDragging(true);
           isDraggingRef.current = true;
           dragStartRef.current = true;
-          onDragStart?.();
+          onDragStart?.(e);
         }
       }, 300);
       setLongPressTimer(timer);
@@ -71,8 +69,6 @@ export const useObjectInteraction = (
   }, [movementMode, hasMoved, onDragStart, longPressTimer]);
 
   const handlePointerMove = useCallback((e: any) => {
-    if (!lastDragPosition) return;
-    
     const currentX = e.clientX || e.point?.x || 0;
     const currentY = e.clientY || e.point?.y || 0;
     
@@ -92,39 +88,13 @@ export const useObjectInteraction = (
       }
     }
     
-    // Handle dragging with proper scaling based on movement mode
+    // Handle dragging
     if (isDraggingRef.current && onDrag && movementMode !== 'none') {
       e.stopPropagation();
-      
-      const sensitivity = 0.01; // Increased sensitivity for better control
-      const deltaX = (currentX - lastDragPosition.x) * sensitivity;
-      const deltaY = -(currentY - lastDragPosition.y) * sensitivity; // Invert Y for natural movement
-      
-      let delta = new Vector3(0, 0, 0);
-      
-      // Apply movement constraints based on mode
-      switch (movementMode) {
-        case 'x-axis':
-          delta.set(deltaX, 0, 0);
-          break;
-        case 'y-axis':
-          delta.set(0, deltaY, 0);
-          break;
-        case 'z-axis':
-          // Use horizontal mouse movement for Z-axis
-          delta.set(0, 0, deltaX);
-          break;
-        case 'freehand':
-          delta.set(deltaX, deltaY, 0);
-          break;
-      }
-      
-      onDrag(delta);
-      
-      console.log(`Dragging object in ${movementMode} mode with delta:`, delta);
-      setLastDragPosition({ x: currentX, y: currentY });
+      onDrag(e);
+      console.log(`Dragging object in ${movementMode} mode`);
     }
-  }, [lastDragPosition, startPosition, longPressTimer, onDrag, movementMode, clearLongPressTimer]);
+  }, [startPosition, longPressTimer, onDrag, movementMode, clearLongPressTimer]);
 
   const handlePointerUp = useCallback((e: any) => {
     e.stopPropagation();
@@ -154,7 +124,6 @@ export const useObjectInteraction = (
       onSelect();
     }
     
-    setLastDragPosition(null);
     setHasMoved(false);
   }, [pointerStartTime, clearLongPressTimer, onDragEnd, hasMoved, onSelect]);
 
