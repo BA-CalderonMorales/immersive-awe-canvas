@@ -83,7 +83,7 @@ const ExperienceLayout = ({
         {isSettingsOpen && (
           <>
             <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={25} minSize={20} maxSize={40} className="relative z-20">
+            <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
               <SceneSettingsPanel sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
             </ResizablePanel>
           </>

@@ -9,8 +9,7 @@ import {
 } from "@/components/ui/sheet";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
-import SceneSettingsPanel from "../SceneSettingsPanel";
+import { Copy, Settings, HelpCircle, Search, Move, Grid3x3 } from "lucide-react";
 
 interface BottomBarProps {
   uiColor: string;
@@ -25,6 +24,8 @@ interface BottomBarProps {
   theme: 'day' | 'night';
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  forceWireframe?: boolean;
+  onToggleWireframe?: () => void;
 }
 
 const BottomBar = ({
@@ -40,6 +41,8 @@ const BottomBar = ({
   theme,
   isDragEnabled,
   onToggleDrag,
+  forceWireframe = false,
+  onToggleWireframe,
 }: BottomBarProps) => {
   const blendedButtonClasses = theme === 'day' 
     ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
@@ -58,7 +61,7 @@ const BottomBar = ({
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search, Drag Toggle */}
+      {/* Left side: Copy, Search, Drag Toggle, Wireframe Toggle */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -108,6 +111,24 @@ const BottomBar = ({
             <p>Toggle Drag Controls (Z)</p>
           </TooltipContent>
         </Tooltip>
+        {onToggleWireframe && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                style={buttonStyle}
+                className={`${blendedButtonClasses} ${forceWireframe ? 'bg-yellow-500/20' : ''}`}
+                size="icon"
+                aria-label="Toggle Wireframe"
+                onClick={onToggleWireframe}
+              >
+                <Grid3x3 className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Toggle Wireframe (W)</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
       </div>
       
       {/* Right side: Settings, Help */}
@@ -128,14 +149,19 @@ const BottomBar = ({
                 </SheetTrigger>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Scene Settings (E)</p>
+                <p>Scene Settings (Esc)</p>
               </TooltipContent>
             </Tooltip>
-            <SheetContent side="bottom" className="h-[75vh] bg-black/95 border-t border-cyan-500/30 p-0">
-              <SceneSettingsPanel 
-                sceneConfig={editableSceneConfig} 
-                onUpdate={onUpdateSceneConfig} 
-              />
+            <SheetContent side="bottom" className="h-[60vh]">
+              <SheetHeader className="text-left">
+                <SheetTitle>Scene Settings</SheetTitle>
+                <SheetDescription>
+                  Manage objects in the scene
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-4 h-full overflow-y-auto">
+                <p className="text-sm text-gray-500">Use the settings panel to manage scene objects.</p>
+              </div>
             </SheetContent>
           </Sheet>
         ) : (
@@ -152,7 +178,7 @@ const BottomBar = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Scene Settings (E)</p>
+              <p>Scene Settings (Esc)</p>
             </TooltipContent>
           </Tooltip>
         )}

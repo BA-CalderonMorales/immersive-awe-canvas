@@ -1,4 +1,3 @@
-
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
 import ExperienceTransitions from "./ExperienceTransitions";
@@ -78,10 +77,16 @@ const ExperienceContainerContent = ({
   isDragEnabled,
   onToggleDrag,
 }: ExperienceContainerContentProps) => {
+  const [forceWireframe, setForceWireframe] = useState(false);
+
   // Direct UI color calculation
   const uiColor = worldData ? 
     (theme === 'day' ? (worldData.ui_day_color || 'white') : (worldData.ui_night_color || 'white')) : 
     'white';
+
+  const handleToggleWireframe = () => {
+    setForceWireframe(!forceWireframe);
+  };
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
@@ -169,6 +174,7 @@ const ExperienceContainerContent = ({
           worlds={worlds}
           jumpToWorld={handleJumpToWorld}
           onToggleDrag={onToggleDrag}
+          onToggleWireframe={handleToggleWireframe}
         />
       </motion.div>
     </AnimatePresence>

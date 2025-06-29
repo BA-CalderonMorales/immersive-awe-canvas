@@ -1,20 +1,14 @@
+
 import { useState, useCallback } from 'react';
 import { SceneObject, ObjectManagerState, ObjectManagerActions } from '@/types/sceneObjects';
 import { toast } from 'sonner';
 
-const GEOMETRIES: ObjectManagerState['availableGeometries'] = [
-  { type: 'box', name: 'Box' },
-  { type: 'sphere', name: 'Sphere' },
-  { type: 'cylinder', name: 'Cylinder' },
-  { type: 'cone', name: 'Cone' },
-  { type: 'torus', name: 'Torus' },
-  { type: 'dodecahedron', name: 'Dodecahedron' },
-  { type: 'icosahedron', name: 'Icosahedron' },
-  { type: 'octahedron', name: 'Octahedron' },
-  { type: 'tetrahedron', name: 'Tetrahedron' },
-  { type: 'plane', name: 'Plane' },
-  { type: 'ring', name: 'Ring' },
-  { type: 'torusKnot', name: 'Torus Knot' },
+const GEOMETRIES = [
+  { type: 'box' as const, name: 'Box' },
+  { type: 'sphere' as const, name: 'Sphere' },
+  { type: 'cylinder' as const, name: 'Cylinder' },
+  { type: 'cone' as const, name: 'Cone' },
+  { type: 'torus' as const, name: 'Torus' },
 ];
 
 export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
@@ -51,10 +45,9 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
       ...prev,
       objects: [...prev.objects, newObject],
       selectedObjectId: newObject.id,
-      isAddingObject: false, // Close add panel after adding
     }));
 
-    toast.success(`${GEOMETRIES.find(g => g.type === type)?.name || 'Object'} added`);
+    toast.success(`${type} added`);
   }, [mainObjectColor]);
 
   const removeObject = useCallback((id: string) => {
@@ -84,17 +77,13 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
     toast.success('All objects cleared');
   }, []);
 
-  const toggleAddMode = useCallback(() => {
-    setState(prev => ({ ...prev, isAddingObject: !prev.isAddingObject }));
-  }, []);
-
   const actions: ObjectManagerActions = {
     addObject,
     removeObject,
     updateObject,
     selectObject,
     clearObjects,
-    toggleAddMode,
+    toggleAddMode: () => {}, // Simplified - no longer needed
   };
 
   return {

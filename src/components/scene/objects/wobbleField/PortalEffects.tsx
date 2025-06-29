@@ -17,93 +17,93 @@ const PortalEffects = ({ materialConfig }: PortalEffectsProps) => {
 
   return (
     <>
-      {/* Enlightenment Rings - expanding awareness circles */}
-      {[...Array(4)].map((_, i) => (
+      {/* Enlightenment Rings - representing expanding awareness */}
+      {[...Array(3)].map((_, i) => (
         <mesh 
           key={`enlightenment-ring-${i}`}
           position={[
-            Math.cos(i * Math.PI / 2 + timeRef.current * 0.015) * (6 + i * 0.5),
-            Math.sin(timeRef.current * 0.06 + i * 1.5) * 0.6,
-            Math.sin(i * Math.PI / 2 + timeRef.current * 0.015) * (6 + i * 0.5)
+            Math.cos(i * Math.PI / 1.5 + timeRef.current * 0.02) * 5, // Very slow orbital motion
+            Math.sin(timeRef.current * 0.08 + i * 2) * 0.8, // Gentle floating
+            Math.sin(i * Math.PI / 1.5 + timeRef.current * 0.02) * 5
           ]}
           rotation={[
-            Math.PI / 4 + Math.sin(timeRef.current * 0.08 + i) * 0.1,
-            timeRef.current * 0.2 + i * (Math.PI / 2),
-            Math.PI / 8
+            Math.PI / 4 + Math.sin(timeRef.current * 0.1 + i) * 0.1, 
+            timeRef.current * 0.3 + i * (Math.PI * 2 / 3), 
+            Math.PI / 6
           ]}
-          scale={0.9 + Math.sin(timeRef.current * 0.8 + i) * 0.1}
+          scale={0.8 + Math.sin(timeRef.current * 1.0 + i) * 0.15} // Subtle breathing scale
         >
-          <ringGeometry args={[1.2, 1.8, 16]} />
+          <ringGeometry args={[1.5, 2.2, 20]} />
           <DynamicMaterial 
             materialConfig={{
               ...materialConfig,
               transparent: true,
-              opacity: 0.15 + Math.sin(timeRef.current * 0.3 + i) * 0.05,
-              emissiveIntensity: 0.1
+              opacity: 0.12 + Math.sin(timeRef.current * 0.4 + i) * 0.03, // Very subtle presence
+              emissiveIntensity: 0.08
             }} 
-            color={`hsl(${(i * 90 + timeRef.current * 6) % 360}, 60%, 70%)`}
+            color={`hsl(${(i * 120 + timeRef.current * 8) % 360}, 50%, 65%)`} // Wisdom colors
           />
         </mesh>
       ))}
 
-      {/* Contemplation Orbs - floating meditation spheres */}
-      {[...Array(8)].map((_, i) => {
-        const orbitRadius = 5 + i * 0.4;
-        const orbitSpeed = 0.008 + i * 0.001;
+      {/* Contemplation Spheres - representing deep states of meditation */}
+      {[...Array(5)].map((_, i) => {
+        const orbitRadius = 6 + i * 0.8;
+        const orbitSpeed = 0.01 + i * 0.002;
         return (
           <mesh
-            key={`contemplation-orb-${i}`}
+            key={`contemplation-sphere-${i}`}
             position={[
-              Math.cos(timeRef.current * orbitSpeed + i * (Math.PI * 2 / 8)) * orbitRadius,
-              Math.sin(timeRef.current * 0.04 + i) * 1.5,
-              Math.sin(timeRef.current * orbitSpeed + i * (Math.PI * 2 / 8)) * orbitRadius
+              Math.cos(timeRef.current * orbitSpeed + i * (Math.PI * 2 / 5)) * orbitRadius,
+              Math.sin(timeRef.current * 0.05 + i) * 2,
+              Math.sin(timeRef.current * orbitSpeed + i * (Math.PI * 2 / 5)) * orbitRadius
             ]}
-            scale={0.25 + Math.sin(timeRef.current * 0.5 + i) * 0.08}
+            scale={0.3 + Math.sin(timeRef.current * 0.6 + i) * 0.1}
           >
-            <sphereGeometry args={[0.3, 8, 6]} />
+            <sphereGeometry args={[0.4, 12, 8]} />
             <DynamicMaterial
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
-                opacity: 0.25 + Math.sin(timeRef.current * 0.4 + i) * 0.08,
-                emissiveIntensity: 0.12,
-                wireframe: i % 3 === 0
+                opacity: 0.2 + Math.sin(timeRef.current * 0.5 + i) * 0.05,
+                emissiveIntensity: 0.1,
+                wireframe: i % 2 === 0 // Alternating solid and wireframe
               }}
-              color={`hsl(${(i * 45 + timeRef.current * 10) % 360}, 45%, 60%)`}
+              color={`hsl(${(i * 72 + timeRef.current * 12) % 360}, 35%, 50%)`}
             />
           </mesh>
         );
       })}
 
-      {/* Wisdom Crystals - geometric understanding forms */}
-      {[...Array(6)].map((_, i) => {
-        const crystalRadius = 4.5 + Math.sin(i * 0.8) * 1.5;
-        const crystalHeight = Math.sin(i * 1.2) * 2;
+      {/* Wisdom Fragments - floating pieces of understanding */}
+      {[...Array(12)].map((_, i) => {
+        const fragmentRadius = 4 + Math.sin(i * 0.5) * 2;
+        const fragmentHeight = Math.sin(i * 0.7) * 3;
         return (
           <mesh
-            key={`wisdom-crystal-${i}`}
+            key={`wisdom-fragment-${i}`}
             position={[
-              Math.cos(i * (Math.PI * 2 / 6) + timeRef.current * 0.03) * crystalRadius,
-              crystalHeight + Math.sin(timeRef.current * 0.25 + i) * 0.5,
-              Math.sin(i * (Math.PI * 2 / 6) + timeRef.current * 0.03) * crystalRadius
+              Math.cos(i * (Math.PI * 2 / 12) + timeRef.current * 0.04) * fragmentRadius,
+              fragmentHeight + Math.sin(timeRef.current * 0.3 + i) * 0.6,
+              Math.sin(i * (Math.PI * 2 / 12) + timeRef.current * 0.04) * fragmentRadius
             ]}
             rotation={[
-              timeRef.current * 0.12 + i * 0.3,
-              timeRef.current * 0.08 + i * 0.4,
-              timeRef.current * 0.15 + i * 0.2
+              timeRef.current * 0.15 + i * 0.2,
+              timeRef.current * 0.1 + i * 0.3,
+              timeRef.current * 0.2 + i * 0.1
             ]}
-            scale={0.18 + Math.sin(timeRef.current * 0.6 + i) * 0.04}
+            scale={0.2 + Math.sin(timeRef.current * 0.8 + i) * 0.05}
           >
-            <tetrahedronGeometry args={[0.25, 0]} />
+            <tetrahedronGeometry args={[0.3, 0]} />
             <DynamicMaterial
               materialConfig={{
                 ...materialConfig,
                 transparent: true,
-                opacity: 0.2 + Math.sin(timeRef.current * 0.6 + i) * 0.08,
-                emissiveIntensity: 0.08,
+                opacity: 0.15 + Math.sin(timeRef.current * 0.7 + i) * 0.05,
+                emissiveIntensity: 0.05,
                 wireframe: false
               }}
-              color={`hsl(${(i * 60 + timeRef.current * 15) % 360}, 40%, 55%)`}
+              color={`hsl(${(i * 30 + timeRef.current * 20) % 360}, 30%, 45%)`}
             />
           </mesh>
         );

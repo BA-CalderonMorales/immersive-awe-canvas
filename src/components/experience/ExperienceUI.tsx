@@ -1,3 +1,4 @@
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
@@ -54,6 +55,7 @@ const ExperienceUI = ({
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
   const [localIsDragEnabled, setLocalIsDragEnabled] = useState(false);
+  const [forceWireframe, setForceWireframe] = useState(false);
 
   // Use prop value if provided, otherwise use local state
   const isDragEnabled = propIsDragEnabled || localIsDragEnabled;
@@ -108,6 +110,11 @@ const ExperienceUI = ({
     logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
   };
 
+  const handleToggleWireframe = () => {
+    setForceWireframe(!forceWireframe);
+    logEvent({ eventType: 'button_click', eventSource: 'toggle_wireframe' });
+  };
+
   return (
     <TooltipProvider>
       <SceneObjectsProvider mainObjectColor={uiColor} isDragEnabled={isDragEnabled}>
@@ -156,6 +163,8 @@ const ExperienceUI = ({
               theme={theme}
               isDragEnabled={isDragEnabled}
               onToggleDrag={handleToggleDrag}
+              forceWireframe={forceWireframe}
+              onToggleWireframe={handleToggleWireframe}
             />
 
             {/* Keyboard hint for desktop */}

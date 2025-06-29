@@ -1,4 +1,3 @@
-
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
@@ -21,7 +20,7 @@ interface WobbleFieldObjectProps {
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled } = useSceneObjectsContext();
+  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
   
   // Generate field data once
   const fieldData = generateChaoticField();
@@ -29,7 +28,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   useFrame((state) => {
     if (groupRef.current?.userData.isBeingDragged) return;
     if (!isLocked && groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.05;
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
     }
   });
 
@@ -50,45 +49,16 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
       onPointerOver={handlePointerEnter}
       onPointerOut={handlePointerLeave}
     >
-      {/* Main central sphere with enhanced appearance */}
+      {/* Main central sphere */}
       <mesh>
-        <sphereGeometry args={[1.2, 32, 32]} />
-        <DynamicMaterial 
-          materialConfig={{
-            ...materialConfig,
-            emissiveIntensity: 0.15,
-            transparent: true,
-            opacity: 0.9
-          }} 
-          color={color} 
-        />
+        <sphereGeometry args={[0.8, 64, 64]} />
+        <DynamicMaterial materialConfig={materialConfig} color={color} />
         
-        {/* Inner glow sphere */}
-        <mesh scale={0.95}>
-          <sphereGeometry args={[1, 16, 16]} />
-          <meshBasicMaterial 
-            color={color} 
-            transparent 
-            opacity={0.3}
-          />
-        </mesh>
-        
-        {/* Outer aura */}
-        <mesh scale={1.3}>
-          <sphereGeometry args={[1, 12, 12]} />
-          <meshBasicMaterial 
-            color={color} 
-            transparent 
-            opacity={0.1}
-            wireframe
-          />
-        </mesh>
-
-        {/* Drag indicator overlay */}
-        {(isDragEnabled || isHovered) && (
-          <mesh scale={1.1}>
-            <sphereGeometry args={[1, 16, 16]} />
-            <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.4} />
+        {/* Wireframe overlay - show when drag is enabled, force wireframe is enabled, or when hovered */}
+        {(isDragEnabled || forceWireframe || isHovered) && (
+          <mesh>
+            <sphereGeometry args={[0.8, 64, 64]} />
+            <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
           </mesh>
         )}
       </mesh>
