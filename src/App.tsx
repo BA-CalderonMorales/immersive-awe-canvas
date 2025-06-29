@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ExperienceProvider } from "@/context/ExperienceContext";
+import { KeyboardShortcutsProvider } from "@/context/KeyboardShortcutsContext";
 import ExperienceLogic from "@/components/experience/ExperienceLogic";
 import NotFound from "./pages/NotFound";
 
@@ -29,9 +30,11 @@ const App = () => {
             <Route 
               path="/experience/:worldSlug" 
               element={
-                <ExperienceProvider>
-                  <ExperienceLogic />
-                </ExperienceProvider>
+                <KeyboardShortcutsProvider>
+                  <ExperienceProvider>
+                    <ExperienceLogic />
+                  </ExperienceProvider>
+                </KeyboardShortcutsProvider>
               } 
             />
             
