@@ -29,7 +29,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   useFrame((state) => {
     if (groupRef.current?.userData.isBeingDragged) return;
     if (!isLocked && groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.05;
     }
   });
 
@@ -50,16 +50,45 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
       onPointerOver={handlePointerEnter}
       onPointerOut={handlePointerLeave}
     >
-      {/* Main central sphere */}
+      {/* Main central sphere with enhanced appearance */}
       <mesh>
-        <sphereGeometry args={[0.8, 64, 64]} />
-        <DynamicMaterial materialConfig={materialConfig} color={color} />
+        <sphereGeometry args={[1.2, 32, 32]} />
+        <DynamicMaterial 
+          materialConfig={{
+            ...materialConfig,
+            emissiveIntensity: 0.15,
+            transparent: true,
+            opacity: 0.9
+          }} 
+          color={color} 
+        />
         
-        {/* Wireframe overlay - show when drag is enabled or when hovered */}
+        {/* Inner glow sphere */}
+        <mesh scale={0.95}>
+          <sphereGeometry args={[1, 16, 16]} />
+          <meshBasicMaterial 
+            color={color} 
+            transparent 
+            opacity={0.3}
+          />
+        </mesh>
+        
+        {/* Outer aura */}
+        <mesh scale={1.3}>
+          <sphereGeometry args={[1, 12, 12]} />
+          <meshBasicMaterial 
+            color={color} 
+            transparent 
+            opacity={0.1}
+            wireframe
+          />
+        </mesh>
+
+        {/* Drag indicator overlay */}
         {(isDragEnabled || isHovered) && (
-          <mesh>
-            <sphereGeometry args={[0.8, 64, 64]} />
-            <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+          <mesh scale={1.1}>
+            <sphereGeometry args={[1, 16, 16]} />
+            <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.4} />
           </mesh>
         )}
       </mesh>
