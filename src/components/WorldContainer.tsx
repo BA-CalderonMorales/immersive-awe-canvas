@@ -8,9 +8,10 @@ type WorldContainerProps = {
   children: React.ReactNode;
   onToggleLock?: () => void;
   isLocked: boolean;
+  isDragEnabled?: boolean;
 };
 
-const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
+const WorldContainer = ({ children, onToggleLock, isLocked, isDragEnabled = false }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const orbitControlsRef = useRef<any>(null);
@@ -76,8 +77,8 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             ref={orbitControlsRef}
             enableZoom={true}
             enablePan={false}
-            enableRotate={true}
-            autoRotate={!isLocked}
+            enableRotate={!isDragEnabled}
+            autoRotate={!isLocked && !isDragEnabled}
             autoRotateSpeed={0.5}
             minDistance={8}
             maxDistance={50}

@@ -1,4 +1,3 @@
-
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
@@ -27,6 +26,8 @@ interface ExperienceUIProps {
   isUiHidden: boolean;
   onToggleUiHidden: () => void;
   showUiHint?: boolean;
+  isDragEnabled?: boolean;
+  onToggleDrag?: () => void;
 }
 
 const ExperienceUI = ({
@@ -47,6 +48,8 @@ const ExperienceUI = ({
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
+  isDragEnabled = false,
+  onToggleDrag,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
 
@@ -89,6 +92,13 @@ const ExperienceUI = ({
   const handleToggleUiHidden = () => {
     console.log('ExperienceUI - handleToggleUiHidden called');
     onToggleUiHidden();
+  };
+
+  const handleToggleDrag = () => {
+    if (onToggleDrag) {
+      onToggleDrag();
+      logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
+    }
   };
 
   return (
@@ -137,6 +147,8 @@ const ExperienceUI = ({
               onUpdateSceneConfig={onUpdateSceneConfig}
               onShowHelp={handleShowHelp}
               theme={theme}
+              isDragEnabled={isDragEnabled}
+              onToggleDrag={handleToggleDrag}
             />
 
             {/* Keyboard hint for desktop */}
