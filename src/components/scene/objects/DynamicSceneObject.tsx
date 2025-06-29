@@ -12,7 +12,6 @@ interface DynamicSceneObjectProps {
   object: SceneObject;
   isSelected: boolean;
   onSelect: () => void;
-  isLocked: boolean;
 }
 
 const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {

@@ -32,17 +32,6 @@ const ObjectTransformControls = ({
     }
     
     onUpdateObject(selectedObject.id, { position: newPosition });
-    
-    toast.success(`📍 Moved along ${axis.toUpperCase()}-axis`, {
-      description: `Position: [${newPosition.map(n => n.toFixed(1)).join(', ')}]`,
-      duration: 1500,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(34, 197, 94, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
   };
 
   const handleScaleObject = (factor: number) => {
@@ -53,17 +42,6 @@ const ObjectTransformControls = ({
     ];
     
     onUpdateObject(selectedObject.id, { scale: newScale });
-    
-    toast.success(`📏 ${selectedObject.type} ${factor > 1 ? 'enlarged' : 'shrunk'}`, {
-      description: `Scale: ${newScale[0].toFixed(2)}x`,
-      duration: 2000,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(59, 130, 246, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
   };
 
   const handleResetTransform = () => {
@@ -72,17 +50,6 @@ const ObjectTransformControls = ({
       rotation: [0, 0, 0],
       scale: [1, 1, 1]
     });
-    
-    toast.success(`🔄 ${selectedObject.type} transform reset`, {
-      description: 'Position, rotation, and scale restored to defaults',
-      duration: 2500,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: '1px solid rgba(34, 197, 94, 0.3)',
-        backdropFilter: 'blur(8px)',
-      },
-    });
   };
 
   const handleRandomizeColor = () => {
@@ -90,17 +57,6 @@ const ObjectTransformControls = ({
     const randomColor = colors[Math.floor(Math.random() * colors.length)];
     
     onUpdateObject(selectedObject.id, { color: randomColor });
-    
-    toast.success(`🎨 Color randomized`, {
-      description: `New color: ${randomColor}`,
-      duration: 2000,
-      style: {
-        background: 'rgba(0, 0, 0, 0.9)',
-        color: '#fff',
-        border: `1px solid ${randomColor}40`,
-        backdropFilter: 'blur(8px)',
-      },
-    });
   };
 
   return (

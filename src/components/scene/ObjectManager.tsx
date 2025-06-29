@@ -13,7 +13,6 @@ const ObjectManager = () => {
           object={object}
           isSelected={object.id === selectedObjectId}
           onSelect={() => actions.selectObject(object.id)}
-          isLocked={false}
         />
       ))}
     </>

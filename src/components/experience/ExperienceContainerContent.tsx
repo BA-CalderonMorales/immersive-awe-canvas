@@ -1,8 +1,6 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
-import { useExperienceUiColor } from "./hooks/useExperienceUiColor";
-import { useBlurTransitionManager } from "./hooks/useBlurTransitionManager";
 import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
 import ExperienceUI from "./ExperienceUI";
@@ -75,11 +73,10 @@ const ExperienceContainerContent = ({
   handleWorldTransitionEnd,
   isMobile,
 }: ExperienceContainerContentProps) => {
-  const uiColor = useExperienceUiColor({ worldData, theme });
-  const { showBlurTransition, handleBlurTransitionEnd } = useBlurTransitionManager({
-    isTransitioning,
-    showEntryTransition,
-  });
+  // Direct UI color calculation
+  const uiColor = worldData ? 
+    (theme === 'day' ? (worldData.ui_day_color || 'white') : (worldData.ui_night_color || 'white')) : 
+    'white';
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
@@ -109,11 +106,11 @@ const ExperienceContainerContent = ({
         <ExperienceTransitions
           showEntryTransition={showEntryTransition}
           showWorldTransition={showWorldTransition}
-          showBlurTransition={showBlurTransition}
+          showBlurTransition={isTransitioning && !showEntryTransition}
           theme={theme}
           onEntryTransitionEnd={handleEntryTransitionEndWithHint}
           onWorldTransitionEnd={handleWorldTransitionEnd}
-          onBlurTransitionEnd={handleBlurTransitionEnd}
+          onBlurTransitionEnd={() => {}}
         />
         
         <ExperienceLayout
