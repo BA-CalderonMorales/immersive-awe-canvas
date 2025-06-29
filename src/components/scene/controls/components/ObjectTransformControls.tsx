@@ -2,7 +2,6 @@
 import { Button } from '@/components/ui/button';
 import { RotateCcw, Scale, Palette, Trash2 } from 'lucide-react';
 import { SceneObject } from '@/types/sceneObjects';
-import { toast } from 'sonner';
 
 interface ObjectTransformControlsProps {
   selectedObject: SceneObject;
