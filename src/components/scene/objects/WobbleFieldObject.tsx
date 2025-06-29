@@ -1,12 +1,13 @@
 
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Mesh } from 'three';
+import { Group } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import DynamicMaterial from '../materials/DynamicMaterial';
 import InstancedFieldElements from './wobbleField/InstancedFieldElements';
 import EnergyStreams from './wobbleField/EnergyStreams';
 import PortalEffects from './wobbleField/PortalEffects';
+import { generateChaoticField } from './wobbleField/fieldGenerator';
 
 interface WobbleFieldObjectProps {
   color: string;
@@ -15,8 +16,11 @@ interface WobbleFieldObjectProps {
 }
 
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
-  const groupRef = useRef<THREE.Group>(null!);
+  const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
+  
+  // Generate field data once
+  const fieldData = generateChaoticField();
 
   useFrame((state) => {
     if (!isLocked && groupRef.current) {
@@ -55,13 +59,18 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
       </mesh>
 
       {/* Field elements */}
-      <InstancedFieldElements color={color} />
+      <InstancedFieldElements 
+        color={color} 
+        materialConfig={materialConfig}
+        fieldData={fieldData}
+        isLocked={isLocked}
+      />
       
       {/* Energy streams */}
-      <EnergyStreams />
+      <EnergyStreams materialConfig={materialConfig} />
       
       {/* Portal effects */}
-      <PortalEffects />
+      <PortalEffects materialConfig={materialConfig} />
     </group>
   );
 };
