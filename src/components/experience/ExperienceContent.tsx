@@ -1,28 +1,71 @@
+import { DynamicBackground } from "@/components/scene/background/DynamicBackground";
+import { DynamicLights } from "@/components/scene/lights/DynamicLights";
+import { DynamicObject } from "@/components/scene/objects/DynamicObject";
+import { OrbitControls } from "@react-three/drei";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect } from "react";
+import { useKeyboardControls } from "@react-three/drei";
+import { WorldData } from "@/types/scene";
+import ObjectManager from "@/components/scene/ObjectManager";
 
-import { useParams, Navigate } from "react-router-dom";
-import { KeyboardShortcutsProvider } from "@/context/KeyboardShortcutsContext";
-import { useWorldBySlug } from "@/hooks/useWorlds";
-import LoadingOverlay from "./LoadingOverlay";
-import ExperienceLogic from "./ExperienceLogic";
+interface ExperienceContentProps {
+  worldData: WorldData | null;
+  editableSceneConfig: any;
+  isObjectLocked: boolean;
+  theme: 'day' | 'night';
+}
 
-const ExperienceContent = () => {
-  const { worldSlug } = useParams<{ worldSlug: string }>();
+const ExperienceContent = ({ worldData, editableSceneConfig, isObjectLocked, theme }: ExperienceContentProps) => {
+  const { camera } = useThree();
+  const [ , getKeys ] = useKeyboardControls()
   
-  // Validate the world exists before rendering
-  const { data: world, isLoading, isError } = useWorldBySlug(worldSlug || '');
+  useEffect(() => {
+    if (worldData && worldData.cameraPosition) {
+      camera.position.set(
+        worldData.cameraPosition[0],
+        worldData.cameraPosition[1],
+        worldData.cameraPosition[2]
+      );
+    }
+  }, [worldData, camera]);
 
-  if (isLoading) {
-    return <LoadingOverlay message="Loading world..." theme="night" />;
+  useFrame((state, delta) => {
+    if (getKeys().forward) {
+      camera.position.z -= 0.5
+    }
+    if (getKeys().back) {
+      camera.position.z += 0.5
+    }
+  })
+
+  if (!worldData) {
+    return <></>;
   }
 
-  if (isError || !world) {
-    return <Navigate to="/experience/genesis-torus" replace />;
-  }
+  const editableConfig = editableSceneConfig || worldData.sceneConfig;
 
   return (
-    <KeyboardShortcutsProvider>
-      <ExperienceLogic key={world.slug} initialWorldSlug={world.slug} />
-    </KeyboardShortcutsProvider>
+    <>
+      <DynamicBackground
+        background={editableConfig.background}
+        theme={theme}
+      />
+      <DynamicLights lights={editableConfig.lights} />
+      
+      <DynamicObject
+        config={editableConfig.object}
+        locked={isObjectLocked}
+      />
+      
+      {/* Add the ObjectManager to render scene objects */}
+      <ObjectManager />
+      
+      <OrbitControls
+        makeDefault
+        minPolarAngle={0}
+        maxPolarAngle={Math.PI / 2}
+      />
+    </>
   );
 };
 

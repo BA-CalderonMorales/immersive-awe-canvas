@@ -1,41 +1,34 @@
-
-import { useMemo, useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { isSceneConfig } from "@/lib/typeguards";
-import { useIsMobile } from "@/hooks/use-mobile";
-import ExperienceUI from "./ExperienceUI";
-import ExperienceHotkeys from "./ExperienceHotkeys";
+import { Canvas } from "@react-three/fiber";
+import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
+import ExperienceUI from "./ui/ExperienceUI";
+import ExperienceContent from "./ExperienceContent";
 import ExperienceTransitions from "./ExperienceTransitions";
-import ExperienceLayout from "./ExperienceLayout";
-import LoadingOverlay from "./LoadingOverlay";
+import { SceneConfig, WorldData } from "@/types/scene";
 
 interface ExperienceContainerProps {
-  worldData: any;
-  editableSceneConfig: any;
+  worldData: WorldData | null;
+  editableSceneConfig: SceneConfig | null;
   isTransitioning: boolean;
   currentWorldIndex: number;
   isObjectLocked: boolean;
   theme: 'day' | 'night';
-  worlds: any[];
-  // UI state
+  worlds: WorldData[];
   isSettingsOpen: boolean;
   isUiHidden: boolean;
   showUiHint: boolean;
   isHelpOpen: boolean;
   isSearchOpen: boolean;
-  // Transition state
   showEntryTransition: boolean;
   showWorldTransition: boolean;
-  // Callbacks
   toggleObjectLock: () => void;
   toggleTheme: () => void;
-  setEditableSceneConfig: (config: any) => void;
+  setEditableSceneConfig: (config: SceneConfig) => void;
   setIsHelpOpen: (open: boolean) => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
-  setIsUiHidden: (hidden: boolean | ((prev: boolean) => boolean)) => void;
+  setIsUiHidden: (hidden: boolean) => void;
   handleChangeWorld: (direction: 'next' | 'prev') => void;
-  handleJumpToWorld: (index: number) => void;
+  handleJumpToWorld: (worldIndex: number) => void;
   handleCopyCode: () => void;
   handleGoHome: () => void;
   handleToggleShortcuts: () => void;
@@ -133,80 +126,73 @@ const ExperienceContainer = ({
   }
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={worldData.slug}
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          transition={{ 
-            duration: 0.8, 
-            ease: [0.25, 0.8, 0.25, 1]
+    <SceneObjectsProvider mainObjectColor={worldData?.sceneConfig?.object?.color || '#ffffff'}>
+      <div className="w-full h-screen relative overflow-hidden bg-black">
+        <Canvas
+          camera={{
+            position: [0, 0, 8],
+            fov: 45,
+            near: 0.1,
+            far: 1000,
           }}
-          className="absolute inset-0 w-full h-full"
+          gl={{
+            antialias: true,
+            alpha: false,
+            powerPreference: "high-performance",
+          }}
+          dpr={[1, 2]}
+          style={{ 
+            touchAction: 'none',
+            userSelect: 'none',
+            WebkitUserSelect: 'none',
+            WebkitTouchCallout: 'none'
+          }}
         >
-          <ExperienceTransitions
-            showEntryTransition={showEntryTransition}
-            showWorldTransition={showWorldTransition}
-            showBlurTransition={showBlurTransition}
-            theme={theme}
-            onEntryTransitionEnd={handleEntryTransitionEndWithHint}
-            onWorldTransitionEnd={handleWorldTransitionEnd}
-            onBlurTransitionEnd={handleBlurTransitionEnd}
-          />
-          
-          <ExperienceLayout
+          <ExperienceContent
+            worldData={worldData}
             editableSceneConfig={editableSceneConfig}
-            isTransitioning={isTransitioning}
-            currentWorldIndex={currentWorldIndex}
             isObjectLocked={isObjectLocked}
-            onToggleObjectLock={toggleObjectLock}
-            isSettingsOpen={isSettingsOpen}
-            isMobile={isMobile}
-            onUpdateSceneConfig={setEditableSceneConfig}
-          />
-
-          <ExperienceUI
-            worldName={worldData.name}
             theme={theme}
-            isTransitioning={isTransitioning}
-            editableSceneConfig={editableSceneConfig}
-            onToggleTheme={toggleTheme}
-            onChangeWorld={handleChangeWorld}
-            onCopyCode={handleCopyCode}
-            onUpdateSceneConfig={setEditableSceneConfig}
-            onShowHelp={() => setIsHelpOpen(true)}
-            onGoHome={handleGoHome}
-            onShowSearch={() => setIsSearchOpen(true)}
-            uiColor={uiColor}
-            isSettingsOpen={isSettingsOpen}
-            onToggleSettings={setIsSettingsOpen}
-            isUiHidden={isUiHidden}
-            onToggleUiHidden={() => setIsUiHidden((h) => !h)}
-            showUiHint={showUiHint}
           />
+        </Canvas>
 
-          <ExperienceHotkeys
-            toggleTheme={toggleTheme}
-            changeWorld={handleChangeWorld}
-            handleGoHome={handleGoHome}
-            handleCopyCode={handleCopyCode}
-            toggleObjectLock={toggleObjectLock}
-            handleToggleShortcuts={handleToggleShortcuts}
-            setIsSearchOpen={setIsSearchOpen}
-            setIsHelpOpen={setIsHelpOpen}
-            setIsSettingsOpen={setIsSettingsOpen}
-            setIsUiHidden={setIsUiHidden}
-            isHelpOpen={isHelpOpen}
-            isSearchOpen={isSearchOpen}
-            isSettingsOpen={isSettingsOpen}
-            worlds={worlds}
-            jumpToWorld={handleJumpToWorld}
-          />
-        </motion.div>
-      </AnimatePresence>
-    </div>
+        <ExperienceUI
+          worldName={worldData?.name || 'Unknown World'}
+          theme={theme}
+          isTransitioning={isTransitioning}
+          editableSceneConfig={editableSceneConfig}
+          uiColor={uiColor}
+          onToggleTheme={toggleTheme}
+          onChangeWorld={handleChangeWorld}
+          onCopyCode={handleCopyCode}
+          onUpdateSceneConfig={setEditableSceneConfig}
+          onShowHelp={() => setIsHelpOpen(true)}
+          onGoHome={handleGoHome}
+          onShowSearch={() => setIsSearchOpen(true)}
+          isSettingsOpen={isSettingsOpen}
+          onToggleSettings={setIsSettingsOpen}
+          isUiHidden={isUiHidden}
+          onToggleUiHidden={() => setIsUiHidden(!isUiHidden)}
+          showUiHint={showUiHint}
+        />
+
+        <ExperienceTransitions
+          showEntryTransition={showEntryTransition}
+          showWorldTransition={showWorldTransition}
+          onEntryTransitionEnd={handleEntryTransitionEndWithHint}
+          onWorldTransitionEnd={handleWorldTransitionEnd}
+          theme={theme}
+          currentWorldIndex={currentWorldIndex}
+          isHelpOpen={isHelpOpen}
+          isSearchOpen={isSearchOpen}
+          worlds={worlds}
+          onCloseHelp={() => setIsHelpOpen(false)}
+          onCloseSearch={() => setIsSearchOpen(false)}
+          onJumpToWorld={handleJumpToWorld}
+          onToggleShortcuts={handleToggleShortcuts}
+        />
+      </div>
+    </SceneObjectsProvider>
   );
 };
 

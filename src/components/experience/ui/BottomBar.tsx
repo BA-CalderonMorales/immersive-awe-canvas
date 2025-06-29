@@ -18,8 +18,10 @@ import {
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import SceneControls from "@/components/scene/SceneControls";
+import ObjectMoveControls from "@/components/scene/controls/ObjectMoveControls";
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
+import { useState } from "react";
 
 interface BottomBarProps {
   uiColor: string;
@@ -32,7 +34,6 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
-  onShowObjectControls?: () => void;
 }
 
 const BottomBar = ({
@@ -46,21 +47,12 @@ const BottomBar = ({
   onUpdateSceneConfig,
   onShowHelp,
   theme,
-  onShowObjectControls,
 }: BottomBarProps) => {
+  const [isObjectControlsOpen, setIsObjectControlsOpen] = useState(false);
   const blendedButtonClasses = "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   
   // Use scene-specific UI colors for proper contrast
   const uiStyle = { color: uiColor, borderColor: uiColor };
-
-  const handleObjectControls = () => {
-    if (onShowObjectControls) {
-      onShowObjectControls();
-    } else {
-      // Fallback behavior - open settings with object focus
-      onToggleSettings(true);
-    }
-  };
 
   return (
     <div 
@@ -104,22 +96,71 @@ const BottomBar = ({
             <p>Search Worlds (S or Ctrl+K)</p>
           </TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={uiStyle}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Object Controls"
-              onClick={handleObjectControls}
-            >
-              <Move />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Object Controls (O)</p>
-          </TooltipContent>
-        </Tooltip>
+        
+        {/* Object Move Controls */}
+        {isMobile ? (
+          <Sheet open={isObjectControlsOpen} onOpenChange={setIsObjectControlsOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <SheetTrigger asChild>
+                  <Button
+                    style={uiStyle}
+                    className={blendedButtonClasses}
+                    size="icon"
+                    aria-label="Object Controls"
+                  >
+                    <Move />
+                  </Button>
+                </SheetTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Object Controls (O)</p>
+              </TooltipContent>
+            </Tooltip>
+            <SheetContent side="bottom" className="h-[70vh]">
+              <SheetHeader className="text-left">
+                <SheetTitle>Object Controls</SheetTitle>
+                <SheetDescription>
+                  Move, resize, and manage objects in the scene
+                </SheetDescription>
+              </SheetHeader>
+              <div className="mt-4 h-full overflow-y-auto">
+                <ObjectMoveControls />
+              </div>
+            </SheetContent>
+          </Sheet>
+        ) : (
+          <Drawer open={isObjectControlsOpen} onOpenChange={setIsObjectControlsOpen}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DrawerTrigger asChild>
+                  <Button
+                    style={uiStyle}
+                    className={blendedButtonClasses}
+                    size="icon"
+                    aria-label="Object Controls"
+                  >
+                    <Move />
+                  </Button>
+                </DrawerTrigger>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Object Controls (O)</p>
+              </TooltipContent>
+            </Tooltip>
+            <DrawerContent className="h-[50vh]">
+              <DrawerHeader className="text-left">
+                <DrawerTitle>Object Controls</DrawerTitle>
+                <DrawerDescription>
+                  Move, resize, and manage objects in the scene
+                </DrawerDescription>
+              </DrawerHeader>
+              <div className="px-4 pb-4 h-full overflow-y-auto">
+                <ObjectMoveControls />
+              </div>
+            </DrawerContent>
+          </Drawer>
+        )}
       </div>
       
       {/* Right side: Settings, Help */}

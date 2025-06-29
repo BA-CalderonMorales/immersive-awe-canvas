@@ -92,8 +92,8 @@ export const useObjectInteraction = (
     if (isDragging && onDrag) {
       e.stopPropagation();
       
-      const deltaX = (currentX - lastDragPosition.x) * 0.005; // Reduced sensitivity
-      const deltaY = -(currentY - lastDragPosition.y) * 0.005; // Invert Y for 3D space
+      const deltaX = (currentX - lastDragPosition.x) * 0.005;
+      const deltaY = -(currentY - lastDragPosition.y) * 0.005;
       
       const delta = new Vector3(deltaX, deltaY, 0);
       onDrag(delta);
