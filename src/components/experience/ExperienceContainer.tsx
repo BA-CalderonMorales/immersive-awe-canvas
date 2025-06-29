@@ -1,10 +1,10 @@
 
-import { Canvas } from "@react-three/fiber";
 import { useState, useEffect, useMemo } from "react";
-import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useExperienceUIColor } from "@/hooks/useExperienceUIColor";
+import { useExperienceBlurTransition } from "@/hooks/useExperienceBlurTransition";
 import ExperienceUI from "./ExperienceUI";
-import ExperienceContent from "./ExperienceContent";
+import ExperienceCanvas from "./ExperienceCanvas";
 import ExperienceTransitions from "./ExperienceTransitions";
 import LoadingOverlay from "./LoadingOverlay";
 import { SceneConfig, WorldData } from "@/types/scene";
@@ -72,51 +72,8 @@ const ExperienceContainer = ({
   handleWorldTransitionEnd,
 }: ExperienceContainerProps) => {
   const isMobile = useIsMobile();
-  const [showBlurTransition, setShowBlurTransition] = useState(false);
-
-  // Fix: Ensure uiColor updates properly when theme changes by adding explicit logging and dependency tracking
-  const uiColor = useMemo(() => {
-    if (!worldData) {
-      console.log('ExperienceContainer - No worldData, using white');
-      return 'white';
-    }
-    
-    const dayColor = worldData.ui_day_color;
-    const nightColor = worldData.ui_night_color;
-    const selectedColor = theme === 'day' ? dayColor : nightColor;
-    const finalColor = selectedColor || 'white';
-    
-    console.log('ExperienceContainer - uiColor calculation:', {
-      worldSlug: worldData.slug,
-      theme,
-      dayColor,
-      nightColor,
-      selectedColor,
-      finalColor
-    });
-    
-    return finalColor;
-  }, [worldData, theme, worldData?.ui_day_color, worldData?.ui_night_color]);
-
-  // Add effect to log when uiColor changes
-  useEffect(() => {
-    console.log('ExperienceContainer - uiColor changed to:', uiColor, 'for theme:', theme);
-  }, [uiColor, theme]);
-
-  const handleBlurTransitionEnd = () => {
-    setShowBlurTransition(false);
-  };
-
-  // Only show blur transition during world changes, not on initial load
-  useEffect(() => {
-    if (isTransitioning && !showEntryTransition) {
-      setShowBlurTransition(true);
-      const timer = setTimeout(() => {
-        setShowBlurTransition(false);
-      }, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [isTransitioning, showEntryTransition]);
+  const uiColor = useExperienceUIColor(worldData, theme);
+  const { showBlurTransition, handleBlurTransitionEnd } = useExperienceBlurTransition(isTransitioning, showEntryTransition);
 
   if (!worldData) {
     return <LoadingOverlay message="Discovering worlds..." theme={theme} />;
@@ -135,65 +92,45 @@ const ExperienceContainer = ({
   const mainObjectColor = themeConfig?.mainObjectColor || '#ffffff';
 
   return (
-    <SceneObjectsProvider mainObjectColor={mainObjectColor}>
-      <div className="w-full h-screen relative overflow-hidden bg-black">
-        <Canvas
-          camera={{
-            position: [0, 0, 8],
-            fov: 45,
-            near: 0.1,
-            far: 1000,
-          }}
-          gl={{
-            antialias: true,
-            alpha: false,
-            powerPreference: "high-performance",
-          }}
-          dpr={[1, 2]}
-          style={{ 
-            touchAction: 'none',
-            userSelect: 'none',
-            WebkitUserSelect: 'none',
-            WebkitTouchCallout: 'none'
-          }}
-        >
-          <ExperienceContent
-            worldData={worldData}
-            editableSceneConfig={editableSceneConfig}
-            isObjectLocked={isObjectLocked}
-            theme={theme}
-          />
-        </Canvas>
+    <div className="w-full h-screen relative overflow-hidden bg-black">
+      <ExperienceCanvas
+        worldData={worldData}
+        editableSceneConfig={editableSceneConfig}
+        isObjectLocked={isObjectLocked}
+        theme={theme}
+        mainObjectColor={mainObjectColor}
+      />
 
-        <ExperienceUI
-          worldName={worldData?.name || 'Unknown World'}
-          theme={theme}
-          isTransitioning={isTransitioning}
-          editableSceneConfig={editableSceneConfig}
-          uiColor={uiColor}
-          onToggleTheme={toggleTheme}
-          onChangeWorld={handleChangeWorld}
-          onCopyCode={handleCopyCode}
-          onUpdateSceneConfig={setEditableSceneConfig}
-          onShowHelp={() => setIsHelpOpen(true)}
-          onGoHome={handleGoHome}
-          onShowSearch={() => setIsSearchOpen(true)}
-          isSettingsOpen={isSettingsOpen}
-          onToggleSettings={setIsSettingsOpen}
-          isUiHidden={isUiHidden}
-          onToggleUiHidden={() => setIsUiHidden(!isUiHidden)}
-          showUiHint={showUiHint}
-        />
+      <ExperienceUI
+        worldName={worldData?.name || 'Unknown World'}
+        theme={theme}
+        isTransitioning={isTransitioning}
+        editableSceneConfig={editableSceneConfig}
+        uiColor={uiColor}
+        onToggleTheme={toggleTheme}
+        onChangeWorld={handleChangeWorld}
+        onCopyCode={handleCopyCode}
+        onUpdateSceneConfig={setEditableSceneConfig}
+        onShowHelp={() => setIsHelpOpen(true)}
+        onGoHome={handleGoHome}
+        onShowSearch={() => setIsSearchOpen(true)}
+        isSettingsOpen={isSettingsOpen}
+        onToggleSettings={setIsSettingsOpen}
+        isUiHidden={isUiHidden}
+        onToggleUiHidden={() => setIsUiHidden(!isUiHidden)}
+        showUiHint={showUiHint}
+      />
 
-        <ExperienceTransitions
-          showEntryTransition={showEntryTransition}
-          showWorldTransition={showWorldTransition}
-          onEntryTransitionEnd={handleEntryTransitionEndWithHint}
-          onWorldTransitionEnd={handleWorldTransitionEnd}
-          theme={theme}
-        />
-      </div>
-    </SceneObjectsProvider>
+      <ExperienceTransitions
+        showEntryTransition={showEntryTransition}
+        showWorldTransition={showWorldTransition}
+        showBlurTransition={showBlurTransition}
+        onEntryTransitionEnd={handleEntryTransitionEndWithHint}
+        onWorldTransitionEnd={handleWorldTransitionEnd}
+        onBlurTransitionEnd={handleBlurTransitionEnd}
+        theme={theme}
+      />
+    </div>
   );
 };
 
