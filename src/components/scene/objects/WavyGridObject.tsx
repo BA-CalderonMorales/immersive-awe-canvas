@@ -1,4 +1,4 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
@@ -16,16 +16,7 @@ interface WavyGridObjectProps {
 const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, forceWireframe, objectRefs } = useSceneObjectsContext();
-
-  useEffect(() => {
-    if (meshRef.current) {
-      objectRefs.current.set(MAIN_OBJECT_NAME, meshRef.current);
-    }
-    return () => {
-      objectRefs.current.delete(MAIN_OBJECT_NAME);
-    };
-  }, [objectRefs]);
+  const { isDragEnabled, forceWireframe } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;

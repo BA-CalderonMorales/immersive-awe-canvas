@@ -1,7 +1,7 @@
-import { createContext, useContext, ReactNode, useState, useRef } from 'react';
+
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { useSceneObjects } from '@/hooks/useSceneObjects';
 import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/sceneObjects';
-import * as THREE from 'three';
 
 interface SceneObjectsContextType extends ObjectManagerState {
   actions: ObjectManagerActions;
@@ -9,7 +9,6 @@ interface SceneObjectsContextType extends ObjectManagerState {
   isDragEnabled: boolean;
   forceWireframe: boolean;
   setForceWireframe: (force: boolean) => void;
-  objectRefs: React.MutableRefObject<Map<string, THREE.Object3D | null>>;
 }
 
 const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
@@ -27,15 +26,13 @@ export const SceneObjectsProvider = ({
 }: SceneObjectsProviderProps) => {
   const sceneObjectsData = useSceneObjects(mainObjectColor);
   const [forceWireframe, setForceWireframe] = useState(false);
-  const objectRefs = useRef<Map<string, THREE.Object3D | null>>(new Map());
 
   return (
     <SceneObjectsContext.Provider value={{
       ...sceneObjectsData,
       isDragEnabled,
       forceWireframe,
-      setForceWireframe,
-      objectRefs,
+      setForceWireframe
     }}>
       {children}
     </SceneObjectsContext.Provider>
