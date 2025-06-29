@@ -1,11 +1,9 @@
 
-import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
-import { toast } from "sonner";
 import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
@@ -51,7 +49,6 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
-  const [isObjectMoveMode, setIsObjectMoveMode] = useState(false);
 
   console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
 
@@ -92,41 +89,6 @@ const ExperienceUI = ({
   const handleToggleUiHidden = () => {
     console.log('ExperienceUI - handleToggleUiHidden called');
     onToggleUiHidden();
-  };
-
-  const handleToggleObjectMoveMode = () => {
-    const newState = !isObjectMoveMode;
-    setIsObjectMoveMode(newState);
-    
-    if (newState) {
-      toast.info('🎯 Object Move Mode Activated', {
-        description: 'Long press or Ctrl+drag objects to move them',
-        duration: 3000,
-        style: {
-          background: 'rgba(0, 0, 0, 0.9)',
-          color: '#fff',
-          border: '1px solid rgba(251, 191, 36, 0.3)',
-          backdropFilter: 'blur(8px)',
-        },
-      });
-    } else {
-      toast.success('✅ Move Mode Deactivated', {
-        description: 'Normal camera controls restored',
-        duration: 2000,
-        style: {
-          background: 'rgba(0, 0, 0, 0.9)',
-          color: '#fff',
-          border: '1px solid rgba(34, 197, 94, 0.3)',
-          backdropFilter: 'blur(8px)',
-        },
-      });
-    }
-    
-    logEvent({ 
-      eventType: 'button_click', 
-      eventSource: 'toggle_object_move_mode', 
-      metadata: { active: newState } 
-    });
   };
 
   return (
@@ -175,8 +137,6 @@ const ExperienceUI = ({
               onUpdateSceneConfig={onUpdateSceneConfig}
               onShowHelp={handleShowHelp}
               theme={theme}
-              onToggleObjectMoveMode={handleToggleObjectMoveMode}
-              isObjectMoveMode={isObjectMoveMode}
             />
 
             {/* Keyboard hint for desktop */}

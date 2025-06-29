@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
+import { Copy, Settings, HelpCircle, Search } from "lucide-react";
 
 interface BottomBarProps {
   uiColor: string;
@@ -31,8 +31,6 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
-  onToggleObjectMoveMode: () => void;
-  isObjectMoveMode: boolean;
 }
 
 const BottomBar = ({
@@ -46,8 +44,6 @@ const BottomBar = ({
   onUpdateSceneConfig,
   onShowHelp,
   theme,
-  onToggleObjectMoveMode,
-  isObjectMoveMode,
 }: BottomBarProps) => {
   // Improved button classes with better contrast
   const blendedButtonClasses = theme === 'day' 
@@ -62,15 +58,6 @@ const BottomBar = ({
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
-  // Special styling for active object move mode
-  const objectMoveButtonStyle = isObjectMoveMode 
-    ? { 
-        borderColor: uiColor, 
-        backgroundColor: theme === 'day' ? `${uiColor}20` : `${uiColor}30`,
-        color: theme === 'day' ? '#1f2937' : uiColor 
-      }
-    : buttonStyle;
-
   return (
     <div 
       className={`fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 ${
@@ -80,7 +67,7 @@ const BottomBar = ({
         pointerEvents: 'none'
       }}
     >
-      {/* Left side: Copy, Search, Object Controls */}
+      {/* Left side: Copy, Search */}
       <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
@@ -114,34 +101,6 @@ const BottomBar = ({
             <p>Search Worlds (S or Ctrl+K)</p>
           </TooltipContent>
         </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={objectMoveButtonStyle}
-              className={`${blendedButtonClasses} ${isObjectMoveMode ? 'ring-2 ring-opacity-50' : ''}`}
-              size="icon"
-              aria-label="Object Move Mode"
-              onClick={onToggleObjectMoveMode}
-            >
-              <Move className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <div className="text-center">
-              <p className="font-medium">
-                {isObjectMoveMode ? 'Deactivate Object Move (O)' : 'Activate Object Move (O)'}
-              </p>
-              <p className="text-xs text-gray-400 mt-1">
-                {isObjectMoveMode 
-                  ? 'Click to disable object movement' 
-                  : isMobile 
-                    ? 'Long press then drag objects'
-                    : 'Ctrl+drag to move objects'
-                }
-              </p>
-            </div>
-          </TooltipContent>
-        </Tooltip>
       </div>
       
       {/* Right side: Settings, Help */}
@@ -167,13 +126,13 @@ const BottomBar = ({
             </Tooltip>
             <SheetContent side="bottom" className="h-[60vh]">
               <SheetHeader className="text-left">
-                <SheetTitle>Customize Scene</SheetTitle>
+                <SheetTitle>Scene Settings</SheetTitle>
                 <SheetDescription>
-                  Tweak the live parameters of the scene. Your changes can be copied.
+                  Manage objects in the scene
                 </SheetDescription>
               </SheetHeader>
               <div className="mt-4 h-full overflow-y-auto">
-                <p className="text-sm text-gray-500">Scene controls have been simplified. Use the settings panel to manage objects.</p>
+                <p className="text-sm text-gray-500">Use the settings panel to manage scene objects.</p>
               </div>
             </SheetContent>
           </Sheet>

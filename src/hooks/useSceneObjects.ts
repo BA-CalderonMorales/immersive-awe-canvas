@@ -77,17 +77,13 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
     toast.success('All objects cleared');
   }, []);
 
-  const toggleAddMode = useCallback(() => {
-    setState(prev => ({ ...prev, isAddingObject: !prev.isAddingObject }));
-  }, []);
-
   const actions: ObjectManagerActions = {
     addObject,
     removeObject,
     updateObject,
     selectObject,
     clearObjects,
-    toggleAddMode,
+    toggleAddMode: () => {}, // Simplified - no longer needed
   };
 
   return {
