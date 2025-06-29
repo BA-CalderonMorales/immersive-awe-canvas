@@ -32,7 +32,7 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
-  onShowObjectControls?: () => void;
+  onShowObjectControls: () => void;
 }
 
 const BottomBar = ({
@@ -50,23 +50,14 @@ const BottomBar = ({
 }: BottomBarProps) => {
   // Improved button classes with better contrast
   const blendedButtonClasses = theme === 'day' 
-    ? "border border-gray-300 bg-white/90 hover:bg-white text-gray-900 backdrop-blur-sm shadow-lg"
-    : "border bg-black/70 hover:bg-black/90 text-white backdrop-blur-sm shadow-lg";
+    ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
+    : "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   
   // Use scene-specific UI colors for border only
   const uiStyle = { borderColor: uiColor };
   
-  // For light theme, use dark text; for dark theme, use the ui color
-  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
-
-  const handleObjectControls = () => {
-    // Don't open settings - this should be separate functionality
-    console.log('Object controls clicked - this should open object management panel');
-    if (onShowObjectControls) {
-      onShowObjectControls();
-    }
-    // For now, we'll just log since the object controls functionality needs to be implemented
-  };
+  // For light theme, use white text; for dark theme, use the ui color
+  const textStyle = { color: theme === 'day' ? '#ffffff' : uiColor };
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
@@ -86,7 +77,7 @@ const BottomBar = ({
             <Button
               style={buttonStyle}
               onClick={onCopyCode}
-              className={`transition-opacity duration-300 ${blendedButtonClasses}`}
+              className={`transition-opacity duration-300 ${blendedButtonClasses} text-white`}
               size="icon"
               aria-label="Copy Scene Configuration"
             >
@@ -101,7 +92,7 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={blendedButtonClasses}
+              className={`${blendedButtonClasses} text-white`}
               size="icon"
               aria-label="Search Worlds"
               onClick={onShowSearch}
@@ -117,10 +108,10 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={blendedButtonClasses}
+              className={`${blendedButtonClasses} text-white`}
               size="icon"
               aria-label="Object Controls"
-              onClick={handleObjectControls}
+              onClick={onShowObjectControls}
             >
               <Move className="w-4 h-4" />
             </Button>
@@ -140,7 +131,7 @@ const BottomBar = ({
                 <SheetTrigger asChild>
                   <Button
                     style={buttonStyle}
-                    className={blendedButtonClasses}
+                    className={`${blendedButtonClasses} text-white`}
                     size="icon"
                     aria-label="Scene Settings"
                   >
@@ -169,7 +160,7 @@ const BottomBar = ({
             <TooltipTrigger asChild>
               <Button
                 style={buttonStyle}
-                className={blendedButtonClasses}
+                className={`${blendedButtonClasses} text-white`}
                 size="icon"
                 aria-label="Scene Settings"
                 onClick={() => onToggleSettings(!isSettingsOpen)}
@@ -186,7 +177,7 @@ const BottomBar = ({
           <TooltipTrigger asChild>
             <Button
               style={buttonStyle}
-              className={blendedButtonClasses}
+              className={`${blendedButtonClasses} text-white`}
               size="icon"
               aria-label="Help"
               onClick={onShowHelp}

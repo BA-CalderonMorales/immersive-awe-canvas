@@ -1,4 +1,5 @@
 
+import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
@@ -7,6 +8,7 @@ import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
 import BottomBar from "./ui/BottomBar";
+import ObjectControlsPanel from "./ui/ObjectControlsPanel";
 
 interface ExperienceUIProps {
   worldName: string;
@@ -48,6 +50,7 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
+  const [isObjectControlsOpen, setIsObjectControlsOpen] = useState(false);
 
   console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
 
@@ -88,6 +91,15 @@ const ExperienceUI = ({
   const handleToggleUiHidden = () => {
     console.log('ExperienceUI - handleToggleUiHidden called');
     onToggleUiHidden();
+  };
+
+  const handleShowObjectControls = () => {
+    setIsObjectControlsOpen(true);
+    logEvent({ eventType: 'button_click', eventSource: 'show_object_controls' });
+  };
+
+  const handleCloseObjectControls = () => {
+    setIsObjectControlsOpen(false);
   };
 
   return (
@@ -135,6 +147,15 @@ const ExperienceUI = ({
             onUpdateSceneConfig={onUpdateSceneConfig}
             onShowHelp={handleShowHelp}
             theme={theme}
+            onShowObjectControls={handleShowObjectControls}
+          />
+
+          {/* Object Controls Panel */}
+          <ObjectControlsPanel 
+            isOpen={isObjectControlsOpen}
+            onClose={handleCloseObjectControls}
+            isMobile={isMobile}
+            theme={theme}
           />
 
           {/* Keyboard hint for desktop */}
@@ -142,7 +163,7 @@ const ExperienceUI = ({
             <div 
               style={{ color: theme === 'day' ? '#000000' : uiColor }} 
               className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
-                isSettingsOpen ? 'z-10' : 'z-50'
+                isSettingsOpen || isObjectControlsOpen ? 'z-10' : 'z-50'
               }`}
             >
               Press SPACE to change time of day
