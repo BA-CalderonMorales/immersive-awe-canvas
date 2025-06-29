@@ -130,8 +130,12 @@ const ExperienceContainer = ({
      return <LoadingOverlay message="Preparing world data..." theme={theme} />;
   }
 
+  // Get the main object color from the current theme config
+  const themeConfig = theme === 'day' ? editableSceneConfig.day : editableSceneConfig.night;
+  const mainObjectColor = themeConfig?.mainObjectColor || '#ffffff';
+
   return (
-    <SceneObjectsProvider mainObjectColor={worldData?.sceneConfig?.object?.color || '#ffffff'}>
+    <SceneObjectsProvider mainObjectColor={mainObjectColor}>
       <div className="w-full h-screen relative overflow-hidden bg-black">
         <Canvas
           camera={{
@@ -187,13 +191,6 @@ const ExperienceContainer = ({
           onEntryTransitionEnd={handleEntryTransitionEndWithHint}
           onWorldTransitionEnd={handleWorldTransitionEnd}
           theme={theme}
-          isHelpOpen={isHelpOpen}
-          isSearchOpen={isSearchOpen}
-          worlds={worlds}
-          onCloseHelp={() => setIsHelpOpen(false)}
-          onCloseSearch={() => setIsSearchOpen(false)}
-          onJumpToWorld={handleJumpToWorld}
-          onToggleShortcuts={handleToggleShortcuts}
         />
       </div>
     </SceneObjectsProvider>

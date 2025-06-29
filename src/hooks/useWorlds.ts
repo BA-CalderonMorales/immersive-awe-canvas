@@ -3,10 +3,24 @@ import { useState, useMemo, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import type { Database } from "@/integrations/supabase/types";
+import { DatabaseWorld, WorldData } from "@/types/scene";
 
 type World = Database['public']['Tables']['worlds']['Row'];
 
-const fetchWorlds = async (): Promise<World[]> => {
+const transformWorldData = (world: World): WorldData => {
+  return {
+    id: world.id.toString(),
+    slug: world.slug || '',
+    name: world.name,
+    sceneConfig: world.scene_config as any,
+    scene_config: world.scene_config,
+    cameraPosition: [0, 0, 8], // Default camera position
+    ui_day_color: world.ui_day_color || '#ffffff',
+    ui_night_color: world.ui_night_color || '#ffffff',
+  };
+};
+
+const fetchWorlds = async (): Promise<WorldData[]> => {
   const { data, error } = await supabase
     .from('worlds')
     .select('*')
@@ -15,10 +29,10 @@ const fetchWorlds = async (): Promise<World[]> => {
   
   if (error) throw new Error(error.message);
   
-  return data || [];
+  return (data || []).map(transformWorldData);
 };
 
-const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
+const fetchWorldBySlug = async (slug: string): Promise<WorldData | null> => {
   const { data, error } = await supabase
     .from('worlds')
     .select('*')
@@ -31,19 +45,19 @@ const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
     throw new Error(error.message);
   }
   
-  return data;
+  return data ? transformWorldData(data) : null;
 };
 
 export const useWorlds = (initialSlug?: string) => {
   const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const { data: worlds, isLoading, isError } = useQuery<World[]>({
+  const { data: worlds, isLoading, isError } = useQuery<WorldData[]>({
     queryKey: ['worlds'],
     queryFn: fetchWorlds,
   });
 
-  const { data: initialWorld } = useQuery<World | null>({
+  const { data: initialWorld } = useQuery<WorldData | null>({
     queryKey: ['world', initialSlug],
     queryFn: () => initialSlug ? fetchWorldBySlug(initialSlug) : Promise.resolve(null),
     enabled: !!initialSlug,
@@ -127,7 +141,7 @@ export const useWorlds = (initialSlug?: string) => {
 };
 
 export const useWorldBySlug = (slug: string) => {
-  return useQuery<World | null>({
+  return useQuery<WorldData | null>({
     queryKey: ['world', slug],
     queryFn: () => fetchWorldBySlug(slug),
     enabled: !!slug,

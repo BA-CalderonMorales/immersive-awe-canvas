@@ -1,7 +1,7 @@
 
-import { DynamicBackground } from "@/components/scene/DynamicBackground";
-import { DynamicLights } from "@/components/scene/DynamicLights";
-import { DynamicObject } from "@/components/scene/DynamicObject";
+import DynamicBackground from "@/components/scene/DynamicBackground";
+import DynamicLights from "@/components/scene/DynamicLights";
+import DynamicObject from "@/components/scene/DynamicObject";
 import { OrbitControls } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect } from "react";
@@ -44,18 +44,20 @@ const ExperienceContent = ({ worldData, editableSceneConfig, isObjectLocked, the
   }
 
   const editableConfig = editableSceneConfig || worldData.sceneConfig;
+  const themeConfig = theme === 'day' ? editableConfig.day : editableConfig.night;
 
   return (
     <>
       <DynamicBackground
-        background={editableConfig.background}
-        theme={theme}
+        background={themeConfig.background}
+        extras={themeConfig.extras}
       />
-      <DynamicLights lights={editableConfig.lights} />
+      <DynamicLights lights={themeConfig.lights} />
       
       <DynamicObject
-        config={editableConfig.object}
-        locked={isObjectLocked}
+        type={editableConfig.type}
+        themeConfig={themeConfig}
+        isLocked={isObjectLocked}
       />
       
       {/* Add the ObjectManager to render scene objects */}
