@@ -12,7 +12,6 @@ type WorldContainerProps = {
 
 const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const orbitControlsRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -26,50 +25,15 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
     };
 
     updateDimensions();
-
     const resizeObserver = new ResizeObserver(updateDimensions);
     if (containerRef.current) {
       resizeObserver.observe(containerRef.current);
     }
 
     window.addEventListener('resize', updateDimensions);
-
     return () => {
       resizeObserver.disconnect();
       window.removeEventListener('resize', updateDimensions);
-    };
-  }, []);
-
-  // Enhanced object drag state management
-  useEffect(() => {
-    const handleObjectDragStart = () => {
-      console.log('Object drag detected - disabling camera controls');
-      setIsObjectDragging(true);
-      
-      // Immediately disable orbit controls
-      if (orbitControlsRef.current) {
-        orbitControlsRef.current.enabled = false;
-      }
-    };
-
-    const handleObjectDragEnd = () => {
-      console.log('Object drag ended - enabling camera controls');
-      setIsObjectDragging(false);
-      
-      // Re-enable orbit controls with a small delay to prevent conflicts
-      setTimeout(() => {
-        if (orbitControlsRef.current) {
-          orbitControlsRef.current.enabled = true;
-        }
-      }, 50);
-    };
-
-    window.addEventListener('object-drag-start', handleObjectDragStart);
-    window.addEventListener('object-drag-end', handleObjectDragEnd);
-
-    return () => {
-      window.removeEventListener('object-drag-start', handleObjectDragStart);
-      window.removeEventListener('object-drag-end', handleObjectDragEnd);
     };
   }, []);
 
@@ -92,13 +56,13 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
           camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
           style={{
-            cursor: isDragging ? 'grabbing' : isObjectDragging ? 'crosshair' : 'grab',
+            cursor: isDragging ? 'grabbing' : 'grab',
             width: '100%',
             height: '100%',
             display: 'block',
             touchAction: 'none'
           }}
-          onPointerDown={() => !isObjectDragging && setIsDragging(true)}
+          onPointerDown={() => setIsDragging(true)}
           onPointerUp={() => setIsDragging(false)}
           onPointerLeave={() => setIsDragging(false)}
           resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
@@ -112,12 +76,12 @@ const WorldContainer = ({ children, onToggleLock, isLocked }: WorldContainerProp
             ref={orbitControlsRef}
             enableZoom={true}
             enablePan={false}
-            enableRotate={!isObjectDragging}
-            autoRotate={!isLocked && !isObjectDragging}
+            enableRotate={true}
+            autoRotate={!isLocked}
             autoRotateSpeed={0.5}
             minDistance={8}
             maxDistance={50}
-            onStart={() => !isObjectDragging && setIsDragging(true)}
+            onStart={() => setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
             makeDefault
           />
