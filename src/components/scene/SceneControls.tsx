@@ -22,13 +22,11 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
   const isMobile = useIsMobile();
   const [activeTab, setActiveTab] = useState("scene");
 
-  // Helper for deep cloning and updating to avoid state mutation issues
   const updateConfig = createConfigUpdater(sceneConfig, onUpdate);
 
   useEffect(() => {
     if (!containerRef.current || activeTab !== "scene") return;
 
-    // Destroy previous GUI if it exists
     if (guiRef.current) {
       guiRef.current.destroy();
     }
@@ -36,7 +34,6 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
     const gui = new GUI({ container: containerRef.current });
     guiRef.current = gui;
 
-    // Create all controls using the factory
     const factory = new GuiControlsFactory(gui, sceneConfig, theme, updateConfig);
     factory.createAllControls();
 
@@ -53,11 +50,7 @@ const SceneControls = ({ sceneConfig, onUpdate }: SceneControlsProps) => {
 
   return (
     <SceneObjectsProvider mainObjectColor={mainObjectColor}>
-      <div
-        className={`w-full h-full ${
-          isMobile ? "max-h-[72vh] overflow-y-auto modal-scrollbar" : ""
-        }`}
-      >
+      <div className={`w-full h-full ${isMobile ? "max-h-[72vh] overflow-y-auto modal-scrollbar" : ""}`}>
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full h-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="scene">Scene</TabsTrigger>

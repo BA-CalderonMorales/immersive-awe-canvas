@@ -1,10 +1,8 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { Mesh } from 'three';
 import { SceneObject } from '@/types/sceneObjects';
 import { useMovementMode } from '@/context/MovementModeContext';
-import { useSceneDragControlsContext } from '@/context/SceneDragControlsContext';
-import { useSimplifiedObjectInteraction } from './hooks/useSimplifiedObjectInteraction';
 import { useObjectSelection } from './hooks/useObjectSelection';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
@@ -22,21 +20,9 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const { movementMode } = useMovementMode();
-  const { registerObject, unregisterObject } = useSceneDragControlsContext();
+  const [isHovered, setIsHovered] = useState(false);
 
-  // Custom hooks for object functionality
   const objectSelection = useObjectSelection({ object, onSelect });
-
-  // Register/unregister with scene drag controls
-  useEffect(() => {
-    if (meshRef.current) {
-      registerObject(object.id, meshRef.current);
-    }
-
-    return () => {
-      unregisterObject(object.id);
-    };
-  }, [object.id, registerObject, unregisterObject]);
 
   // Update mesh position when object position changes
   useEffect(() => {
@@ -45,14 +31,21 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   }, [object.position]);
 
-  // Object interaction handling (simplified since DragControls handles dragging)
-  const {
-    isHovered,
-    handlePointerOver,
-    handlePointerOut,
-    handleClick,
-    showLongPressEffect,
-  } = useSimplifiedObjectInteraction(onSelect, movementMode);
+  const handlePointerOver = (e: any) => {
+    e.stopPropagation();
+    setIsHovered(true);
+    document.body.style.cursor = movementMode !== 'none' ? 'grab' : 'pointer';
+  };
+
+  const handlePointerOut = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    onSelect();
+  };
 
   return (
     <ObjectContextMenu
@@ -82,7 +75,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           isHovered={isHovered}
           objectType={object.type}
           meshRef={meshRef}
-          showLongPressEffect={showLongPressEffect}
+          showLongPressEffect={false}
         />
 
         <ObjectAnimationController

@@ -7,7 +7,6 @@ import { Move } from 'lucide-react';
 import MovementModeSelector from './components/MovementModeSelector';
 import SceneObjectsList from './components/SceneObjectsList';
 import ObjectTransformControls from './components/ObjectTransformControls';
-import MovementInstructions from './components/MovementInstructions';
 
 const ObjectMoveControls = () => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
@@ -48,8 +47,6 @@ const ObjectMoveControls = () => {
               onRemoveObject={actions.removeObject}
             />
           )}
-
-          <MovementInstructions />
         </CardContent>
       </Card>
     </div>
