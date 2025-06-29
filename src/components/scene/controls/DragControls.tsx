@@ -19,98 +19,92 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
   const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
   useEffect(() => {
+    // Clean up previous controls instance
+    if (controlsRef.current) {
+      controlsRef.current.dispose();
+      controlsRef.current = undefined;
+    }
+
     if (!enabled) {
-      if (controlsRef.current) {
-        controlsRef.current.dispose();
-        controlsRef.current = undefined;
-      }
       return;
     }
 
-    const draggableObjects: THREE.Object3D[] = [];
-    
-    // Add context objects from the object manager
-    objects.forEach(obj => {
-      const mesh = scene.getObjectByName(obj.id);
-      if (mesh) {
-        draggableObjects.push(mesh);
-      }
-    });
-
-    // Add the main scene object
-    const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
-    if (mainObject) {
-      draggableObjects.push(mainObject);
-    }
-
-    if (draggableObjects.length === 0) return;
-
-    const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
-    controlsRef.current = controls;
-
-    const handleDragStart = (event: any) => {
-      const object = event.object as THREE.Object3D;
-      object.userData.isBeingDragged = true;
+    // Defer setup to ensure the scene graph is updated with new objects
+    const setupTimeout = setTimeout(() => {
+      const draggableObjects: THREE.Object3D[] = [];
       
-      // Store initial depth relative to camera
-      const initialPosition = new THREE.Vector3();
-      object.getWorldPosition(initialPosition);
-      const positionInCameraSpace = camera.worldToLocal(initialPosition);
-      initialDepthRef.current.set(object, positionInCameraSpace.z);
-
-      if (object.userData?.objectId) {
-        actions.selectObject(object.userData.objectId);
-      }
-      onDragStart?.();
-    };
-
-    const handleDrag = (event: any) => {
-      const object = event.object as THREE.Object3D;
-      const initialDepth = initialDepthRef.current.get(object);
-
-      if (initialDepth !== undefined) {
-        // Constrain movement to the initial depth plane
-        const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
-        newPositionInCameraSpace.z = initialDepth;
-        
-        const parent = object.parent;
-        if (parent) {
-          // Convert back to world space, then to parent's local space
-          const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
-          const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
-          object.position.copy(constrainedPositionLocal);
+      // Find all user-added objects
+      objects.forEach(obj => {
+        const mesh = scene.getObjectByName(obj.id);
+        if (mesh) {
+          draggableObjects.push(mesh);
         }
+      });
+
+      // Find the main scene object
+      const mainObject = scene.getObjectByName(MAIN_OBJECT_NAME);
+      if (mainObject && !draggableObjects.some(o => o.uuid === mainObject.uuid)) {
+        draggableObjects.push(mainObject);
       }
 
-      if (object.userData?.objectId) {
-        const position: [number, number, number] = [
-          object.position.x,
-          object.position.y,
-          object.position.z
-        ];
-        actions.updateObject(object.userData.objectId, { position });
-      }
-    };
+      if (draggableObjects.length === 0) return;
 
-    const handleDragEnd = (event: any) => {
-      const object = event.object as THREE.Object3D;
-      if (object.userData) {
-        object.userData.isBeingDragged = false;
-      }
-      // Clean up stored depth
-      initialDepthRef.current.delete(object);
-      onDragEnd?.();
-    };
+      const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
+      controlsRef.current = controls;
 
-    controls.addEventListener('dragstart', handleDragStart);
-    controls.addEventListener('drag', handleDrag);
-    controls.addEventListener('dragend', handleDragEnd);
+      const handleDragStart = (event: any) => {
+        const object = event.object as THREE.Object3D;
+        object.userData.isBeingDragged = true;
+        
+        const initialPosition = new THREE.Vector3();
+        object.getWorldPosition(initialPosition);
+        const positionInCameraSpace = camera.worldToLocal(initialPosition);
+        initialDepthRef.current.set(object, positionInCameraSpace.z);
+
+        if (object.userData?.objectId) {
+          actions.selectObject(object.userData.objectId);
+        }
+        onDragStart?.();
+      };
+
+      const handleDrag = (event: any) => {
+        const object = event.object as THREE.Object3D;
+        const initialDepth = initialDepthRef.current.get(object);
+
+        if (initialDepth !== undefined) {
+          const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
+          newPositionInCameraSpace.z = initialDepth;
+          
+          const parent = object.parent;
+          if (parent) {
+            const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
+            const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
+            object.position.copy(constrainedPositionLocal);
+          }
+        }
+
+        if (object.userData?.objectId) {
+          const position: [number, number, number] = [object.position.x, object.position.y, object.position.z];
+          actions.updateObject(object.userData.objectId, { position });
+        }
+      };
+
+      const handleDragEnd = (event: any) => {
+        const object = event.object as THREE.Object3D;
+        if (object.userData) {
+          object.userData.isBeingDragged = false;
+        }
+        initialDepthRef.current.delete(object);
+        onDragEnd?.();
+      };
+
+      controls.addEventListener('dragstart', handleDragStart);
+      controls.addEventListener('drag', handleDrag);
+      controls.addEventListener('dragend', handleDragEnd);
+    }, 0); // A timeout of 0 defers execution until the next event loop tick
 
     return () => {
-      controls.removeEventListener('dragstart', handleDragStart);
-      controls.removeEventListener('drag', handleDrag);
-      controls.removeEventListener('dragend', handleDragEnd);
-      controls.dispose();
+      clearTimeout(setupTimeout);
     };
   }, [enabled, objects, camera, gl, scene, actions, onDragStart, onDragEnd]);
 
