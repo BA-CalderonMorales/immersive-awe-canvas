@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { Mesh } from 'three';
+import { ThreeEvent } from '@react-three/fiber';
 import { SceneObject } from '@/types/sceneObjects';
 import ObjectGeometry from './components/ObjectGeometry';
 import ObjectMaterial from './components/ObjectMaterial';
@@ -14,19 +15,17 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleClick = (e: any) => {
-    e.stopPropagation();
+  const handleClick = (e: ThreeEvent<MouseEvent>) => {
+    // Allow event to propagate to OrbitControls and other listeners.
     onSelect();
   };
 
-  const handlePointerEnter = (e: any) => {
-    e.stopPropagation();
+  const handlePointerEnter = (e: ThreeEvent<MouseEvent>) => {
     setIsHovered(true);
     document.body.style.cursor = 'pointer';
   };
 
-  const handlePointerLeave = (e: any) => {
-    e.stopPropagation();
+  const handlePointerLeave = (e: ThreeEvent<MouseEvent>) => {
     setIsHovered(false);
     document.body.style.cursor = 'auto';
   };
