@@ -10,9 +10,10 @@ import { useExperience } from '@/hooks/useExperience';
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
   isLocked: boolean;
+  onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
+const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorldProps) => {
   const { isDragEnabled } = useSceneObjectsContext();
   const { theme } = useExperience();
   
@@ -30,7 +31,10 @@ const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
         themeConfig={themeConfig}
         isLocked={isLocked}
       />
-      <ObjectManager isDragEnabled={isDragEnabled} />
+      <ObjectManager 
+        isDragEnabled={isDragEnabled} 
+        onDragStateChange={onDragStateChange}
+      />
     </>
   );
 };

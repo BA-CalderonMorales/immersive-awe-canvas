@@ -20,6 +20,7 @@ interface ExperienceHotkeysProps {
   isSettingsOpen: boolean;
   worlds: any[];
   jumpToWorld: (worldId: number) => void;
+  onToggleDrag?: () => void;
 }
 
 const ExperienceHotkeys = ({
@@ -38,6 +39,7 @@ const ExperienceHotkeys = ({
   isSettingsOpen,
   worlds,
   jumpToWorld,
+  onToggleDrag,
 }: ExperienceHotkeysProps) => {
   
   // Handle M key separately - should always work
@@ -63,6 +65,29 @@ const ExperienceHotkeys = ({
     window.addEventListener('keydown', handleMKey);
     return () => window.removeEventListener('keydown', handleMKey);
   }, [handleToggleShortcuts]);
+
+  // Handle D key for drag toggle
+  useEffect(() => {
+    const handleDKey = (event: KeyboardEvent) => {
+      if (event.code === 'KeyD' && onToggleDrag) {
+        // Check if user is typing
+        const activeEl = document.activeElement;
+        const isTyping = activeEl && (
+          activeEl.tagName === 'INPUT' ||
+          activeEl.tagName === 'TEXTAREA' ||
+          activeEl.getAttribute('contenteditable') === 'true'
+        );
+        
+        if (!isTyping) {
+          event.preventDefault();
+          onToggleDrag();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleDKey);
+    return () => window.removeEventListener('keydown', handleDKey);
+  }, [onToggleDrag]);
   
   // Handle all other hotkeys - only when dialogs are closed
   useExperienceHotkeys({

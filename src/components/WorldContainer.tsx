@@ -9,10 +9,18 @@ type WorldContainerProps = {
   onToggleLock?: () => void;
   isLocked: boolean;
   isDragEnabled?: boolean;
+  onDragStateChange?: (isDragging: boolean) => void;
 };
 
-const WorldContainer = ({ children, onToggleLock, isLocked, isDragEnabled = false }: WorldContainerProps) => {
+const WorldContainer = ({ 
+  children, 
+  onToggleLock, 
+  isLocked, 
+  isDragEnabled = false,
+  onDragStateChange 
+}: WorldContainerProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const orbitControlsRef = useRef<any>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -38,6 +46,16 @@ const WorldContainer = ({ children, onToggleLock, isLocked, isDragEnabled = fals
     };
   }, []);
 
+  const handleDragStateChange = (dragging: boolean) => {
+    setIsObjectDragging(dragging);
+    onDragStateChange?.(dragging);
+  };
+
+  // Clone children and pass drag state handler
+  const childrenWithProps = typeof children === 'object' && children !== null && 'type' in children
+    ? { ...children, props: { ...children.props, onDragStateChange: handleDragStateChange } }
+    : children;
+
   return (
     <div 
       ref={containerRef}
@@ -57,32 +75,32 @@ const WorldContainer = ({ children, onToggleLock, isLocked, isDragEnabled = fals
           camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
           style={{
-            cursor: isDragging ? 'grabbing' : 'grab',
+            cursor: isDragging || isObjectDragging ? 'grabbing' : 'grab',
             width: '100%',
             height: '100%',
             display: 'block',
             touchAction: 'none'
           }}
-          onPointerDown={() => setIsDragging(true)}
+          onPointerDown={() => !isObjectDragging && setIsDragging(true)}
           onPointerUp={() => setIsDragging(false)}
           onPointerLeave={() => setIsDragging(false)}
           resize={{ scroll: false, debounce: { scroll: 50, resize: 0 } }}
           dpr={[1, 2]}
         >
           <Suspense fallback={null}>
-            {children}
+            {childrenWithProps}
           </Suspense>
 
           <OrbitControls
             ref={orbitControlsRef}
             enableZoom={true}
             enablePan={false}
-            enableRotate={!isDragEnabled}
-            autoRotate={!isLocked && !isDragEnabled}
+            enableRotate={!isDragEnabled && !isObjectDragging}
+            autoRotate={!isLocked && !isDragEnabled && !isObjectDragging}
             autoRotateSpeed={0.5}
             minDistance={8}
             maxDistance={50}
-            onStart={() => setIsDragging(true)}
+            onStart={() => !isObjectDragging && setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
             makeDefault
           />
