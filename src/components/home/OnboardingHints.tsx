@@ -24,27 +24,15 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
 
   return (
     <div className="pointer-events-none fixed inset-0 z-30">
-      {/* Arrow pointing to show UI button */}
-      <div className={`absolute ${isMobile ? 'top-6 right-20' : 'top-2 right-24 sm:top-6 sm:right-28'}`}>
-        <div className="flex items-center gap-1 animate-fade-in">
+      {/* Show UI button hint */}
+      <div className={`absolute ${isMobile ? 'top-6 right-4' : 'top-2 right-4 sm:top-6 sm:right-6'}`}>
+        <div className="animate-fade-in">
           <div className={`
             px-2 py-1 rounded-md backdrop-blur-sm
             text-xs font-medium
             ${hintBaseClasses}
           `}>
             {isMobile ? 'Tap to show' : 'Show interface'}
-          </div>
-          <div className="flex flex-col items-center">
-            <div className={`
-              w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px]
-              border-l-transparent border-r-transparent animate-pulse
-              transform rotate-45
-              ${theme === 'day' ? 'border-b-blue-500' : 'border-b-blue-400'}
-            `} />
-            <div className={`
-              w-0.5 h-2 mt-0.5 animate-pulse transform rotate-45
-              ${theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'}
-            `} />
           </div>
         </div>
       </div>
