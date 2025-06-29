@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
 import { MaterialConfig } from '@/types/scene';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
 import InstancedFieldElements from './wobbleField/InstancedFieldElements';
 import EnergyStreams from './wobbleField/EnergyStreams';
@@ -18,6 +19,7 @@ interface WobbleFieldObjectProps {
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
+  const { isDragEnabled } = useSceneObjectsContext();
   
   // Generate field data once
   const fieldData = generateChaoticField();
@@ -49,8 +51,8 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
         <sphereGeometry args={[0.8, 64, 64]} />
         <DynamicMaterial materialConfig={materialConfig} color={color} />
         
-        {/* Hover wireframe overlay */}
-        {isHovered && (
+        {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
+        {(isDragEnabled || (isHovered && isDragEnabled)) && (
           <mesh>
             <sphereGeometry args={[0.8, 64, 64]} />
             <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

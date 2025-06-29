@@ -3,6 +3,7 @@ import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { MaterialConfig } from '@/types/scene';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface WavyGridObjectProps {
@@ -14,6 +15,7 @@ interface WavyGridObjectProps {
 const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
+  const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (!isLocked && meshRef.current) {
@@ -41,8 +43,8 @@ const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps
       <planeGeometry args={[4, 4, 32, 32]} />
       <DynamicMaterial materialConfig={materialConfig} color={color} />
       
-      {/* Hover wireframe overlay */}
-      {isHovered && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
+      {(isDragEnabled || (isHovered && isDragEnabled)) && (
         <mesh>
           <planeGeometry args={[4, 4, 32, 32]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />

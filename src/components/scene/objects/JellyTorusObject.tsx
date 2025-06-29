@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 
 interface JellyTorusObjectProps {
   isLocked: boolean;
@@ -10,6 +11,7 @@ interface JellyTorusObjectProps {
 const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
+  const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state, delta) => {
     if (!isLocked && meshRef.current) {
@@ -49,8 +51,8 @@ const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
         opacity={0.8}
       />
       
-      {/* Hover wireframe overlay */}
-      {isHovered && (
+      {/* Wireframe overlay - show when drag is enabled or when hovered and drag is enabled */}
+      {(isDragEnabled || (isHovered && isDragEnabled)) && (
         <mesh>
           <torusGeometry args={[1, 0.4, 16, 100]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
