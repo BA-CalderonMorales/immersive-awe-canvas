@@ -50,11 +50,16 @@ const ExperienceUI = ({
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
+  isDragEnabled: propIsDragEnabled = false,
+  onToggleDrag: propOnToggleDrag,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
-  const [isDragEnabled, setIsDragEnabled] = useState(false);
+  const [localIsDragEnabled, setLocalIsDragEnabled] = useState(false);
 
-  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
+  // Use prop value if provided, otherwise use local state
+  const isDragEnabled = propIsDragEnabled || localIsDragEnabled;
+
+  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint, 'isDragEnabled:', isDragEnabled);
 
   // Event handlers with logging
   const handleToggleTheme = () => {
@@ -96,7 +101,11 @@ const ExperienceUI = ({
   };
 
   const handleToggleDrag = () => {
-    setIsDragEnabled(!isDragEnabled);
+    if (propOnToggleDrag) {
+      propOnToggleDrag();
+    } else {
+      setLocalIsDragEnabled(!localIsDragEnabled);
+    }
     logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
   };
 

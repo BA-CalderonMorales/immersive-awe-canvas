@@ -78,7 +78,8 @@ const ExperienceHotkeys = ({
           activeEl.getAttribute('contenteditable') === 'true'
         );
         
-        if (!isTyping) {
+        if (!isTyping && !isHelpOpen && !isSearchOpen && !isSettingsOpen) {
+          console.log('ExperienceHotkeys - D key pressed, toggling drag');
           event.preventDefault();
           onToggleDrag();
         }
@@ -87,7 +88,7 @@ const ExperienceHotkeys = ({
 
     window.addEventListener('keydown', handleDKey);
     return () => window.removeEventListener('keydown', handleDKey);
-  }, [onToggleDrag]);
+  }, [onToggleDrag, isHelpOpen, isSearchOpen, isSettingsOpen]);
   
   // Handle all other hotkeys - only when dialogs are closed
   useExperienceHotkeys({
