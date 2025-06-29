@@ -16,6 +16,7 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
   const { camera, gl, scene } = useThree();
   const { objects, actions } = useSceneObjectsContext();
   const controlsRef = useRef<ThreeDragControls>();
+  const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
   useEffect(() => {
     if (!enabled) {
@@ -48,15 +49,39 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
     controlsRef.current = controls;
 
     const handleDragStart = (event: any) => {
-      event.object.userData.isBeingDragged = true;
-      if (event.object.userData?.objectId) {
-        actions.selectObject(event.object.userData.objectId);
+      const object = event.object as THREE.Object3D;
+      object.userData.isBeingDragged = true;
+      
+      // Store initial depth relative to camera
+      const initialPosition = new THREE.Vector3();
+      object.getWorldPosition(initialPosition);
+      const positionInCameraSpace = camera.worldToLocal(initialPosition);
+      initialDepthRef.current.set(object, positionInCameraSpace.z);
+
+      if (object.userData?.objectId) {
+        actions.selectObject(object.userData.objectId);
       }
       onDragStart?.();
     };
 
     const handleDrag = (event: any) => {
-      const object = event.object;
+      const object = event.object as THREE.Object3D;
+      const initialDepth = initialDepthRef.current.get(object);
+
+      if (initialDepth !== undefined) {
+        // Constrain movement to the initial depth plane
+        const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
+        newPositionInCameraSpace.z = initialDepth;
+        
+        const parent = object.parent;
+        if (parent) {
+          // Convert back to world space, then to parent's local space
+          const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
+          const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
+          object.position.copy(constrainedPositionLocal);
+        }
+      }
+
       if (object.userData?.objectId) {
         const position: [number, number, number] = [
           object.position.x,
@@ -68,9 +93,12 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
     };
 
     const handleDragEnd = (event: any) => {
-      if (event.object.userData) {
-        event.object.userData.isBeingDragged = false;
+      const object = event.object as THREE.Object3D;
+      if (object.userData) {
+        object.userData.isBeingDragged = false;
       }
+      // Clean up stored depth
+      initialDepthRef.current.delete(object);
       onDragEnd?.();
     };
 
