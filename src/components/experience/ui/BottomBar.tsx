@@ -52,9 +52,15 @@ const BottomBar = ({
   const uiStyle = { color: uiColor, borderColor: uiColor };
 
   return (
-    <div className="absolute bottom-4 left-0 w-full flex items-center justify-between z-10 pointer-events-none px-4 sm:px-8">
+    <div 
+      className="fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8"
+      style={{ 
+        zIndex: 1000,
+        pointerEvents: 'none'
+      }}
+    >
       {/* Left side: Copy, Search */}
-      <div className="flex gap-2 pointer-events-auto">
+      <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
@@ -90,7 +96,7 @@ const BottomBar = ({
       </div>
       
       {/* Right side: Settings, Help */}
-      <div className="flex gap-2 pointer-events-auto">
+      <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
         {isMobile ? (
           <Sheet open={isSettingsOpen} onOpenChange={onToggleSettings}>
             <Tooltip>

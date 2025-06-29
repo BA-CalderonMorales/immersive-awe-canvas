@@ -75,11 +75,21 @@
     @apply bg-background text-foreground;
   }
 
-  /* Ensure Three.js canvas takes full space */
+  /* Ensure Three.js canvas takes full space but doesn't interfere with UI */
   canvas {
     width: 100% !important;
     height: 100% !important;
     display: block !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 1 !important;
+  }
+
+  /* Ensure UI elements stay above canvas */
+  .ui-overlay {
+    position: relative;
+    z-index: 100;
   }
 }
 

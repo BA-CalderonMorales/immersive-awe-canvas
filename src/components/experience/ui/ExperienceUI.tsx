@@ -102,7 +102,7 @@ const ExperienceUI = ({
       
       {/* Full UI - only show when UI is not hidden */}
       {!isUiHidden && (
-        <>
+        <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: 100 }}>
           {/* Top navigation bar */}
           <TopBar 
             worldName={worldName}
@@ -124,7 +124,7 @@ const ExperienceUI = ({
             theme={theme}
           />
 
-          {/* Bottom action bar */}
+          {/* Bottom action bar - ensure it's always visible */}
           <BottomBar 
             uiColor={uiColor}
             onCopyCode={onCopyCode}
@@ -141,13 +141,16 @@ const ExperienceUI = ({
           {/* Keyboard hint for desktop */}
           {!isMobile && (
             <div 
-              style={{ color: uiColor }} 
-              className="absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
+              style={{ 
+                color: uiColor,
+                zIndex: 50
+              }} 
+              className="fixed bottom-16 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
             >
               Press SPACE to change time of day
             </div>
           )}
-        </>
+        </div>
       )}
     </TooltipProvider>
   );
