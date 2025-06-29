@@ -32,7 +32,8 @@ interface BottomBarProps {
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
   theme: 'day' | 'night';
-  onShowObjectControls: () => void;
+  onToggleObjectMoveMode: () => void;
+  isObjectMoveMode: boolean;
 }
 
 const BottomBar = ({
@@ -46,7 +47,8 @@ const BottomBar = ({
   onUpdateSceneConfig,
   onShowHelp,
   theme,
-  onShowObjectControls,
+  onToggleObjectMoveMode,
+  isObjectMoveMode,
 }: BottomBarProps) => {
   // Improved button classes with better contrast
   const blendedButtonClasses = theme === 'day' 
@@ -60,6 +62,15 @@ const BottomBar = ({
   const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
 
   const buttonStyle = { ...uiStyle, ...textStyle };
+
+  // Special styling for active object move mode
+  const objectMoveButtonStyle = isObjectMoveMode 
+    ? { 
+        borderColor: uiColor, 
+        backgroundColor: theme === 'day' ? `${uiColor}20` : `${uiColor}30`,
+        color: theme === 'day' ? '#1f2937' : uiColor 
+      }
+    : buttonStyle;
 
   return (
     <div 
@@ -107,17 +118,29 @@ const BottomBar = ({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              style={buttonStyle}
-              className={blendedButtonClasses}
+              style={objectMoveButtonStyle}
+              className={`${blendedButtonClasses} ${isObjectMoveMode ? 'ring-2 ring-opacity-50' : ''}`}
               size="icon"
-              aria-label="Object Controls"
-              onClick={onShowObjectControls}
+              aria-label="Object Move Mode"
+              onClick={onToggleObjectMoveMode}
             >
               <Move className="w-4 h-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>
-            <p>Object Controls (O)</p>
+            <div className="text-center">
+              <p className="font-medium">
+                {isObjectMoveMode ? 'Deactivate Object Move (O)' : 'Activate Object Move (O)'}
+              </p>
+              <p className="text-xs text-gray-400 mt-1">
+                {isObjectMoveMode 
+                  ? 'Click to disable object movement' 
+                  : isMobile 
+                    ? 'Long press then drag objects'
+                    : 'Ctrl+drag to move objects'
+                }
+              </p>
+            </div>
           </TooltipContent>
         </Tooltip>
       </div>

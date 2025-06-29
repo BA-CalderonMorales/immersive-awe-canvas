@@ -1,8 +1,11 @@
 
+import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
+import { toast } from "sonner";
 import HiddenUiView from "./HiddenUiView";
 import TopBar from "./TopBar";
 import NavigationControls from "./NavigationControls";
@@ -48,11 +51,9 @@ const ExperienceUI = ({
   showUiHint = false,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
+  const [isObjectMoveMode, setIsObjectMoveMode] = useState(false);
 
-  console.log('ExperienceUI rendering - theme:', theme, 'uiColor:', uiColor, 'isUiHidden:', isUiHidden);
-
-  // Ensure proper contrast colors - fallback to safe defaults if DB colors aren't working
-  const safeUiColor = uiColor || (theme === 'day' ? '#000000' : '#FFFFFF');
+  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
 
   // Event handlers with logging
   const handleToggleTheme = () => {
@@ -93,74 +94,105 @@ const ExperienceUI = ({
     onToggleUiHidden();
   };
 
-  const handleShowObjectControls = () => {
-    console.log('Object controls button clicked');
-    // For now, just log the action - actual implementation would open a panel
+  const handleToggleObjectMoveMode = () => {
+    const newState = !isObjectMoveMode;
+    setIsObjectMoveMode(newState);
+    
+    if (newState) {
+      toast.info('🎯 Object Move Mode Activated', {
+        description: 'Long press or Ctrl+drag objects to move them',
+        duration: 3000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(251, 191, 36, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    } else {
+      toast.success('✅ Move Mode Deactivated', {
+        description: 'Normal camera controls restored',
+        duration: 2000,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(34, 197, 94, 0.3)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+    }
+    
+    logEvent({ 
+      eventType: 'button_click', 
+      eventSource: 'toggle_object_move_mode', 
+      metadata: { active: newState } 
+    });
   };
 
   return (
     <TooltipProvider>
-      {/* Always render HiddenUiView - it manages its own visibility */}
-      <HiddenUiView 
-        onToggleUiHidden={handleToggleUiHidden}
-        showUiHint={showUiHint}
-        uiColor={safeUiColor}
-        theme={theme}
-      />
-      
-      {/* Full UI - only show when UI is not hidden */}
-      {!isUiHidden && (
-        <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ zIndex: 100 }}>
-          {/* Top navigation bar */}
-          <TopBar 
-            worldName={worldName}
-            uiColor={safeUiColor}
+      <SceneObjectsProvider mainObjectColor={uiColor}>
+        {isUiHidden ? (
+          <HiddenUiView 
             onToggleUiHidden={handleToggleUiHidden}
-            onToggleTheme={handleToggleTheme}
-            theme={theme}
-            onGoHome={handleGoHome}
-            onShowHelp={handleShowHelp}
-            isTransitioning={false}
-            isMobile={isMobile}
-          />
-          
-          {/* World navigation controls */}
-          <NavigationControls 
-            uiColor={safeUiColor}
-            onChangeWorld={handleChangeWorld}
-            isTransitioning={false}
+            showUiHint={showUiHint}
+            uiColor={uiColor}
             theme={theme}
           />
+        ) : (
+          <>
+            {/* Top navigation bar */}
+            <TopBar 
+              worldName={worldName}
+              uiColor={uiColor}
+              onToggleUiHidden={handleToggleUiHidden}
+              onToggleTheme={handleToggleTheme}
+              theme={theme}
+              onGoHome={handleGoHome}
+              onShowHelp={handleShowHelp}
+              isTransitioning={false}
+              isMobile={isMobile}
+              isSettingsOpen={isSettingsOpen}
+            />
+            
+            {/* World navigation controls */}
+            <NavigationControls 
+              uiColor={uiColor}
+              onChangeWorld={handleChangeWorld}
+              isTransitioning={false}
+              theme={theme}
+            />
 
-          {/* Bottom action bar - ensure it's always visible */}
-          <BottomBar 
-            uiColor={safeUiColor}
-            onCopyCode={onCopyCode}
-            onShowSearch={handleShowSearch}
-            isMobile={isMobile}
-            isSettingsOpen={isSettingsOpen}
-            onToggleSettings={onToggleSettings}
-            editableSceneConfig={editableSceneConfig}
-            onUpdateSceneConfig={onUpdateSceneConfig}
-            onShowHelp={handleShowHelp}
-            theme={theme}
-            onShowObjectControls={handleShowObjectControls}
-          />
+            {/* Bottom action bar */}
+            <BottomBar 
+              uiColor={uiColor}
+              onCopyCode={onCopyCode}
+              onShowSearch={handleShowSearch}
+              isMobile={isMobile}
+              isSettingsOpen={isSettingsOpen}
+              onToggleSettings={onToggleSettings}
+              editableSceneConfig={editableSceneConfig}
+              onUpdateSceneConfig={onUpdateSceneConfig}
+              onShowHelp={handleShowHelp}
+              theme={theme}
+              onToggleObjectMoveMode={handleToggleObjectMoveMode}
+              isObjectMoveMode={isObjectMoveMode}
+            />
 
-          {/* Keyboard hint for desktop */}
-          {!isMobile && (
-            <div 
-              style={{ 
-                color: safeUiColor,
-                zIndex: 50
-              }} 
-              className="fixed bottom-16 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none"
-            >
-              Press SPACE to change time of day
-            </div>
-          )}
-        </div>
-      )}
+            {/* Keyboard hint for desktop */}
+            {!isMobile && (
+              <div 
+                style={{ color: theme === 'day' ? '#000000' : uiColor }} 
+                className={`absolute bottom-4 left-1/2 -translate-x-1/2 text-xs animate-fade-in [animation-delay:0.5s] transition-opacity duration-300 pointer-events-none ${
+                  isSettingsOpen ? 'z-10' : 'z-50'
+                }`}
+              >
+                Press SPACE to change time of day
+              </div>
+            )}
+          </>
+        )}
+      </SceneObjectsProvider>
     </TooltipProvider>
   );
 };
