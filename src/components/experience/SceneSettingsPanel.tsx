@@ -24,33 +24,33 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const [isAddingObject, setIsAddingObject] = useState(false);
   const { theme } = useExperience();
 
-  // Dynamic color schemes based on theme
+  // Professional neutral color schemes
   const colorScheme = {
     day: {
-      background: 'bg-white/95 backdrop-blur-md',
-      border: 'border-gray-200',
-      headerBg: 'bg-white/90 backdrop-blur-md',
-      headerBorder: 'border-gray-200',
-      primaryText: 'text-gray-900',
-      secondaryText: 'text-gray-600',
-      accentText: 'text-blue-600',
-      accentHover: 'hover:bg-blue-50',
-      separatorColor: 'bg-gray-200',
-      collapsibleHover: 'hover:bg-gray-50',
-      infoIcon: 'text-gray-500 hover:text-gray-700',
+      background: 'bg-slate-50/95 backdrop-blur-md',
+      border: 'border-slate-200',
+      headerBg: 'bg-white/95 backdrop-blur-md',
+      headerBorder: 'border-slate-200',
+      primaryText: 'text-slate-900',
+      secondaryText: 'text-slate-600',
+      accentText: 'text-slate-700',
+      accentHover: 'hover:bg-slate-100',
+      separatorColor: 'bg-slate-200',
+      collapsibleHover: 'hover:bg-slate-50',
+      infoIcon: 'text-slate-500 hover:text-slate-700',
     },
     night: {
-      background: 'bg-gray-900/95 backdrop-blur-md',
-      border: 'border-cyan-500/30',
-      headerBg: 'bg-gray-900/90 backdrop-blur-md',
-      headerBorder: 'border-cyan-500/20',
-      primaryText: 'text-white',
-      secondaryText: 'text-gray-300',
-      accentText: 'text-cyan-400',
-      accentHover: 'hover:bg-cyan-500/10',
-      separatorColor: 'bg-cyan-500/30',
-      collapsibleHover: 'hover:bg-cyan-500/10',
-      infoIcon: 'text-gray-400 hover:text-white',
+      background: 'bg-slate-900/95 backdrop-blur-md',
+      border: 'border-slate-700',
+      headerBg: 'bg-slate-800/95 backdrop-blur-md',
+      headerBorder: 'border-slate-700',
+      primaryText: 'text-slate-100',
+      secondaryText: 'text-slate-300',
+      accentText: 'text-slate-200',
+      accentHover: 'hover:bg-slate-800/50',
+      separatorColor: 'bg-slate-700',
+      collapsibleHover: 'hover:bg-slate-800/30',
+      infoIcon: 'text-slate-400 hover:text-slate-200',
     }
   };
 
