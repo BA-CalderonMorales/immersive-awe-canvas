@@ -38,10 +38,11 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
             <div className={`
               w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px]
               border-l-transparent border-r-transparent animate-pulse
+              transform rotate-45
               ${theme === 'day' ? 'border-b-blue-500' : 'border-b-blue-400'}
             `} />
             <div className={`
-              w-0.5 h-2 mt-0.5 animate-pulse
+              w-0.5 h-2 mt-0.5 animate-pulse transform rotate-45
               ${theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'}
             `} />
           </div>
