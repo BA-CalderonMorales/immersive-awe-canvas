@@ -25,10 +25,10 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
   return (
     <div className="pointer-events-none fixed inset-0 z-30">
       {/* Arrow pointing to show UI button */}
-      <div className={`absolute ${isMobile ? 'top-6 right-6' : 'top-2 right-16 sm:top-6 sm:right-20'}`}>
-        <div className="flex items-center gap-1.5 animate-fade-in">
+      <div className={`absolute ${isMobile ? 'top-6 right-20' : 'top-2 right-24 sm:top-6 sm:right-28'}`}>
+        <div className="flex items-center gap-1 animate-fade-in">
           <div className={`
-            px-2.5 py-1.5 rounded-md shadow-md backdrop-blur-sm
+            px-2 py-1 rounded-md backdrop-blur-sm
             text-xs font-medium
             ${hintBaseClasses}
           `}>
@@ -36,12 +36,12 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
           </div>
           <div className="flex flex-col items-center">
             <div className={`
-              w-0 h-0 border-l-[6px] border-r-[6px] border-b-[8px]
+              w-0 h-0 border-l-[5px] border-r-[5px] border-b-[6px]
               border-l-transparent border-r-transparent animate-pulse
               ${theme === 'day' ? 'border-b-blue-500' : 'border-b-blue-400'}
             `} />
             <div className={`
-              w-0.5 h-3 mt-0.5 animate-pulse
+              w-0.5 h-2 mt-0.5 animate-pulse
               ${theme === 'day' ? 'bg-blue-500' : 'bg-blue-400'}
             `} />
           </div>
@@ -52,12 +52,12 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
       <div className={`absolute ${isMobile ? 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6' : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'}`}>
         <div className="opacity-0 animate-[fade-in_0.6s_ease-out_1.2s_forwards]">
           <div className={`
-            text-center px-3 py-2.5 rounded-md shadow-md backdrop-blur-sm
-            ${isMobile ? 'max-w-[260px]' : 'max-w-xs'} mx-auto
+            text-center px-3 py-2 rounded-md backdrop-blur-sm
+            ${isMobile ? 'max-w-[240px]' : 'max-w-xs'} mx-auto
             ${hintBaseClasses}
           `}>
             <div className={`
-              ${isMobile ? 'text-base' : 'text-lg'} font-semibold mb-1.5
+              ${isMobile ? 'text-sm' : 'text-base'} font-semibold mb-1
               ${theme === 'day' ? 'text-emerald-700' : 'text-emerald-300'}
             `}>
               Discover New Worlds
@@ -76,8 +76,8 @@ const OnboardingHints = ({ isVisible, theme }: OnboardingHintsProps) => {
       <div className={`absolute ${isMobile ? 'bottom-20 left-1/2 -translate-x-1/2 px-6' : 'bottom-16 left-1/2 -translate-x-1/2'}`}>
         <div className="opacity-0 animate-[fade-in_0.6s_ease-out_2s_forwards]">
           <div className={`
-            text-center px-3 py-2.5 rounded-md shadow-md backdrop-blur-sm
-            ${isMobile ? 'max-w-[260px]' : 'max-w-xs'} mx-auto
+            text-center px-3 py-2 rounded-md backdrop-blur-sm
+            ${isMobile ? 'max-w-[240px]' : 'max-w-xs'} mx-auto
             ${hintBaseClasses}
           `}>
             <div className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium space-y-0.5`}>
