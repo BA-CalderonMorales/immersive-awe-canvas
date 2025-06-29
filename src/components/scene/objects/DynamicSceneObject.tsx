@@ -1,4 +1,3 @@
-
 import { useRef, useEffect, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -15,7 +14,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const [longPressTimer, setLongPressTimer] = useState<NodeJS.Timeout | null>(null);
-  const [touchStartTime, setTouchStartTime] = useState<number>(0);
+  const [pointerStartTime, setPointerStartTime] = useState<number>(0);
   const [hasMoved, setHasMoved] = useState(false);
   const [startPosition, setStartPosition] = useState({ x: 0, y: 0 });
 
@@ -41,15 +40,12 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   });
 
-  const handleTouchStart = (e: any) => {
+  const handlePointerDown = (e: any) => {
     e.stopPropagation();
-    // Prevent default to stop context menu and text selection
-    e.preventDefault();
     
-    const touch = e.touches?.[0] || e.point;
-    setTouchStartTime(Date.now());
+    setPointerStartTime(Date.now());
     setHasMoved(false);
-    setStartPosition({ x: touch.clientX || touch.x || 0, y: touch.clientY || touch.y || 0 });
+    setStartPosition({ x: e.clientX || e.point?.x || 0, y: e.clientY || e.point?.y || 0 });
     
     const timer = setTimeout(() => {
       if (!hasMoved) {
@@ -60,10 +56,9 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     setLongPressTimer(timer);
   };
 
-  const handleTouchMove = (e: any) => {
-    const touch = e.touches?.[0] || e.point;
-    const currentX = touch.clientX || touch.x || 0;
-    const currentY = touch.clientY || touch.y || 0;
+  const handlePointerMove = (e: any) => {
+    const currentX = e.clientX || e.point?.x || 0;
+    const currentY = e.clientY || e.point?.y || 0;
     
     const moveDistance = Math.sqrt(
       Math.pow(currentX - startPosition.x, 2) + 
@@ -80,11 +75,10 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
   };
 
-  const handleTouchEnd = (e: any) => {
+  const handlePointerUp = (e: any) => {
     e.stopPropagation();
-    e.preventDefault();
     
-    const touchDuration = Date.now() - touchStartTime;
+    const pointerDuration = Date.now() - pointerStartTime;
     
     if (longPressTimer) {
       clearTimeout(longPressTimer);
@@ -92,26 +86,9 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
     }
     
     // If it was a quick tap (less than 200ms) and didn't move much
-    if (touchDuration < 200 && !hasMoved) {
+    if (pointerDuration < 200 && !hasMoved) {
       console.log('Quick tap on object:', object.id);
       onSelect();
-    }
-  };
-
-  const handlePointerDown = (e: any) => {
-    // Handle mouse events separately from touch events
-    if (e.pointerType === 'mouse') {
-      const timer = setTimeout(() => {
-        onSelect();
-      }, 500);
-      setLongPressTimer(timer);
-    }
-  };
-
-  const handlePointerUp = (e: any) => {
-    if (e.pointerType === 'mouse' && longPressTimer) {
-      clearTimeout(longPressTimer);
-      setLongPressTimer(null);
     }
   };
 
@@ -195,6 +172,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
           onSelect();
         }}
         onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onPointerOver={(e) => {
           e.stopPropagation();
@@ -204,15 +182,6 @@ const DynamicSceneObject = ({ object, isSelected, onSelect, isLocked }: DynamicS
         onPointerOut={() => {
           setIsHovered(false);
           document.body.style.cursor = 'auto';
-        }}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-        style={{ 
-          touchAction: 'none',
-          userSelect: 'none',
-          WebkitUserSelect: 'none',
-          WebkitTouchCallout: 'none'
         }}
       >
         {renderGeometry()}
