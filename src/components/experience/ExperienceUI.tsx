@@ -121,7 +121,6 @@ const ExperienceUI = ({
             onChangeWorld={handleChangeWorld}
             isTransitioning={false}
             theme={theme}
-            isSettingsOpen={isSettingsOpen}
           />
 
           {/* Bottom action bar */}
