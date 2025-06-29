@@ -1,9 +1,9 @@
 
-import { useRef } from 'react';
-import { MeshDistortMaterial } from '@react-three/drei';
-import { MaterialConfig } from '@/types/scene';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MathUtils } from 'three';
+import { Mesh } from 'three';
+import { MaterialConfig } from '@/types/scene';
+import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface WavyGridObjectProps {
   color: string;
@@ -12,35 +12,42 @@ interface WavyGridObjectProps {
 }
 
 const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
-  const materialRef = useRef<any>(null!);
+  const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
 
   useFrame((state) => {
-    if (!isLocked && materialRef.current) {
-      const time = state.clock.getElapsedTime();
-      materialRef.current.distort = MathUtils.lerp(
-        materialRef.current.distort,
-        Math.sin(time * 0.5) * 0.2 + 0.3,
-        0.02
-      );
-      materialRef.current.speed = MathUtils.lerp(
-        materialRef.current.speed,
-        1 + Math.sin(time * 0.3) * 2,
-        0.02
-      )
+    if (!isLocked && meshRef.current) {
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.2;
     }
   });
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
   return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} scale={2}>
-      <planeGeometry args={[10, 10, 64, 64]} />
-      <MeshDistortMaterial
-        // @ts-ignore
-        ref={materialRef}
-        color={color}
-        speed={2}
-        distort={0.5}
-        {...materialConfig}
-      />
+    <mesh 
+      ref={meshRef}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
+      <planeGeometry args={[4, 4, 32, 32]} />
+      <DynamicMaterial materialConfig={materialConfig} color={color} />
+      
+      {/* Hover wireframe overlay */}
+      {isHovered && (
+        <mesh>
+          <planeGeometry args={[4, 4, 32, 32]} />
+          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+        </mesh>
+      )}
     </mesh>
   );
 };

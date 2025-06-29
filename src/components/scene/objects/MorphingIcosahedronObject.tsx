@@ -1,9 +1,9 @@
 
-import { useRef } from 'react';
-import { MeshDistortMaterial } from '@react-three/drei';
-import { MaterialConfig } from '@/types/scene';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MathUtils } from 'three';
+import { Mesh } from 'three';
+import { MaterialConfig } from '@/types/scene';
+import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface MorphingIcosahedronObjectProps {
   color: string;
@@ -12,37 +12,45 @@ interface MorphingIcosahedronObjectProps {
 }
 
 const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: MorphingIcosahedronObjectProps) => {
-  const materialRef = useRef<any>(null!);
-  const meshRef = useRef<any>(null!);
+  const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
 
   useFrame((state) => {
-    if (!isLocked) {
-      if (materialRef.current) {
-        materialRef.current.distort = MathUtils.lerp(
-          materialRef.current.distort,
-          Math.sin(state.clock.getElapsedTime() * 0.5) * 0.25 + 0.25,
-          0.02
-        );
-      }
-      if (meshRef.current) {
-          meshRef.current.rotation.x += 0.001;
-          meshRef.current.rotation.y += 0.002;
-      }
+    if (!isLocked && meshRef.current) {
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.4;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.6;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.2;
     }
   });
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
   return (
-    <mesh ref={meshRef} scale={1.2}>
-      <icosahedronGeometry args={[1.5, 0]} />
-      <MeshDistortMaterial
-        // @ts-ignore
-        ref={materialRef}
-        color={color}
-        speed={1}
-        distort={0.5}
-        {...materialConfig}
-      />
+    <mesh 
+      ref={meshRef}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
+      <icosahedronGeometry args={[1, 2]} />
+      <DynamicMaterial materialConfig={materialConfig} color={color} />
+      
+      {/* Hover wireframe overlay */}
+      {isHovered && (
+        <mesh>
+          <icosahedronGeometry args={[1, 2]} />
+          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+        </mesh>
+      )}
     </mesh>
   );
 };
+
 export default MorphingIcosahedronObject;

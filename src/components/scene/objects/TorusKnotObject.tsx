@@ -1,9 +1,8 @@
 
-import { useMemo, useRef } from 'react';
-import { TorusKnot } from '@react-three/drei';
-import { SceneThemeConfig } from '@/types/scene';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import * as THREE from 'three';
+import { Mesh } from 'three';
+import { SceneThemeConfig } from '@/types/scene';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface TorusKnotObjectProps {
@@ -12,33 +11,47 @@ interface TorusKnotObjectProps {
 }
 
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
-  const ref = useRef<THREE.Mesh>(null!);
-  const { mainObjectColor, material: materialConfig, torusKnot } = themeConfig;
+  const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
 
-  const args = useMemo(() => [
-      torusKnot?.radius ?? 1,
-      torusKnot?.tube ?? 0.4,
-      torusKnot?.tubularSegments ?? 256,
-      torusKnot?.radialSegments ?? 32,
-      torusKnot?.p ?? 2,
-      torusKnot?.q ?? 3,
-  ] as [number, number, number, number, number, number], [torusKnot]);
-
-  useFrame((state, delta) => {
-    if (ref.current && !isLocked) {
-      // Gentle constant rotation only
-      ref.current.rotation.z += delta * 0.1;
-
-      // Add a subtle pulse
-      const pulse = Math.sin(state.clock.getElapsedTime() * 1.5) * 0.05 + 1;
-      ref.current.scale.set(pulse, pulse, pulse);
+  useFrame((state) => {
+    if (!isLocked && meshRef.current) {
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
     }
   });
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
   return (
-    <TorusKnot ref={ref} args={args}>
-      <DynamicMaterial materialConfig={materialConfig} color={mainObjectColor} />
-    </TorusKnot>
+    <mesh 
+      ref={meshRef}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
+      <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+      <DynamicMaterial 
+        materialConfig={themeConfig.material} 
+        color={themeConfig.mainObjectColor} 
+      />
+      
+      {/* Hover wireframe overlay */}
+      {isHovered && (
+        <mesh>
+          <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+        </mesh>
+      )}
+    </mesh>
   );
 };
+
 export default TorusKnotObject;

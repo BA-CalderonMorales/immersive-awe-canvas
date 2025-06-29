@@ -1,9 +1,9 @@
 
-import { useRef } from 'react';
-import { MeshDistortMaterial } from '@react-three/drei';
-import { MaterialConfig } from '@/types/scene';
+import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { MathUtils, Mesh } from 'three';
+import { Mesh } from 'three';
+import { MaterialConfig } from '@/types/scene';
+import DynamicMaterial from '../materials/DynamicMaterial';
 
 interface DistortionSphereObjectProps {
   color: string;
@@ -12,52 +12,48 @@ interface DistortionSphereObjectProps {
 }
 
 const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {
-  const materialRef = useRef<any>(null!);
-  const vortexRef = useRef<Mesh>(null!);
+  const meshRef = useRef<Mesh>(null!);
+  const [isHovered, setIsHovered] = useState(false);
 
-  useFrame((state, delta) => {
-    if (!isLocked) {
-      if (materialRef.current) {
-        // Time-based wave for continuous motion only
-        const timeDistort = Math.sin(state.clock.getElapsedTime() * 2) * 0.2;
-        materialRef.current.distort = MathUtils.lerp(materialRef.current.distort, 0.4 + timeDistort, 0.05);
-
-        // Constant speed for the material
-        materialRef.current.speed = MathUtils.lerp(materialRef.current.speed, 3, 0.05);
-      }
-      if (vortexRef.current) {
-        vortexRef.current.rotation.x += delta * 0.3;
-        vortexRef.current.rotation.y += delta * 0.5;
-        vortexRef.current.rotation.z += delta * 0.1;
-      }
+  useFrame((state) => {
+    if (!isLocked && meshRef.current) {
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+      
+      // Subtle scale pulsing
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      meshRef.current.scale.setScalar(scale);
     }
   });
 
+  const handlePointerEnter = () => {
+    setIsHovered(true);
+    document.body.style.cursor = 'pointer';
+  };
+
+  const handlePointerLeave = () => {
+    setIsHovered(false);
+    document.body.style.cursor = 'auto';
+  };
+
   return (
-    <>
-      <mesh>
-        <sphereGeometry args={[1.5, 64, 64]} />
-        <MeshDistortMaterial
-          // @ts-ignore
-          ref={materialRef}
-          color={color}
-          speed={3}
-          distort={0.8}
-          {...materialConfig}
-        />
-      </mesh>
-      <mesh ref={vortexRef} scale={1.2}>
-        <torusGeometry args={[1.8, 0.1, 16, 100]} />
-        <meshPhysicalMaterial
-          color="#ffffff"
-          roughness={0.1}
-          metalness={0.9}
-          transparent
-          opacity={0.5}
-          wireframe
-        />
-      </mesh>
-    </>
+    <mesh 
+      ref={meshRef}
+      onPointerEnter={handlePointerEnter}
+      onPointerLeave={handlePointerLeave}
+    >
+      <sphereGeometry args={[1.2, 64, 64]} />
+      <DynamicMaterial materialConfig={materialConfig} color={color} />
+      
+      {/* Hover wireframe overlay */}
+      {isHovered && (
+        <mesh>
+          <sphereGeometry args={[1.2, 64, 64]} />
+          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+        </mesh>
+      )}
+    </mesh>
   );
 };
+
 export default DistortionSphereObject;
