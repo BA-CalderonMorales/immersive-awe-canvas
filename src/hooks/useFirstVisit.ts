@@ -30,6 +30,28 @@ export const useFirstVisit = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (!showOnboardingHints) return;
+
+    // Listen for any drag/pointer events on the canvas to hide onboarding
+    const handleCanvasInteraction = (e: PointerEvent) => {
+      const target = e.target as HTMLElement;
+      // Check if the interaction is on the canvas or within the canvas container
+      if (target.tagName === 'CANVAS' || target.closest('canvas')) {
+        handleFirstInteraction();
+      }
+    };
+
+    // Add event listeners for pointer events
+    document.addEventListener('pointermove', handleCanvasInteraction);
+    document.addEventListener('pointerdown', handleCanvasInteraction);
+
+    return () => {
+      document.removeEventListener('pointermove', handleCanvasInteraction);
+      document.removeEventListener('pointerdown', handleCanvasInteraction);
+    };
+  }, [showOnboardingHints]);
+
   const handleFirstInteraction = () => {
     setShowOnboardingHints(false);
     setIsFirstVisit(false);
