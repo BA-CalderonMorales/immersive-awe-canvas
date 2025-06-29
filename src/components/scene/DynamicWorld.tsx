@@ -1,10 +1,10 @@
 
-import { useExperience } from '@/hooks/useExperience';
-import { SceneConfig } from '@/types/scene';
-import DynamicBackground from './DynamicBackground';
-import DynamicLights from './DynamicLights';
-import DynamicObject from './DynamicObject';
 import ObjectManager from './ObjectManager';
+import DynamicObject from './DynamicObject';
+import DynamicLights from './DynamicLights';
+import DynamicBackground from './DynamicBackground';
+import { SceneConfig } from '@/types/scene';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
@@ -12,21 +12,14 @@ interface DynamicWorldProps {
 }
 
 const DynamicWorld = ({ sceneConfig, isLocked }: DynamicWorldProps) => {
-  const { theme } = useExperience();
-  const { type, day, night } = sceneConfig;
-
-  const themeConfig = theme === 'day' ? day : night;
-
-  if (!themeConfig) {
-    return null;
-  }
+  const { isDragEnabled } = useSceneObjectsContext();
 
   return (
     <>
-      <DynamicLights lights={themeConfig.lights} />
-      <DynamicBackground background={themeConfig.background} extras={themeConfig.extras} />
-      <DynamicObject type={type} themeConfig={themeConfig} isLocked={isLocked} />
-      <ObjectManager />
+      <DynamicBackground sceneConfig={sceneConfig} />
+      <DynamicLights sceneConfig={sceneConfig} />
+      <DynamicObject sceneConfig={sceneConfig} isLocked={isLocked} />
+      <ObjectManager isDragEnabled={isDragEnabled} />
     </>
   );
 };

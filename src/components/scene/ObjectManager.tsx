@@ -4,9 +4,12 @@ import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicSceneObject from './objects/DynamicSceneObject';
 import DragControls from './controls/DragControls';
 
-const ObjectManager = () => {
+interface ObjectManagerProps {
+  isDragEnabled?: boolean;
+}
+
+const ObjectManager = ({ isDragEnabled = false }: ObjectManagerProps) => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
-  const [isDragEnabled, setIsDragEnabled] = useState(false);
 
   return (
     <>

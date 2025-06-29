@@ -6,6 +6,7 @@ import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/s
 interface SceneObjectsContextType extends ObjectManagerState {
   actions: ObjectManagerActions;
   selectedObject: SceneObject | null;
+  isDragEnabled: boolean;
 }
 
 const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
@@ -13,13 +14,21 @@ const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
 interface SceneObjectsProviderProps {
   children: ReactNode;
   mainObjectColor?: string;
+  isDragEnabled?: boolean;
 }
 
-export const SceneObjectsProvider = ({ children, mainObjectColor = '#ffffff' }: SceneObjectsProviderProps) => {
+export const SceneObjectsProvider = ({ 
+  children, 
+  mainObjectColor = '#ffffff',
+  isDragEnabled = false
+}: SceneObjectsProviderProps) => {
   const sceneObjectsData = useSceneObjects(mainObjectColor);
 
   return (
-    <SceneObjectsContext.Provider value={sceneObjectsData}>
+    <SceneObjectsContext.Provider value={{
+      ...sceneObjectsData,
+      isDragEnabled
+    }}>
       {children}
     </SceneObjectsContext.Provider>
   );

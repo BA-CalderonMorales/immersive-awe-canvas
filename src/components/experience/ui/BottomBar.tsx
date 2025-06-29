@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -7,14 +8,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Drawer,
-  DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
@@ -48,17 +41,12 @@ const BottomBar = ({
   isDragEnabled = false,
   onToggleDrag,
 }: BottomBarProps) => {
-  // Improved button classes with better contrast
   const blendedButtonClasses = theme === 'day' 
     ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
     : "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
   
-  // Use scene-specific UI colors for border only
   const uiStyle = { borderColor: uiColor };
-  
-  // For light theme, use dark text; for dark theme, use the ui color
   const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
-
   const buttonStyle = { ...uiStyle, ...textStyle };
 
   return (
@@ -120,7 +108,7 @@ const BottomBar = ({
             <TooltipContent>
               <p>Toggle Drag Controls (D)</p>
             </TooltipContent>
-          </Tooltip>
+            </Tooltip>
         )}
       </div>
       

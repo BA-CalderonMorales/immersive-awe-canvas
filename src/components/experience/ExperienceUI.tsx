@@ -1,8 +1,10 @@
+
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
+import { useState } from "react";
 import HiddenUiView from "./ui/HiddenUiView";
 import TopBar from "./ui/TopBar";
 import NavigationControls from "./ui/NavigationControls";
@@ -48,10 +50,9 @@ const ExperienceUI = ({
   isUiHidden,
   onToggleUiHidden,
   showUiHint = false,
-  isDragEnabled = false,
-  onToggleDrag,
 }: ExperienceUIProps) => {
   const isMobile = useIsMobile();
+  const [isDragEnabled, setIsDragEnabled] = useState(false);
 
   console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint);
 
@@ -95,15 +96,13 @@ const ExperienceUI = ({
   };
 
   const handleToggleDrag = () => {
-    if (onToggleDrag) {
-      onToggleDrag();
-      logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
-    }
+    setIsDragEnabled(!isDragEnabled);
+    logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
   };
 
   return (
     <TooltipProvider>
-      <SceneObjectsProvider mainObjectColor={uiColor}>
+      <SceneObjectsProvider mainObjectColor={uiColor} isDragEnabled={isDragEnabled}>
         {isUiHidden ? (
           <HiddenUiView 
             onToggleUiHidden={handleToggleUiHidden}
