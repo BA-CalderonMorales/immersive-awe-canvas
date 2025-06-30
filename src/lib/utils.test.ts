@@ -10,6 +10,14 @@ describe('color utilities', () => {
     expect(darkenColor('#ffffff', 0.5)).toBe('#808080');
   });
 
+  it('lightens shorthand hex colors', () => {
+    expect(lightenColor('#abc', 0.5)).toBe(lightenColor('#aabbcc', 0.5));
+  });
+
+  it('darkens shorthand hex colors', () => {
+    expect(darkenColor('#abc', 0.5)).toBe(darkenColor('#aabbcc', 0.5));
+  });
+
   it('validates hex colors correctly', () => {
     expect(isHexColor('#fff')).toBe(true);
     expect(isHexColor('#123ABC')).toBe(true);

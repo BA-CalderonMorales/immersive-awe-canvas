@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Normalize `normalizeHexColor` utility and support for shorthand 3-digit hex colors in color helpers.
 - Initial project setup with Vite, React, TypeScript, and Supabase.
 - Dynamic 3D scenes with `react-three-fiber`.
 - World switching functionality with improved transitions.
