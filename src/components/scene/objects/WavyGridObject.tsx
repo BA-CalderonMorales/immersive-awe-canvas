@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -21,8 +22,9 @@ const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+      // Smooth wave-like rotation
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.15;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.1;
     }
   });
 

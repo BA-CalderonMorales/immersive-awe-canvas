@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -21,9 +22,10 @@ const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: Morphing
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.4;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.6;
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.2;
+      // Balanced rotation speeds for smooth motion
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.4;
+      meshRef.current.rotation.z = state.clock.elapsedTime * 0.15;
     }
   });
 

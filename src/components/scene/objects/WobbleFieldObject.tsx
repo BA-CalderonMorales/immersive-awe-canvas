@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Group } from 'three';
@@ -28,7 +29,8 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
   useFrame((state) => {
     if (groupRef.current?.userData.isBeingDragged) return;
     if (!isLocked && groupRef.current) {
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.1;
+      // Smooth, consistent rotation
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.08;
     }
   });
 

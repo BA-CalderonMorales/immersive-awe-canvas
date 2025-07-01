@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -20,8 +21,9 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+      // Smooth, consistent rotation
+      meshRef.current.rotation.x = state.clock.elapsedTime * 0.2;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
     }
   });
 

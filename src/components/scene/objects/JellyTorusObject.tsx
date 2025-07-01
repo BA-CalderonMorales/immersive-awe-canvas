@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -14,14 +15,15 @@ const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
-      meshRef.current.rotation.x += delta * 0.5;
-      meshRef.current.rotation.y += delta * 0.3;
+      // Smooth rotation
+      meshRef.current.rotation.x += 0.005;
+      meshRef.current.rotation.y += 0.003;
       
-      // Jelly-like scaling effect
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 3) * 0.15;
+      // Gentle jelly-like scaling effect
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 2.5) * 0.12;
       meshRef.current.scale.setScalar(scale);
     }
   });

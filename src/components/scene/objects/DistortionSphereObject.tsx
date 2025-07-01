@@ -1,3 +1,4 @@
+
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
@@ -21,11 +22,12 @@ const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionS
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
-      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.2;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
+      // Smooth oscillation
+      meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.3;
+      meshRef.current.rotation.y = state.clock.elapsedTime * 0.2;
       
-      // Subtle scale pulsing
-      const scale = 1 + Math.sin(state.clock.elapsedTime * 2) * 0.1;
+      // Gentle scale pulsing
+      const scale = 1 + Math.sin(state.clock.elapsedTime * 1.5) * 0.08;
       meshRef.current.scale.setScalar(scale);
     }
   });
