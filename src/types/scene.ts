@@ -81,6 +81,7 @@ export type MaterialConfig = {
     // For MeshDistortMaterial, often used with standard
     distort?: number;
     speed?: number; // also for distort
+    scale?: number; // for scaling transformations
     // Physical material properties
     clearcoat?: number;
     clearcoatRoughness?: number;

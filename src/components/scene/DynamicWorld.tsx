@@ -15,15 +15,16 @@ interface DynamicWorldProps {
 }
 
 const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, onDragStateChange }: DynamicWorldProps) => {
-  const { isDragEnabled, actions } = useSceneObjectsContext();
+  const { isDragEnabled: contextDragEnabled, actions } = useSceneObjectsContext();
   const { theme } = useExperience();
-  
+  const actualDragEnabled = dragEnabled || contextDragEnabled;
+
   const themeConfig = theme === 'day' ? sceneConfig.day : sceneConfig.night;
 
   // Handle clicking on empty space to deselect objects when in drag mode
   const handleSceneClick = (e: ThreeEvent<MouseEvent>) => {
     // Only deselect if in drag mode and clicking on background (not on any mesh/object)
-    if (isDragEnabled && (!e.object || e.object.type === 'Scene' || e.object.name === '')) {
+    if (actualDragEnabled && (!e.object || e.object.type === 'Scene' || e.object.name === '')) {
       console.log('🔍 DEBUG: Scene background clicked, deselecting');
       e.stopPropagation();
       actions.selectObject(null);
@@ -43,7 +44,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, onDra
         isLocked={isLocked}
       />
       <ObjectManager 
-        isDragEnabled={dragEnabled || isDragEnabled} 
+        isDragEnabled={actualDragEnabled} 
         gizmoMode="translate"
         onDragStateChange={onDragStateChange}
       />
