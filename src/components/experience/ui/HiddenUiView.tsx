@@ -33,11 +33,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
-  console.log('HiddenUiView rendering - showUiHint:', showUiHint, 'isVisible:', isVisible, 'isMobile:', isMobile, 'uiColor:', uiColor);
-
   const handleToggleUi = () => {
-    console.log('HiddenUiView - handleToggleUi called');
-    
     // Handle first interaction if it's the first visit
     if (isFirstVisit && showOnboardingHints) {
       handleFirstInteraction();
@@ -48,7 +44,6 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 
   const handleInfoClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    console.log('HiddenUiView - handleInfoClick called');
     toggleExpanded();
   };
 

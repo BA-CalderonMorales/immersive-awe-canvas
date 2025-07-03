@@ -1,6 +1,5 @@
-
 import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { BackgroundConfig } from '@/types/scene';
 import * as THREE from 'three';
 
@@ -9,13 +8,8 @@ interface GradientBackgroundProps {
 }
 
 const GradientBackground = ({ config }: GradientBackgroundProps) => {
-  const meshRef = useRef<THREE.Mesh>(null!);
-
-  useFrame((state) => {
-    if (meshRef.current && config.speed) {
-      meshRef.current.rotation.z = state.clock.getElapsedTime() * config.speed * 0.1;
-    }
-  });
+  const { scene } = useThree();
+  const materialRef = useRef<THREE.ShaderMaterial>(null!);
 
   const vertexShader = `
     varying vec2 vUv;
@@ -33,7 +27,11 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
     
     void main() {
       vec2 uv = vUv;
-      vec3 color = mix(colorBottom, colorTop, uv.y + sin(uv.x * 3.14159 + time) * 0.1);
+      
+      // Create smooth gradient with subtle animation
+      float gradient = uv.y + sin(uv.x * 3.14159 + time) * 0.05;
+      vec3 color = mix(colorBottom, colorTop, gradient);
+      
       gl_FragColor = vec4(color, 1.0);
     }
   `;
@@ -45,19 +43,22 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
   };
 
   useFrame((state) => {
-    if (uniforms.time) {
-      uniforms.time.value = state.clock.getElapsedTime();
+    if (materialRef.current && config.speed) {
+      materialRef.current.uniforms.time.value = state.clock.getElapsedTime() * config.speed;
     }
   });
 
   return (
-    <mesh ref={meshRef} scale={[50, 50, 1]} position={[0, 0, -25]}>
-      <planeGeometry args={[1, 1]} />
+    <mesh scale={[1000, 1000, 1000]}>
+      <sphereGeometry args={[1, 32, 32]} />
       <shaderMaterial
+        ref={materialRef}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={uniforms}
-        side={THREE.DoubleSide}
+        side={THREE.BackSide}
+        depthWrite={false}
+        depthTest={false}
       />
     </mesh>
   );

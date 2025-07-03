@@ -45,7 +45,7 @@ const ExperienceHotkeys = ({
   useEffect(() => {
     const handleMKey = (event: KeyboardEvent) => {
       if (event.code === 'KeyM') {
-        // Check if user is typing
+        // Check if user is typing - early return pattern
         const activeEl = document.activeElement;
         const isTyping = activeEl && (
           activeEl.tagName === 'INPUT' ||
@@ -53,11 +53,10 @@ const ExperienceHotkeys = ({
           activeEl.getAttribute('contenteditable') === 'true'
         );
         
-        if (!isTyping) {
-          console.log('ExperienceHotkeys - M key pressed, calling handleToggleShortcuts');
-          event.preventDefault();
-          handleToggleShortcuts();
-        }
+        if (isTyping) return;
+        
+        event.preventDefault();
+        handleToggleShortcuts();
       }
     };
 
@@ -69,7 +68,7 @@ const ExperienceHotkeys = ({
   useEffect(() => {
     const handleZKey = (event: KeyboardEvent) => {
       if (event.code === 'KeyZ' && onToggleDrag) {
-        // Check if user is typing
+        // Check if user is typing - early return pattern
         const activeEl = document.activeElement;
         const isTyping = activeEl && (
           activeEl.tagName === 'INPUT' ||
@@ -77,11 +76,10 @@ const ExperienceHotkeys = ({
           activeEl.getAttribute('contenteditable') === 'true'
         );
         
-        if (!isTyping && !isHelpOpen && !isSearchOpen && !isSettingsOpen) {
-          console.log('ExperienceHotkeys - Z key pressed, toggling drag');
-          event.preventDefault();
-          onToggleDrag();
-        }
+        if (isTyping || isHelpOpen || isSearchOpen || isSettingsOpen) return;
+        
+        event.preventDefault();
+        onToggleDrag();
       }
     };
 

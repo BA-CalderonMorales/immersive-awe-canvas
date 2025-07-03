@@ -14,10 +14,6 @@ interface WorldViewProps {
 }
 
 const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggleLock, isDragEnabled }: WorldViewProps) => {
-  const handleDragStateChange = (isDragging: boolean) => {
-    console.log('Drag state changed:', isDragging);
-  };
-
   return (
     <div
       key={worldIndex}
@@ -32,13 +28,11 @@ const WorldView = ({ sceneConfig, isTransitioning, worldIndex, isLocked, onToggl
         onToggleLock={onToggleLock} 
         isLocked={isLocked}
         isDragEnabled={isDragEnabled}
-        onDragStateChange={handleDragStateChange}
       >
         <KeyboardControls />
         <DynamicWorld 
           sceneConfig={sceneConfig} 
           isLocked={isLocked} 
-          onDragStateChange={handleDragStateChange}
         />
       </WorldContainer>
     </div>

@@ -5,6 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-07-03
+
+### Features
+
+- Implement proper skybox rendering for immersive backgrounds using sphere geometry
+- Create enhanced sunset background with realistic gradient layers and sun disk
+- Add improved gradient background with sphere rendering instead of plane geometry
+
+### Code Quality Improvements
+
+- Remove dead console.log statements across components
+- Implement early return pattern to reduce nested conditionals
+- Consolidate cloud rendering logic in DynamicBackground component
+- Clean up unused drag state handlers and callbacks
+- Improve TypeScript interfaces and remove unnecessary props
+
+### Performance Optimizations
+
+- Replace flat plane backgrounds with proper sphere geometry for immersive experience
+- Add depth testing and writing controls for background rendering
+- Optimize shader materials with proper uniforms management
+- Implement efficient background type switching with early returns
+
+### Bug Fixes
+
+- Fix backgrounds appearing as planes in space instead of immersive environments
+- Resolve console log pollution in production builds
+- Clean up unused function references causing TypeScript errors
+- Improve background rendering depth and perspective
+
 ## [1.0.2] - 2025-07-03
 
 ### Features

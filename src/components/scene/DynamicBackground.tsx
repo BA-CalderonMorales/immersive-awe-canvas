@@ -1,4 +1,3 @@
-
 import { Sky, Stars, Sparkles, Cloud, Environment } from '@react-three/drei';
 import { BackgroundConfig, ExtraConfig } from '@/types/scene';
 import VoidBackground from './effects/VoidBackground';
@@ -9,19 +8,42 @@ import AuroraBackground from './effects/AuroraBackground';
 import SunsetBackground from './effects/SunsetBackground';
 import { useExperience } from '@/hooks/useExperience';
 
-const DynamicBackground = ({ background, extras }: { background: BackgroundConfig, extras?: ExtraConfig[] }) => {
+interface DynamicBackgroundProps {
+  background: BackgroundConfig;
+  extras?: ExtraConfig[];
+}
+
+const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
   const { theme } = useExperience();
+  
+  // Early return for unsupported types
+  if (!background?.type) return null;
+  
+  const renderClouds = () => {
+    if (!extras?.length) {
+      return (
+        <>
+          <Cloud position={[-15, -8, -20]} speed={0.1} opacity={0.2} segments={30} frustumCulled={false} />
+          <Cloud position={[12, 6, -25]} speed={0.08} opacity={0.18} segments={25} frustumCulled={false} />
+          <Cloud position={[0, 0, -35]} speed={0.12} opacity={0.15} segments={35} frustumCulled={false} />
+        </>
+      );
+    }
+    
+    return extras.map((extra, i) => {
+      if (extra.type !== 'cloud') return null;
+      return <Cloud key={`cloud-${i}`} {...extra} frustumCulled={false} />;
+    });
+  };
   
   switch (background.type) {
     case 'sky':
-      // @ts-ignore
-      return <Sky sunPosition={background.sunPosition} />;
+      return <Sky sunPosition={background.sunPosition || [100, 20, 100]} />;
     
     case 'stars':
       return (
         <>
           <color attach="background" args={['#000008']} />
-          {/* @ts-ignore */}
           <Stars 
             radius={background.radius || 100}
             depth={background.depth || 50}
@@ -38,7 +60,6 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
       return (
         <>
           <VoidBackground theme={theme} />
-          {/* @ts-ignore */}
           <Sparkles 
             count={background.count || 100}
             scale={background.scale || 10}
@@ -90,41 +111,15 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
             ]} 
           />
           <color attach="background" args={[background.color || '#ffffff']} />
-          
-          {/* Render extra clouds if provided */}
-          {extras?.map((extra, i) => {
-            if (extra.type === 'cloud') {
-              // @ts-ignore
-              return <Cloud key={`extra-cloud-${i}`} {...extra} frustumCulled={false} />
-            }
-            return null
-          })}
-          
-          {/* Add default atmospheric clouds if no extras provided */}
-          {(!extras || extras.length === 0) && (
-            <>
-              <Cloud position={[-15, -8, -20]} speed={0.1} opacity={0.2} segments={30} frustumCulled={false} />
-              <Cloud position={[12, 6, -25]} speed={0.08} opacity={0.18} segments={25} frustumCulled={false} />
-              <Cloud position={[0, 0, -35]} speed={0.12} opacity={0.15} segments={35} frustumCulled={false} />
-            </>
-          )}
+          {renderClouds()}
         </>
       );
     
     case 'environment':
       return (
         <>
-          {/* @ts-ignore */}
-          <Environment preset={background.preset} background blur={background.blur} />
-          
-          {/* Add atmospheric clouds for environment backgrounds too */}
-          {extras?.map((extra, i) => {
-            if (extra.type === 'cloud') {
-              // @ts-ignore
-              return <Cloud key={`env-cloud-${i}`} {...extra} frustumCulled={false} />
-            }
-            return null
-          })}
+          <Environment preset={background.preset || 'sunset'} background blur={background.blur} />
+          {renderClouds()}
         </>
       );
     
