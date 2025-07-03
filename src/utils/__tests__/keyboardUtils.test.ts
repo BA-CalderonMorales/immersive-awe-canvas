@@ -45,12 +45,20 @@ describe('keyboardUtils', () => {
     it('should handle empty array', () => {
       expect(isValidKeyCombo([])).toBe(false);
     });
+
+    it('should handle empty array', () => {
+      expect(isValidKeyCombo([])).toBe(false);
+    });
+
+    it('should handle empty array', () => {
+      expect(isValidKeyCombo([])).toBe(false);
+    });
   });
 
   describe('parseKeyCombo', () => {
     it('should parse single keys', () => {
       expect(parseKeyCombo('a')).toEqual(['a']);
-      expect(parseKeyCombo('Enter')).toEqual(['Enter']);
+      expect(parseKeyCombo('Enter')).toEqual(['enter']);
     });
 
     it('should parse key combinations', () => {

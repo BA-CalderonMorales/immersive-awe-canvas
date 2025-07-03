@@ -15,8 +15,21 @@ export const formatKeyCombo = (keys: string[]): string => {
 
 export const isValidKeyCombo = (keys: string[]): boolean => {
   if (keys.length === 0) return false;
-  const validKeys = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'Enter', 'Space', 'Tab', 'F1', 'F2', 'F3', 'F4', 'ctrl', 'alt', 'shift', 'meta', 'cmd'];
-  return keys.every(key => validKeys.includes(key.toLowerCase()));
+  const lowerCaseKeys = keys.map(key => key.toLowerCase());
+  const uniqueKeys = new Set(lowerCaseKeys);
+  if (uniqueKeys.size !== keys.length) return false; // Check for duplicate keys
+
+  const validKeys = [
+    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+    'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8', 'f9', 'f10', 'f11', 'f12',
+    'enter', 'escape', 'space', 'tab', 'backspace', 'delete', 'insert',
+    'home', 'end', 'pageup', 'pagedown',
+    'arrowup', 'arrowdown', 'arrowleft', 'arrowright',
+    'ctrl', 'alt', 'shift', 'meta', 'cmd',
+    '+', '-', '=', '[', ']', '\\', ';', '\'', ',', '.', '/', '`'
+  ];
+  return lowerCaseKeys.every(key => validKeys.includes(key));
 };
 
 export const parseKeyCombo = (combo: string): string[] => {
