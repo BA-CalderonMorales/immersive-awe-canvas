@@ -29,12 +29,11 @@ vi.mock('@/hooks/useWorlds', () => ({
   useWorlds: () => ({
     worlds: [],
     isLoading: false,
+    isError: false,
     currentWorldIndex: 0,
     worldData: { slug: 'test-world' },
-    goToWorld: vi.fn(),
-    goToNextWorld: vi.fn(),
-    goToPreviousWorld: vi.fn(),
-    setTransitioning: vi.fn(),
+    changeWorld: vi.fn(),
+    jumpToWorld: vi.fn(),
     isTransitioning: false,
   }),
 }));
