@@ -17,7 +17,7 @@ interface TorusKnotObjectProps {
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled } = useSceneObjectsContext();
+  const { isDragEnabled, actions } = useSceneObjectsContext();
 
   const { isDragging, dragHandlers } = useDragControls({
     enabled: isDragEnabled,
@@ -42,6 +42,11 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
     }
   });
 
+  const handleClick = () => {
+    // Select the main object when clicked
+    actions.selectObject('main-scene-object');
+  };
+
   const handlePointerEnter = () => {
     if (!isDragEnabled) {
       setIsHovered(true);
@@ -65,6 +70,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
       ref={meshRef}
       name={MAIN_OBJECT_NAME}
       userData={{ isBeingDragged: isDragging }}
+      onClick={handleClick}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       {...(isDragEnabled ? dragHandlers : {})}

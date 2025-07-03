@@ -20,11 +20,20 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
   useEffect(() => {
     if (!enabled || !selectedObjectId) {
       selectedMesh.current = null;
+      if (transformRef.current) {
+        transformRef.current.detach();
+      }
       return;
     }
 
     // Find the selected mesh in the scene
-    const mesh = scene.getObjectByName(selectedObjectId) || scene.getObjectByName('main-scene-object');
+    let mesh = null;
+    if (selectedObjectId === 'main-scene-object') {
+      mesh = scene.getObjectByName('main-scene-object');
+    } else {
+      mesh = scene.getObjectByName(selectedObjectId);
+    }
+    
     selectedMesh.current = mesh || null;
     
     if (transformRef.current && selectedMesh.current) {
@@ -33,7 +42,15 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
   }, [enabled, selectedObjectId, scene]);
 
   const handleObjectChange = () => {
-    if (!selectedMesh.current || !selectedObject) return;
+    if (!selectedMesh.current) return;
+    
+    // Handle main scene object differently since it's not in the objects array
+    if (selectedObjectId === 'main-scene-object') {
+      // Main scene object position is managed by the object itself
+      return;
+    }
+    
+    if (!selectedObject) return;
     
     const position: [number, number, number] = [
       selectedMesh.current.position.x,
