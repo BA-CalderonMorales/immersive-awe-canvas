@@ -90,8 +90,7 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
     onDragStateChange?.(false);
   }, [onDragStateChange]);
 
-  // Only show gizmo when drag mode is enabled AND object is selected
-  const shouldShowGizmo = enabled && isDragEnabled && selectedMesh.current;
+  const shouldShowGizmo = enabled && selectedMesh.current;
 
   if (!shouldShowGizmo) {
     return null;
