@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Temporarily disable componentTagger plugin to fix Three.js compatibility issues causing runtime errors
 - Consolidate test structure by moving all tests from `src/components/__tests__/` to `src/test/` directory
 - Fix missing Three.js Canvas rendering by adding required onDragStateChange prop to WorldView component
+- Fix flickering eyeball and info icons by consolidating conflicting hint state systems
 
 ### 🧹 Chore
 - Reorganize test files to follow consistent structure as per RULES.md

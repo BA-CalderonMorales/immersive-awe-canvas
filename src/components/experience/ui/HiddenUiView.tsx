@@ -33,6 +33,10 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
+  // Consolidate hint logic - prioritize onboarding hints over UI hints
+  const shouldShowTooltip = showUiHint && !showOnboardingHints && !isFirstVisit;
+  const shouldShowPulse = isFirstVisit && showOnboardingHints;
+
   const handleToggleUi = () => {
     // Handle first interaction if it's the first visit
     if (isFirstVisit && showOnboardingHints) {
@@ -57,14 +61,14 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
       <div className="fixed inset-0 z-50 pointer-events-none">
         {/* Show UI Button - Top Right - ALWAYS VISIBLE */}
         <div className="absolute top-4 right-4 pointer-events-auto z-[60]">
-          <Tooltip open={showUiHint}>
+          <Tooltip open={shouldShowTooltip}>
             <TooltipTrigger asChild>
               <Button
                 size="icon"
                 aria-label="Show UI"
                 onClick={handleToggleUi}
                 className={`${blendedButtonClasses} cursor-pointer ${
-                  isFirstVisit && showOnboardingHints ? 'ring-2 ring-blue-400/50 animate-pulse' : ''
+                  shouldShowPulse ? 'ring-2 ring-blue-400/50 animate-pulse' : ''
                 }`}
                 style={buttonStyle}
               >
