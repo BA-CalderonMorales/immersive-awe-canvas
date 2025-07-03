@@ -1058,8 +1058,16 @@ const applyDiscount = (price: number, discountRate: number): number => {
   fix: correct date formatting in payment processor
   refactor: extract payment validation logic
   test: add edge cases for payment validation
+  chore: update dependencies
+  breaking: major API change
   ```
 - Include test changes with feature changes in the same commit
+
+### Semantic Versioning
+
+- **patch:** `chore:*`
+- **minor:** `fix:*`, `feat:*`, `perf:*`
+- **major:** `breaking:*`
 
 ### Pull Request Standards
 

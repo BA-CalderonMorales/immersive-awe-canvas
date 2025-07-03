@@ -1,0 +1,21 @@
+{
+  "branches": ["main"],
+  "plugins": [
+    ["@semantic-release/commit-analyzer", {
+      "preset": "conventionalcommits",
+      "releaseRules": [
+        {"type": "chore", "release": "patch"},
+        {"type": "fix", "release": "minor"},
+        {"type": "feat", "release": "minor"},
+        {"type": "perf", "release": "minor"},
+        {"type": "breaking", "release": "major"}
+      ]
+    }],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    ["@semantic-release/npm", {
+      "npmPublish": false
+    }],
+    "@semantic-release/github"
+  ]
+}

@@ -3,96 +3,10 @@ name: Semantic Versioning & Release
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
 
 jobs:
-  analyze-commits:
-    runs-on: ubuntu-latest
-    outputs:
-      version-type: ${{ steps.version.outputs.version-type }}
-      new-version: ${{ steps.version.outputs.new-version }}
-      should-release: ${{ steps.version.outputs.should-release }}
-    
-    steps:
-    - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Analyze Commits for Version Bump
-      id: version
-      run: |
-        # Get commits since last tag
-        if git describe --tags --abbrev=0 >/dev/null 2>&1; then
-          LAST_TAG=$(git describe --tags --abbrev=0)
-          COMMITS=$(git log "${LAST_TAG}..HEAD" --oneline)
-        else
-          # No tags found, log all commits
-          COMMITS=$(git log --oneline)
-          LAST_TAG="none"
-        fi
-        
-        echo "Commits since ${LAST_TAG}:"
-        echo "$COMMITS"
-        
-        # Determine version bump type based on conventional commits
-        VERSION_TYPE="none"
-        
-        if echo "$COMMITS" | grep -q "^[a-f0-9]* feat.*BREAKING CHANGE" || echo "$COMMITS" | grep -q "^[a-f0-9]* feat.*!"; then
-          VERSION_TYPE="major"
-        elif echo "$COMMITS" | grep -q "^[a-f0-9]* feat:"; then
-          VERSION_TYPE="minor"  
-        elif echo "$COMMITS" | grep -q "^[a-f0-9]* fix:" || echo "$COMMITS" | grep -q "^[a-f0-9]* perf:"; then
-          VERSION_TYPE="patch"
-        fi
-        
-        echo "version-type=${VERSION_TYPE}" >> $GITHUB_OUTPUT
-        
-        if [ "$VERSION_TYPE" != "none" ]; then
-          echo "should-release=true" >> $GITHUB_OUTPUT
-          
-          # Calculate new version
-          if [ "$LAST_TAG" = "none" ]; then
-            CURRENT_VERSION="1.0.0"
-          else
-            CURRENT_VERSION=$(echo $LAST_TAG | sed 's/v//')
-            if [ "$CURRENT_VERSION" = "0.0.0" ]; then
-              CURRENT_VERSION="1.0.0"
-            fi
-          fi
-          
-          IFS='.' read -ra VERSION_PARTS <<< "$CURRENT_VERSION"
-          MAJOR=${VERSION_PARTS[0]}
-          MINOR=${VERSION_PARTS[1]}
-          PATCH=${VERSION_PARTS[2]}
-          
-          case $VERSION_TYPE in
-            major)
-              MAJOR=$((MAJOR + 1))
-              MINOR=0
-              PATCH=0
-              ;;
-            minor)
-              MINOR=$((MINOR + 1))
-              PATCH=0
-              ;;
-            patch)
-              PATCH=$((PATCH + 1))
-              ;;
-          esac
-          
-          NEW_VERSION="${MAJOR}.${MINOR}.${PATCH}"
-          echo "new-version=${NEW_VERSION}" >> $GITHUB_OUTPUT
-          echo "New version will be: v${NEW_VERSION}"
-        else
-          echo "should-release=false" >> $GITHUB_OUTPUT
-          echo "No version bump needed"
-        fi
-
   release:
-    needs: analyze-commits
     runs-on: ubuntu-latest
-    if: needs.analyze-commits.outputs.should-release == 'true'
     permissions:
       contents: write
       pull-requests: write
@@ -121,42 +35,15 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Update version and create tag
-      run: |
-        NEW_VERSION="${{ needs.analyze-commits.outputs.new-version }}"
-        
-        # Update package.json version
-        npm version $NEW_VERSION --no-git-tag-version
-        
-        # Generate changelog
-        node scripts/generate-changelog.cjs
-        
-        # Configure git
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # Commit changes
-        git add package.json CHANGELOG.md
-        git commit -m "chore: release v${NEW_VERSION}"
-        
-        # Create and push tag
-        git tag "v${NEW_VERSION}"
-        git push origin main --follow-tags
-
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
+    - name: Semantic Release
+      uses: cycjimmy/semantic-release-action@v4
+      with:
+        branch: main
+        extra_plugins: |
+          "@semantic-release/commit-analyzer"
+          "@semantic-release/release-notes-generator"
+          "@semantic-release/changelog"
+          "@semantic-release/npm"
+          "@semantic-release/github"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        tag_name: v${{ needs.analyze-commits.outputs.new-version }}
-        release_name: Release v${{ needs.analyze-commits.outputs.new-version }}
-        body: |
-          ## Changes in v${{ needs.analyze-commits.outputs.new-version }}
-          
-          This release includes improvements to the immersive 3D canvas experience.
-          
-          ### Commit Type: ${{ needs.analyze-commits.outputs.version-type }}
-          
-          See CHANGELOG.md for detailed changes.
-        draft: false
-        prerelease: false

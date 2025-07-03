@@ -37,10 +37,10 @@ docs: update API documentation
 
 ### Semantic Versioning Rules
 
-- `feat:` commits trigger **minor** version bumps (e.g., 1.0.0 → 1.1.0)
-- `fix:` and `perf:` commits trigger **patch** version bumps (e.g., 1.0.0 → 1.0.1)  
-- `feat:` or `fix:` with `BREAKING CHANGE:` or `!` trigger **major** version bumps (e.g., 1.0.0 → 2.0.0)
-- `chore:`, `docs:`, `style:`, `refactor:`, `test:` commits do **not** trigger version bumps
+- `chore:` commits trigger **patch** version bumps (e.g., 1.0.0 → 1.0.1)
+- `fix:`, `feat:`, and `perf:` commits trigger **minor** version bumps (e.g., 1.0.0 → 1.1.0)
+- `breaking:` commits trigger **major** version bumps (e.g., 1.0.0 → 2.0.0)
+- `docs:`, `style:`, `refactor:`, `test:` commits do **not** trigger version bumps
 
 ### Version Management Commands
 

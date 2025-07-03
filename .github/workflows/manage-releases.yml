@@ -1,0 +1,37 @@
+name: Manage Releases
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        type: choice
+        description: 'Action to perform'
+        required: true
+        options:
+        - delete-all
+        - delete-tag
+      tag:
+        description: 'Tag to delete (if action is delete-tag)'
+        required: false
+
+jobs:
+  manage-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete all releases and tags
+        if: ${{ github.event.inputs.action == 'delete-all' }}
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          delete_release: true
+          tag_name: ""
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete a specific tag and release
+        if: ${{ github.event.inputs.action == 'delete-tag' }}
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          delete_release: true
+          tag_name: ${{ github.event.inputs.tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
