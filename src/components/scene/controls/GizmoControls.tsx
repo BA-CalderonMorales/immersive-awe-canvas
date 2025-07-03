@@ -108,7 +108,10 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
 
   return (
     <TransformControls
-      ref={transformRef}
+      ref={(ref) => {
+        transformRef.current = ref;
+        console.log('🔍 DEBUG: TransformControls ref callback:', !!ref);
+      }}
       object={selectedMesh.current}
       mode={mode}
       size={isMobile ? 1.8 : 1.2} // Even larger size on mobile for better touch interaction
