@@ -4,7 +4,6 @@ import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneThemeConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
-import { useDragControls } from '@/hooks/useDragControls';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
 const MAIN_OBJECT_NAME = 'main-scene-object';
@@ -17,24 +16,15 @@ interface TorusKnotObjectProps {
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled, actions } = useSceneObjectsContext();
-
-  const { isDragging, dragHandlers } = useDragControls({
-    enabled: isDragEnabled,
-    onDragStart: () => {
-      if (meshRef.current) {
-        meshRef.current.userData.isBeingDragged = true;
-      }
-    },
-    onDragEnd: () => {
-      if (meshRef.current) {
-        meshRef.current.userData.isBeingDragged = false;
-      }
-    }
-  });
+  const { isDragEnabled, actions, selectedObjectId } = useSceneObjectsContext();
+  
+  const isSelected = selectedObjectId === 'main-scene-object';
+  const isBeingManipulated = useRef(false);
 
   useFrame((state) => {
-    if (meshRef.current?.userData.isBeingDragged) return;
+    // Don't animate if being manipulated by gizmo
+    if (isBeingManipulated.current) return;
+    
     if (!isLocked && meshRef.current) {
       // Smooth, consistent rotation
       meshRef.current.rotation.x = state.clock.elapsedTime * 0.2;
@@ -43,7 +33,6 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   });
 
   const handleClick = () => {
-    // Select the main object when clicked
     actions.selectObject('main-scene-object');
   };
 
@@ -52,28 +41,37 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
       setIsHovered(true);
       document.body.style.cursor = 'pointer';
     } else {
-      dragHandlers.onPointerEnter();
+      document.body.style.cursor = 'grab';
     }
   };
 
   const handlePointerLeave = () => {
     if (!isDragEnabled) {
       setIsHovered(false);
-      document.body.style.cursor = 'auto';
-    } else {
-      dragHandlers.onPointerLeave();
     }
+    document.body.style.cursor = 'auto';
+  };
+
+  // Listen for gizmo manipulation
+  const handleObjectChange = () => {
+    isBeingManipulated.current = true;
+    // Reset after a short delay when manipulation stops
+    setTimeout(() => {
+      isBeingManipulated.current = false;
+    }, 100);
   };
 
   return (
     <mesh 
       ref={meshRef}
       name={MAIN_OBJECT_NAME}
-      userData={{ isBeingDragged: isDragging }}
       onClick={handleClick}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      {...(isDragEnabled ? dragHandlers : {})}
+      userData={{ 
+        isMainObject: true,
+        onObjectChange: handleObjectChange
+      }}
     >
       <torusKnotGeometry args={[1, 0.3, 128, 16]} />
       <DynamicMaterial 
@@ -81,13 +79,18 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
         color={themeConfig.mainObjectColor} 
       />
       
-      {/* Wireframe overlay - show when drag is enabled or when hovered */}
-      {(isDragEnabled || isHovered) && (
+      {/* Wireframe overlay - show when drag is enabled, selected, or hovered */}
+      {(isDragEnabled && isSelected) || (!isDragEnabled && isHovered) ? (
         <mesh>
           <torusKnotGeometry args={[1, 0.3, 128, 16]} />
-          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+          <meshBasicMaterial 
+            wireframe 
+            color={isSelected ? "#00ff00" : "#ffff00"} 
+            transparent 
+            opacity={0.5} 
+          />
         </mesh>
-      )}
+      ) : null}
     </mesh>
   );
 };

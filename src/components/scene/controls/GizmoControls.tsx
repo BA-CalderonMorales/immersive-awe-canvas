@@ -44,9 +44,14 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
   const handleObjectChange = () => {
     if (!selectedMesh.current) return;
     
+    // Notify main object it's being manipulated
+    if (selectedMesh.current.userData?.onObjectChange) {
+      selectedMesh.current.userData.onObjectChange();
+    }
+    
     // Handle main scene object differently since it's not in the objects array
     if (selectedObjectId === 'main-scene-object') {
-      // Main scene object position is managed by the object itself
+      // Main scene object position is managed by the gizmo directly
       return;
     }
     
