@@ -1,8 +1,10 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Info, Shapes, ChevronsUpDown } from 'lucide-react';
+import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 import { SceneConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import SceneObjectsList from '../scene/controls/components/SceneObjectsList';
@@ -17,12 +19,20 @@ import { useDeviceType } from '@/hooks/use-mobile';
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
   onUpdate: (config: SceneConfig) => void;
+  isMotionFrozen?: boolean;
+  onToggleMotion?: () => void;
 }
 
-const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) => {
+const SceneSettingsPanel = ({ 
+  sceneConfig, 
+  onUpdate, 
+  isMotionFrozen = false, 
+  onToggleMotion 
+}: SceneSettingsPanelProps) => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const [isAddingObject, setIsAddingObject] = useState(false);
+  const [activeTab, setActiveTab] = useState('main');
   const { theme } = useExperience();
   const { isMobile, isTablet, isDesktop } = useDeviceType();
 
@@ -69,14 +79,35 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const colors = colorScheme[theme];
 
   return (
-    <div className={`h-full ${panelWidth} ${colors.background} ${colors.border} border-l overflow-y-auto z-40 relative`}>
-      <div className="bg-transparent border-0">
-        <div className={`sticky top-0 ${colors.headerBg} z-10 ${colors.headerBorder} border-b ${headerPadding}`}>
-          <div className="flex items-center justify-between mb-2">
-            <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium ${isMobile ? 'text-base' : 'text-lg'}`}>
-              <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
-              Scene Editor
-            </h2>
+    <div className={`h-full ${panelWidth} ${colors.background} ${colors.border} border-l overflow-hidden z-40 relative flex flex-col`}>
+      <div className={`${colors.headerBg} z-10 ${colors.headerBorder} border-b ${headerPadding} flex-shrink-0`}>
+        <div className="flex items-center justify-between mb-2">
+          <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium ${isMobile ? 'text-base' : 'text-lg'}`}>
+            <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
+            Scene Editor
+          </h2>
+          <div className="flex items-center gap-2">
+            {onToggleMotion && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={onToggleMotion}
+                    className={`p-1.5 h-auto ${colors.accentHover}`}
+                  >
+                    {isMotionFrozen ? (
+                      <Play className="w-4 h-4 text-emerald-500" />
+                    ) : (
+                      <Pause className="w-4 h-4 text-orange-500" />
+                    )}
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  {isMotionFrozen ? 'Resume animation' : 'Freeze animation'}
+                </TooltipContent>
+              </Tooltip>
+            )}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className={`w-4 h-4 ${colors.infoIcon} cursor-help transition-colors`} />
@@ -86,53 +117,68 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className={`${colors.secondaryText} ${isMobile ? 'text-xs' : 'text-sm'}`}>
-            Modify the main object or add new ones to the scene.
-          </p>
         </div>
-        <div className={`${contentPadding} ${spacingY}`}>
-          
-          <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border}`}>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium ${colors.primaryText}`}>Main Scene Object</h3>
-            </div>
-            <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
-          </div>
+        <p className={`${colors.secondaryText} ${isMobile ? 'text-xs' : 'text-sm'}`}>
+          Modify the main object or add new ones to the scene.
+        </p>
+      </div>
 
-          <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border}`}>
-            <div className="flex items-center justify-between mb-3">
-              <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium ${colors.primaryText} flex items-center gap-2`}>
-                <Shapes className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-                Scene Objects
-              </h3>
-            </div>
-            
-            <div className={`${isMobile ? 'space-y-3' : 'space-y-4'}`}>
-              <ObjectAddPanel 
-                isAddingObject={isAddingObject}
-                onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
-              />
-              <SceneObjectsList
-                objects={objects}
-                selectedObjectId={selectedObjectId}
-                onSelectObject={actions.selectObject}
-              />
-              {selectedObject ? (
-                <div className={`mt-4 pt-4 border-t border-gray-200 dark:border-gray-700`}>
-                  <ObjectGuiControls 
-                    object={selectedObject}
-                    onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
-                  />
-                </div>
-              ) : (
-                <div className={`text-center ${isMobile ? 'text-xs' : 'text-sm'} ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
-                  Select an object to edit its properties
-                </div>
-              )}
-            </div>
-          </div>
+      <div className="flex-1 overflow-hidden">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+          <TabsList className={`grid w-full grid-cols-2 mx-4 mt-4 ${colors.cardBg} ${colors.border}`}>
+            <TabsTrigger 
+              value="main" 
+              className={`flex items-center gap-2 ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText}`}
+            >
+              <Palette className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+              Main Object
+            </TabsTrigger>
+            <TabsTrigger 
+              value="objects" 
+              className={`flex items-center gap-2 ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText}`}
+            >
+              <Shapes className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
+              Scene Objects ({objects.length})
+            </TabsTrigger>
+          </TabsList>
 
-        </div>
+          <TabsContent value="main" className="flex-1 overflow-y-auto mt-0 mx-4 mb-4">
+            <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mt-4`}>
+              <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
+            </div>
+          </TabsContent>
+
+          <TabsContent value="objects" className="flex-1 overflow-y-auto mt-0 mx-4 mb-4">
+            <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mt-4`}>
+              <div className={`${isMobile ? 'space-y-3' : 'space-y-4'}`}>
+                <ObjectAddPanel 
+                  isAddingObject={isAddingObject}
+                  onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
+                />
+                <SceneObjectsList
+                  objects={objects}
+                  selectedObjectId={selectedObjectId}
+                  onSelectObject={actions.selectObject}
+                />
+                {selectedObject ? (
+                  <div className={`mt-4 pt-4 border-t ${colors.separatorColor}`}>
+                    <h4 className={`${colors.primaryText} font-medium mb-3 ${isMobile ? 'text-sm' : 'text-base'}`}>
+                      Object Properties
+                    </h4>
+                    <ObjectGuiControls 
+                      object={selectedObject}
+                      onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
+                    />
+                  </div>
+                ) : (
+                  <div className={`text-center ${isMobile ? 'text-xs' : 'text-sm'} ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
+                    Select an object to edit its properties
+                  </div>
+                )}
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

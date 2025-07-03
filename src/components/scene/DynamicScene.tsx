@@ -11,10 +11,19 @@ interface DynamicSceneProps {
   theme: 'day' | 'night';
   isLocked: boolean;
   isDragEnabled?: boolean;
+  isMotionFrozen?: boolean;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, isDragEnabled, onDragStateChange }: DynamicSceneProps) => {
+const DynamicScene = ({ 
+  currentBackground, 
+  currentGeometry, 
+  theme, 
+  isLocked, 
+  isDragEnabled, 
+  isMotionFrozen, 
+  onDragStateChange 
+}: DynamicSceneProps) => {
   const dynamicSceneConfig = useMemo<SceneConfig>(() => {
     if (!currentBackground || !currentGeometry) {
       return {
@@ -98,6 +107,7 @@ const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, isD
             sceneConfig={dynamicSceneConfig}
             isLocked={isLocked}
             isDragEnabled={isDragEnabled}
+            isMotionFrozen={isMotionFrozen}
             onDragStateChange={onDragStateChange}
           />
         </Canvas>

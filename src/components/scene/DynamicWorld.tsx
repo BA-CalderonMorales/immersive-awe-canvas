@@ -11,10 +11,11 @@ interface DynamicWorldProps {
   sceneConfig: SceneConfig;
   isLocked: boolean;
   isDragEnabled?: boolean;
+  isMotionFrozen?: boolean;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, onDragStateChange }: DynamicWorldProps) => {
+const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, isMotionFrozen, onDragStateChange }: DynamicWorldProps) => {
   const { isDragEnabled: contextDragEnabled, actions } = useSceneObjectsContext();
   const { theme } = useExperience();
   const actualDragEnabled = dragEnabled || contextDragEnabled;
@@ -42,6 +43,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, onDra
         type={sceneConfig.type}
         themeConfig={themeConfig}
         isLocked={isLocked}
+        isMotionFrozen={isMotionFrozen}
       />
       <ObjectManager 
         isDragEnabled={actualDragEnabled} 

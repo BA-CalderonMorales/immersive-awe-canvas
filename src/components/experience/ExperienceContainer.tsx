@@ -36,6 +36,8 @@ interface ExperienceContainerProps {
   handleWorldTransitionEnd: () => void;
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  isMotionFrozen?: boolean;
+  onToggleMotion?: () => void;
   currentBackground?: any;
   currentGeometry?: any;
 }

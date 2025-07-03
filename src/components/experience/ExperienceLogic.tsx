@@ -54,6 +54,8 @@ const ExperienceLogic = () => {
     handleCopyCode,
     isDragEnabled,
     toggleDragEnabled,
+    isMotionFrozen,
+    toggleMotionFreeze,
   } = useExperienceState();
 
   const {
@@ -137,6 +139,8 @@ const ExperienceLogic = () => {
         handleWorldTransitionEnd={() => {}}
         isDragEnabled={false}
         onToggleDrag={() => {}}
+        isMotionFrozen={false}
+        onToggleMotion={() => {}}
         currentBackground={null}
         currentGeometry={null}
       />
@@ -192,6 +196,8 @@ const ExperienceLogic = () => {
       handleWorldTransitionEnd={handleWorldTransitionEnd}
       isDragEnabled={isDragEnabled}
       onToggleDrag={toggleDragEnabled}
+      isMotionFrozen={isMotionFrozen}
+      onToggleMotion={toggleMotionFreeze}
       currentBackground={currentBackground}
       currentGeometry={currentGeometry}
     />

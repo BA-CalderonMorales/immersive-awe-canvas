@@ -11,6 +11,7 @@ export const useExperienceState = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isDragEnabled, setIsDragEnabled] = useState(false);
+  const [isMotionFrozen, setIsMotionFrozen] = useState(false);
   
   // Helper function for localStorage operations
   const getStoredBoolean = (key: string, defaultValue: boolean): boolean => {
@@ -106,6 +107,24 @@ export const useExperienceState = () => {
     });
   }, []);
 
+  const toggleMotionFreeze = useCallback(() => {
+    setIsMotionFrozen(frozen => {
+      const newState = !frozen;
+      toast.info(newState ? "🥶 Animation Frozen" : "🔄 Animation Resumed", {
+        description: newState ? "Scene motion is now paused" : "Scene motion has resumed",
+        duration: 2500,
+        style: {
+          background: 'rgba(0, 0, 0, 0.9)',
+          color: '#fff',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          backdropFilter: 'blur(8px)',
+        },
+      });
+      logEvent({ eventType: 'action', eventSource: 'toggle_motion_freeze', metadata: { frozen: newState } });
+      return newState;
+    });
+  }, []);
+
   const handleCopyCode = useCallback(() => {
     if (!editableSceneConfig) return;
     
@@ -173,5 +192,7 @@ export const useExperienceState = () => {
     handleCopyCode,
     isDragEnabled,
     toggleDragEnabled,
+    isMotionFrozen,
+    toggleMotionFreeze,
   };
 };

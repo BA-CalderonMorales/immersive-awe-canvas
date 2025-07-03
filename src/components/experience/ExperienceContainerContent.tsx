@@ -42,6 +42,8 @@ interface ExperienceContainerContentProps {
   isMobile: boolean;
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  isMotionFrozen?: boolean;
+  onToggleMotion?: () => void;
   currentBackground?: any;
   currentGeometry?: any;
 }
@@ -79,6 +81,8 @@ const ExperienceContainerContent = ({
   isMobile,
   isDragEnabled,
   onToggleDrag,
+  isMotionFrozen,
+  onToggleMotion,
   currentBackground,
   currentGeometry,
 }: ExperienceContainerContentProps) => {
@@ -130,6 +134,8 @@ const ExperienceContainerContent = ({
           isMobile={isMobile}
           onUpdateSceneConfig={setEditableSceneConfig}
           isDragEnabled={isDragEnabled}
+          isMotionFrozen={isMotionFrozen}
+          onToggleMotion={onToggleMotion}
           currentBackground={currentBackground}
           currentGeometry={currentGeometry}
         />

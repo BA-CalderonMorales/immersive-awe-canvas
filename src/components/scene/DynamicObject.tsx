@@ -12,25 +12,26 @@ interface DynamicObjectProps {
   type: SceneConfig['type'];
   themeConfig: SceneThemeConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
-const DynamicObject = ({ type, themeConfig, isLocked }: DynamicObjectProps) => {
+const DynamicObject = ({ type, themeConfig, isLocked, isMotionFrozen }: DynamicObjectProps) => {
   const { mainObjectColor, material } = themeConfig;
   switch (type) {
     case 'TorusKnot':
-      return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} />;
+      return <TorusKnotObject themeConfig={themeConfig} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'WobbleField':
-      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <WobbleFieldObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'CrystallineSpire':
-      return <CrystallineSpireObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <CrystallineSpireObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'DistortionSphere':
-      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <DistortionSphereObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'MorphingIcosahedron':
-      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <MorphingIcosahedronObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'WavyGrid':
-      return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} />;
+      return <WavyGridObject color={mainObjectColor} materialConfig={material} isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     case 'JellyTorus':
-      return <JellyTorusObject isLocked={isLocked} />;
+      return <JellyTorusObject isLocked={isLocked} isMotionFrozen={isMotionFrozen} />;
     default:
       return null;
   }

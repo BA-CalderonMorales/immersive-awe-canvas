@@ -15,6 +15,8 @@ interface ExperienceLayoutProps {
   isMobile: boolean;
   onUpdateSceneConfig: (config: SceneConfig) => void;
   isDragEnabled: boolean;
+  isMotionFrozen?: boolean;
+  onToggleMotion?: () => void;
   currentBackground?: any;
   currentGeometry?: any;
 }
@@ -29,6 +31,8 @@ const ExperienceLayout = ({
   isMobile,
   onUpdateSceneConfig,
   isDragEnabled,
+  isMotionFrozen,
+  onToggleMotion,
   currentBackground,
   currentGeometry,
 }: ExperienceLayoutProps) => {
@@ -85,7 +89,12 @@ const ExperienceLayout = ({
           <>
             <ResizableHandle withHandle />
             <ResizablePanel defaultSize={25} minSize={20} maxSize={40}>
-              <SceneSettingsPanel sceneConfig={editableSceneConfig} onUpdate={onUpdateSceneConfig} />
+              <SceneSettingsPanel
+                sceneConfig={editableSceneConfig}
+                onUpdate={onUpdateSceneConfig}
+                isMotionFrozen={isMotionFrozen}
+                onToggleMotion={onToggleMotion}
+              />
             </ResizablePanel>
           </>
         )}
