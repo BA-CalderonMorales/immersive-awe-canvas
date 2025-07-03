@@ -126,7 +126,7 @@ describe('ExperienceLogic', () => {
   });
 
   it('should pass correct props to ExperienceContainer', () => {
-    const { container } = render(<ExperienceLogic initialWorldSlug="test-world" />);
+    const { container } = render(<ExperienceLogic />);
     
     // Verify that the component renders without errors and passes props correctly
     expect(container).toBeInTheDocument();

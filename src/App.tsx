@@ -19,17 +19,23 @@ const App = () => (
       
       <BrowserRouter basename={basename}>
         <Routes>
-          {/* Redirect root to first world */}
-          <Route path="/" element={<Navigate to="/experience/genesis-torus" replace />} />
+          {/* Redirect root to experience */}
+          <Route path="/" element={<Navigate to="/experience" replace />} />
           
-          {/* Main experience route */}
+          {/* Main experience route - simplified without world slug */}
           <Route 
-            path="/experience/:worldSlug" 
+            path="/experience" 
             element={
               <ExperienceProvider>
                 <ExperienceContent />
               </ExperienceProvider>
             } 
+          />
+          
+          {/* Legacy world slug route - redirect to main experience */}
+          <Route 
+            path="/experience/:worldSlug" 
+            element={<Navigate to="/experience" replace />}
           />
           
           {/* Fallback */}

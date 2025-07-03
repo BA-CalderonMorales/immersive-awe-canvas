@@ -8,11 +8,7 @@ import { useExperienceEffects } from "@/hooks/useExperienceEffects";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceContainer from "./ExperienceContainer";
 
-interface ExperienceLogicProps {
-  initialWorldSlug?: string;
-}
-
-const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
+const ExperienceLogic = () => {
   const { theme, toggleTheme } = useExperience();
   
   const {
