@@ -126,7 +126,7 @@ jobs:
         npm version $NEW_VERSION --no-git-tag-version
         
         # Generate changelog
-        node --require=module scripts/generate-changelog.js || node scripts/generate-changelog.js
+        node scripts/generate-changelog.js
         
         # Configure git
         git config user.name "github-actions[bot]"
