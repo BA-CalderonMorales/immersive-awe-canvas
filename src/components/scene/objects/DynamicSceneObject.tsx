@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import { Mesh } from 'three';
-import { ThreeEvent } from '@react-three/fiber';
+import { Mesh, Vector3 } from 'three';
+import { ThreeEvent, useThree } from '@react-three/fiber';
 import { SceneObject } from '@/types/sceneObjects';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import ObjectGeometry from './components/ObjectGeometry';
@@ -15,37 +15,90 @@ interface DynamicSceneObjectProps {
 const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragEnabled } = useSceneObjectsContext();
+  const [isDragging, setIsDragging] = useState(false);
+  const { isDragEnabled, actions } = useSceneObjectsContext();
+  const { camera, gl } = useThree();
+  
+  const dragStartPosition = useRef<Vector3>(new Vector3());
+  const dragOffset = useRef<Vector3>(new Vector3());
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    onSelect();
+    if (!isDragEnabled) {
+      onSelect();
+    }
   };
 
   const handlePointerEnter = (e: ThreeEvent<MouseEvent>) => {
     if (!isDragEnabled) {
       setIsHovered(true);
       document.body.style.cursor = 'pointer';
+    } else {
+      document.body.style.cursor = 'grab';
     }
   };
 
   const handlePointerLeave = (e: ThreeEvent<MouseEvent>) => {
-    if (!isDragEnabled) {
+    if (!isDragEnabled && !isDragging) {
       setIsHovered(false);
       document.body.style.cursor = 'auto';
     }
+  };
+
+  const handlePointerDown = (e: ThreeEvent<PointerEvent>) => {
+    if (!isDragEnabled) return;
+    
+    e.stopPropagation();
+    setIsDragging(true);
+    onSelect();
+    document.body.style.cursor = 'grabbing';
+    
+    // Calculate drag offset
+    const intersectionPoint = e.point;
+    const meshPosition = meshRef.current.position;
+    dragOffset.current.copy(intersectionPoint).sub(meshPosition);
+    dragStartPosition.current.copy(meshPosition);
+    
+    gl.domElement.setPointerCapture(e.pointerId);
+  };
+
+  const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
+    if (!isDragging || !isDragEnabled) return;
+    
+    e.stopPropagation();
+    
+    // Convert screen coordinates to world position
+    const newPosition = e.point.clone().sub(dragOffset.current);
+    meshRef.current.position.copy(newPosition);
+    
+    // Update object state
+    const position: [number, number, number] = [newPosition.x, newPosition.y, newPosition.z];
+    actions.updateObject(object.id, { position });
+  };
+
+  const handlePointerUp = (e: ThreeEvent<PointerEvent>) => {
+    if (!isDragging) return;
+    
+    e.stopPropagation();
+    setIsDragging(false);
+    document.body.style.cursor = isDragEnabled ? 'grab' : 'auto';
+    
+    gl.domElement.releasePointerCapture(e.pointerId);
   };
 
   return (
     <mesh
       ref={meshRef}
       name={object.id}
-      userData={{ objectId: object.id }}
+      userData={{ objectId: object.id, isBeingDragged: isDragging }}
       position={object.position}
       rotation={object.rotation}
       scale={object.scale}
       onClick={handleClick}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
+      onPointerDown={handlePointerDown}
+      onPointerMove={handlePointerMove}
+      onPointerUp={handlePointerUp}
     >
       <ObjectGeometry type={object.type} />
       <ObjectMaterial material={object.material} color={object.color} />

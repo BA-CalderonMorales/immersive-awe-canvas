@@ -1,8 +1,6 @@
 
-import { useState } from 'react';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicSceneObject from './objects/DynamicSceneObject';
-import DragControls from './controls/DragControls';
 
 interface ObjectManagerProps {
   isDragEnabled?: boolean;
@@ -11,14 +9,6 @@ interface ObjectManagerProps {
 
 const ObjectManager = ({ isDragEnabled = false, onDragStateChange }: ObjectManagerProps) => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
-
-  const handleDragStart = () => {
-    onDragStateChange?.(true);
-  };
-
-  const handleDragEnd = () => {
-    onDragStateChange?.(false);
-  };
 
   return (
     <>
@@ -30,11 +20,6 @@ const ObjectManager = ({ isDragEnabled = false, onDragStateChange }: ObjectManag
           onSelect={() => actions.selectObject(object.id)}
         />
       ))}
-      <DragControls 
-        enabled={isDragEnabled} 
-        onDragStart={handleDragStart}
-        onDragEnd={handleDragEnd}
-      />
     </>
   );
 };
