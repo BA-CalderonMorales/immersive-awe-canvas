@@ -59,15 +59,17 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
                   </AccordionTrigger>
                   <AccordionContent className="border-t-0 pt-4">
                     <ul className="list-disc list-inside space-y-2 pl-4 text-sm">
-                      <li><b>Look around:</b> Click and drag with your mouse.</li>
+                      <li><b>Look around:</b> Click and drag with your mouse to rotate camera.</li>
                       <li><b>Zoom:</b> Scroll with mouse wheel or pinch on touchpads.</li>
+                      <li><b>Select Objects:</b> Click on any geometry to select and show gizmo controls.</li>
+                      <li><b>Move Objects:</b> Press 'Z' to toggle drag mode, then drag gizmo handles for precise movement.</li>
                       <li><b>Freeze Scene:</b> Double-click the scene or press '.' (period).</li>
-                      <li><b>Toggle Day/Night:</b> Press the SPACE key.</li>
-                      <li><b>Cycle worlds:</b> Use arrow buttons or press 'N' for next and 'P' for previous.</li>
-                      <li><b>Search worlds:</b> Press 'S' or Ctrl+K (or Cmd+K).</li>
+                      <li><b>Toggle Day/Night:</b> Press SPACE key.</li>
+                      <li><b>Navigate Worlds:</b> Use arrow buttons or press 'N' for next and 'P' for previous.</li>
+                      <li><b>Search Worlds:</b> Press 'S' or Ctrl+K (Cmd+K on Mac).</li>
                       <li><b>Show/Hide UI:</b> Press 'V'.</li>
-                      <li><b>Toggle Settings:</b> Press 'E'.</li>
-                      <li><b>Copy Scene Config:</b> Press 'C'.</li>
+                      <li><b>Toggle Settings Panel:</b> Press 'E' to open scene editor.</li>
+                      <li><b>Copy Scene Config:</b> Press 'C' to copy current scene configuration.</li>
                       <li><b>Go Home:</b> Press 'G'.</li>
                       <li><b>This Help Dialog:</b> Press 'H'.</li>
                     </ul>
@@ -80,26 +82,32 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
                   <AccordionContent className="border-t-0 pt-4">
                     <div className="text-sm text-muted-foreground space-y-4">
                       <div>
-                        <h4 className="font-semibold text-foreground mb-1">Recent Features</h4>
+                        <h4 className="font-semibold text-foreground mb-1">Current Features</h4>
                         <ul className="list-disc list-inside space-y-1 pl-4">
-                          <li>Dynamic 3D scenes with react-three-fiber</li>
-                          <li>World switching (including keyboard navigation)</li>
-                          <li>Day/Night theme toggling with per-world UI colors</li>
-                          <li>Live scene customization panel</li>
-                          <li>Copyable scene configuration</li>
-                          <li>Searchable world list with keyboard shortcut</li>
+                          <li>Multiple 3D scene types with optimized animations</li>
+                          <li>Blender-style gizmo controls for precise object manipulation</li>
+                          <li>Professional scene editor with real-time property adjustment</li>
+                          <li>Dynamic object management (add, remove, select, modify)</li>
+                          <li>Smooth drag controls with interpolation</li>
+                          <li>Day/night theme toggling with world-specific UI colors</li>
+                          <li>Comprehensive keyboard shortcuts for efficient navigation</li>
+                          <li>Responsive design optimized for desktop and mobile</li>
+                          <li>Exportable scene configurations</li>
+                          <li>Semantic versioning with automated GitHub releases</li>
                         </ul>
                       </div>
                       <div>
-                        <h4 className="font-semibold text-foreground mb-1">Fixed Bugs</h4>
+                        <h4 className="font-semibold text-foreground mb-1">Technical Improvements</h4>
                         <ul className="list-disc list-inside space-y-1 pl-4">
-                          <li>UI visibility issues on various world backgrounds</li>
-                          <li>Corrected broken theme in toast notifications</li>
-                          <li>Adjusted "Echoing Void" night theme for better visibility</li>
+                          <li>Fixed animation conflicts during object manipulation</li>
+                          <li>Resolved gizmo interference with natural animations</li>
+                          <li>Eliminated glitchy behavior in geometry rendering</li>
+                          <li>Improved main scene object selection and control</li>
+                          <li>Enhanced settings panel contrast for better accessibility</li>
                         </ul>
                       </div>
                       <p>
-                        This is an experimental project. If you find a bug or have a feature request, please open an issue on GitHub.
+                        This project follows semantic versioning and conventional commits. Report issues or contribute on GitHub.
                       </p>
                     </div>
                   </AccordionContent>
