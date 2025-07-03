@@ -12,6 +12,7 @@ import MainObjectControls from '../scene/controls/MainObjectControls';
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useExperience } from '@/hooks/useExperience';
+import { useDeviceType } from '@/hooks/use-mobile';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -23,6 +24,13 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const [isAddingObject, setIsAddingObject] = useState(false);
   const { theme } = useExperience();
+  const { isMobile, isTablet, isDesktop } = useDeviceType();
+
+  // Responsive settings based on device type
+  const panelWidth = isMobile ? 'w-full' : isTablet ? 'w-80' : 'w-96';
+  const headerPadding = isMobile ? 'p-3' : 'p-4';
+  const contentPadding = isMobile ? 'p-3' : 'p-4';
+  const spacingY = isMobile ? 'space-y-4' : 'space-y-6';
 
   // Clean, modern color schemes inspired by Excalidraw
   const colorScheme = {
@@ -61,12 +69,12 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const colors = colorScheme[theme];
 
   return (
-    <div className={`h-full ${colors.background} ${colors.border} border-l overflow-y-auto z-40 relative`}>
+    <div className={`h-full ${panelWidth} ${colors.background} ${colors.border} border-l overflow-y-auto z-40 relative`}>
       <div className="bg-transparent border-0">
-        <div className={`sticky top-0 ${colors.headerBg} z-10 ${colors.headerBorder} border-b p-4`}>
+        <div className={`sticky top-0 ${colors.headerBg} z-10 ${colors.headerBorder} border-b ${headerPadding}`}>
           <div className="flex items-center justify-between mb-2">
-            <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium text-lg`}>
-              <Settings className="w-5 h-5" />
+            <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium ${isMobile ? 'text-base' : 'text-lg'}`}>
+              <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
               Scene Editor
             </h2>
             <Tooltip>
@@ -78,28 +86,28 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
               </TooltipContent>
             </Tooltip>
           </div>
-          <p className={`${colors.secondaryText} text-sm`}>
+          <p className={`${colors.secondaryText} ${isMobile ? 'text-xs' : 'text-sm'}`}>
             Modify the main object or add new ones to the scene.
           </p>
         </div>
-        <div className="p-4 space-y-6">
+        <div className={`${contentPadding} ${spacingY}`}>
           
-          <div className={`${colors.cardBg} rounded-xl p-4 border ${colors.border}`}>
+          <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border}`}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className={`text-sm font-medium ${colors.primaryText}`}>Main Scene Object</h3>
+              <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium ${colors.primaryText}`}>Main Scene Object</h3>
             </div>
             <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
           </div>
 
-          <div className={`${colors.cardBg} rounded-xl p-4 border ${colors.border}`}>
+          <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border}`}>
             <div className="flex items-center justify-between mb-3">
-              <h3 className={`text-sm font-medium ${colors.primaryText} flex items-center gap-2`}>
-                <Shapes className="w-4 h-4" />
+              <h3 className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium ${colors.primaryText} flex items-center gap-2`}>
+                <Shapes className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
                 Scene Objects
               </h3>
             </div>
             
-            <div className="space-y-4">
+            <div className={`${isMobile ? 'space-y-3' : 'space-y-4'}`}>
               <ObjectAddPanel 
                 isAddingObject={isAddingObject}
                 onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
@@ -110,14 +118,14 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
                 onSelectObject={actions.selectObject}
               />
               {selectedObject ? (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <div className={`mt-4 pt-4 border-t border-gray-200 dark:border-gray-700`}>
                   <ObjectGuiControls 
                     object={selectedObject}
                     onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
                   />
                 </div>
               ) : (
-                <div className={`text-center text-sm ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
+                <div className={`text-center ${isMobile ? 'text-xs' : 'text-sm'} ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
                   Select an object to edit its properties
                 </div>
               )}
