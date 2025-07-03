@@ -19,6 +19,7 @@ import { SceneObjectsProvider } from '@/context/SceneObjectsContext';
 import GizmoControls from '@/components/scene/controls/GizmoControls';
 import DynamicSceneObject from '@/components/scene/objects/DynamicSceneObject';
 import TorusKnotObject from '@/components/scene/objects/TorusKnotObject';
+import { useIsMobile, useDeviceType } from '@/hooks/use-mobile';
 
 // Mock Three.js and react-three-fiber
 vi.mock('@react-three/fiber', () => ({
@@ -34,12 +35,22 @@ vi.mock('@react-three/fiber', () => ({
   }
 }));
 
-vi.mock('@react-three/drei', () => ({
-  TransformControls: ({ children, ...props }: any) => <div data-testid="transform-controls" {...props}>{children}</div>
-}));
+vi.mock('@react-three/drei', async (importOriginal) => {
+  const actual = await importOriginal();
+  return {
+    ...actual,
+    useMatcapTexture: vi.fn().mockReturnValue([null]),
+    TransformControls: ({ children, ...props }: any) => <div data-testid="transform-controls" {...props}>{children}</div>
+  };
+});
 
 vi.mock('@/hooks/use-mobile', () => ({
-  useIsMobile: () => false
+  useIsMobile: vi.fn(),
+  useDeviceType: vi.fn(() => ({
+    isMobile: false,
+    isTablet: false,
+    isDesktop: true,
+  }))
 }));
 
 const mockSceneObject = {
@@ -77,7 +88,7 @@ describe('Drag Behavior Tests', () => {
   
   describe('Requirement 1: Gizmo sensitivity for mobile', () => {
     it('should have larger gizmo size on mobile', () => {
-      vi.mocked(require('@/hooks/use-mobile').useIsMobile).mockReturnValue(true);
+      useIsMobile.mockReturnValue(true);
       
       const { getByTestId } = render(
         <TestWrapper isDragEnabled={true} selectedObjectId="test-object">
@@ -90,7 +101,7 @@ describe('Drag Behavior Tests', () => {
     });
 
     it('should use normal gizmo size on desktop', () => {
-      vi.mocked(require('@/hooks/use-mobile').useIsMobile).mockReturnValue(false);
+      useIsMobile.mockReturnValue(false);
       
       const { getByTestId } = render(
         <TestWrapper isDragEnabled={true} selectedObjectId="test-object">
