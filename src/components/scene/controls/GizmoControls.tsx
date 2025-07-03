@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useCallback } from 'react';
 import { TransformControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
@@ -8,9 +8,10 @@ import * as THREE from 'three';
 interface GizmoControlsProps {
   enabled: boolean;
   mode?: 'translate' | 'rotate' | 'scale';
+  onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
+const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: GizmoControlsProps) => {
   const transformRef = useRef<any>(null);
   const { scene, camera, gl } = useThree();
   const { selectedObjectId, objects, actions, isDragEnabled } = useSceneObjectsContext();
@@ -80,6 +81,15 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
     actions.updateObject(selectedObject.id, { position, rotation, scale });
   };
 
+  // Handle gizmo interaction states
+  const handleTransformStart = useCallback(() => {
+    onDragStateChange?.(true);
+  }, [onDragStateChange]);
+
+  const handleTransformEnd = useCallback(() => {
+    onDragStateChange?.(false);
+  }, [onDragStateChange]);
+
   // Only show gizmo when drag mode is enabled AND object is selected
   const shouldShowGizmo = enabled && isDragEnabled && selectedMesh.current;
 
@@ -92,26 +102,17 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
       ref={transformRef}
       object={selectedMesh.current}
       mode={mode}
-      size={isMobile ? 1.5 : 1.0} // Larger size on mobile for easier touch interaction
+      size={isMobile ? 1.8 : 1.2} // Even larger size on mobile for better touch interaction
       space="world"
       rotationSnap={null}
       translationSnap={null}
       scaleSnap={null}
       onObjectChange={handleObjectChange}
+      onMouseDown={handleTransformStart}
+      onMouseUp={handleTransformEnd}
       showX={true}
       showY={true}
       showZ={true}
-      // Prevent camera controls interference on mobile
-      onMouseDown={() => {
-        if (gl.domElement) {
-          gl.domElement.style.touchAction = 'none';
-        }
-      }}
-      onMouseUp={() => {
-        if (gl.domElement) {
-          gl.domElement.style.touchAction = 'pan-x pan-y';
-        }
-      }}
     />
   );
 };

@@ -29,6 +29,7 @@ const ObjectManager = ({
       <GizmoControls 
         enabled={!!selectedObjectId} 
         mode={gizmoMode}
+        onDragStateChange={onDragStateChange}
       />
     </>
   );

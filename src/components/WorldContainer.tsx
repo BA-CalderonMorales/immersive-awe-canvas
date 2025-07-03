@@ -101,6 +101,7 @@ const WorldContainer = ({
             maxDistance={50}
             onStart={() => !isObjectDragging && setIsDragging(true)}
             onEnd={() => setIsDragging(false)}
+            enabled={!isObjectDragging} // Completely disable when object is being dragged
             makeDefault
           />
 

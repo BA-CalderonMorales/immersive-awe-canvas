@@ -21,8 +21,9 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
 
   // Handle clicking on empty space to deselect objects when in drag mode
   const handleSceneClick = (e: ThreeEvent<MouseEvent>) => {
-    if (isDragEnabled && e.object.name === '') {
-      // Only deselect if clicking on background/empty space
+    // Only deselect if in drag mode and clicking on background/non-mesh objects
+    if (isDragEnabled && (!e.object || e.object.type === 'Scene' || !e.object.userData?.objectId)) {
+      e.stopPropagation();
       actions.selectObject(null);
     }
   };
