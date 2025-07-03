@@ -1,13 +1,16 @@
 /**
- * Test Cases for Drag Behavior Requirements
+ * Test Cases for Drag Behavior Requirements - CORRECTED VERSION
  * 
- * Requirements from user:
+ * Original Requirements (from user's previous message):
  * 1. Fix gizmo sensitivity for mobile (prevent screen movement)
- * 2. Drag button activation → all objects show green wireframe  
- * 3. Gizmo only visible when drag mode enabled AND object selected
+ * 2. User presses drag button → all objects show green wireframe  
+ * 3. When drag mode enabled, move via gizmo easily/smoothly (gizmo should work normally)
  * 4. Click outside object → deselects object, hides gizmo
  * 5. Select different object → switches gizmo to new object
  * 6. Click drag button again → exits drag mode, hides wireframes
+ * 
+ * KEY INSIGHT: Gizmo should work NORMALLY (always when object selected)
+ * Drag mode only adds: green wireframes + enhanced behavior, but doesn't break normal gizmo
  */
 
 import { render, fireEvent } from '@testing-library/react';

@@ -21,6 +21,8 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
   const selectedMesh = useRef<THREE.Object3D | null>(null);
 
   useEffect(() => {
+    console.log('🔍 DEBUG: GizmoControls useEffect', { enabled, selectedObjectId });
+    
     if (!enabled || !selectedObjectId) {
       selectedMesh.current = null;
       if (transformRef.current) {
@@ -33,14 +35,22 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
     let mesh = null;
     if (selectedObjectId === 'main-scene-object') {
       mesh = scene.getObjectByName('main-scene-object');
+      console.log('🔍 DEBUG: Looking for main-scene-object:', mesh);
     } else {
       mesh = scene.getObjectByName(selectedObjectId);
+      console.log('🔍 DEBUG: Looking for object:', selectedObjectId, mesh);
     }
     
     selectedMesh.current = mesh || null;
     
     if (transformRef.current && selectedMesh.current) {
+      console.log('🔍 DEBUG: Attaching gizmo to mesh:', selectedMesh.current);
       transformRef.current.attach(selectedMesh.current);
+    } else {
+      console.log('🔍 DEBUG: Failed to attach gizmo:', { 
+        transformRef: !!transformRef.current, 
+        selectedMesh: !!selectedMesh.current 
+      });
     }
   }, [enabled, selectedObjectId, scene]);
 
