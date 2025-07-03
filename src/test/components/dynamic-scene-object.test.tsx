@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { createMockSceneObject } from '../../test/test-utils';
-import DynamicSceneObject from '../scene/objects/DynamicSceneObject';
+import { createMockSceneObject } from '../test-utils';
+import DynamicSceneObject from '../../components/scene/objects/DynamicSceneObject';
 
 // Mock Three.js Canvas
 vi.mock('@react-three/fiber', () => ({

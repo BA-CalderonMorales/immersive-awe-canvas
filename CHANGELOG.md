@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🐛 Bug Fixes
+- Temporarily disable componentTagger plugin to fix Three.js compatibility issues causing runtime errors
+- Consolidate test structure by moving all tests from `src/components/__tests__/` to `src/test/` directory
+
+### 🧹 Chore
+- Reorganize test files to follow consistent structure as per RULES.md
+
 ## [1.1.0] - 2025-07-03
 
 ### ✨ Features

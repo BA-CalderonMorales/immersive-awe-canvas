@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '../../test/test-utils';
-import ExperienceLogic from '../experience/ExperienceLogic';
+import { render, screen } from '../test-utils';
+import ExperienceLogic from '../../components/experience/ExperienceLogic';
 
 // Mock the hooks
 vi.mock('@/hooks/useWorlds', () => ({
