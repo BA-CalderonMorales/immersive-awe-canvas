@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix missing Three.js Canvas rendering by adding required onDragStateChange prop to WorldView component
 - Fix flickering eyeball and info icons by consolidating conflicting hint state systems
 - Fix scene object rendering and enable mobile gizmo controls for touch interaction
+- Improve gizmo sensitivity for mobile interfaces and prevent camera interference
+- Implement enhanced drag mode logic with green wireframe highlighting for all objects
+- Add click-outside-to-deselect functionality and improved object selection behavior
 
 ### 🧹 Chore
 - Reorganize test files to follow consistent structure as per RULES.md

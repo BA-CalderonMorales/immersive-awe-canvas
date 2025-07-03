@@ -23,8 +23,11 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
   const dragOffset = useRef<Vector3>(new Vector3());
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
-    if (!isDragEnabled) {
-      onSelect();
+    e.stopPropagation(); // Prevent scene click from deselecting
+    if (isDragEnabled) {
+      onSelect(); // Select object in drag mode
+    } else {
+      onSelect(); // Normal selection
     }
   };
 
@@ -103,15 +106,15 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
       <ObjectGeometry type={object.type} />
       <ObjectMaterial material={object.material} color={object.color} />
       
-      {/* Drag wireframe overlay */}
+      {/* Green wireframe overlay when drag mode is enabled (all objects) */}
       {isDragEnabled && (
         <mesh>
           <ObjectGeometry type={object.type} />
-          <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
+          <meshBasicMaterial wireframe color="#00ff00" transparent opacity={0.5} />
         </mesh>
       )}
       
-      {/* Selection wireframe overlay (when not dragging) */}
+      {/* Selection wireframe overlay (when not in drag mode) */}
       {!isDragEnabled && isSelected && (
         <mesh>
           <ObjectGeometry type={object.type} />
@@ -119,7 +122,7 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
         </mesh>
       )}
       
-      {/* Hover wireframe overlay (when not dragging or selected) */}
+      {/* Hover wireframe overlay (when not in drag mode or selected) */}
       {!isDragEnabled && isHovered && !isSelected && (
         <mesh>
           <ObjectGeometry type={object.type} />

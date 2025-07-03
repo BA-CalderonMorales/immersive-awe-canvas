@@ -5,6 +5,7 @@ import DynamicBackground from './DynamicBackground';
 import { SceneConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import { useExperience } from '@/hooks/useExperience';
+import { ThreeEvent } from '@react-three/fiber';
 
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
@@ -13,13 +14,21 @@ interface DynamicWorldProps {
 }
 
 const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorldProps) => {
-  const { isDragEnabled } = useSceneObjectsContext();
+  const { isDragEnabled, actions } = useSceneObjectsContext();
   const { theme } = useExperience();
   
   const themeConfig = theme === 'day' ? sceneConfig.day : sceneConfig.night;
 
+  // Handle clicking on empty space to deselect objects when in drag mode
+  const handleSceneClick = (e: ThreeEvent<MouseEvent>) => {
+    if (isDragEnabled && e.object.name === '') {
+      // Only deselect if clicking on background/empty space
+      actions.selectObject(null);
+    }
+  };
+
   return (
-    <>
+    <group onClick={handleSceneClick}>
       <DynamicBackground 
         background={themeConfig.background} 
         extras={themeConfig.extras} 
@@ -35,7 +44,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
         gizmoMode="translate"
         onDragStateChange={onDragStateChange}
       />
-    </>
+    </group>
   );
 };
 

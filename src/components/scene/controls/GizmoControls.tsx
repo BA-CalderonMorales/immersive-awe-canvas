@@ -12,8 +12,8 @@ interface GizmoControlsProps {
 
 const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
   const transformRef = useRef<any>(null);
-  const { scene } = useThree();
-  const { selectedObjectId, objects, actions } = useSceneObjectsContext();
+  const { scene, camera, gl } = useThree();
+  const { selectedObjectId, objects, actions, isDragEnabled } = useSceneObjectsContext();
   const isMobile = useIsMobile();
   
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
@@ -80,7 +80,10 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
     actions.updateObject(selectedObject.id, { position, rotation, scale });
   };
 
-  if (!enabled || !selectedMesh.current) {
+  // Only show gizmo when drag mode is enabled AND object is selected
+  const shouldShowGizmo = enabled && isDragEnabled && selectedMesh.current;
+
+  if (!shouldShowGizmo) {
     return null;
   }
 
@@ -89,7 +92,7 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
       ref={transformRef}
       object={selectedMesh.current}
       mode={mode}
-      size={isMobile ? 1.2 : 0.8} // Larger size on mobile for easier touch interaction
+      size={isMobile ? 1.5 : 1.0} // Larger size on mobile for easier touch interaction
       space="world"
       rotationSnap={null}
       translationSnap={null}
@@ -98,6 +101,17 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
       showX={true}
       showY={true}
       showZ={true}
+      // Prevent camera controls interference on mobile
+      onMouseDown={() => {
+        if (gl.domElement) {
+          gl.domElement.style.touchAction = 'none';
+        }
+      }}
+      onMouseUp={() => {
+        if (gl.domElement) {
+          gl.domElement.style.touchAction = 'pan-x pan-y';
+        }
+      }}
     />
   );
 };
