@@ -23,6 +23,7 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 - **Language**: TypeScript (strict mode)
 - **Testing**: Jest/Vitest + React Testing Library
 - **State Management**: Prefer immutable patterns
+- **Package Manager/Runtime**: Bun (for install, run, test, and build)
 
 ## Testing Principles
 

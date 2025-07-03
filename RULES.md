@@ -11,17 +11,17 @@ These rules keep development consistent across the project. The document is inte
 
 ## Local Workflow
 
-Use these npm scripts during feature work:
+Use these npm/bun scripts during feature work:
 
-- `npm ci` – install dependencies
-- `npm start` – run the Metro bundler
-- `npm run ios` – run the iOS app
-- `npm run android` – run the Android app
-- `npm test` – run the full test suite
-- `npm run typecheck` – run TypeScript checks
-- `npm run build` – build release artifacts with Fastlane
+- `npm ci` or `bun install` – install dependencies
+- `npm start` or `bun dev` – run the development server
+- `npm run ios` or `bun ios` – run the iOS app
+- `npm run android` or `bun android` – run the Android app
+- `npm test` or `bun test` – run the full test suite
+- `npm run typecheck` or `bun typecheck` – run TypeScript checks
+- `npm run build` or `bun build` – build release artifacts
 
-Run `npm ci`, `npm test`, `npm run typecheck`, and `npm run build` before pushing changes. CI uses the same commands.
+Run `npm ci` or `bun install`, `npm test` or `bun test`, `npm run typecheck` or `bun typecheck`, and `npm run build` or `bun build` before pushing changes. CI uses the same commands.
 
 ## Commit Standards
 
