@@ -6,6 +6,7 @@ import GradientBackground from './effects/GradientBackground';
 import NoiseBackground from './effects/NoiseBackground';
 import PlasmaBackground from './effects/PlasmaBackground';
 import AuroraBackground from './effects/AuroraBackground';
+import SunsetBackground from './effects/SunsetBackground';
 import { useExperience } from '@/hooks/useExperience';
 
 const DynamicBackground = ({ background, extras }: { background: BackgroundConfig, extras?: ExtraConfig[] }) => {
@@ -70,6 +71,9 @@ const DynamicBackground = ({ background, extras }: { background: BackgroundConfi
     
     case 'aurora':
       return <AuroraBackground config={background} />;
+    
+    case 'sunset':
+      return <SunsetBackground config={background} />;
     
     case 'void':
       return <VoidBackground theme={theme} />;

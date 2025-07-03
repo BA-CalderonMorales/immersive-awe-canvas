@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2025-07-03
+
+### Features
+
+- Add responsive device detection hooks for mobile, tablet, and desktop
+- Create beautiful sunset background effect for better light mode experience
+- Implement responsive settings panel that adapts to different screen sizes
+
+### Mobile/Tablet Improvements
+
+- Redesign object adding panel with responsive grid layout (1 col mobile, 2 tablet, 3 desktop)
+- Improve button sizing and spacing for touch interfaces
+- Add proper tablet-specific width constraints for settings panel
+- Enhance mobile typography with appropriate font sizes
+
+### UI/UX Improvements
+
+- Replace blinding sky background in Genesis Torus light mode with warm sunset gradient
+- Add visual icons and better spacing to object selection interface
+- Improve settings panel layout with device-appropriate padding and sizing
+- Enhanced touch targets for mobile interactions
+
+### Bug Fixes
+
+- Fix settings panel overflow and cramped layout on tablet devices
+- Resolve object adding experience on mobile devices
+- Improve visual contrast and readability across device types
+
 ## [1.0.1] - 2025-07-03
 
 ### Features

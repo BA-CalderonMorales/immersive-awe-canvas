@@ -11,7 +11,7 @@ export type LightConfig = {
 export type EnvironmentPreset = 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby' | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
 
 export type BackgroundConfig = {
-  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment' | 'gradient' | 'noise' | 'plasma' | 'void' | 'aurora';
+  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment' | 'gradient' | 'noise' | 'plasma' | 'void' | 'aurora' | 'sunset';
   // Sky properties
   sunPosition?: [number, number, number];
   

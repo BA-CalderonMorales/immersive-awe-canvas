@@ -2,7 +2,7 @@
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { useDeviceType } from "@/hooks/use-mobile";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useState } from "react";
 import HiddenUiView from "./ui/HiddenUiView";
@@ -53,7 +53,7 @@ const ExperienceUI = ({
   isDragEnabled: propIsDragEnabled = false,
   onToggleDrag: propOnToggleDrag,
 }: ExperienceUIProps) => {
-  const isMobile = useIsMobile();
+  const { isMobile } = useDeviceType();
   const [localIsDragEnabled, setLocalIsDragEnabled] = useState(false);
 
   // Use prop value if provided, otherwise use local state
