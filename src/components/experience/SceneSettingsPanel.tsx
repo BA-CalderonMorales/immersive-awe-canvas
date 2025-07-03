@@ -24,33 +24,37 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
   const [isAddingObject, setIsAddingObject] = useState(false);
   const { theme } = useExperience();
 
-  // High contrast professional color schemes
+  // Clean, modern color schemes inspired by Excalidraw
   const colorScheme = {
     day: {
       background: 'bg-white',
-      border: 'border-gray-300',
-      headerBg: 'bg-gray-50',
-      headerBorder: 'border-gray-300',
+      border: 'border-gray-200',
+      headerBg: 'bg-white',
+      headerBorder: 'border-gray-200',
       primaryText: 'text-gray-900',
-      secondaryText: 'text-gray-700',
-      accentText: 'text-gray-900',
-      accentHover: 'hover:bg-gray-100',
-      separatorColor: 'bg-gray-300',
+      secondaryText: 'text-gray-600',
+      accentText: 'text-gray-800',
+      accentHover: 'hover:bg-gray-50',
+      separatorColor: 'bg-gray-100',
       collapsibleHover: 'hover:bg-gray-50',
-      infoIcon: 'text-gray-600 hover:text-gray-900',
+      infoIcon: 'text-gray-500 hover:text-gray-700',
+      cardBg: 'bg-gray-50/50',
+      buttonSecondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200',
     },
     night: {
-      background: 'bg-gray-900',
-      border: 'border-gray-600',
-      headerBg: 'bg-gray-800',
-      headerBorder: 'border-gray-600',
+      background: 'bg-gray-950',
+      border: 'border-gray-800',
+      headerBg: 'bg-gray-950',
+      headerBorder: 'border-gray-800',
       primaryText: 'text-gray-100',
-      secondaryText: 'text-gray-300',
-      accentText: 'text-gray-100',
-      accentHover: 'hover:bg-gray-800',
-      separatorColor: 'bg-gray-600',
-      collapsibleHover: 'hover:bg-gray-800',
-      infoIcon: 'text-gray-400 hover:text-gray-100',
+      secondaryText: 'text-gray-400',
+      accentText: 'text-gray-200',
+      accentHover: 'hover:bg-gray-900',
+      separatorColor: 'bg-gray-800',
+      collapsibleHover: 'hover:bg-gray-900',
+      infoIcon: 'text-gray-500 hover:text-gray-300',
+      cardBg: 'bg-gray-900/50',
+      buttonSecondary: 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-gray-700',
     }
   };
 
@@ -58,13 +62,13 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
 
   return (
     <div className={`h-full ${colors.background} ${colors.border} border-l overflow-y-auto z-40 relative`}>
-      <Card className="bg-transparent border-0">
-        <CardHeader className={`sticky top-0 ${colors.headerBg} z-10 ${colors.headerBorder} border-b`}>
-          <div className="flex items-center justify-between">
-            <CardTitle className={`${colors.primaryText} flex items-center gap-2 font-semibold`}>
+      <div className="bg-transparent border-0">
+        <div className={`sticky top-0 ${colors.headerBg} z-10 ${colors.headerBorder} border-b p-4`}>
+          <div className="flex items-center justify-between mb-2">
+            <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium text-lg`}>
               <Settings className="w-5 h-5" />
               Scene Editor
-            </CardTitle>
+            </h2>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className={`w-4 h-4 ${colors.infoIcon} cursor-help transition-colors`} />
@@ -74,33 +78,28 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
               </TooltipContent>
             </Tooltip>
           </div>
-          <CardDescription className={colors.secondaryText}>
+          <p className={`${colors.secondaryText} text-sm`}>
             Modify the main object or add new ones to the scene.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="p-4 space-y-4">
+          </p>
+        </div>
+        <div className="p-4 space-y-6">
           
-          <Collapsible defaultOpen>
-            <CollapsibleTrigger className={`w-full flex items-center justify-between p-3 rounded-lg ${colors.collapsibleHover} transition-colors`}>
-              <h3 className={`text-base font-semibold ${colors.primaryText}`}>Main Scene Object</h3>
-              <ChevronsUpDown className={`w-4 h-4 ${colors.primaryText}`} />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="p-2">
-              <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
-            </CollapsibleContent>
-          </Collapsible>
+          <div className={`${colors.cardBg} rounded-xl p-4 border ${colors.border}`}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className={`text-sm font-medium ${colors.primaryText}`}>Main Scene Object</h3>
+            </div>
+            <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
+          </div>
 
-          <Separator className={colors.separatorColor} />
-
-          <Collapsible defaultOpen>
-            <CollapsibleTrigger className={`w-full flex items-center justify-between p-3 rounded-lg ${colors.collapsibleHover} transition-colors`}>
-              <h3 className={`text-base font-semibold ${colors.primaryText} flex items-center gap-2`}>
+          <div className={`${colors.cardBg} rounded-xl p-4 border ${colors.border}`}>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className={`text-sm font-medium ${colors.primaryText} flex items-center gap-2`}>
                 <Shapes className="w-4 h-4" />
-                Editable Scene Objects
+                Scene Objects
               </h3>
-              <ChevronsUpDown className={`w-4 h-4 ${colors.primaryText}`} />
-            </CollapsibleTrigger>
-            <CollapsibleContent className="p-2 space-y-4">
+            </div>
+            
+            <div className="space-y-4">
               <ObjectAddPanel 
                 isAddingObject={isAddingObject}
                 onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
@@ -111,20 +110,22 @@ const SceneSettingsPanel = ({ sceneConfig, onUpdate }: SceneSettingsPanelProps) 
                 onSelectObject={actions.selectObject}
               />
               {selectedObject ? (
-                <ObjectGuiControls 
-                  object={selectedObject}
-                  onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
-                />
+                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <ObjectGuiControls 
+                    object={selectedObject}
+                    onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
+                  />
+                </div>
               ) : (
-                <div className={`text-center text-sm ${colors.secondaryText} py-4`}>
-                  Select an object to see its properties.
+                <div className={`text-center text-sm ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
+                  Select an object to edit its properties
                 </div>
               )}
-            </CollapsibleContent>
-          </Collapsible>
+            </div>
+          </div>
 
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

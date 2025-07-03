@@ -63,20 +63,8 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
 
     const handleDrag = (event: any) => {
       const object = event.object as THREE.Object3D;
-      const initialDepth = initialDepthRef.current.get(object);
-
-      if (initialDepth !== undefined) {
-        const newPositionInCameraSpace = camera.worldToLocal(object.position.clone());
-        newPositionInCameraSpace.z = initialDepth;
-        
-        const parent = object.parent;
-        if (parent) {
-          const constrainedPositionWorld = camera.localToWorld(newPositionInCameraSpace);
-          const constrainedPositionLocal = parent.worldToLocal(constrainedPositionWorld);
-          object.position.copy(constrainedPositionLocal);
-        }
-      }
-
+      
+      // Update object state immediately for real-time feedback
       if (object.userData?.objectId) {
         const position: [number, number, number] = [object.position.x, object.position.y, object.position.z];
         actions.updateObject(object.userData.objectId, { position });
