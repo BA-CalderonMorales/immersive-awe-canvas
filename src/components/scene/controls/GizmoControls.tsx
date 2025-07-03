@@ -2,7 +2,7 @@ import { useRef, useEffect, useCallback } from 'react';
 import { TransformControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { useDeviceType } from '@/hooks/use-mobile';
 import * as THREE from 'three';
 
 interface GizmoControlsProps {
@@ -14,8 +14,8 @@ interface GizmoControlsProps {
 const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: GizmoControlsProps) => {
   const transformRef = useRef<any>(null);
   const { scene, camera, gl } = useThree();
-  const { selectedObjectId, objects, actions, isDragEnabled } = useSceneObjectsContext();
-  const isMobile = useIsMobile();
+  const { selectedObjectId, objects, actions, isDragEnabled, setIsDragging } = useSceneObjectsContext();
+  const { isMobile, isTablet, isDesktop } = useDeviceType();
   
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const selectedMesh = useRef<THREE.Object3D | null>(null);
@@ -93,12 +93,14 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
 
   // Handle gizmo interaction states
   const handleTransformStart = useCallback(() => {
+    setIsDragging(true);
     onDragStateChange?.(true);
-  }, [onDragStateChange]);
+  }, [setIsDragging, onDragStateChange]);
 
   const handleTransformEnd = useCallback(() => {
+    setIsDragging(false);
     onDragStateChange?.(false);
-  }, [onDragStateChange]);
+  }, [setIsDragging, onDragStateChange]);
 
   const shouldShowGizmo = enabled && selectedMesh.current;
 
@@ -114,7 +116,7 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
       }}
       object={selectedMesh.current}
       mode={mode}
-      size={isMobile ? 1.8 : 1.2} // Even larger size on mobile for better touch interaction
+      size={isMobile ? 2.0 : isTablet ? 1.6 : 1.2} // Device-specific sizing for optimal interaction
       space="world"
       rotationSnap={null}
       translationSnap={null}

@@ -1,8 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { SceneConfig } from '@/types/scene';
 import { motion, AnimatePresence } from "framer-motion";
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicWorld from './DynamicWorld';
 
 interface DynamicSceneProps {
@@ -24,6 +25,15 @@ const DynamicScene = ({
   isMotionFrozen, 
   onDragStateChange 
 }: DynamicSceneProps) => {
+  const orbitControlsRef = useRef<any>(null);
+  const { isDragging } = useSceneObjectsContext();
+
+  // Update orbit controls based on drag state
+  useEffect(() => {
+    if (orbitControlsRef.current) {
+      orbitControlsRef.current.enabled = !isDragging && !isDragEnabled;
+    }
+  }, [isDragging, isDragEnabled]);
   const dynamicSceneConfig = useMemo<SceneConfig>(() => {
     if (!currentBackground || !currentGeometry) {
       return {
@@ -94,14 +104,16 @@ const DynamicScene = ({
           className="w-full h-full"
         >
           <OrbitControls 
-            enabled={!isDragEnabled}
-            enableZoom={!isDragEnabled}
-            enablePan={!isDragEnabled}
-            enableRotate={!isDragEnabled}
+            ref={orbitControlsRef}
+            enabled={!isDragging && !isDragEnabled}
+            enableZoom={true}
+            enablePan={false}
+            enableRotate={!isDragging && !isDragEnabled}
             enableDamping={true}
             dampingFactor={0.1}
             maxDistance={20}
             minDistance={2}
+            makeDefault
           />
           <DynamicWorld 
             sceneConfig={dynamicSceneConfig}

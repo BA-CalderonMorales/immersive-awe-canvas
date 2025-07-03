@@ -14,7 +14,7 @@ interface TorusKnotObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
+const TorusKnotObject = ({ themeConfig, isLocked, isMotionFrozen }: TorusKnotObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled, actions, selectedObjectId } = useSceneObjectsContext();
@@ -25,6 +25,7 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   useFrame((state) => {
     // Don't animate if being manipulated by gizmo
     if (isBeingManipulated.current) return;
+    if (isMotionFrozen) return;
     
     if (!isLocked && meshRef.current) {
       // Smooth, consistent rotation

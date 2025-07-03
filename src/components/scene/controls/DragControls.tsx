@@ -14,7 +14,7 @@ interface DragControlsProps {
 
 const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) => {
   const { camera, gl, scene } = useThree();
-  const { objects, actions } = useSceneObjectsContext();
+  const { objects, actions, setIsDragging } = useSceneObjectsContext();
   const controlsRef = useRef<ThreeDragControls>();
   const initialDepthRef = useRef<Map<THREE.Object3D, number>>(new Map());
 
@@ -52,6 +52,7 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
       const handleDragStart = (event: any) => {
         const object = event.object as THREE.Object3D;
         object.userData.isBeingDragged = true;
+        setIsDragging(true);
         
         const initialPosition = new THREE.Vector3();
         object.getWorldPosition(initialPosition);
@@ -79,6 +80,7 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
         if (object.userData) {
           object.userData.isBeingDragged = false;
         }
+        setIsDragging(false);
         initialDepthRef.current.delete(object);
         onDragEnd?.();
       };
@@ -98,7 +100,7 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
         controlsRef.current = undefined;
       }
     };
-  }, [enabled, objects.length, camera, gl, scene, actions, onDragStart, onDragEnd]);
+  }, [enabled, objects.length, camera, gl, scene, actions, setIsDragging, onDragStart, onDragEnd]);
 
   return null;
 };

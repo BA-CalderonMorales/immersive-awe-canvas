@@ -15,13 +15,14 @@ interface WavyGridObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
+const WavyGridObject = ({ color, materialConfig, isLocked, isMotionFrozen }: WavyGridObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
+    if (isMotionFrozen) return;
     if (!isLocked && meshRef.current) {
       // Smooth wave-like rotation
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.25) * 0.15;

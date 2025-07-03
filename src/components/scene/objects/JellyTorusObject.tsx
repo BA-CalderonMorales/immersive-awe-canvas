@@ -11,13 +11,14 @@ interface JellyTorusObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {
+const JellyTorusObject = ({ isLocked, isMotionFrozen }: JellyTorusObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
+    if (isMotionFrozen) return;
     if (!isLocked && meshRef.current) {
       // Smooth rotation
       meshRef.current.rotation.x += 0.005;

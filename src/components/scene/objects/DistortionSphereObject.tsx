@@ -15,13 +15,14 @@ interface DistortionSphereObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {
+const DistortionSphereObject = ({ color, materialConfig, isLocked, isMotionFrozen }: DistortionSphereObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
+    if (isMotionFrozen) return;
     if (!isLocked && meshRef.current) {
       // Smooth oscillation
       meshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.4) * 0.3;

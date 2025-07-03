@@ -1,5 +1,4 @@
-
-import { createContext, useContext, ReactNode } from 'react';
+import { createContext, useContext, ReactNode, useState } from 'react';
 import { useSceneObjects } from '@/hooks/useSceneObjects';
 import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/sceneObjects';
 
@@ -7,6 +6,8 @@ interface SceneObjectsContextType extends ObjectManagerState {
   actions: ObjectManagerActions;
   selectedObject: SceneObject | null;
   isDragEnabled: boolean;
+  isDragging: boolean;
+  setIsDragging: (isDragging: boolean) => void;
 }
 
 const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
@@ -23,11 +24,14 @@ export const SceneObjectsProvider = ({
   isDragEnabled = false
 }: SceneObjectsProviderProps) => {
   const sceneObjectsData = useSceneObjects(mainObjectColor);
+  const [isDragging, setIsDragging] = useState(false);
 
   return (
     <SceneObjectsContext.Provider value={{
       ...sceneObjectsData,
-      isDragEnabled
+      isDragEnabled,
+      isDragging,
+      setIsDragging
     }}>
       {children}
     </SceneObjectsContext.Provider>

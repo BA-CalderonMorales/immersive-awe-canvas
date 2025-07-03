@@ -19,7 +19,7 @@ interface WobbleFieldObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {
+const WobbleFieldObject = ({ color, materialConfig, isLocked, isMotionFrozen }: WobbleFieldObjectProps) => {
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
@@ -29,6 +29,7 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjec
 
   useFrame((state) => {
     if (groupRef.current?.userData.isBeingDragged) return;
+    if (isMotionFrozen) return;
     if (!isLocked && groupRef.current) {
       // Smooth, consistent rotation
       groupRef.current.rotation.y = state.clock.elapsedTime * 0.08;

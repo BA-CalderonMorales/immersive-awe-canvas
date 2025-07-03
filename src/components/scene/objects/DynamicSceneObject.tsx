@@ -57,7 +57,10 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
     dragOffset.current.copy(intersectionPoint).sub(meshPosition);
     dragStartPosition.current.copy(meshPosition);
     
-    gl.domElement.setPointerCapture(e.pointerId);
+    // Use proper pointer capture for better cross-device support
+    if (e.pointerId !== undefined) {
+      gl.domElement.setPointerCapture(e.pointerId);
+    }
   };
 
   const handlePointerMove = (e: ThreeEvent<PointerEvent>) => {
@@ -81,7 +84,10 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
     setIsDragging(false);
     document.body.style.cursor = isDragEnabled ? 'grab' : 'auto';
     
-    gl.domElement.releasePointerCapture(e.pointerId);
+    // Use proper pointer capture release for better cross-device support
+    if (e.pointerId !== undefined) {
+      gl.domElement.releasePointerCapture(e.pointerId);
+    }
   };
 
   return (

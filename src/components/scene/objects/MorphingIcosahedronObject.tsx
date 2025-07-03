@@ -15,13 +15,14 @@ interface MorphingIcosahedronObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: MorphingIcosahedronObjectProps) => {
+const MorphingIcosahedronObject = ({ color, materialConfig, isLocked, isMotionFrozen }: MorphingIcosahedronObjectProps) => {
   const meshRef = useRef<Mesh>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
+    if (isMotionFrozen) return;
     if (!isLocked && meshRef.current) {
       // Balanced rotation speeds for smooth motion
       meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;

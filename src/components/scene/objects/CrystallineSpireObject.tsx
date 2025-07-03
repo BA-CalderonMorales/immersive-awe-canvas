@@ -19,7 +19,7 @@ interface CrystallineSpireObjectProps {
   isMotionFrozen?: boolean;
 }
 
-const CrystallineSpireObject = ({ color, materialConfig, isLocked }: CrystallineSpireObjectProps) => {
+const CrystallineSpireObject = ({ color, materialConfig, isLocked, isMotionFrozen }: CrystallineSpireObjectProps) => {
   const mainGroupRef = useRef<Group>(null!);
   const spireRefs = useRef<Group[]>([]);
   const orbitalRefs = useRef<Group[]>([]);
@@ -49,6 +49,7 @@ const CrystallineSpireObject = ({ color, materialConfig, isLocked }: Crystalline
   useFrame((state) => {
     if (mainGroupRef.current?.userData.isBeingDragged) return;
     if (isLocked) return;
+    if (isMotionFrozen) return;
     
     timeRef.current = state.clock.getElapsedTime();
     const mouseInfluence = Math.sqrt(mouse.x * mouse.x + mouse.y * mouse.y) * 0.1;
