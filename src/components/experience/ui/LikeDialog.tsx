@@ -1,5 +1,4 @@
 
-import { Button } from "@/components/ui/button";
 import { Heart, Coffee, Link, Star } from "lucide-react";
 import {
   AlertDialog,
@@ -12,24 +11,26 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import GlassButton from "./GlassButton";
 
 interface LikeDialogProps {
-  uiStyle: { color: string; borderColor: string };
-  blendedButtonClasses: string;
+  theme: 'day' | 'night';
+  uiColor: string;
 }
 
-const LikeDialog = ({ uiStyle, blendedButtonClasses }: LikeDialogProps) => {
+const LikeDialog = ({ theme, uiColor }: LikeDialogProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          style={uiStyle}
-          className={`transition-all duration-300 ${blendedButtonClasses} flex-shrink-0`}
-          size="icon"
-          aria-label="Like this project"
-        >
-          <Heart className="fill-current" />
-        </Button>
+        <div>
+          <GlassButton
+            icon={Heart}
+            label="Like this project"
+            onClick={() => {}}
+            theme={theme}
+            uiColor={uiColor}
+          />
+        </div>
       </AlertDialogTrigger>
       <AlertDialogContent className="max-w-md mx-auto p-0 overflow-hidden">
         <AlertDialogHeader className="p-6 pb-4 text-center">

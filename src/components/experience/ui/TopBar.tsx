@@ -3,9 +3,8 @@ import { useState, useEffect } from "react";
 import { useInstructions } from "@/hooks/useInstructions";
 import InfoTooltip from "./InfoTooltip";
 import TopBarActions from "./TopBarActions";
-import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Home } from "lucide-react";
+import GlassButton from "./GlassButton";
 
 interface TopBarProps {
   worldName: string;
@@ -79,22 +78,14 @@ const TopBar = ({
       } ${isSettingsOpen ? 'z-10' : 'z-50'}`}
     >
       <div className="flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={buttonStyle}
-              onClick={onGoHome}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Go Home"
-            >
-              <Home className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Go Home (G)</p>
-          </TooltipContent>
-        </Tooltip>
+        <GlassButton
+          icon={Home}
+          label="Go Home"
+          shortcut="G"
+          onClick={onGoHome}
+          theme={theme}
+          uiColor={uiColor}
+        />
 
         {!isMobile && (
           <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
@@ -116,11 +107,10 @@ const TopBar = ({
       </div>
       
       <TopBarActions 
-        uiStyle={buttonStyle}
-        blendedButtonClasses={blendedButtonClasses}
+        uiColor={uiColor}
+        theme={theme}
         onToggleUiHidden={onToggleUiHidden}
         onToggleTheme={onToggleTheme}
-        theme={theme}
       />
     </div>
   );

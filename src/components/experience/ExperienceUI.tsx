@@ -59,8 +59,6 @@ const ExperienceUI = ({
   // Use prop value if provided, otherwise use local state
   const isDragEnabled = propIsDragEnabled || localIsDragEnabled;
 
-  console.log('ExperienceUI rendering - isUiHidden:', isUiHidden, 'showUiHint:', showUiHint, 'isDragEnabled:', isDragEnabled);
-
   // Event handlers with logging
   const handleToggleTheme = () => {
     onToggleTheme();
@@ -96,16 +94,15 @@ const ExperienceUI = ({
   };
 
   const handleToggleUiHidden = () => {
-    console.log('ExperienceUI - handleToggleUiHidden called');
     onToggleUiHidden();
   };
 
   const handleToggleDrag = () => {
     if (propOnToggleDrag) {
       propOnToggleDrag();
-    } else {
-      setLocalIsDragEnabled(!localIsDragEnabled);
+      return;
     }
+    setLocalIsDragEnabled(!localIsDragEnabled);
     logEvent({ eventType: 'button_click', eventSource: 'toggle_drag' });
   };
 

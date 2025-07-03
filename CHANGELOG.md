@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2025-07-03
+
+### Features
+
+- Add new glass button design system with consistent theming
+- Implement enhanced design tokens for better UI contrast and shadows
+- Create reusable GlassButton component with proper hover states and animations
+- Add proper semantic color tokens for day/night themes
+
+### UI/UX Improvements
+
+- Replace hardcoded button styles with design system tokens
+- Improve button hover animations and visual feedback
+- Add scale animations and ring focus states for better accessibility
+- Consolidate button styling across all UI components
+- Remove duplicate styling patterns and improve maintainability
+
+### Code Quality
+
+- Remove dead code and console logs from ExperienceUI component
+- Simplify conditional logic with early returns pattern
+- Consolidate glass button styling into reusable component
+- Improve TypeScript interfaces and prop passing
+- Clean up unnecessary style calculations and duplicated classes
+
+### Performance
+
+- Reduce bundle size by eliminating duplicate button styling code
+- Optimize component re-renders with cleaner prop interfaces
+- Improve animation performance with CSS custom properties
+
 ## [1.0.0] - 2025-01-03
 
 ### Features

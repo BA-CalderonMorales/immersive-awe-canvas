@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { SceneConfig } from "@/types/scene";
 import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
 import SceneSettingsPanel from "../SceneSettingsPanel";
+import GlassButton from "./GlassButton";
 
 interface BottomBarProps {
   uiColor: string;
@@ -39,92 +40,61 @@ const BottomBar = ({
   isDragEnabled,
   onToggleDrag,
 }: BottomBarProps) => {
-  const blendedButtonClasses = theme === 'day' 
-    ? "border border-gray-300 bg-white/90 hover:bg-white backdrop-blur-sm shadow-lg"
-    : "border bg-black/70 hover:bg-black/90 backdrop-blur-sm shadow-lg";
-  
-  const uiStyle = { borderColor: uiColor };
-  const textStyle = theme === 'day' ? { color: '#1f2937' } : { color: uiColor };
-  const buttonStyle = { ...uiStyle, ...textStyle };
-
   return (
     <div 
-      className={`fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 z-30`}
-      style={{ 
-        pointerEvents: 'none'
-      }}
+      className="fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 z-30 pointer-events-none"
     >
       {/* Left side: Copy, Search, Drag Toggle */}
-      <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={buttonStyle}
-              onClick={onCopyCode}
-              className={`transition-opacity duration-300 ${blendedButtonClasses}`}
-              size="icon"
-              aria-label="Copy Scene Configuration"
-            >
-              <Copy className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Copy Scene Config (C)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={buttonStyle}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Search Worlds"
-              onClick={onShowSearch}
-            >
-              <Search className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Search Worlds (S or Ctrl+K)</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={buttonStyle}
-              className={`${blendedButtonClasses} ${isDragEnabled ? 'bg-blue-500/20 text-blue-400' : ''}`}
-              size="icon"
-              aria-label="Toggle Drag Controls"
-              onClick={onToggleDrag}
-            >
-              <Move className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Toggle Drag Controls (Z)</p>
-          </TooltipContent>
-        </Tooltip>
+      <div className="flex gap-2 pointer-events-auto">
+        <GlassButton
+          icon={Copy}
+          label="Copy Scene Config"
+          shortcut="C"
+          onClick={onCopyCode}
+          theme={theme}
+          uiColor={uiColor}
+        />
+        <GlassButton
+          icon={Search}
+          label="Search Worlds"
+          shortcut="S or Ctrl+K"
+          onClick={onShowSearch}
+          theme={theme}
+          uiColor={uiColor}
+        />
+        <GlassButton
+          icon={Move}
+          label="Toggle Drag Controls"
+          shortcut="Z"
+          onClick={onToggleDrag}
+          theme={theme}
+          uiColor={uiColor}
+          active={isDragEnabled}
+        />
       </div>
       
       {/* Right side: Settings, Help */}
-      <div className="flex gap-2" style={{ pointerEvents: 'auto' }}>
+      <div className="flex gap-2 pointer-events-auto">
         {isMobile ? (
           <Sheet open={isSettingsOpen} onOpenChange={onToggleSettings}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <SheetTrigger asChild>
-                  <Button
-                    style={buttonStyle}
-                    className={blendedButtonClasses}
-                    size="icon"
-                    aria-label="Scene Settings"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </Button>
+                  <div>
+                    <GlassButton
+                      icon={Settings}
+                      label="Scene Settings"
+                      shortcut="E"
+                      onClick={() => {}}
+                      theme={theme}
+                      uiColor={uiColor}
+                      active={isSettingsOpen}
+                    />
+                  </div>
                 </SheetTrigger>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Scene Settings (Esc)</p>
+                <p>Scene Settings (E)</p>
               </TooltipContent>
             </Tooltip>
             <SheetContent side="bottom" className="h-[75vh] bg-black/95 border-t border-cyan-500/30 p-0">
@@ -132,39 +102,24 @@ const BottomBar = ({
             </SheetContent>
           </Sheet>
         ) : (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                style={buttonStyle}
-                className={blendedButtonClasses}
-                size="icon"
-                aria-label="Scene Settings"
-                onClick={() => onToggleSettings(!isSettingsOpen)}
-              >
-                <Settings className="w-4 h-4" />
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>Scene Settings (Esc)</p>
-            </TooltipContent>
-          </Tooltip>
+          <GlassButton
+            icon={Settings}
+            label="Scene Settings"
+            shortcut="E"
+            onClick={() => onToggleSettings(!isSettingsOpen)}
+            theme={theme}
+            uiColor={uiColor}
+            active={isSettingsOpen}
+          />
         )}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              style={buttonStyle}
-              className={blendedButtonClasses}
-              size="icon"
-              aria-label="Help"
-              onClick={onShowHelp}
-            >
-              <HelpCircle className="w-4 h-4" />
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Help & Shortcuts (H)</p>
-          </TooltipContent>
-        </Tooltip>
+        <GlassButton
+          icon={HelpCircle}
+          label="Help & Shortcuts"
+          shortcut="H"
+          onClick={onShowHelp}
+          theme={theme}
+          uiColor={uiColor}
+        />
       </div>
     </div>
   );
