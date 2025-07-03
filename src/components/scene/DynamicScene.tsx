@@ -1,4 +1,5 @@
 import { useMemo } from 'react';
+import { Canvas } from '@react-three/fiber';
 import { SceneConfig } from '@/types/scene';
 import { motion, AnimatePresence } from "framer-motion";
 import DynamicWorld from './DynamicWorld';
@@ -77,11 +78,16 @@ const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, onD
         transition={{ duration: 0.5, ease: "easeInOut" }}
         className="absolute inset-0"
       >
-        <DynamicWorld 
-          sceneConfig={dynamicSceneConfig}
-          isLocked={isLocked}
-          onDragStateChange={onDragStateChange}
-        />
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 75 }}
+          className="w-full h-full"
+        >
+          <DynamicWorld 
+            sceneConfig={dynamicSceneConfig}
+            isLocked={isLocked}
+            onDragStateChange={onDragStateChange}
+          />
+        </Canvas>
       </motion.div>
     </AnimatePresence>
   );
