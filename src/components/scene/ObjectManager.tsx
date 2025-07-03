@@ -1,4 +1,3 @@
-
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicSceneObject from './objects/DynamicSceneObject';
 import GizmoControls from './controls/GizmoControls';
@@ -26,8 +25,9 @@ const ObjectManager = ({
           onSelect={() => actions.selectObject(object.id)}
         />
       ))}
+      {/* Show gizmo for any selected object, including on mobile */}
       <GizmoControls 
-        enabled={isDragEnabled && !!selectedObjectId} 
+        enabled={!!selectedObjectId} 
         mode={gizmoMode}
       />
     </>

@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react';
 import { TransformControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useIsMobile } from '@/hooks/use-mobile';
 import * as THREE from 'three';
 
 interface GizmoControlsProps {
@@ -13,6 +14,7 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
   const transformRef = useRef<any>(null);
   const { scene } = useThree();
   const { selectedObjectId, objects, actions } = useSceneObjectsContext();
+  const isMobile = useIsMobile();
   
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const selectedMesh = useRef<THREE.Object3D | null>(null);
@@ -87,7 +89,11 @@ const GizmoControls = ({ enabled, mode = 'translate' }: GizmoControlsProps) => {
       ref={transformRef}
       object={selectedMesh.current}
       mode={mode}
-      size={0.8}
+      size={isMobile ? 1.2 : 0.8} // Larger size on mobile for easier touch interaction
+      space="world"
+      rotationSnap={null}
+      translationSnap={null}
+      scaleSnap={null}
       onObjectChange={handleObjectChange}
       showX={true}
       showY={true}
