@@ -9,17 +9,22 @@ function generateChangelog() {
   try {
     // Get the last tag
     let lastTag;
+    let commits;
+    
     try {
       lastTag = execSync('git describe --tags --abbrev=0', { encoding: 'utf-8' }).trim();
+      commits = execSync(`git log ${lastTag}..HEAD --oneline`, { encoding: 'utf-8' })
+        .trim()
+        .split('\n')
+        .filter(commit => commit.length > 0);
     } catch (error) {
-      lastTag = 'v0.0.0'; // First release
+      // No tags found, get all commits
+      lastTag = 'none';
+      commits = execSync('git log --oneline', { encoding: 'utf-8' })
+        .trim()
+        .split('\n')
+        .filter(commit => commit.length > 0);
     }
-
-    // Get commits since last tag
-    const commits = execSync(`git log ${lastTag}..HEAD --oneline`, { encoding: 'utf-8' })
-      .trim()
-      .split('\n')
-      .filter(commit => commit.length > 0);
 
     if (commits.length === 0) {
       console.log('No new commits since last tag');
