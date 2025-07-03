@@ -10,10 +10,11 @@ interface DynamicSceneProps {
   currentGeometry: any;
   theme: 'day' | 'night';
   isLocked: boolean;
+  isDragEnabled?: boolean;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, onDragStateChange }: DynamicSceneProps) => {
+const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, isDragEnabled, onDragStateChange }: DynamicSceneProps) => {
   const dynamicSceneConfig = useMemo<SceneConfig>(() => {
     if (!currentBackground || !currentGeometry) {
       return {
@@ -84,9 +85,10 @@ const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, onD
           className="w-full h-full"
         >
           <OrbitControls 
-            enableZoom={true}
-            enablePan={true}
-            enableRotate={true}
+            enabled={!isDragEnabled}
+            enableZoom={!isDragEnabled}
+            enablePan={!isDragEnabled}
+            enableRotate={!isDragEnabled}
             enableDamping={true}
             dampingFactor={0.1}
             maxDistance={20}
