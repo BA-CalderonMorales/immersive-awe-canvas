@@ -69,8 +69,9 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, []);
 
   const selectObject = useCallback((id: string | null) => {
+    console.log('🔍 DEBUG: useSceneObjects.selectObject called', { id, previousId: state.selectedObjectId });
     setState(prev => ({ ...prev, selectedObjectId: id }));
-  }, []);
+  }, [state.selectedObjectId]);
 
   const clearObjects = useCallback(() => {
     setState(prev => ({ ...prev, objects: [], selectedObjectId: null }));

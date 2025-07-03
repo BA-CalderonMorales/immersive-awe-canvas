@@ -24,11 +24,12 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation(); // Prevent scene click from deselecting
-    if (isDragEnabled) {
-      onSelect(); // Select object in drag mode
-    } else {
-      onSelect(); // Normal selection
-    }
+    console.log('🔍 DEBUG: DynamicSceneObject clicked', { 
+      objectId: object.id, 
+      isDragEnabled, 
+      currentSelected: isSelected 
+    });
+    onSelect(); // This should call actions.selectObject(object.id)
   };
 
   const handlePointerEnter = (e: ThreeEvent<MouseEvent>) => {
