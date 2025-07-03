@@ -5,6 +5,7 @@ import { logEvent } from "@/lib/logger";
 interface HotkeyActionCallbacks {
   toggleTheme: () => void;
   changeWorld: (direction: 'next' | 'prev') => void;
+  changeGeometry: (direction: 'next' | 'prev') => void;
   openSearch: () => void;
   goHome: () => void;
   openHelp: () => void;
@@ -49,6 +50,7 @@ export const useHotkeyActions = (callbacks: HotkeyActionCallbacks) => {
     handleOpenHelp,
     handleToggleSettings,
     changeWorld: callbacks.changeWorld,
+    changeGeometry: callbacks.changeGeometry,
     openSearch: callbacks.openSearch,
     goHome: callbacks.goHome,
     copyCode: callbacks.copyCode,

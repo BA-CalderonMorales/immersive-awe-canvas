@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import { SceneConfig } from '@/types/scene';
 import { motion, AnimatePresence } from "framer-motion";
 import DynamicWorld from './DynamicWorld';
@@ -82,6 +83,15 @@ const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, onD
           camera={{ position: [0, 0, 5], fov: 75 }}
           className="w-full h-full"
         >
+          <OrbitControls 
+            enableZoom={true}
+            enablePan={true}
+            enableRotate={true}
+            enableDamping={true}
+            dampingFactor={0.1}
+            maxDistance={20}
+            minDistance={2}
+          />
           <DynamicWorld 
             sceneConfig={dynamicSceneConfig}
             isLocked={isLocked}

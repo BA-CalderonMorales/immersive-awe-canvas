@@ -32,6 +32,7 @@ interface ExperienceContainerContentProps {
   setIsSettingsOpen: (open: boolean) => void;
   setIsUiHidden: (hidden: boolean | ((prev: boolean) => boolean)) => void;
   handleChangeBackground: (direction: 'next' | 'prev') => void;
+  handleChangeGeometry: (direction: 'next' | 'prev') => void;
   handleJumpToWorld: (index: number) => void;
   handleCopyCode: () => void;
   handleGoHome: () => void;
@@ -68,6 +69,7 @@ const ExperienceContainerContent = ({
   setIsSettingsOpen,
   setIsUiHidden,
   handleChangeBackground,
+  handleChangeGeometry,
   handleJumpToWorld,
   handleCopyCode,
   handleGoHome,
@@ -157,6 +159,7 @@ const ExperienceContainerContent = ({
         <ExperienceHotkeys
           toggleTheme={toggleTheme}
           changeBackground={handleChangeBackground}
+          changeGeometry={handleChangeGeometry}
           handleGoHome={handleGoHome}
           handleCopyCode={handleCopyCode}
           toggleObjectLock={toggleObjectLock}

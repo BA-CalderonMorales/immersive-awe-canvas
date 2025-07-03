@@ -6,6 +6,7 @@ import { useKeyboardEventHandler } from './useKeyboardEventHandler';
 interface HotkeyCallbacks {
   toggleTheme: () => void;
   changeWorld: (direction: 'next' | 'prev') => void;
+  changeGeometry: (direction: 'next' | 'prev') => void;
   openSearch: () => void;
   goHome: () => void;
   openHelp: () => void;
@@ -26,6 +27,7 @@ export const useExperienceHotkeys = ({ callbacks, enabled }: useExperienceHotkey
   const { handleKeyDown } = useKeyboardEventHandler({
     onToggleTheme: actions.handleToggleTheme,
     onChangeWorld: actions.changeWorld,
+    onChangeGeometry: actions.changeGeometry,
     onOpenSearch: actions.openSearch,
     onGoHome: actions.goHome,
     onOpenHelp: actions.handleOpenHelp,

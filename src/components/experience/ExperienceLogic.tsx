@@ -27,6 +27,7 @@ const ExperienceLogic = () => {
     isError: geometriesError,
     currentGeometry,
     currentGeometryIndex,
+    changeGeometry,
   } = useDefaultGeometries();
 
   const isLoading = backgroundsLoading || geometriesLoading;
@@ -84,24 +85,62 @@ const ExperienceLogic = () => {
     handleEntryTransitionEnd,
   });
 
-  // Debug logging
-  console.log('🔍 ExperienceLogic Debug:', {
-    isLoading,
-    backgroundsLoading,
-    geometriesLoading,
-    backgroundsError,
-    geometriesError,
-    currentBackground: currentBackground?.name,
-    currentGeometry: currentGeometry?.name,
-    backgroundsCount: backgrounds?.length,
-    geometriesCount: geometries?.length,
-    currentBackgroundIndex,
-    currentGeometryIndex,
-  });
+  // Show minimal scene while loading instead of blocking overlay
 
   if (isLoading) {
     console.log('🔍 Still loading because:', { backgroundsLoading, geometriesLoading });
-    return <LoadingOverlay message="Loading Experience..." theme="night" />;
+    // Show minimal scene while loading instead of blocking overlay
+    return (
+      <ExperienceContainer
+        worldData={{ name: "Loading..." }}
+        editableSceneConfig={{
+          type: 'TorusKnot',
+          day: {
+            lights: [{ type: 'ambient', intensity: 1 }],
+            material: { materialType: 'standard' },
+            background: { type: 'void' },
+            mainObjectColor: '#ffffff'
+          },
+          night: {
+            lights: [{ type: 'ambient', intensity: 0.5 }],
+            material: { materialType: 'standard' },
+            background: { type: 'void' },
+            mainObjectColor: '#ffffff'
+          }
+        }}
+        isTransitioning={true}
+        currentWorldIndex={0}
+        isObjectLocked={true}
+        theme={theme}
+        worlds={[]}
+        isSettingsOpen={false}
+        isUiHidden={false}
+        showUiHint={false}
+        isHelpOpen={false}
+        isSearchOpen={false}
+        showEntryTransition={false}
+        showWorldTransition={false}
+        toggleObjectLock={() => {}}
+        toggleTheme={toggleTheme}
+        setEditableSceneConfig={() => {}}
+        setIsHelpOpen={() => {}}
+        setIsSearchOpen={() => {}}
+        setIsSettingsOpen={() => {}}
+        setIsUiHidden={() => {}}
+        handleChangeBackground={() => {}}
+        handleChangeGeometry={() => {}}
+        handleJumpToWorld={() => {}}
+        handleCopyCode={() => {}}
+        handleGoHome={() => {}}
+        handleToggleShortcuts={() => {}}
+        handleEntryTransitionEndWithHint={() => {}}
+        handleWorldTransitionEnd={() => {}}
+        isDragEnabled={false}
+        onToggleDrag={() => {}}
+        currentBackground={null}
+        currentGeometry={null}
+      />
+    );
   }
 
   if (isError) {
@@ -144,6 +183,7 @@ const ExperienceLogic = () => {
       setIsSettingsOpen={setIsSettingsOpen}
       setIsUiHidden={setIsUiHidden}
       handleChangeBackground={changeBackground}
+      handleChangeGeometry={changeGeometry}
       handleJumpToWorld={() => {}}
       handleCopyCode={handleCopyCode}
       handleGoHome={handleGoHome}

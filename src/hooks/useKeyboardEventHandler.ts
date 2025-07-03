@@ -5,6 +5,7 @@ import { isUserTyping } from '@/utils/keyboardUtils';
 interface KeyboardEventHandlerProps {
   onToggleTheme: () => void;
   onChangeWorld: (direction: 'next' | 'prev') => void;
+  onChangeGeometry: (direction: 'next' | 'prev') => void;
   onOpenSearch: () => void;
   onGoHome: () => void;
   onOpenHelp: () => void;
@@ -19,6 +20,7 @@ interface KeyboardEventHandlerProps {
 export const useKeyboardEventHandler = ({
   onToggleTheme,
   onChangeWorld,
+  onChangeGeometry,
   onOpenSearch,
   onGoHome,
   onOpenHelp,
@@ -81,6 +83,17 @@ export const useKeyboardEventHandler = ({
         }
         break;
       
+      case 'KeyO':
+        if (!typing) {
+          event.preventDefault();
+          if (event.shiftKey) {
+            onChangeGeometry('prev');
+          } else {
+            onChangeGeometry('next');
+          }
+        }
+        break;
+      
       case 'KeyS':
         if (!typing) {
           event.preventDefault();
@@ -127,6 +140,7 @@ export const useKeyboardEventHandler = ({
     enabled,
     onToggleTheme,
     onChangeWorld,
+    onChangeGeometry,
     onOpenSearch,
     onGoHome,
     onOpenHelp,
