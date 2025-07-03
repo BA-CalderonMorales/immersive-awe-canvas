@@ -8,6 +8,7 @@ const MAIN_OBJECT_NAME = 'main-scene-object';
 
 interface JellyTorusObjectProps {
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const JellyTorusObject = ({ isLocked }: JellyTorusObjectProps) => {

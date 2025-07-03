@@ -12,6 +12,7 @@ interface DistortionSphereObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const DistortionSphereObject = ({ color, materialConfig, isLocked }: DistortionSphereObjectProps) => {

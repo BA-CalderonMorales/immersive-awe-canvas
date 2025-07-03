@@ -81,6 +81,7 @@ const ExperienceLayout = ({
               theme={theme}
               isLocked={isObjectLocked}
               isDragEnabled={isDragEnabled}
+              isMotionFrozen={isMotionFrozen}
             />
           </div>
         </ResizablePanel>

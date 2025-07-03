@@ -11,6 +11,7 @@ const MAIN_OBJECT_NAME = 'main-scene-object';
 interface TorusKnotObjectProps {
   themeConfig: SceneThemeConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {

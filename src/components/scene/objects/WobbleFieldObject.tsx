@@ -16,6 +16,7 @@ interface WobbleFieldObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const WobbleFieldObject = ({ color, materialConfig, isLocked }: WobbleFieldObjectProps) => {

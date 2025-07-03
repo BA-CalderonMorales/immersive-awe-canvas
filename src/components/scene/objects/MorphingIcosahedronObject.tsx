@@ -12,6 +12,7 @@ interface MorphingIcosahedronObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const MorphingIcosahedronObject = ({ color, materialConfig, isLocked }: MorphingIcosahedronObjectProps) => {

@@ -16,6 +16,7 @@ interface CrystallineSpireObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const CrystallineSpireObject = ({ color, materialConfig, isLocked }: CrystallineSpireObjectProps) => {

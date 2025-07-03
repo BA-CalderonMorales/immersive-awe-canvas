@@ -12,6 +12,7 @@ interface WavyGridObjectProps {
   color: string;
   materialConfig: MaterialConfig;
   isLocked: boolean;
+  isMotionFrozen?: boolean;
 }
 
 const WavyGridObject = ({ color, materialConfig, isLocked }: WavyGridObjectProps) => {
