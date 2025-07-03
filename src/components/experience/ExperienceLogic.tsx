@@ -73,7 +73,10 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   const {
     handleEntryTransitionEndWithHint,
   } = useExperienceEffects({
-    worldData: currentGeometry,
+    worldData: currentGeometry ? {
+      ...currentGeometry,
+      scene_config: { type: currentGeometry.geometry_type }
+    } : null,
     currentWorldId,
     setEditableSceneConfig,
     setCurrentWorldId,
@@ -84,19 +87,6 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     handleEntryTransitionEnd,
   });
 
-  // Debug logging
-  console.log('🔍 ExperienceLogic Debug:', {
-    isLoading,
-    backgroundsLoading,
-    geometriesLoading,
-    backgroundsError,
-    geometriesError,
-    currentBackground,
-    currentGeometry,
-    backgroundsCount: backgrounds?.length,
-    geometriesCount: geometries?.length
-  });
-
   if (isLoading) {
     return <LoadingOverlay message="Loading Experience..." theme="night" />;
   }
@@ -105,13 +95,9 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     return <LoadingOverlay message="Could not load experience data." theme="night" />;
   }
 
-  // Create a fallback if no data is available
-  if (!currentGeometry && !geometriesLoading) {
-    return <LoadingOverlay message="No geometries available." theme="night" />;
-  }
-
-  if (!currentBackground && !backgroundsLoading) {
-    return <LoadingOverlay message="No backgrounds available." theme="night" />;
+  // Ensure data is available
+  if (!currentGeometry || !currentBackground) {
+    return <LoadingOverlay message="Waiting for data..." theme="night" />;
   }
 
   return (
