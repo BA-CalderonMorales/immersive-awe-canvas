@@ -5,13 +5,19 @@ describe('typeguards', () => {
   describe('isSceneConfig', () => {
     it('should return true for valid scene config', () => {
       const validConfig = {
-        theme: {
+        type: 'TorusKnot',
+        day: {
+          mainObjectColor: '#ffffff',
           material: { materialType: 'standard' },
-          mainObjectColor: '#ff0000',
-          backgroundColor: '#000000',
-          backgroundType: 'gradient',
+          background: { type: 'color', color: '#000000' },
+          lights: [],
         },
-        objectType: 'torusKnot',
+        night: {
+          mainObjectColor: '#000000',
+          material: { materialType: 'standard' },
+          background: { type: 'color', color: '#ffffff' },
+          lights: [],
+        },
       };
 
       expect(isSceneConfig(validConfig)).toBe(true);
