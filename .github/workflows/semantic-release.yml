@@ -93,6 +93,9 @@ jobs:
     needs: analyze-commits
     runs-on: ubuntu-latest
     if: needs.analyze-commits.outputs.should-release == 'true'
+    permissions:
+      contents: write
+      pull-requests: write
     
     steps:
     - uses: actions/checkout@v4
