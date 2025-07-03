@@ -97,6 +97,7 @@ const DynamicScene = ({ currentBackground, currentGeometry, theme, isLocked, isD
           <DynamicWorld 
             sceneConfig={dynamicSceneConfig}
             isLocked={isLocked}
+            isDragEnabled={isDragEnabled}
             onDragStateChange={onDragStateChange}
           />
         </Canvas>

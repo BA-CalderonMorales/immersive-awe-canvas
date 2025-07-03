@@ -10,10 +10,11 @@ import { ThreeEvent } from '@react-three/fiber';
 interface DynamicWorldProps {
   sceneConfig: SceneConfig;
   isLocked: boolean;
+  isDragEnabled?: boolean;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorldProps) => {
+const DynamicWorld = ({ sceneConfig, isLocked, isDragEnabled: dragEnabled, onDragStateChange }: DynamicWorldProps) => {
   const { isDragEnabled, actions } = useSceneObjectsContext();
   const { theme } = useExperience();
   
@@ -42,7 +43,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
         isLocked={isLocked}
       />
       <ObjectManager 
-        isDragEnabled={isDragEnabled} 
+        isDragEnabled={dragEnabled || isDragEnabled} 
         gizmoMode="translate"
         onDragStateChange={onDragStateChange}
       />
