@@ -84,7 +84,7 @@ const HiddenUiView = ({ onToggleUiHidden, showUiHint, uiColor, theme }: HiddenUi
         {/* Info icon/button - Bottom Left - ALWAYS VISIBLE ON DESKTOP */}
         {!isMobile && (
           <div className="absolute bottom-4 left-4 pointer-events-auto z-[60]">
-            <Tooltip>
+            <Tooltip open={!showOnboardingHints && !isFirstVisit}>
               <TooltipTrigger asChild>
                 <Button
                   variant="ghost"
