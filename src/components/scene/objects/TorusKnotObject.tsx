@@ -4,6 +4,7 @@ import { useFrame } from '@react-three/fiber';
 import { Mesh } from 'three';
 import { SceneThemeConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useDragControls } from '@/hooks/useDragControls';
 import DynamicMaterial from '../materials/DynamicMaterial';
 
 const MAIN_OBJECT_NAME = 'main-scene-object';
@@ -18,6 +19,20 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
 
+  const { isDragging, dragHandlers } = useDragControls({
+    enabled: isDragEnabled,
+    onDragStart: () => {
+      if (meshRef.current) {
+        meshRef.current.userData.isBeingDragged = true;
+      }
+    },
+    onDragEnd: () => {
+      if (meshRef.current) {
+        meshRef.current.userData.isBeingDragged = false;
+      }
+    }
+  });
+
   useFrame((state) => {
     if (meshRef.current?.userData.isBeingDragged) return;
     if (!isLocked && meshRef.current) {
@@ -28,21 +43,31 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   });
 
   const handlePointerEnter = () => {
-    setIsHovered(true);
-    document.body.style.cursor = 'pointer';
+    if (!isDragEnabled) {
+      setIsHovered(true);
+      document.body.style.cursor = 'pointer';
+    } else {
+      dragHandlers.onPointerEnter();
+    }
   };
 
   const handlePointerLeave = () => {
-    setIsHovered(false);
-    document.body.style.cursor = 'auto';
+    if (!isDragEnabled) {
+      setIsHovered(false);
+      document.body.style.cursor = 'auto';
+    } else {
+      dragHandlers.onPointerLeave();
+    }
   };
 
   return (
     <mesh 
       ref={meshRef}
       name={MAIN_OBJECT_NAME}
+      userData={{ isBeingDragged: isDragging }}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
+      {...(isDragEnabled ? dragHandlers : {})}
     >
       <torusKnotGeometry args={[1, 0.3, 128, 16]} />
       <DynamicMaterial 
