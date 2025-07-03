@@ -32,6 +32,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
       />
       <ObjectManager 
         isDragEnabled={isDragEnabled} 
+        gizmoMode="translate"
         onDragStateChange={onDragStateChange}
       />
     </>

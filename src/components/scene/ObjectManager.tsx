@@ -1,13 +1,19 @@
 
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicSceneObject from './objects/DynamicSceneObject';
+import GizmoControls from './controls/GizmoControls';
 
 interface ObjectManagerProps {
   isDragEnabled?: boolean;
+  gizmoMode?: 'translate' | 'rotate' | 'scale';
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
-const ObjectManager = ({ isDragEnabled = false, onDragStateChange }: ObjectManagerProps) => {
+const ObjectManager = ({ 
+  isDragEnabled = false, 
+  gizmoMode = 'translate',
+  onDragStateChange 
+}: ObjectManagerProps) => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
 
   return (
@@ -20,6 +26,10 @@ const ObjectManager = ({ isDragEnabled = false, onDragStateChange }: ObjectManag
           onSelect={() => actions.selectObject(object.id)}
         />
       ))}
+      <GizmoControls 
+        enabled={isDragEnabled && !!selectedObjectId} 
+        mode={gizmoMode}
+      />
     </>
   );
 };
