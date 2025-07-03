@@ -30,7 +30,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
   };
 
   return (
-    <group onClick={handleSceneClick}>
+    <>
       <DynamicBackground 
         background={themeConfig.background} 
         extras={themeConfig.extras} 
@@ -46,7 +46,7 @@ const DynamicWorld = ({ sceneConfig, isLocked, onDragStateChange }: DynamicWorld
         gizmoMode="translate"
         onDragStateChange={onDragStateChange}
       />
-    </group>
+    </>
   );
 };
 
