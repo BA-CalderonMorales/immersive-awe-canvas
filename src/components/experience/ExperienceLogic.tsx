@@ -26,6 +26,7 @@ const ExperienceLogic = () => {
     isLoading: geometriesLoading,
     isError: geometriesError,
     currentGeometry,
+    currentGeometryIndex,
   } = useDefaultGeometries();
 
   const isLoading = backgroundsLoading || geometriesLoading;
@@ -83,16 +84,39 @@ const ExperienceLogic = () => {
     handleEntryTransitionEnd,
   });
 
+  // Debug logging
+  console.log('🔍 ExperienceLogic Debug:', {
+    isLoading,
+    backgroundsLoading,
+    geometriesLoading,
+    backgroundsError,
+    geometriesError,
+    currentBackground: currentBackground?.name,
+    currentGeometry: currentGeometry?.name,
+    backgroundsCount: backgrounds?.length,
+    geometriesCount: geometries?.length,
+    currentBackgroundIndex,
+    currentGeometryIndex,
+  });
+
   if (isLoading) {
+    console.log('🔍 Still loading because:', { backgroundsLoading, geometriesLoading });
     return <LoadingOverlay message="Loading Experience..." theme="night" />;
   }
 
   if (isError) {
+    console.log('🔍 Error state:', { backgroundsError, geometriesError });
     return <LoadingOverlay message="Could not load experience data." theme="night" />;
   }
 
   // Ensure data is available
   if (!currentGeometry || !currentBackground) {
+    console.log('🔍 Missing data:', { 
+      hasCurrentGeometry: !!currentGeometry, 
+      hasCurrentBackground: !!currentBackground,
+      geometriesLength: geometries?.length,
+      backgroundsLength: backgrounds?.length 
+    });
     return <LoadingOverlay message="Waiting for data..." theme="night" />;
   }
 

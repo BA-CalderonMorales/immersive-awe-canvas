@@ -28,18 +28,33 @@ export const useExperienceEffects = ({
   handleEntryTransitionEnd,
 }: UseExperienceEffectsProps) => {
   
-  // World data effect
+  // World data effect - updated for geometry-based system
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
-      if (isSceneConfig(worldData.scene_config)) {
-        setEditableSceneConfig(JSON.parse(JSON.stringify(worldData.scene_config)));
-        setCurrentWorldId(worldData.id);
-        if (isSettingsOpen) {
-          setIsSettingsOpen(false);
+      // For geometry objects, create a basic scene config from the geometry type
+      const basicSceneConfig: SceneConfig = {
+        type: worldData.scene_config?.type || 'TorusKnot',
+        day: {
+          lights: [{ type: 'ambient', intensity: 1 }],
+          material: { materialType: 'standard' as const },
+          background: { type: 'void' },
+          mainObjectColor: '#ffffff'
+        },
+        night: {
+          lights: [{ type: 'ambient', intensity: 0.5 }],
+          material: { materialType: 'standard' as const },
+          background: { type: 'void' },
+          mainObjectColor: '#ffffff'
         }
-
-        handleEntryTransitionEnd();
+      };
+      
+      setEditableSceneConfig(basicSceneConfig);
+      setCurrentWorldId(worldData.id);
+      if (isSettingsOpen) {
+        setIsSettingsOpen(false);
       }
+
+      handleEntryTransitionEnd();
     }
   }, [worldData, currentWorldId, isSettingsOpen, setEditableSceneConfig, setCurrentWorldId, setIsSettingsOpen, handleEntryTransitionEnd]);
 
