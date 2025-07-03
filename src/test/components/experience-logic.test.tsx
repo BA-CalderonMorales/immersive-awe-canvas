@@ -1,31 +1,37 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen } from '../test-utils';
 import ExperienceLogic from '../../components/experience/ExperienceLogic';
+import { useBackgrounds } from '@/hooks/useBackgrounds';
+import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
 
-// Mock the hooks
-vi.mock('@/hooks/useWorlds', () => ({
-  useWorlds: vi.fn(() => ({
-    worlds: [
-      {
-        id: 1,
-        name: 'Test World',
-        slug: 'test-world',
-        scene_config: { objectType: 'torusKnot' },
-      },
-    ],
+// Mock all the hooks that ExperienceLogic actually uses
+vi.mock('@/hooks/useExperience', () => ({
+  useExperience: vi.fn(() => ({
+    theme: 'day',
+    toggleTheme: vi.fn(),
+  })),
+}));
+
+vi.mock('@/hooks/useBackgrounds', () => ({
+  useBackgrounds: vi.fn(() => ({
+    backgrounds: [],
     isLoading: false,
     isError: false,
-    worldData: {
-      id: 1,
-      name: 'Test World',
-      slug: 'test-world',
-      scene_config: { objectType: 'torusKnot' },
-      ui_day_color: '#ffffff',
-      ui_night_color: '#000000',
-    },
-    currentWorldIndex: 0,
+    currentBackground: null,
+    currentBackgroundIndex: 0,
     isTransitioning: false,
-    jumpToWorld: vi.fn(),
+    changeBackground: vi.fn(),
+  })),
+}));
+
+vi.mock('@/hooks/useDefaultGeometries', () => ({
+  useDefaultGeometries: vi.fn(() => ({
+    geometries: [],
+    isLoading: false,
+    isError: false,
+    currentGeometry: null,
+    currentGeometryIndex: 0,
+    changeGeometry: vi.fn(),
   })),
 }));
 
@@ -38,7 +44,7 @@ vi.mock('@/hooks/useWorldNavigation', () => ({
 
 vi.mock('@/hooks/useExperienceState', () => ({
   useExperienceState: vi.fn(() => ({
-    editableSceneConfig: { objectType: 'torusKnot' },
+    editableSceneConfig: { type: 'TorusKnot' },
     setEditableSceneConfig: vi.fn(),
     isObjectLocked: false,
     toggleObjectLock: vi.fn(),
@@ -58,6 +64,8 @@ vi.mock('@/hooks/useExperienceState', () => ({
     handleCopyCode: vi.fn(),
     isDragEnabled: false,
     toggleDragEnabled: vi.fn(),
+    isMotionFrozen: false,
+    toggleMotionFreeze: vi.fn(),
   })),
 }));
 
@@ -83,46 +91,92 @@ vi.mock('@/hooks/useExperienceEffects', () => ({
   })),
 }));
 
+// Mock the components
+vi.mock('../../components/experience/LoadingOverlay', () => ({
+  default: ({ message }: { message: string }) => <div>{message}</div>,
+}));
+
+vi.mock('../../components/experience/ExperienceContainer', () => ({
+  default: ({ worldData }: { worldData: any }) => (
+    <div>ExperienceContainer - {worldData?.name || 'Default'}</div>
+  ),
+}));
+
 describe('ExperienceLogic', () => {
   it('should render loading state correctly', () => {
-    vi.mocked(require('@/hooks/useWorlds').useWorlds).mockReturnValue({
-      worlds: [],
+    vi.mocked(useBackgrounds).mockReturnValue({
+      backgrounds: [],
       isLoading: true,
       isError: false,
-      worldData: null,
-      currentWorldIndex: 0,
+      currentBackground: null,
+      currentBackgroundIndex: 0,
       isTransitioning: false,
-      jumpToWorld: vi.fn(),
+      changeBackground: vi.fn(),
+    });
+
+    vi.mocked(useDefaultGeometries).mockReturnValue({
+      geometries: [],
+      isLoading: true,
+      isError: false,
+      currentGeometry: null,
+      currentGeometryIndex: 0,
+      changeGeometry: vi.fn(),
     });
 
     render(<ExperienceLogic />);
     
-    expect(screen.getByText('Summoning Worlds...')).toBeInTheDocument();
+    expect(screen.getByText('ExperienceContainer - Loading...')).toBeInTheDocument();
   });
 
   it('should render error state correctly', () => {
-    vi.mocked(require('@/hooks/useWorlds').useWorlds).mockReturnValue({
-      worlds: [],
+    vi.mocked(useBackgrounds).mockReturnValue({
+      backgrounds: [],
       isLoading: false,
       isError: true,
-      worldData: null,
-      currentWorldIndex: 0,
+      currentBackground: null,
+      currentBackgroundIndex: 0,
       isTransitioning: false,
-      jumpToWorld: vi.fn(),
+      changeBackground: vi.fn(),
+    });
+
+    vi.mocked(useDefaultGeometries).mockReturnValue({
+      geometries: [],
+      isLoading: false,
+      isError: false,
+      currentGeometry: null,
+      currentGeometryIndex: 0,
+      changeGeometry: vi.fn(),
     });
 
     render(<ExperienceLogic />);
     
-    expect(screen.getByText('Could not connect to the multiverse.')).toBeInTheDocument();
+    expect(screen.getByText('Could not load experience data.')).toBeInTheDocument();
   });
 
   it('should render experience container when data is loaded', () => {
+    vi.mocked(useBackgrounds).mockReturnValue({
+      backgrounds: [{ id: 1, name: 'Test Background' }],
+      isLoading: false,
+      isError: false,
+      currentBackground: { id: 1, name: 'Test Background' },
+      currentBackgroundIndex: 0,
+      isTransitioning: false,
+      changeBackground: vi.fn(),
+    });
+
+    vi.mocked(useDefaultGeometries).mockReturnValue({
+      geometries: [{ id: 1, name: 'Test Geometry' }],
+      isLoading: false,
+      isError: false,
+      currentGeometry: { id: 1, name: 'Test Geometry' },
+      currentGeometryIndex: 0,
+      changeGeometry: vi.fn(),
+    });
+
     render(<ExperienceLogic />);
     
-    // Should render the experience container (indicated by the canvas or main content)
-    // Since this is a complex 3D component, we check for absence of loading states
-    expect(screen.queryByText('Summoning Worlds...')).not.toBeInTheDocument();
-    expect(screen.queryByText('Could not connect to the multiverse.')).not.toBeInTheDocument();
+    // Should render the experience container with the geometry name
+    expect(screen.getByText('ExperienceContainer - Test Geometry')).toBeInTheDocument();
   });
 
   it('should pass correct props to ExperienceContainer', () => {
