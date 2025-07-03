@@ -4,12 +4,13 @@ import GlassButton from "./GlassButton";
 
 interface NavigationControlsProps {
   uiColor: string;
-  onChangeWorld: (direction: 'next' | 'prev') => void;
+  onChangeBackground: (direction: 'next' | 'prev') => void;
   isTransitioning: boolean;
   theme: 'day' | 'night';
+  backgroundName?: string;
 }
 
-const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: NavigationControlsProps) => {
+const NavigationControls = ({ uiColor, onChangeBackground, isTransitioning, theme, backgroundName }: NavigationControlsProps) => {
   if (isTransitioning) return null;
 
   return (
@@ -17,9 +18,9 @@ const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: 
       <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
         <GlassButton
           icon={ArrowLeft}
-          label="Previous World"
+          label="Previous Background"
           shortcut="P"
-          onClick={() => onChangeWorld('prev')}
+          onClick={() => onChangeBackground('prev')}
           theme={theme}
           uiColor={uiColor}
         />
@@ -27,9 +28,9 @@ const NavigationControls = ({ uiColor, onChangeWorld, isTransitioning, theme }: 
       <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
         <GlassButton
           icon={ArrowRight}
-          label="Next World"
+          label="Next Background"
           shortcut="N"
-          onClick={() => onChangeWorld('next')}
+          onClick={() => onChangeBackground('next')}
           theme={theme}
           uiColor={uiColor}
         />

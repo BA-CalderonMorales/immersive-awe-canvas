@@ -1,10 +1,10 @@
 import { useExperience } from "@/hooks/useExperience";
-import { useWorlds } from "@/hooks/useWorlds";
+import { useBackgrounds } from "@/hooks/useBackgrounds";
+import { useDefaultGeometries } from "@/hooks/useDefaultGeometries";
 import { useExperienceState } from "@/hooks/useExperienceState";
 import { useExperienceTransitions } from "@/hooks/useExperienceTransitions";
 import { useExperienceCallbacks } from "@/hooks/useExperienceCallbacks";
 import { useExperienceEffects } from "@/hooks/useExperienceEffects";
-import { useWorldNavigation } from "@/hooks/useWorldNavigation";
 import LoadingOverlay from "./LoadingOverlay";
 import ExperienceContainer from "./ExperienceContainer";
 
@@ -16,21 +16,24 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   const { theme, toggleTheme } = useExperience();
   
   const {
-    worlds,
-    isLoading,
-    isError,
-    worldData,
-    currentWorldIndex,
+    backgrounds,
+    isLoading: backgroundsLoading,
+    isError: backgroundsError,
+    currentBackground,
+    currentBackgroundIndex,
     isTransitioning,
-    jumpToWorld,
-  } = useWorlds(initialWorldSlug);
+    changeBackground,
+  } = useBackgrounds();
 
-  // Handle world navigation
-  const { handleChangeWorld, handleJumpToWorld } = useWorldNavigation({
-    worlds,
-    currentWorldIndex,
-    jumpToWorld,
-  });
+  const {
+    geometries,
+    isLoading: geometriesLoading,
+    isError: geometriesError,
+    currentGeometry,
+  } = useDefaultGeometries();
+
+  const isLoading = backgroundsLoading || geometriesLoading;
+  const isError = backgroundsError || geometriesError;
 
   const {
     editableSceneConfig,
@@ -70,7 +73,7 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   const {
     handleEntryTransitionEndWithHint,
   } = useExperienceEffects({
-    worldData,
+    worldData: currentGeometry,
     currentWorldId,
     setEditableSceneConfig,
     setCurrentWorldId,
@@ -82,22 +85,22 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
   });
 
   if (isLoading) {
-    return <LoadingOverlay message="Summoning Worlds..." theme="night" />;
+    return <LoadingOverlay message="Loading Experience..." theme="night" />;
   }
 
-  if (isError) {
-    return <LoadingOverlay message="Could not connect to the multiverse." theme="night" />;
+  if (isError || !currentGeometry || !currentBackground) {
+    return <LoadingOverlay message="Could not load experience." theme="night" />;
   }
 
   return (
     <ExperienceContainer
-      worldData={worldData}
+      worldData={currentGeometry}
       editableSceneConfig={editableSceneConfig}
       isTransitioning={isTransitioning}
-      currentWorldIndex={currentWorldIndex}
+      currentWorldIndex={currentBackgroundIndex}
       isObjectLocked={isObjectLocked}
       theme={theme}
-      worlds={worlds}
+      worlds={backgrounds}
       isSettingsOpen={isSettingsOpen}
       isUiHidden={isUiHidden}
       showUiHint={showUiHint}
@@ -112,8 +115,8 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
       setIsSearchOpen={setIsSearchOpen}
       setIsSettingsOpen={setIsSettingsOpen}
       setIsUiHidden={setIsUiHidden}
-      handleChangeWorld={handleChangeWorld}
-      handleJumpToWorld={handleJumpToWorld}
+      handleChangeBackground={changeBackground}
+      handleJumpToWorld={() => {}}
       handleCopyCode={handleCopyCode}
       handleGoHome={handleGoHome}
       handleToggleShortcuts={handleToggleShortcuts}
@@ -121,6 +124,8 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
       handleWorldTransitionEnd={handleWorldTransitionEnd}
       isDragEnabled={isDragEnabled}
       onToggleDrag={toggleDragEnabled}
+      currentBackground={currentBackground}
+      currentGeometry={currentGeometry}
     />
   );
 };

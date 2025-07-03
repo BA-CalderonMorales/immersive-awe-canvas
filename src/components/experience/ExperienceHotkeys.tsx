@@ -5,7 +5,7 @@ import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
 
 interface ExperienceHotkeysProps {
   toggleTheme: () => void;
-  changeWorld: (direction: 'next' | 'prev') => void;
+  changeBackground: (direction: 'next' | 'prev') => void;
   handleGoHome: () => void;
   handleCopyCode: () => void;
   toggleObjectLock: () => void;
@@ -24,7 +24,7 @@ interface ExperienceHotkeysProps {
 
 const ExperienceHotkeys = ({
   toggleTheme,
-  changeWorld,
+  changeBackground,
   handleGoHome,
   handleCopyCode,
   toggleObjectLock,
@@ -91,7 +91,7 @@ const ExperienceHotkeys = ({
   useExperienceHotkeys({
     callbacks: {
       toggleTheme,
-      changeWorld,
+      changeWorld: changeBackground,
       openSearch: () => setIsSearchOpen(true),
       goHome: handleGoHome,
       openHelp: () => setIsHelpOpen(true),

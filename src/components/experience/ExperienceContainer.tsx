@@ -26,7 +26,7 @@ interface ExperienceContainerProps {
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
   setIsUiHidden: (hidden: boolean | ((prev: boolean) => boolean)) => void;
-  handleChangeWorld: (direction: 'next' | 'prev') => void;
+  handleChangeBackground: (direction: 'next' | 'prev') => void;
   handleJumpToWorld: (index: number) => void;
   handleCopyCode: () => void;
   handleGoHome: () => void;
@@ -35,6 +35,8 @@ interface ExperienceContainerProps {
   handleWorldTransitionEnd: () => void;
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  currentBackground?: any;
+  currentGeometry?: any;
 }
 
 const ExperienceContainer = (props: ExperienceContainerProps) => {

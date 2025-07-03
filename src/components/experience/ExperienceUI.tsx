@@ -17,7 +17,7 @@ interface ExperienceUIProps {
   editableSceneConfig: SceneConfig;
   uiColor: string;
   onToggleTheme: () => void;
-  onChangeWorld: (direction: 'next' | 'prev') => void;
+  onChangeBackground: (direction: 'next' | 'prev') => void;
   onCopyCode: () => void;
   onUpdateSceneConfig: (newConfig: SceneConfig) => void;
   onShowHelp: () => void;
@@ -39,7 +39,7 @@ const ExperienceUI = ({
   editableSceneConfig,
   uiColor,
   onToggleTheme,
-  onChangeWorld,
+  onChangeBackground,
   onCopyCode,
   onUpdateSceneConfig,
   onShowHelp,
@@ -74,11 +74,11 @@ const ExperienceUI = ({
     logEvent({ eventType: 'button_click', eventSource: 'go_home' });
   };
 
-  const handleChangeWorld = (direction: 'next' | 'prev') => {
-    onChangeWorld(direction);
+  const handleChangeBackground = (direction: 'next' | 'prev') => {
+    onChangeBackground(direction);
     logEvent({ 
       eventType: 'button_click', 
-      eventSource: 'change_world', 
+      eventSource: 'change_background', 
       metadata: { direction } 
     });
   };
@@ -132,11 +132,11 @@ const ExperienceUI = ({
               isSettingsOpen={isSettingsOpen}
             />
             
-            {/* World navigation controls */}
+            {/* Background navigation controls */}
             <NavigationControls 
               uiColor={uiColor}
-              onChangeWorld={handleChangeWorld}
-              isTransitioning={false}
+              onChangeBackground={onChangeBackground}
+              isTransitioning={isTransitioning}
               theme={theme}
             />
 

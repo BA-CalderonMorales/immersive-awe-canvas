@@ -2,7 +2,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { SceneConfig } from "@/types/scene";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useExperience } from "@/hooks/useExperience";
-import WorldView from "./WorldView";
+import DynamicScene from "../scene/DynamicScene";
 import SceneSettingsPanel from "./SceneSettingsPanel";
 
 interface ExperienceLayoutProps {
@@ -15,6 +15,8 @@ interface ExperienceLayoutProps {
   isMobile: boolean;
   onUpdateSceneConfig: (config: SceneConfig) => void;
   isDragEnabled: boolean;
+  currentBackground?: any;
+  currentGeometry?: any;
 }
 
 const ExperienceLayout = ({
@@ -27,6 +29,8 @@ const ExperienceLayout = ({
   isMobile,
   onUpdateSceneConfig,
   isDragEnabled,
+  currentBackground,
+  currentGeometry,
 }: ExperienceLayoutProps) => {
   const { theme } = useExperience();
   const themeConfig = editableSceneConfig[theme];
@@ -43,13 +47,11 @@ const ExperienceLayout = ({
             overflow: 'hidden'
           }}
         >
-          <WorldView 
-            sceneConfig={editableSceneConfig} 
-            isTransitioning={isTransitioning} 
-            worldIndex={currentWorldIndex} 
-            isLocked={isObjectLocked} 
-            onToggleLock={onToggleObjectLock}
-            isDragEnabled={isDragEnabled}
+          <DynamicScene 
+            currentBackground={currentBackground}
+            currentGeometry={currentGeometry}
+            theme={theme}
+            isLocked={isObjectLocked}
           />
         </div>
       </SceneObjectsProvider>
@@ -69,13 +71,11 @@ const ExperienceLayout = ({
       >
         <ResizablePanel>
           <div className="w-full h-full relative overflow-hidden">
-            <WorldView 
-              sceneConfig={editableSceneConfig} 
-              isTransitioning={isTransitioning} 
-              worldIndex={currentWorldIndex} 
-              isLocked={isObjectLocked} 
-              onToggleLock={onToggleObjectLock}
-              isDragEnabled={isDragEnabled}
+            <DynamicScene 
+              currentBackground={currentBackground}
+              currentGeometry={currentGeometry}
+              theme={theme}
+              isLocked={isObjectLocked}
             />
           </div>
         </ResizablePanel>

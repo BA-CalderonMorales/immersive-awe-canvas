@@ -9,6 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      backgrounds: {
+        Row: {
+          background_config: Json
+          created_at: string
+          description: string | null
+          id: number
+          is_featured: boolean | null
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          background_config: Json
+          created_at?: string
+          description?: string | null
+          id?: number
+          is_featured?: boolean | null
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          background_config?: Json
+          created_at?: string
+          description?: string | null
+          id?: number
+          is_featured?: boolean | null
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
+      default_geometries: {
+        Row: {
+          color_day: string | null
+          color_night: string | null
+          created_at: string
+          description: string | null
+          geometry_type: string
+          id: number
+          is_featured: boolean | null
+          material_config: Json | null
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          color_day?: string | null
+          color_night?: string | null
+          created_at?: string
+          description?: string | null
+          geometry_type: string
+          id?: number
+          is_featured?: boolean | null
+          material_config?: Json | null
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          color_day?: string | null
+          color_night?: string | null
+          created_at?: string
+          description?: string | null
+          geometry_type?: string
+          id?: number
+          is_featured?: boolean | null
+          material_config?: Json | null
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
       logs: {
         Row: {
           created_at: string

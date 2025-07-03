@@ -31,7 +31,7 @@ interface ExperienceContainerContentProps {
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
   setIsUiHidden: (hidden: boolean | ((prev: boolean) => boolean)) => void;
-  handleChangeWorld: (direction: 'next' | 'prev') => void;
+  handleChangeBackground: (direction: 'next' | 'prev') => void;
   handleJumpToWorld: (index: number) => void;
   handleCopyCode: () => void;
   handleGoHome: () => void;
@@ -41,6 +41,8 @@ interface ExperienceContainerContentProps {
   isMobile: boolean;
   isDragEnabled: boolean;
   onToggleDrag: () => void;
+  currentBackground?: any;
+  currentGeometry?: any;
 }
 
 const ExperienceContainerContent = ({
@@ -65,7 +67,7 @@ const ExperienceContainerContent = ({
   setIsSearchOpen,
   setIsSettingsOpen,
   setIsUiHidden,
-  handleChangeWorld,
+  handleChangeBackground,
   handleJumpToWorld,
   handleCopyCode,
   handleGoHome,
@@ -75,6 +77,8 @@ const ExperienceContainerContent = ({
   isMobile,
   isDragEnabled,
   onToggleDrag,
+  currentBackground,
+  currentGeometry,
 }: ExperienceContainerContentProps) => {
   // Direct UI color calculation
   const uiColor = worldData ? 
@@ -89,9 +93,7 @@ const ExperienceContainerContent = ({
     return <LoadingOverlay message="Initializing experience..." theme={theme} />;
   }
 
-  if (!isSceneConfig(worldData.scene_config)) {
-     return <LoadingOverlay message="Preparing world data..." theme={theme} />;
-  }
+  // Remove scene config validation since we're using dynamic backgrounds now
 
   return (
     <AnimatePresence mode="wait">
@@ -126,6 +128,8 @@ const ExperienceContainerContent = ({
           isMobile={isMobile}
           onUpdateSceneConfig={setEditableSceneConfig}
           isDragEnabled={isDragEnabled}
+          currentBackground={currentBackground}
+          currentGeometry={currentGeometry}
         />
 
         <ExperienceUI
@@ -134,7 +138,7 @@ const ExperienceContainerContent = ({
           isTransitioning={isTransitioning}
           editableSceneConfig={editableSceneConfig}
           onToggleTheme={toggleTheme}
-          onChangeWorld={handleChangeWorld}
+          onChangeBackground={handleChangeBackground}
           onCopyCode={handleCopyCode}
           onUpdateSceneConfig={setEditableSceneConfig}
           onShowHelp={() => setIsHelpOpen(true)}
@@ -152,7 +156,7 @@ const ExperienceContainerContent = ({
 
         <ExperienceHotkeys
           toggleTheme={toggleTheme}
-          changeWorld={handleChangeWorld}
+          changeBackground={handleChangeBackground}
           handleGoHome={handleGoHome}
           handleCopyCode={handleCopyCode}
           toggleObjectLock={toggleObjectLock}
