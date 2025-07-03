@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { SceneObject, ObjectManagerState, ObjectManagerActions } from '@/types/sceneObjects';
 import { toast } from 'sonner';
 
@@ -18,6 +18,16 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
     isAddingObject: false,
     availableGeometries: GEOMETRIES,
   });
+
+  // Listen for drag mode disable to clear selection
+  useEffect(() => {
+    const handleClearSelection = () => {
+      setState(prev => ({ ...prev, selectedObjectId: null }));
+    };
+    
+    window.addEventListener('clearSelection', handleClearSelection);
+    return () => window.removeEventListener('clearSelection', handleClearSelection);
+  }, []);
 
   const addObject = useCallback((type: SceneObject['type']) => {
     const newObject: SceneObject = {
@@ -69,9 +79,8 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, []);
 
   const selectObject = useCallback((id: string | null) => {
-    console.log('🔍 DEBUG: useSceneObjects.selectObject called', { id, previousId: state.selectedObjectId });
     setState(prev => ({ ...prev, selectedObjectId: id }));
-  }, [state.selectedObjectId]);
+  }, []);
 
   const clearObjects = useCallback(() => {
     setState(prev => ({ ...prev, objects: [], selectedObjectId: null }));

@@ -95,6 +95,13 @@ export const useExperienceState = () => {
         },
       });
       logEvent({ eventType: 'action', eventSource: 'toggle_drag_mode', metadata: { enabled: newState } });
+      
+      // Clear selection when disabling drag mode
+      if (!newState && typeof window !== 'undefined') {
+        // Signal to clear selection - we'll handle this in SceneObjectsProvider
+        window.dispatchEvent(new CustomEvent('clearSelection'));
+      }
+      
       return newState;
     });
   }, []);

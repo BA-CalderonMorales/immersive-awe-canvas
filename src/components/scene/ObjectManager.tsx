@@ -31,10 +31,6 @@ const ObjectManager = ({
         mode={gizmoMode}
         onDragStateChange={onDragStateChange}
       />
-      {selectedObjectId && console.log('🔍 DEBUG: ObjectManager rendering GizmoControls', { 
-        selectedObjectId, 
-        enabled: !!selectedObjectId 
-      })}
     </>
   );
 };

@@ -33,7 +33,6 @@ const TorusKnotObject = ({ themeConfig, isLocked }: TorusKnotObjectProps) => {
   });
 
   const handleClick = () => {
-    console.log('🔍 DEBUG: Main object clicked, selecting main-scene-object');
     actions.selectObject('main-scene-object');
   };
 
