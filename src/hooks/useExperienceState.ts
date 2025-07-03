@@ -12,19 +12,20 @@ export const useExperienceState = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isDragEnabled, setIsDragEnabled] = useState(false);
   
-  // Stable UI state management
-  const [isUiHidden, setIsUiHidden] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('uiHidden');
-        return saved ? JSON.parse(saved) : true;
-      } catch {
-        return true;
-      }
+  // Helper function for localStorage operations
+  const getStoredBoolean = (key: string, defaultValue: boolean): boolean => {
+    if (typeof window === 'undefined') return defaultValue;
+    
+    try {
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : defaultValue;
+    } catch {
+      return defaultValue;
     }
-    return true;
-  });
+  };
   
+  // Stable UI state management with helper
+  const [isUiHidden, setIsUiHidden] = useState(() => getStoredBoolean('uiHidden', true));
   const [showUiHint, setShowUiHint] = useState(false);
   const [hasInitialized, setHasInitialized] = useState(false);
   const hintShownRef = useRef(false);

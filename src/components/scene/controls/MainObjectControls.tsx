@@ -20,6 +20,7 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
   useEffect(() => {
     if (!guiContainerRef.current) return;
 
+    // Early cleanup
     if (guiRef.current) {
       guiRef.current.destroy();
     }
@@ -32,7 +33,7 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
     });
     guiRef.current = gui;
 
-    // Apply theme class to the GUI element
+    // Apply theme styling
     const guiElement = gui.domElement;
     guiElement.setAttribute('data-theme', theme);
     guiElement.classList.add(`theme-${theme}`);
@@ -44,10 +45,10 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
       updateConfig(c => { c[theme].mainObjectColor = value; });
     });
 
-    // Material Controls
-    if (themeConfig.material) {
-      new MaterialControlsBuilder(gui, themeConfig.material, theme, updateConfig).build();
-    }
+    // Material Controls - early return if no material
+    if (!themeConfig.material) return;
+    
+    new MaterialControlsBuilder(gui, themeConfig.material, theme, updateConfig).build();
 
     return () => {
       if (guiRef.current) {

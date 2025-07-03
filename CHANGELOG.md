@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2025-07-03
+
+### Features
+
+- Create professional photorealistic sunset background with atmospheric scattering
+- Implement realistic color temperature and atmospheric perspective effects
+- Add sophisticated cloud simulation with proper lighting
+- Enhanced sun disk rendering with corona and glow effects
+
+### Code Quality Improvements
+
+- Extract helper functions for localStorage operations in useExperienceState
+- Implement early return patterns in MainObjectControls
+- Consolidate DOM manipulation in ExperienceContext
+- Remove redundant formatting and empty lines across components
+- Optimize callback dependencies and eliminate unnecessary complexity
+
+### Performance Optimizations
+
+- Increase sunset background geometry resolution for smoother rendering
+- Add proper render order for background elements
+- Optimize shader complexity with better atmospheric calculations
+- Reduce React re-renders with cleaner state management
+
+### Visual Enhancements
+
+- Professional sunset with realistic gradient transitions
+- Atmospheric scattering simulation for authentic sky colors
+- Dynamic cloud formations with sun-based lighting
+- Enhanced color grading and gamma correction for realism
+
 ## [1.0.3] - 2025-07-03
 
 ### Features
