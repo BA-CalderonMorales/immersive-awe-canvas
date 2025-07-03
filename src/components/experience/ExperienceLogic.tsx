@@ -84,12 +84,34 @@ const ExperienceLogic = ({ initialWorldSlug }: ExperienceLogicProps) => {
     handleEntryTransitionEnd,
   });
 
+  // Debug logging
+  console.log('🔍 ExperienceLogic Debug:', {
+    isLoading,
+    backgroundsLoading,
+    geometriesLoading,
+    backgroundsError,
+    geometriesError,
+    currentBackground,
+    currentGeometry,
+    backgroundsCount: backgrounds?.length,
+    geometriesCount: geometries?.length
+  });
+
   if (isLoading) {
     return <LoadingOverlay message="Loading Experience..." theme="night" />;
   }
 
-  if (isError || !currentGeometry || !currentBackground) {
-    return <LoadingOverlay message="Could not load experience." theme="night" />;
+  if (isError) {
+    return <LoadingOverlay message="Could not load experience data." theme="night" />;
+  }
+
+  // Create a fallback if no data is available
+  if (!currentGeometry && !geometriesLoading) {
+    return <LoadingOverlay message="No geometries available." theme="night" />;
+  }
+
+  if (!currentBackground && !backgroundsLoading) {
+    return <LoadingOverlay message="No backgrounds available." theme="night" />;
   }
 
   return (
