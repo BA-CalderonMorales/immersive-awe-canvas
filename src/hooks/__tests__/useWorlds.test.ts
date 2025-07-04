@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { renderHook, waitFor } from '@testing-library/react';
+import { renderHook, waitFor, act } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import React from 'react';
 
@@ -9,58 +9,65 @@ vi.unmock('@/hooks/useWorlds');
 import { useWorlds } from '../useWorlds';
 
 // Mock Supabase
+const mockWorldsData = [
+  {
+    id: 1,
+    name: 'Genesis Torus',
+    slug: 'genesis-torus',
+    scene_config: { objectType: 'torusKnot' },
+    ui_day_color: '#ffffff',
+    ui_night_color: '#000000',
+  },
+  {
+    id: 2,
+    name: 'Distortion Sphere',
+    slug: 'distortion-sphere',
+    scene_config: { objectType: 'distortionSphere' },
+    ui_day_color: '#ffffff',
+    ui_night_color: '#000000',
+  },
+];
+
 vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(() => ({
       select: vi.fn(() => ({
-        eq: vi.fn(() => ({
-          order: vi.fn(() => Promise.resolve({
-            data: [
-              {
-                id: 1,
-                name: 'Genesis Torus',
-                slug: 'genesis-torus',
-                scene_config: { objectType: 'torusKnot' },
-                ui_day_color: '#ffffff',
-                ui_night_color: '#000000',
-              },
-              {
-                id: 2,
-                name: 'Distortion Sphere',
-                slug: 'distortion-sphere',
-                scene_config: { objectType: 'distortionSphere' },
-                ui_day_color: '#ffffff',
-                ui_night_color: '#000000',
-              },
-            ],
-            error: null,
-          })),
-        })),
-        single: vi.fn((slug?: string) => {
-          if (slug === 'distortion-sphere') {
-            return Promise.resolve({
-              data: {
-                id: 2,
-                name: 'Distortion Sphere',
-                slug: 'distortion-sphere',
-                scene_config: { objectType: 'distortionSphere' },
-                ui_day_color: '#ffffff',
-                ui_night_color: '#000000',
-              },
-              error: null,
-            });
+        eq: vi.fn((field: string, value: any) => {
+          if (field === 'is_featured') {
+            return {
+              order: vi.fn(() => Promise.resolve({
+                data: mockWorldsData,
+                error: null,
+              })),
+              single: vi.fn(() => {
+                // This is for fetchWorldBySlug
+                const world = mockWorldsData.find(w => w.slug === value);
+                return Promise.resolve({
+                  data: world || null,
+                  error: world ? null : { code: 'PGRST116', message: 'Not found' },
+                });
+              }),
+            };
           }
-          return Promise.resolve({
-            data: {
-              id: 2,
-              name: 'Distortion Sphere',
-              slug: 'distortion-sphere',
-              scene_config: { objectType: 'distortionSphere' },
-              ui_day_color: '#ffffff',
-              ui_night_color: '#000000',
-            },
-            error: null,
-          });
+          if (field === 'slug') {
+            return {
+              eq: vi.fn((field2: string, value2: any) => {
+                if (field2 === 'is_featured') {
+                  return {
+                    single: vi.fn(() => {
+                      const world = mockWorldsData.find(w => w.slug === value);
+                      return Promise.resolve({
+                        data: world || null,
+                        error: world ? null : { code: 'PGRST116', message: 'Not found' },
+                      });
+                    }),
+                  };
+                }
+                return {};
+              }),
+            };
+          }
+          return {};
         }),
       })),
     })),
@@ -129,7 +136,9 @@ describe('useWorlds', () => {
     });
 
     // Jump to second world
-    result.current.jumpToWorld(1);
+    act(() => {
+      result.current.jumpToWorld(1);
+    });
 
     // Wait for the timeout in jumpToWorld to complete
     await waitFor(() => {
@@ -151,7 +160,9 @@ describe('useWorlds', () => {
     expect(result.current.isTransitioning).toBe(false);
 
     // Trigger transition
-    result.current.jumpToWorld(1);
+    act(() => {
+      result.current.jumpToWorld(1);
+    });
 
     // Should be transitioning immediately after calling jumpToWorld
     expect(result.current.isTransitioning).toBe(true);
