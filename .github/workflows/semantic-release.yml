@@ -44,10 +44,6 @@ jobs:
       with:
         branch: main
         extra_plugins: |
-          "@semantic-release/commit-analyzer"
-          "@semantic-release/release-notes-generator"
-          "@semantic-release/changelog"
-          "@semantic-release/npm"
-          "@semantic-release/github"
+          "conventional-changelog-conventionalcommits"
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
