@@ -33,11 +33,22 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 **AUTOMATED VERSIONING ONLY**: Never manually bump versions. All versioning is handled by semantic-release based on conventional commits.
 
 **CONVENTIONAL COMMITS ARE MANDATORY**: Every commit must follow conventional commit format:
-- `feat:` → minor version bump (0.1.0 → 0.2.0)
-- `fix:` → patch version bump (0.1.0 → 0.1.1)
-- `chore:` → patch version bump (0.1.0 → 0.1.1)
-- `breaking:` → major version bump (0.1.0 → 1.0.0)
-- `docs:`, `style:`, `refactor:`, `test:` → no version bump
+
+**PATCH** version bumps (0.0.1 → 0.0.2):
+- `chore:` → maintenance and tooling changes
+- `perf:` → performance improvements
+- `docs:` → documentation updates
+- `style:` → code formatting and style changes
+- `test:` → test additions and improvements
+- `hotfix:` → emergency bug fixes
+
+**MINOR** version bumps (0.0.1 → 0.1.0):
+- `fix:` → bug fixes and corrections
+- `feat:` → new features and functionality
+
+**MAJOR** version bumps (0.1.0 → 1.0.0):
+- `breaking:` → breaking changes
+- `refactor:` → code restructuring (potentially breaking)
 
 ### Version Reset Protocol
 

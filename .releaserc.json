@@ -5,9 +5,15 @@
       "preset": "conventionalcommits",
       "releaseRules": [
         { "type": "chore", "release": "patch" },
-        { "type": "fix", "release": "patch" },
+        { "type": "perf", "release": "patch" },
+        { "type": "docs", "release": "patch" },
+        { "type": "style", "release": "patch" },
+        { "type": "test", "release": "patch" },
+        { "type": "hotfix", "release": "patch" },
+        { "type": "fix", "release": "minor" },
         { "type": "feat", "release": "minor" },
-        { "type": "perf", "release": "patch" }
+        { "type": "breaking", "release": "major" },
+        { "type": "refactor", "release": "major" }
       ]
     }],
     "@semantic-release/release-notes-generator",

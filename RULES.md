@@ -39,11 +39,21 @@ docs: update API documentation
 
 **IMPORTANT**: Project follows semantic versioning starting from v0.0.1. Version bumps are automated via semantic-release.
 
-- `chore:` commits trigger **patch** version bumps (e.g., 0.0.1 → 0.0.2)
-- `fix:` and `perf:` commits trigger **patch** version bumps (e.g., 0.0.1 → 0.0.2)
-- `feat:` commits trigger **minor** version bumps (e.g., 0.0.1 → 0.1.0)
-- `breaking:` commits trigger **major** version bumps (e.g., 0.1.0 → 1.0.0)
-- `docs:`, `style:`, `refactor:`, `test:` commits do **not** trigger version bumps
+**PATCH** version bumps (e.g., 0.0.1 → 0.0.2):
+- `chore:` commits - maintenance and tooling changes
+- `perf:` commits - performance improvements
+- `docs:` commits - documentation updates
+- `style:` commits - code formatting and style changes
+- `test:` commits - test additions and improvements
+- `hotfix:` commits - emergency bug fixes
+
+**MINOR** version bumps (e.g., 0.0.1 → 0.1.0):
+- `fix:` commits - bug fixes and corrections
+- `feat:` commits - new features and functionality
+
+**MAJOR** version bumps (e.g., 0.1.0 → 1.0.0):
+- `breaking:` commits - breaking changes
+- `refactor:` commits - code restructuring (potentially breaking)
 
 **Version Reset Policy**: If project needs version reset, use the manage-releases.yml workflow or manual deletion of releases/tags, then create a `feat:` commit to trigger new initial release.
 
