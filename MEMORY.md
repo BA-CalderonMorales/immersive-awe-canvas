@@ -24,6 +24,56 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 - **Testing**: Jest/Vitest + React Testing Library
 - **State Management**: Prefer immutable patterns
 - **Package Manager/Runtime**: Bun (for install, run, test, and build)
+- **Version Management**: Semantic-release with conventional commits
+
+## Version Management & Release Process
+
+### Critical Version Management Rules
+
+**AUTOMATED VERSIONING ONLY**: Never manually bump versions. All versioning is handled by semantic-release based on conventional commits.
+
+**CONVENTIONAL COMMITS ARE MANDATORY**: Every commit must follow conventional commit format:
+- `feat:` → minor version bump (0.1.0 → 0.2.0)
+- `fix:` → patch version bump (0.1.0 → 0.1.1)
+- `chore:` → patch version bump (0.1.0 → 0.1.1)
+- `breaking:` → major version bump (0.1.0 → 1.0.0)
+- `docs:`, `style:`, `refactor:`, `test:` → no version bump
+
+### Version Reset Protocol
+
+**When version reset is needed** (e.g., premature v1.0.0 release):
+
+1. **Delete GitHub releases**: `gh release delete vX.X.X --yes`
+2. **Delete local git tags**: `git tag -d vX.X.X`
+3. **Delete remote git tags**: `git push origin --delete vX.X.X`
+4. **Create trigger commit**: `git commit --allow-empty -m "feat: initialize project at vX.X.X"`
+5. **Push to trigger workflow**: `git push`
+
+### CI/CD Workflow Requirements
+
+**CRITICAL**: Always use `bun run test` in GitHub Actions, never `bun test` directly:
+- `bun test` uses Bun's built-in test runner (incompatible with Vitest syntax)
+- `bun run test` uses the npm script which runs Vitest properly
+- Test files use Vitest syntax (`vi.mock`, `vi.fn()`) which requires Vitest runner
+
+**Workflow Files**:
+- `semantic-release.yml`: Automated releases on main branch push
+- `manage-releases.yml`: Manual release/tag deletion for version resets
+
+### Version Monitoring Commands
+
+```bash
+# Check current state
+gh release list
+git tag -l
+
+# Monitor workflows
+gh run list --workflow=semantic-release.yml
+gh run watch
+
+# Trigger manual release management
+gh workflow run manage-releases.yml --field action=delete-tag --field tag=vX.X.X
+```
 
 ## Testing Principles
 

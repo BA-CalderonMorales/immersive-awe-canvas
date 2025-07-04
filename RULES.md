@@ -37,18 +37,49 @@ docs: update API documentation
 
 ### Semantic Versioning Rules
 
-- `chore:` commits trigger **patch** version bumps (e.g., 1.0.0 → 1.0.1)
-- `fix:`, `feat:`, and `perf:` commits trigger **minor** version bumps (e.g., 1.0.0 → 1.1.0)
-- `breaking:` commits trigger **major** version bumps (e.g., 1.0.0 → 2.0.0)
+**IMPORTANT**: Project follows semantic versioning starting from v0.0.1. Version bumps are automated via semantic-release.
+
+- `chore:` commits trigger **patch** version bumps (e.g., 0.0.1 → 0.0.2)
+- `fix:` and `perf:` commits trigger **patch** version bumps (e.g., 0.0.1 → 0.0.2)
+- `feat:` commits trigger **minor** version bumps (e.g., 0.0.1 → 0.1.0)
+- `breaking:` commits trigger **major** version bumps (e.g., 0.1.0 → 1.0.0)
 - `docs:`, `style:`, `refactor:`, `test:` commits do **not** trigger version bumps
 
-### Version Management Commands
+**Version Reset Policy**: If project needs version reset, use the manage-releases.yml workflow or manual deletion of releases/tags, then create a `feat:` commit to trigger new initial release.
+
+## Version Management
+
+### Automated Versioning
+
+Versions are **automatically** managed by semantic-release based on conventional commits. Manual version commands are **not used**.
+
+### GitHub Workflows
+
+- **semantic-release.yml**: Automatically creates releases on push to main
+- **manage-releases.yml**: Manual workflow for deleting releases/tags (version reset)
+
+### Version Reset Process
+
+If version reset is needed (e.g., premature v1.0.0):
+
+1. **Delete releases**: `gh release delete vX.X.X --yes`
+2. **Delete local tags**: `git tag -d vX.X.X`
+3. **Delete remote tags**: `git push origin --delete vX.X.X`
+4. **Create trigger commit**: `git commit --allow-empty -m "feat: initialize project at vX.X.X"`
+5. **Push to trigger release**: `git push`
+
+### Version Monitoring
 
 ```bash
-npm run version:patch  # For bug fixes (1.0.0 → 1.0.1)
-npm run version:minor  # For new features (1.0.0 → 1.1.0)  
-npm run version:major  # For breaking changes (1.0.0 → 2.0.0)
-npm run changelog     # Generate changelog from commits
+# Check current releases
+gh release list
+
+# Monitor workflow progress
+gh run list --workflow=semantic-release.yml
+gh run watch
+
+# Check git tags
+git tag -l
 ```
 
 ## Pull Requests
