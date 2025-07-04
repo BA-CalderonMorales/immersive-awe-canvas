@@ -127,6 +127,7 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
       showX={true}
       showY={true}
       showZ={true}
+      data-testid="transform-controls"
     />
   );
 };
