@@ -100,7 +100,7 @@ const DynamicScene = ({
         className="absolute inset-0"
       >
         <Canvas
-          camera={{ position: [0, 0, 5], fov: 75 }}
+          camera={{ position: [0, 0, 12], fov: 75 }}
           className="w-full h-full"
         >
           <OrbitControls 
