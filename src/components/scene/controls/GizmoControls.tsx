@@ -1,4 +1,4 @@
-import { useRef, useEffect, useCallback } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { TransformControls } from '@react-three/drei';
 import { useThree } from '@react-three/fiber';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
@@ -19,12 +19,14 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
   
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
   const selectedMesh = useRef<THREE.Object3D | null>(null);
+  const [meshFound, setMeshFound] = useState(false); // Track when mesh is found to trigger re-render
 
   useEffect(() => {
     console.log('🔍 DEBUG: GizmoControls useEffect', { enabled, selectedObjectId });
     
     if (!enabled || !selectedObjectId) {
       selectedMesh.current = null;
+      setMeshFound(false);
       if (transformRef.current) {
         transformRef.current.detach();
       }
@@ -42,6 +44,7 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
     }
     
     selectedMesh.current = mesh || null;
+    setMeshFound(!!mesh); // Update state to trigger re-render
     
     if (transformRef.current && selectedMesh.current) {
       console.log('🔍 DEBUG: Attaching gizmo to mesh:', selectedMesh.current);
@@ -102,7 +105,7 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
     onDragStateChange?.(false);
   }, [setIsDragging, onDragStateChange]);
 
-  const shouldShowGizmo = enabled && selectedMesh.current;
+  const shouldShowGizmo = enabled && meshFound;
 
   if (!shouldShowGizmo) {
     return null;

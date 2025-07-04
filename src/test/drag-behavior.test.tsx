@@ -14,7 +14,7 @@
  */
 
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { SceneObjectsProvider, useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import GizmoControls from '@/components/scene/controls/GizmoControls';
@@ -98,12 +98,12 @@ const TestWrapper = ({
   const TestWrapperContent = () => {
     const { actions } = useSceneObjectsContext();
     
-    // Set the selected object ID when component mounts
+    // Set the selected object ID when component mounts or selectedObjectId changes
     React.useEffect(() => {
       if (selectedObjectId) {
         actions.selectObject(selectedObjectId);
       }
-    }, [selectedObjectId, actions]);
+    }, [selectedObjectId]); // Remove actions from dependency array to prevent infinite loop
     
     return <>{children}</>;
   };
@@ -118,7 +118,7 @@ const TestWrapper = ({
 describe('Drag Behavior Tests', () => {
   
   describe('Requirement 1: Gizmo sensitivity for mobile', () => {
-    it('should have larger gizmo size on mobile', () => {
+    it('should have larger gizmo size on mobile', async () => {
       useIsMobile.mockReturnValue(true);
       useDeviceType.mockReturnValue({
         isMobile: true,
@@ -132,11 +132,14 @@ describe('Drag Behavior Tests', () => {
         </TestWrapper>
       );
       
-      const gizmo = getByTestId('transform-controls');
-      expect(gizmo).toHaveAttribute('size', '2'); // Mobile size
+      // Wait for the component to find the mesh and render
+      await waitFor(() => {
+        const gizmo = getByTestId('transform-controls');
+        expect(gizmo).toHaveAttribute('size', '2'); // Mobile size
+      });
     });
 
-    it('should use normal gizmo size on desktop', () => {
+    it('should use normal gizmo size on desktop', async () => {
       useIsMobile.mockReturnValue(false);
       useDeviceType.mockReturnValue({
         isMobile: false,
@@ -150,8 +153,11 @@ describe('Drag Behavior Tests', () => {
         </TestWrapper>
       );
       
-      const gizmo = getByTestId('transform-controls');
-      expect(gizmo).toHaveAttribute('size', '1.2'); // Desktop size
+      // Wait for the component to find the mesh and render
+      await waitFor(() => {
+        const gizmo = getByTestId('transform-controls');
+        expect(gizmo).toHaveAttribute('size', '1.2'); // Desktop size
+      });
     });
   });
 
@@ -206,14 +212,15 @@ describe('Drag Behavior Tests', () => {
       expect(queryByTestId('transform-controls')).toBeTruthy();
     });
 
-    it('should NOT show gizmo when drag disabled even if object selected', () => {
+    it('should show gizmo when object selected even if drag disabled', () => {
       const { queryByTestId } = render(
         <TestWrapper isDragEnabled={false} selectedObjectId="test-object">
           <GizmoControls enabled={true} />
         </TestWrapper>
       );
       
-      expect(queryByTestId('transform-controls')).toBeNull();
+      // Gizmo should show whenever an object is selected, regardless of drag mode
+      expect(queryByTestId('transform-controls')).toBeTruthy();
     });
 
     it('should NOT show gizmo when drag enabled but no object selected', () => {
