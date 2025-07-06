@@ -125,17 +125,17 @@ const SceneSettingsPanel = ({
 
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className={`grid w-full grid-cols-2 mx-4 mt-4 ${colors.cardBg} ${colors.border}`}>
-            <TabsTrigger 
-              value="main" 
-              className={`flex items-center gap-2 ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText}`}
+          <TabsList className={`grid w-full grid-cols-2 mx-4 mt-4 ${colors.cardBg} ${colors.border} rounded-lg overflow-hidden`}>
+            <TabsTrigger
+              value="main"
+              className={`flex items-center gap-2 border-b-2 border-transparent ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText} data-[state=active]:border-b-blue-500`}
             >
               <Palette className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
               Main Object
             </TabsTrigger>
-            <TabsTrigger 
-              value="objects" 
-              className={`flex items-center gap-2 ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText}`}
+            <TabsTrigger
+              value="objects"
+              className={`flex items-center gap-2 border-b-2 border-transparent ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText} data-[state=active]:border-b-blue-500`}
             >
               <Shapes className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
               Scene Objects ({objects.length})
