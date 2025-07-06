@@ -9,7 +9,7 @@ export const logEvent = async ({
 }: {
   eventType: string;
   eventSource?: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }) => {
   try {
     // Sanitize all inputs

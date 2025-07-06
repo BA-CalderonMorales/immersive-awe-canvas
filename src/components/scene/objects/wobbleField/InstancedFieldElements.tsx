@@ -98,7 +98,7 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
           const wobble = getWobbleDistortion(position, timeRef.current, fieldIndex);
           
           // Additional meaning-based motion within the wobble field
-          let meaningMotion = { x: 0, y: 0, z: 0, scaleMultiplier: 1 };
+          const meaningMotion = { x: 0, y: 0, z: 0, scaleMultiplier: 1 };
           
           switch (meaning) {
             case 'memory':
@@ -119,12 +119,13 @@ const InstancedFieldElements = ({ color, materialConfig, fieldData, isLocked }: 
               meaningMotion.x = Math.sin(timeRef.current * 1.1 + fieldIndex * 2) * 0.2;
               meaningMotion.z = Math.cos(timeRef.current * 0.9 + fieldIndex * 3) * 0.2;
               break;
-            case 'wonder':
+            case 'wonder': {
               // Wonder creates spiral motion in the field
               const spiralTime = timeRef.current * 0.5 + fieldIndex;
               meaningMotion.x = Math.cos(spiralTime) * 0.3;
               meaningMotion.z = Math.sin(spiralTime) * 0.3;
               break;
+            }
             case 'truth':
               // Truth remains stable but responds to field
               meaningMotion.scaleMultiplier = 1 + Math.sin(timeRef.current * 0.4) * 0.1;

@@ -15,16 +15,16 @@ const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {
 
         switch (type) {
           case 'ambient':
-            // @ts-ignore
+            // @ts-expect-error - Three.js light props are not fully typed
             return <ambientLight key={key} {...props} />;
           case 'directional':
-            // @ts-ignore
+            // @ts-expect-error - Three.js light props are not fully typed
             return <directionalLight key={key} {...props} />;
           case 'point':
-            // @ts-ignore
+            // @ts-expect-error - Three.js light props are not fully typed
             return <pointLight key={key} {...props} />;
           case 'hemisphere':
-            // @ts-ignore
+            // @ts-expect-error - Three.js light props are not fully typed
             return <hemisphereLight key={key} {...props} />;
           default:
             return null;

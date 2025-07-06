@@ -24,7 +24,7 @@ export interface ObjectManagerState {
   availableGeometries: {
     type: SceneObject['type'];
     name: string;
-    defaultArgs?: any[];
+    defaultArgs?: unknown[];
   }[];
 }
 

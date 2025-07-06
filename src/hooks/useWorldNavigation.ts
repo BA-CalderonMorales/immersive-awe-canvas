@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface UseWorldNavigationProps {
-  worlds: any[] | undefined;
+  worlds: { slug: string }[] | undefined;
   currentWorldIndex: number;
   jumpToWorld: (index: number) => void;
 }

@@ -99,7 +99,7 @@ class RateLimiter {
 export const rateLimiter = new RateLimiter();
 
 // Input sanitization for logs
-export const sanitizeLogData = (data: any): any => {
+export const sanitizeLogData = (data: unknown): unknown => {
   if (typeof data === 'string') {
     return data.slice(0, 1000).replace(/[<>]/g, '');
   }
@@ -109,7 +109,7 @@ export const sanitizeLogData = (data: any): any => {
   }
   
   if (data && typeof data === 'object') {
-    const sanitized: any = {};
+    const sanitized: Record<string, unknown> = {};
     for (const [key, value] of Object.entries(data)) {
       if (key.length > 100) continue; // Skip overly long keys
       sanitized[key.slice(0, 100)] = sanitizeLogData(value);
