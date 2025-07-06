@@ -1399,6 +1399,27 @@ const processOrder = (order: Order) => {
 };
 ```
 
+## Software Engineering Laws
+
+The following classic software engineering laws guide decision-making. Each law
+includes expanded interpretations and real-world examples in the project wiki.
+- **Murphy's Law** – anything that can go wrong will go wrong.
+- **Brook's Law** – adding people to a late project makes it later.
+- **Hofstadter's Law** – everything takes longer than expected.
+- **Conway's Law** – system design mirrors communication structures.
+- **Postel's Law** – be conservative in what you send, liberal in what you
+  accept.
+- **Pareto Principle** – 80% of consequences come from 20% of causes.
+- **The Peter Principle** – employees rise to their level of incompetence.
+- **Kerckhoffs's Principle** – security should rely only on key secrecy.
+- **Linus's Law** – given enough eyes, all bugs are shallow.
+- **Moore's Law** – computing power doubles roughly every two years.
+- **Wirth's Law** – software gets slower faster than hardware improves.
+- **Ninety-ninety Rule** – the last 10% of code takes 90% of the time.
+- **Knuth's Optimization Principle** – premature optimization is the root of
+  all evil.
+- **Norvig's Law** – tech beyond 50% penetration will never double again.
+
 ## Resources and References
 
 - [TypeScript Handbook](https://www.typescriptlang.org/docs/handbook/intro.html)
