@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Enhanced
+- Significantly improved scene vibrancy and color contrast across all backgrounds and default geometries
+- Updated Starry Night background saturation from 0.014 to 0.8 for much more vibrant stars
+- Enhanced Sunset Glory background with warmer, more vibrant orange-yellow gradient colors
+- Boosted Aurora Dreams intensity and speed for more dynamic visual effects
+- Improved all default geometry colors for better day/night contrast and vibrancy:
+  - Genesis Torus: Bright gold (#FFD700) for day, sky blue (#87CEEB) for night with emissive glow
+  - Distortion Sphere: Vibrant orange-red (#FF6347) for day, royal blue (#4169E1) for night
+  - Wobble Field: Dark turquoise (#00CED1) for day, lime green (#32CD32) for night
+  - Crystalline Spire: Plum (#DDA0DD) for day, medium purple (#9370DB) for night
+- Enhanced material properties with increased metalness, reduced roughness, and emissive lighting
+- Objects now provide perfect contrast with backgrounds and reflect vibrant environment colors
+
 ### 🐛 Bug Fixes
 - Temporarily disable componentTagger plugin to fix Three.js compatibility issues causing runtime errors
 - Consolidate test structure by moving all tests from `src/components/__tests__/` to `src/test/` directory
