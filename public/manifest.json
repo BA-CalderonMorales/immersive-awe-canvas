@@ -1,0 +1,21 @@
+{
+  "name": "Immersive Awe Canvas",
+  "short_name": "Awe Canvas",
+  "description": "Interactive 3D playground for crafting awe-inspiring scenes",
+  "start_url": "/",
+  "display": "fullscreen",
+  "orientation": "any",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "icons": [
+    {
+      "src": "placeholder.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["entertainment", "games", "utilities"],
+  "scope": "/",
+  "lang": "en"
+}

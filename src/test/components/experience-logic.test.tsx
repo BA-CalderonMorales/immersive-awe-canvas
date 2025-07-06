@@ -112,6 +112,7 @@ describe('ExperienceLogic', () => {
       currentBackgroundIndex: 0,
       isTransitioning: false,
       changeBackground: vi.fn(),
+      jumpToBackground: vi.fn(),
     });
 
     vi.mocked(useDefaultGeometries).mockReturnValue({
@@ -121,6 +122,7 @@ describe('ExperienceLogic', () => {
       currentGeometry: null,
       currentGeometryIndex: 0,
       changeGeometry: vi.fn(),
+      jumpToGeometry: vi.fn(),
     });
 
     render(<ExperienceLogic />);
@@ -137,6 +139,7 @@ describe('ExperienceLogic', () => {
       currentBackgroundIndex: 0,
       isTransitioning: false,
       changeBackground: vi.fn(),
+      jumpToBackground: vi.fn(),
     });
 
     vi.mocked(useDefaultGeometries).mockReturnValue({
@@ -146,6 +149,7 @@ describe('ExperienceLogic', () => {
       currentGeometry: null,
       currentGeometryIndex: 0,
       changeGeometry: vi.fn(),
+      jumpToGeometry: vi.fn(),
     });
 
     render(<ExperienceLogic />);
@@ -155,22 +159,62 @@ describe('ExperienceLogic', () => {
 
   it('should render experience container when data is loaded', () => {
     vi.mocked(useBackgrounds).mockReturnValue({
-      backgrounds: [{ id: 1, name: 'Test Background' }],
+      backgrounds: [{
+        id: 1,
+        name: 'Test Background',
+        background_config: {},
+        created_at: '2024-01-01',
+        description: 'Test background',
+        is_featured: false,
+        sort_order: 1
+      }],
       isLoading: false,
       isError: false,
-      currentBackground: { id: 1, name: 'Test Background' },
+      currentBackground: {
+        id: 1,
+        name: 'Test Background',
+        background_config: {},
+        created_at: '2024-01-01',
+        description: 'Test background',
+        is_featured: false,
+        sort_order: 1
+      },
       currentBackgroundIndex: 0,
       isTransitioning: false,
       changeBackground: vi.fn(),
+      jumpToBackground: vi.fn(),
     });
 
     vi.mocked(useDefaultGeometries).mockReturnValue({
-      geometries: [{ id: 1, name: 'Test Geometry' }],
+      geometries: [{
+        id: 1,
+        name: 'Test Geometry',
+        color_day: '#ffffff',
+        color_night: '#000000',
+        created_at: '2024-01-01',
+        description: 'Test geometry',
+        geometry_type: 'sphere',
+        is_featured: false,
+        material_config: {},
+        sort_order: 1
+      }],
       isLoading: false,
       isError: false,
-      currentGeometry: { id: 1, name: 'Test Geometry' },
+      currentGeometry: {
+        id: 1,
+        name: 'Test Geometry',
+        color_day: '#ffffff',
+        color_night: '#000000',
+        created_at: '2024-01-01',
+        description: 'Test geometry',
+        geometry_type: 'sphere',
+        is_featured: false,
+        material_config: {},
+        sort_order: 1
+      },
       currentGeometryIndex: 0,
       changeGeometry: vi.fn(),
+      jumpToGeometry: vi.fn(),
     });
 
     render(<ExperienceLogic />);

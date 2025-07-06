@@ -51,10 +51,8 @@ vi.mock('@react-three/fiber', () => ({
   }
 }));
 
-vi.mock('@react-three/drei', async (importOriginal) => {
-  const actual = await importOriginal();
+vi.mock('@react-three/drei', async () => {
   return {
-    ...actual,
     useMatcapTexture: vi.fn().mockReturnValue([null]),
     TransformControls: ({ children, ...props }: any) => <div data-testid="transform-controls" {...props}>{children}</div>
   };
@@ -119,8 +117,8 @@ describe('Drag Behavior Tests', () => {
   
   describe('Requirement 1: Gizmo sensitivity for mobile', () => {
     it('should have larger gizmo size on mobile', async () => {
-      useIsMobile.mockReturnValue(true);
-      useDeviceType.mockReturnValue({
+      vi.mocked(useIsMobile).mockReturnValue(true);
+      vi.mocked(useDeviceType).mockReturnValue({
         isMobile: true,
         isTablet: false,
         isDesktop: false,
@@ -140,8 +138,8 @@ describe('Drag Behavior Tests', () => {
     });
 
     it('should use normal gizmo size on desktop', async () => {
-      useIsMobile.mockReturnValue(false);
-      useDeviceType.mockReturnValue({
+      vi.mocked(useIsMobile).mockReturnValue(false);
+      vi.mocked(useDeviceType).mockReturnValue({
         isMobile: false,
         isTablet: false,
         isDesktop: true,
