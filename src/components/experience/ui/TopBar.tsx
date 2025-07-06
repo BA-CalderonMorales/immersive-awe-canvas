@@ -70,10 +70,14 @@ const TopBar = ({
 
   const buttonStyle = { ...uiStyle, ...textStyle };
 
+  const barClasses = theme === 'day'
+    ? 'bg-white/80 border-b border-gray-200'
+    : 'bg-gray-900/80 border-b border-gray-700';
+
   return (
-    <div 
-      style={textStyle} 
-      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start transition-opacity duration-300 ${
+    <div
+      style={textStyle}
+      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start transition-opacity duration-300 backdrop-blur-md shadow-[var(--shadow-elegant)] ${barClasses} ${
         isTransitioning ? 'opacity-0' : 'opacity-100'
       } ${isSettingsOpen ? 'z-10' : 'z-50'}`}
     >
