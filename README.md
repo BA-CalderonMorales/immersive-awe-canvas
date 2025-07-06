@@ -48,29 +48,29 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 
 ### Prerequisites
 - Node.js 18 or higher
-- npm (comes with Node.js)
+- bun
 
 ### Installation
 ```bash
 git clone <repository-url>
 cd immersive-awe-canvas
-npm ci
-npm run dev
+bun install
+bun dev
 ```
 
 ### Development Commands
 ```bash
-npm test           # Run test suite
-npm run typecheck  # TypeScript validation  
-npm run build      # Production build
-npm run preview    # Preview production build
+bun test           # Run test suite
+bun typecheck      # TypeScript validation
+bun build          # Production build
+bun run preview    # Preview production build
 ```
 
 ### Versioning Commands
 ```bash
-npm run version:patch  # Bug fixes (1.0.0 → 1.0.1)
-npm run version:minor  # Features (1.0.0 → 1.1.0)
-npm run version:major  # Breaking changes (1.0.0 → 2.0.0)
+bun run version:patch  # Bug fixes (1.0.0 → 1.0.1)
+bun run version:minor  # Features (1.0.0 → 1.1.0)
+bun run version:major  # Breaking changes (1.0.0 → 2.0.0)
 ```
 
 ## Controls
