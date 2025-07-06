@@ -2,13 +2,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ExperienceContainerContent from "./ExperienceContainerContent";
 
 interface ExperienceContainerProps {
-  worldData: any;
-  editableSceneConfig: any;
+  worldData: { slug: string; [key: string]: unknown } | null;
+  editableSceneConfig: { type: string; [key: string]: unknown };
   isTransitioning: boolean;
   currentWorldIndex: number;
   isObjectLocked: boolean;
   theme: 'day' | 'night';
-  worlds: any[];
+  worlds: { slug: string; [key: string]: unknown }[];
   // UI state
   isSettingsOpen: boolean;
   isUiHidden: boolean;
@@ -21,7 +21,7 @@ interface ExperienceContainerProps {
   // Callbacks
   toggleObjectLock: () => void;
   toggleTheme: () => void;
-  setEditableSceneConfig: (config: any) => void;
+  setEditableSceneConfig: (config: { type: string; [key: string]: unknown }) => void;
   setIsHelpOpen: (open: boolean) => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
@@ -38,8 +38,8 @@ interface ExperienceContainerProps {
   onToggleDrag: () => void;
   isMotionFrozen?: boolean;
   onToggleMotion?: () => void;
-  currentBackground?: any;
-  currentGeometry?: any;
+  currentBackground?: { type: string; [key: string]: unknown };
+  currentGeometry?: { type: string; [key: string]: unknown };
 }
 
 const ExperienceContainer = (props: ExperienceContainerProps) => {
