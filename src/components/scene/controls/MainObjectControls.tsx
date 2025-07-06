@@ -5,6 +5,7 @@ import { SceneConfig } from '@/types/scene';
 import { useExperience } from '@/hooks/useExperience';
 import { MaterialControlsBuilder } from './MaterialControlsBuilder';
 import { createConfigUpdater } from './ConfigUpdateUtils';
+import ColorInput from '@/components/ui/color-input';
 
 interface MainObjectControlsProps {
   sceneConfig: SceneConfig;
@@ -58,11 +59,19 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
     };
   }, [sceneConfig, onUpdate, theme, themeConfig]);
 
+  const handleColorChange = (value: string) => {
+    const update = createConfigUpdater(sceneConfig, onUpdate);
+    update(c => { c[theme].mainObjectColor = value; });
+  };
+
   return (
-    <div 
-      ref={guiContainerRef} 
-      className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
-    />
+    <div className="space-y-4">
+      <ColorInput label="Color" value={themeConfig.mainObjectColor} onChange={handleColorChange} />
+      <div
+        ref={guiContainerRef}
+        className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
+      />
+    </div>
   );
 };
 

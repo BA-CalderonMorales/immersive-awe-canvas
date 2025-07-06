@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react';
 import GUI from 'lil-gui';
 import { SceneObject } from '@/types/sceneObjects';
 import { useExperience } from '@/hooks/useExperience';
+import ColorInput from '@/components/ui/color-input';
 
 interface ObjectGuiControlsProps {
   object: SceneObject;
@@ -103,10 +104,13 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
   }, [object, onUpdate, theme]);
 
   return (
-    <div 
-      ref={guiContainerRef} 
-      className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
-    />
+    <div className="space-y-4">
+      <ColorInput label="Color" value={object.color} onChange={(value) => onUpdate({ color: value })} />
+      <div
+        ref={guiContainerRef}
+        className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
+      />
+    </div>
   );
 };
 
