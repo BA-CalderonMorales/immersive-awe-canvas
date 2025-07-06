@@ -1,5 +1,4 @@
 
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -40,9 +39,13 @@ const BottomBar = ({
   isDragEnabled,
   onToggleDrag,
 }: BottomBarProps) => {
+  const barClasses = theme === 'day'
+    ? 'bg-white/80 border-t border-gray-200'
+    : 'bg-gray-900/80 border-t border-gray-700';
+
   return (
-    <div 
-      className="fixed bottom-4 left-0 right-0 w-full flex items-center justify-between px-4 sm:px-8 z-30 pointer-events-none"
+    <div
+      className={`fixed bottom-0 left-0 right-0 w-full py-3 px-4 sm:px-8 pointer-events-none flex items-center justify-between backdrop-blur-md shadow-[var(--shadow-elegant)] z-30 ${barClasses}`}
     >
       {/* Left side: Copy, Search, Drag Toggle */}
       <div className="flex gap-2 pointer-events-auto">
