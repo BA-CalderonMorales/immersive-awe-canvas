@@ -5,7 +5,7 @@ import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 export const useOrbitControlsState = () => {
   const { isDragging, isDragEnabled } = useSceneObjectsContext();
   const { gl } = useThree();
-  const orbitControlsRef = useRef<any>(null);
+  const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
 
   useEffect(() => {
     // Find orbit controls in the scene

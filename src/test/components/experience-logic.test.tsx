@@ -97,7 +97,7 @@ vi.mock('../../components/experience/LoadingOverlay', () => ({
 }));
 
 vi.mock('../../components/experience/ExperienceContainer', () => ({
-  default: ({ worldData }: { worldData: any }) => (
+  default: ({ worldData }: { worldData: { slug: string; [key: string]: unknown } | null }) => (
     <div>ExperienceContainer - {worldData?.name || 'Default'}</div>
   ),
 }));

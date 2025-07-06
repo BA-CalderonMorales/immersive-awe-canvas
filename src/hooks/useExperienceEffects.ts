@@ -5,7 +5,7 @@ import { SceneConfig } from '@/types/scene';
 import { logEvent } from '@/lib/logger';
 
 interface UseExperienceEffectsProps {
-  worldData: any;
+  worldData: { id: number; scene_config?: { type?: string } } | null;
   currentWorldId: number | null;
   setEditableSceneConfig: (config: SceneConfig) => void;
   setCurrentWorldId: (id: number) => void;

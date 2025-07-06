@@ -30,14 +30,15 @@ const AnimatedPointLight = ({
         // Fast, rhythmic pulsing like a heartbeat
         lightRef.current.intensity = baseIntensity * (0.5 + Math.sin(timeRef.current * 3) * 0.5);
         break;
-      case 'flicker':
+      case 'flicker': {
         // Erratic flickering like candlelight or electrical interference
         const flicker = Math.sin(timeRef.current * 8) * 0.3 + 
                        Math.sin(timeRef.current * 12.7) * 0.2 + 
                        Math.sin(timeRef.current * 5.3) * 0.15;
         lightRef.current.intensity = baseIntensity * (0.7 + flicker * 0.3);
         break;
-      case 'swirl':
+      }
+      case 'swirl': {
         // Orbital movement with intensity variation - like consciousness flowing
         const swirlIntensity = 0.6 + Math.sin(timeRef.current * 1.5) * 0.4;
         lightRef.current.intensity = baseIntensity * swirlIntensity;
@@ -48,6 +49,7 @@ const AnimatedPointLight = ({
         lightRef.current.position.z = position[2] + Math.sin(timeRef.current * 0.7) * radius;
         lightRef.current.position.y = position[1] + Math.sin(timeRef.current * 0.4) * 0.5;
         break;
+      }
       case 'slowPulse':
         // Deep, meditative breathing rhythm
         lightRef.current.intensity = baseIntensity * (0.4 + Math.sin(timeRef.current * 0.8) * 0.6);

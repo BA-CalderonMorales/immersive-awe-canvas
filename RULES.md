@@ -7,6 +7,8 @@ These rules keep development consistent across the project. The document is inte
 - Follow Test-Driven Development. Write tests before production code and keep changes small.
 - Use strict TypeScript and prefer immutable patterns.
 - When looking for solutions, consult **context7** and the guidance in **MEMORY.md**. Do not copy text from MEMORY.md into this file.
+- Keep the **Software Engineering Laws** section of **MEMORY.md** in mind when
+  planning features or processes.
 - Avoid modifying App.tsx or vite.config deployment settings unless absolutely necessary to keep the live sites accessible.
 
 ## Local Workflow

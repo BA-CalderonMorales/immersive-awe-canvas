@@ -21,7 +21,7 @@ const WorldContainer = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const orbitControlsRef = useRef<any>(null);
+  const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {

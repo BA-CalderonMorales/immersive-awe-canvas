@@ -17,8 +17,8 @@ interface ExperienceLayoutProps {
   isDragEnabled: boolean;
   isMotionFrozen?: boolean;
   onToggleMotion?: () => void;
-  currentBackground?: any;
-  currentGeometry?: any;
+  currentBackground?: { type: string; [key: string]: unknown };
+  currentGeometry?: { type: string; [key: string]: unknown };
 }
 
 const ExperienceLayout = ({

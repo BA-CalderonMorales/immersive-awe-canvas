@@ -6,6 +6,10 @@ import * as THREE from 'three';
 
 const MAIN_OBJECT_NAME = 'main-scene-object';
 
+interface DragEvent {
+  object: THREE.Object3D;
+}
+
 interface DragControlsProps {
   enabled: boolean;
   onDragStart?: () => void;
@@ -49,8 +53,8 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
       const controls = new ThreeDragControls(draggableObjects, camera, gl.domElement);
       controlsRef.current = controls;
 
-      const handleDragStart = (event: any) => {
-        const object = event.object as THREE.Object3D;
+      const handleDragStart = (event: DragEvent) => {
+        const object = event.object;
         object.userData.isBeingDragged = true;
         setIsDragging(true);
         
@@ -65,8 +69,8 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
         onDragStart?.();
       };
 
-      const handleDrag = (event: any) => {
-        const object = event.object as THREE.Object3D;
+      const handleDrag = (event: DragEvent) => {
+        const object = event.object;
         
         // Update object state immediately for real-time feedback
         if (object.userData?.objectId) {
@@ -75,8 +79,8 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
         }
       };
 
-      const handleDragEnd = (event: any) => {
-        const object = event.object as THREE.Object3D;
+      const handleDragEnd = (event: DragEvent) => {
+        const object = event.object;
         if (object.userData) {
           object.userData.isBeingDragged = false;
         }
