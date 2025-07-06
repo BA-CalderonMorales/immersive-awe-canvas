@@ -46,7 +46,7 @@ vi.mock('@react-three/fiber', () => ({
   }),
   useFrame: vi.fn(),
   ThreeEvent: class MockThreeEvent {
-    constructor(public object: any = {}, public point = { x: 0, y: 0, z: 0 }) {}
+    constructor(public object: Record<string, unknown> = {}, public point = { x: 0, y: 0, z: 0 }) {}
     stopPropagation = vi.fn();
   }
 }));
@@ -54,7 +54,7 @@ vi.mock('@react-three/fiber', () => ({
 vi.mock('@react-three/drei', async () => {
   return {
     useMatcapTexture: vi.fn().mockReturnValue([null]),
-    TransformControls: ({ children, ...props }: any) => <div data-testid="transform-controls" {...props}>{children}</div>
+    TransformControls: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => <div data-testid="transform-controls" {...props}>{children}</div>
   };
 });
 

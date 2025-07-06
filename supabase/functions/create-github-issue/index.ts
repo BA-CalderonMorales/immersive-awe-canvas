@@ -49,7 +49,7 @@ const getSecurityHeaders = () => ({
 });
 
 // Helper to send a response with security headers
-const sendResponse = (body: any, status = 200) => {
+const sendResponse = (body: Record<string, unknown>, status = 200) => {
   return new Response(JSON.stringify(body), { 
     headers: getSecurityHeaders(), 
     status 
@@ -75,7 +75,7 @@ serve(async (req) => {
     { global: { headers: { Authorization: req.headers.get('Authorization')! } } }
   );
 
-  const logEvent = async (eventType: string, metadata: any) => {
+  const logEvent = async (eventType: string, metadata: Record<string, unknown>) => {
     // Sanitize metadata before logging
     const sanitizedMetadata = {
       ...metadata,
