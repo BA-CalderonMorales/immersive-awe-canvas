@@ -7,8 +7,8 @@ import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicWorld from './DynamicWorld';
 
 interface DynamicSceneProps {
-  currentBackground: any;
-  currentGeometry: any;
+  currentBackground: { type: string; [key: string]: unknown };
+  currentGeometry: { type: string; [key: string]: unknown };
   theme: 'day' | 'night';
   isLocked: boolean;
   isDragEnabled?: boolean;
@@ -25,7 +25,7 @@ const DynamicScene = ({
   isMotionFrozen, 
   onDragStateChange 
 }: DynamicSceneProps) => {
-  const orbitControlsRef = useRef<any>(null);
+  const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
   const { isDragging } = useSceneObjectsContext();
 
   // Update orbit controls based on drag state
@@ -65,7 +65,7 @@ const DynamicScene = ({
 
     // Create a complete scene config
     const sceneConfig: SceneConfig = {
-      type: currentGeometry.geometry_type as any,
+      type: currentGeometry.geometry_type as string,
       day: {
         lights: [
           { type: 'ambient', intensity: 1.5 },

@@ -32,7 +32,7 @@ vi.mock('@/integrations/supabase/client', () => ({
   supabase: {
     from: vi.fn(() => ({
       select: vi.fn(() => ({
-        eq: vi.fn((field: string, value: any) => {
+        eq: vi.fn((field: string, value: unknown) => {
           if (field === 'is_featured') {
             return {
               order: vi.fn(() => Promise.resolve({
@@ -51,7 +51,7 @@ vi.mock('@/integrations/supabase/client', () => ({
           }
           if (field === 'slug') {
             return {
-              eq: vi.fn((field2: string, value2: any) => {
+              eq: vi.fn((field2: string, value2: unknown) => {
                 if (field2 === 'is_featured') {
                   return {
                     single: vi.fn(() => {

@@ -12,7 +12,7 @@ interface GizmoControlsProps {
 }
 
 const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: GizmoControlsProps) => {
-  const transformRef = useRef<any>(null);
+  const transformRef = useRef<{ attach: (object: unknown) => void; detach: () => void } | null>(null);
   const { scene, camera, gl } = useThree();
   const { selectedObjectId, objects, actions, isDragEnabled, setIsDragging } = useSceneObjectsContext();
   const { isMobile, isTablet, isDesktop } = useDeviceType();

@@ -18,7 +18,7 @@ interface ExperienceHotkeysProps {
   isHelpOpen: boolean;
   isSearchOpen: boolean;
   isSettingsOpen: boolean;
-  worlds: any[];
+  worlds: { id: number; slug: string }[];
   jumpToWorld: (worldId: number) => void;
   onToggleDrag?: () => void;
 }
