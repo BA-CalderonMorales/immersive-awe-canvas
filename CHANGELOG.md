@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+- TorusKnot default geometry configuration with improved material settings
+- New vibrant backgrounds: Cosmic Plasma, Ethereal Gradient, Crystal Sparkles
+- New geometries: Morphing Icosahedron, Wavy Grid, Jelly Torus
+- Scene environment controls in settings panel for background and geometry selection
+
 ### ✨ Enhanced
 - Significantly improved scene vibrancy and color contrast across all backgrounds and default geometries
 - Updated Starry Night background saturation from 0.014 to 0.8 for much more vibrant stars

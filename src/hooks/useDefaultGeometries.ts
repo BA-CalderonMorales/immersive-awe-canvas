@@ -43,12 +43,17 @@ export const useDefaultGeometries = () => {
   }, [geometries]);
 
   const jumpToGeometry = useCallback((index: number) => {
-    if (!geometries || geometries.length === 0 || index === currentGeometryIndex) {
+    if (!geometries || geometries.length === 0) {
       return;
     }
 
-    console.log('Jumping to geometry index:', index);
-    setCurrentGeometryIndex(index);
+    const targetIndex = geometries.findIndex(geo => geo.id === index);
+    if (targetIndex === -1 || targetIndex === currentGeometryIndex) {
+      return;
+    }
+
+    console.log('Jumping to geometry index:', targetIndex, 'for id:', index);
+    setCurrentGeometryIndex(targetIndex);
   }, [geometries, currentGeometryIndex]);
 
   return {

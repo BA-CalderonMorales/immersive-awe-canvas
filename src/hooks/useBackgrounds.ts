@@ -53,15 +53,20 @@ export const useBackgrounds = () => {
   }, [isTransitioning, backgrounds]);
 
   const jumpToBackground = useCallback((index: number) => {
-    if (isTransitioning || !backgrounds || backgrounds.length === 0 || index === currentBackgroundIndex) {
+    if (isTransitioning || !backgrounds || backgrounds.length === 0) {
       return;
     }
 
-    console.log('Jumping to background index:', index);
+    const targetIndex = backgrounds.findIndex(bg => bg.id === index);
+    if (targetIndex === -1 || targetIndex === currentBackgroundIndex) {
+      return;
+    }
+
+    console.log('Jumping to background index:', targetIndex, 'for id:', index);
     setIsTransitioning(true);
     
     setTimeout(() => {
-      setCurrentBackgroundIndex(index);
+      setCurrentBackgroundIndex(targetIndex);
       setTimeout(() => {
         setIsTransitioning(false);
       }, 400);

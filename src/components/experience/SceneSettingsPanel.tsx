@@ -17,7 +17,9 @@ import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useExperience } from '@/hooks/useExperience';
 import { useDeviceType } from '@/hooks/use-mobile';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
+import { useBackgrounds } from '@/hooks/useBackgrounds';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -38,7 +40,8 @@ const SceneSettingsPanel = ({
   const [activeTab, setActiveTab] = useState('main');
   const { theme } = useExperience();
   const { isMobile, isTablet, isDesktop } = useDeviceType();
-  const { currentGeometry } = useDefaultGeometries();
+  const { currentGeometry, geometries, jumpToGeometry } = useDefaultGeometries();
+  const { currentBackground, backgrounds, jumpToBackground } = useBackgrounds();
 
   // Responsive settings - ensure no content cutoff
   const panelWidth = isMobile ? 'w-full' : 'w-full max-w-md';
@@ -174,6 +177,70 @@ const SceneSettingsPanel = ({
       <div className="flex-1 overflow-y-auto scene-editor-scrollbar">
         <div className={`${contentPadding} ${spacingY}`}>
           
+          {/* Scene Environment Section */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label="Toggle scene environment controls"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-indigo-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Scene Environment</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm space-y-4`}>
+                {/* Background Selection */}
+                <div className="space-y-2">
+                  <label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Background
+                  </label>
+                  <Select 
+                    value={currentBackground?.id?.toString()} 
+                    onValueChange={(value) => jumpToBackground(parseInt(value))}
+                  >
+                    <SelectTrigger className={`${colors.buttonSecondary}`}>
+                      <SelectValue placeholder="Select background" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {backgrounds?.map((bg, index) => (
+                        <SelectItem key={bg.id} value={bg.id.toString()}>
+                          {bg.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Geometry Selection */}
+                <div className="space-y-2">
+                  <label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Main Geometry
+                  </label>
+                  <Select 
+                    value={currentGeometry?.id?.toString()} 
+                    onValueChange={(value) => jumpToGeometry(parseInt(value))}
+                  >
+                    <SelectTrigger className={`${colors.buttonSecondary}`}>
+                      <SelectValue placeholder="Select geometry" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {geometries?.map((geo, index) => (
+                        <SelectItem key={geo.id} value={geo.id.toString()}>
+                          {geo.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
           {/* Main Object Section */}
           <Collapsible defaultOpen={true}>
             <CollapsibleTrigger asChild>
