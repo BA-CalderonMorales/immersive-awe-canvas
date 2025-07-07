@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause } from 'lucide-react';
+import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause, Save, Library } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -11,10 +11,13 @@ import SceneObjectsList from '../scene/controls/components/SceneObjectsList';
 import ObjectAddPanel from '../scene/controls/components/ObjectAddPanel';
 import ObjectGuiControls from '../scene/controls/components/ObjectGuiControls';
 import MainObjectControls from '../scene/controls/MainObjectControls';
+import SaveSceneDialog from '../scene/controls/components/SaveSceneDialog';
+import UserScenesManager from '../scene/controls/components/UserScenesManager';
 import { useState } from 'react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { useExperience } from '@/hooks/useExperience';
 import { useDeviceType } from '@/hooks/use-mobile';
+import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -35,6 +38,7 @@ const SceneSettingsPanel = ({
   const [activeTab, setActiveTab] = useState('main');
   const { theme } = useExperience();
   const { isMobile, isTablet, isDesktop } = useDeviceType();
+  const { currentGeometry } = useDefaultGeometries();
 
   // Responsive settings - ensure no content cutoff
   const panelWidth = isMobile ? 'w-full' : 'w-full max-w-md';
@@ -87,6 +91,49 @@ const SceneSettingsPanel = ({
             Scene Editor
           </h2>
           <div className="flex items-center gap-2">
+            {/* Scene Management Buttons */}
+            <SaveSceneDialog 
+              sceneConfig={sceneConfig}
+              baseGeometryId={currentGeometry?.id}
+              baseGeometryName={currentGeometry?.name}
+              trigger={
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`p-1.5 h-auto ${colors.accentHover}`}
+                    >
+                      <Save className="w-4 h-4 text-blue-500" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    Save current scene
+                  </TooltipContent>
+                </Tooltip>
+              }
+            />
+            
+            <UserScenesManager 
+              onLoadScene={onUpdate}
+              trigger={
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className={`p-1.5 h-auto ${colors.accentHover}`}
+                    >
+                      <Library className="w-4 h-4 text-purple-500" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="left">
+                    My saved scenes
+                  </TooltipContent>
+                </Tooltip>
+              }
+            />
+            
             {onToggleMotion && (
               <Tooltip>
                 <TooltipTrigger asChild>

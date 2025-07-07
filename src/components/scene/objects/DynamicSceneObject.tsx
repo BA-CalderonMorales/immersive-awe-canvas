@@ -22,15 +22,41 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
   const dragStartPosition = useRef<Vector3>(new Vector3());
   const dragOffset = useRef<Vector3>(new Vector3());
 
-  // Critical fix: Sync object state changes with Three.js mesh properties
+  // CRITICAL FIX: Sync object state changes with Three.js mesh properties
+  // Use individual array elements in dependencies to ensure React detects array changes
   useEffect(() => {
+    console.log('🎯 DynamicSceneObject useEffect triggered for object:', object.id, {
+      position: object.position,
+      rotation: object.rotation,
+      scale: object.scale,
+      isDragging
+    });
+    
     if (meshRef.current && !isDragging) {
+      console.log('🎯 Updating mesh properties:', {
+        oldPosition: [meshRef.current.position.x, meshRef.current.position.y, meshRef.current.position.z],
+        newPosition: object.position,
+        oldRotation: [meshRef.current.rotation.x, meshRef.current.rotation.y, meshRef.current.rotation.z],
+        newRotation: object.rotation,
+        oldScale: [meshRef.current.scale.x, meshRef.current.scale.y, meshRef.current.scale.z],
+        newScale: object.scale
+      });
+      
       // Update mesh position, rotation, and scale when object state changes
       meshRef.current.position.set(...object.position);
       meshRef.current.rotation.set(...object.rotation);
       meshRef.current.scale.set(...object.scale);
+      
+      console.log('🎯 Mesh updated successfully');
+    } else {
+      console.log('🎯 Skipping mesh update:', { hasMesh: !!meshRef.current, isDragging });
     }
-  }, [object.position, object.rotation, object.scale, isDragging]);
+  }, [
+    object.position[0], object.position[1], object.position[2],
+    object.rotation[0], object.rotation[1], object.rotation[2], 
+    object.scale[0], object.scale[1], object.scale[2],
+    isDragging
+  ]);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation(); // Prevent scene click from deselecting

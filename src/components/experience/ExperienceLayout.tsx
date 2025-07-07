@@ -54,6 +54,7 @@ const ExperienceLayout = ({
           <DynamicScene 
             currentBackground={currentBackground}
             currentGeometry={currentGeometry}
+            editableSceneConfig={editableSceneConfig}
             theme={theme}
             isLocked={isObjectLocked}
           />
@@ -78,6 +79,7 @@ const ExperienceLayout = ({
             <DynamicScene 
               currentBackground={currentBackground}
               currentGeometry={currentGeometry}
+              editableSceneConfig={editableSceneConfig}
               theme={theme}
               isLocked={isObjectLocked}
               isDragEnabled={isDragEnabled}

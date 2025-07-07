@@ -9,6 +9,7 @@ import DynamicWorld from './DynamicWorld';
 interface DynamicSceneProps {
   currentBackground: { type: string; [key: string]: unknown };
   currentGeometry: { type: string; [key: string]: unknown };
+  editableSceneConfig?: SceneConfig; // User's modified scene config
   theme: 'day' | 'night';
   isLocked: boolean;
   isDragEnabled?: boolean;
@@ -19,13 +20,14 @@ interface DynamicSceneProps {
 const DynamicScene = ({ 
   currentBackground, 
   currentGeometry, 
+  editableSceneConfig,
   theme, 
   isLocked, 
   isDragEnabled, 
   isMotionFrozen, 
   onDragStateChange 
 }: DynamicSceneProps) => {
-  const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
+  const orbitControlsRef = useRef<any>(null);
   const { isDragging } = useSceneObjectsContext();
 
   // Update orbit controls based on drag state
@@ -35,6 +37,13 @@ const DynamicScene = ({
     }
   }, [isDragging, isDragEnabled]);
   const dynamicSceneConfig = useMemo<SceneConfig>(() => {
+    // CRITICAL FIX: Use editableSceneConfig (user's changes) when available
+    if (editableSceneConfig) {
+      console.log('🎯 Using editableSceneConfig (user changes):', editableSceneConfig);
+      return editableSceneConfig;
+    }
+
+    // Fallback: Create config from database defaults only when no user config exists
     if (!currentBackground || !currentGeometry) {
       return {
         type: 'TorusKnot',
@@ -54,18 +63,18 @@ const DynamicScene = ({
     }
 
     const materialConfig = currentGeometry.material_config || {
-      materialType: 'standard',
+      materialType: 'standard' as const,
       metalness: 0.3,
       roughness: 0.5
     };
 
-    const backgroundConfig = currentBackground.background_config;
+    const backgroundConfig = currentBackground.background_config || { type: 'void' };
     
-    const baseColor = theme === 'day' ? currentGeometry.color_day : currentGeometry.color_night;
+    console.log('🎯 Using database defaults (no user config):', currentGeometry);
 
-    // Create a complete scene config
+    // Create a complete scene config from database defaults
     const sceneConfig: SceneConfig = {
-      type: currentGeometry.geometry_type as string,
+      type: (currentGeometry.geometry_type as any) || 'TorusKnot',
       day: {
         lights: [
           { type: 'ambient', intensity: 1.5 },
@@ -73,21 +82,21 @@ const DynamicScene = ({
         ],
         material: materialConfig,
         background: backgroundConfig,
-        mainObjectColor: currentGeometry.color_day
+        mainObjectColor: (currentGeometry.color_day as string) || '#ffffff'
       },
       night: {
         lights: [
           { type: 'ambient', intensity: 0.8 },
-          { type: 'point', color: '#ffffff', position: [5, 5, 5], intensity: 2 }
+          { type: 'directional', position: [10, 10, 5], intensity: 0.5 }
         ],
         material: materialConfig,
         background: backgroundConfig,
-        mainObjectColor: currentGeometry.color_night
+        mainObjectColor: (currentGeometry.color_night as string) || '#ffffff'
       }
     };
 
     return sceneConfig;
-  }, [currentBackground, currentGeometry, theme]);
+  }, [editableSceneConfig, currentBackground, currentGeometry, theme]);
 
   return (
     <AnimatePresence mode="wait">

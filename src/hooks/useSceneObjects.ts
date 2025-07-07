@@ -70,12 +70,32 @@ export const useSceneObjects = (mainObjectColor: string = '#ffffff') => {
   }, []);
 
   const updateObject = useCallback((id: string, updates: Partial<SceneObject>) => {
-    setState(prev => ({
-      ...prev,
-      objects: prev.objects.map(obj => 
-        obj.id === id ? { ...obj, ...updates } : obj
-      ),
-    }));
+    console.log('🔄 updateObject called:', { id, updates });
+    setState(prev => {
+      const updatedObjects = prev.objects.map(obj => {
+        if (obj.id === id) {
+          const updatedObj = { ...obj, ...updates };
+          // Ensure arrays are properly cloned for React to detect changes
+          if (updates.position) {
+            updatedObj.position = [...updates.position] as [number, number, number];
+          }
+          if (updates.rotation) {
+            updatedObj.rotation = [...updates.rotation] as [number, number, number];
+          }
+          if (updates.scale) {
+            updatedObj.scale = [...updates.scale] as [number, number, number];
+          }
+          console.log('🔄 Object updated:', { old: obj, new: updatedObj });
+          return updatedObj;
+        }
+        return obj;
+      });
+      
+      return {
+        ...prev,
+        objects: updatedObjects,
+      };
+    });
   }, []);
 
   const selectObject = useCallback((id: string | null) => {
