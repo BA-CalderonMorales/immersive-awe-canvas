@@ -1,14 +1,15 @@
 import { useIsMobile } from "@/hooks/use-mobile";
 import ExperienceContainerContent from "./ExperienceContainerContent";
+import { SceneConfig } from "@/types/scene";
 
 interface ExperienceContainerProps {
-  worldData: { slug: string; [key: string]: unknown } | null;
-  editableSceneConfig: { type: string; [key: string]: unknown };
+  worldData: any;
+  editableSceneConfig: SceneConfig;
   isTransitioning: boolean;
   currentWorldIndex: number;
   isObjectLocked: boolean;
   theme: 'day' | 'night';
-  worlds: { slug: string; [key: string]: unknown }[];
+  worlds: any[];
   // UI state
   isSettingsOpen: boolean;
   isUiHidden: boolean;
@@ -21,7 +22,7 @@ interface ExperienceContainerProps {
   // Callbacks
   toggleObjectLock: () => void;
   toggleTheme: () => void;
-  setEditableSceneConfig: (config: { type: string; [key: string]: unknown }) => void;
+  setEditableSceneConfig: (config: SceneConfig) => void;
   setIsHelpOpen: (open: boolean) => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
@@ -38,8 +39,10 @@ interface ExperienceContainerProps {
   onToggleDrag: () => void;
   isMotionFrozen?: boolean;
   onToggleMotion?: () => void;
-  currentBackground?: { type: string; [key: string]: unknown };
-  currentGeometry?: { type: string; [key: string]: unknown };
+  currentBackground?: any;
+  currentGeometry?: any;
+  onJumpToBackground?: (index: number) => void;
+  onJumpToGeometry?: (index: number) => void;
 }
 
 const ExperienceContainer = (props: ExperienceContainerProps) => {

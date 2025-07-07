@@ -97,6 +97,8 @@ const ExperienceLayout = ({
                 onUpdate={onUpdateSceneConfig}
                 isMotionFrozen={isMotionFrozen}
                 onToggleMotion={onToggleMotion}
+                onJumpToBackground={currentBackground ? (index) => {} : undefined}
+                onJumpToGeometry={currentGeometry ? (index) => {} : undefined}
               />
             </ResizablePanel>
           </>

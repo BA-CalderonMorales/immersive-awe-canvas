@@ -1,82 +1,119 @@
-import { useExperience } from "@/hooks/useExperience";
-import { useBackgrounds } from "@/hooks/useBackgrounds";
-import { useDefaultGeometries } from "@/hooks/useDefaultGeometries";
-import { useExperienceState } from "@/hooks/useExperienceState";
-import { useExperienceTransitions } from "@/hooks/useExperienceTransitions";
-import { useExperienceCallbacks } from "@/hooks/useExperienceCallbacks";
-import { useExperienceEffects } from "@/hooks/useExperienceEffects";
-import LoadingOverlay from "./LoadingOverlay";
-import ExperienceContainer from "./ExperienceContainer";
+import { useState, useRef, useCallback } from 'react';
+import { useBackgrounds } from '@/hooks/useBackgrounds';
+import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
+import { useExperienceEffects } from '@/hooks/useExperienceEffects';
+import { useExperience } from '@/hooks/useExperience';
+import { useHotkeyActions } from '@/hooks/useHotkeyActions';
+import ExperienceContainer from './ExperienceContainer';
+import LoadingOverlay from './LoadingOverlay';
+import { SceneConfig } from '@/types/scene';
+import { updateSceneConfigBackground, updateSceneConfigGeometry } from '@/utils/sceneConfigUtils';
+import type { Database } from "@/integrations/supabase/types";
+
+type DefaultGeometry = Database['public']['Tables']['default_geometries']['Row'];
 
 const ExperienceLogic = () => {
+  // Basic state
+  const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig>({
+    type: 'TorusKnot',
+    day: {
+      lights: [{ type: 'ambient', intensity: 1 }],
+      material: { materialType: 'standard' },
+      background: { type: 'void' },
+      mainObjectColor: '#ffffff'
+    },
+    night: {
+      lights: [{ type: 'ambient', intensity: 0.5 }],
+      material: { materialType: 'standard' },
+      background: { type: 'void' },
+      mainObjectColor: '#ffffff'
+    }
+  });
+  const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
+  const [isObjectLocked, setIsObjectLocked] = useState(false);
+  const [isDragEnabled, setIsDragEnabled] = useState(false);
+  const [isMotionFrozen, setIsMotionFrozen] = useState(false);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [isUiHidden, setIsUiHidden] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [showEntryTransition, setShowEntryTransition] = useState(true);
+  const [showWorldTransition, setShowWorldTransition] = useState(false);
+  const [showUiHint, setShowUiHint] = useState(false);
+  const hintShownRef = useRef(false);
+
+  // Hooks
+  const { backgrounds, currentBackground, isTransitioning, changeBackground, jumpToBackground } = useBackgrounds();
+  const { geometries, currentGeometry, changeGeometry, jumpToGeometry } = useDefaultGeometries();
   const { theme, toggleTheme } = useExperience();
-  
-  const {
-    backgrounds,
-    isLoading: backgroundsLoading,
-    isError: backgroundsError,
-    currentBackground,
-    currentBackgroundIndex,
-    isTransitioning,
-    changeBackground,
-  } = useBackgrounds();
 
-  const {
-    geometries,
-    isLoading: geometriesLoading,
-    isError: geometriesError,
-    currentGeometry,
-    currentGeometryIndex,
+  // Helper functions
+  const toggleObjectLock = useCallback(() => setIsObjectLocked(prev => !prev), []);
+  const toggleDragEnabled = useCallback(() => setIsDragEnabled(prev => !prev), []);
+  const toggleMotionFreeze = useCallback(() => setIsMotionFrozen(prev => !prev), []);
+  const handleEntryTransitionEnd = useCallback(() => setShowEntryTransition(false), []);
+  const handleWorldTransitionEnd = useCallback(() => setShowWorldTransition(false), []);
+  const handleCopyCode = useCallback(() => {
+    // Copy current scene config to clipboard
+    navigator.clipboard.writeText(JSON.stringify(editableSceneConfig, null, 2));
+  }, [editableSceneConfig]);
+  const handleGoHome = useCallback(() => {
+    window.location.href = '/';
+  }, []);
+  const handleToggleShortcuts = useCallback(() => {
+    // Toggle keyboard shortcuts overlay
+  }, []);
+
+  // Hotkey callbacks
+  const hotkeyCallbacks = {
+    toggleTheme,
+    changeWorld: changeBackground,
     changeGeometry,
-  } = useDefaultGeometries();
+    openSearch: () => setIsSearchOpen(true),
+    goHome: handleGoHome,
+    openHelp: () => setIsHelpOpen(true),
+    toggleSettings: () => setIsSettingsOpen(prev => !prev),
+    copyCode: handleCopyCode,
+    toggleUi: () => setIsUiHidden(prev => !prev),
+    toggleLock: toggleObjectLock,
+    toggleShortcuts: handleToggleShortcuts,
+  };
 
-  const isLoading = backgroundsLoading || geometriesLoading;
-  const isError = backgroundsError || geometriesError;
+  // Initialize hotkeys
+  useHotkeyActions(hotkeyCallbacks);
 
-  const {
-    editableSceneConfig,
-    setEditableSceneConfig,
-    isObjectLocked,
-    toggleObjectLock,
-    currentWorldId,
-    setCurrentWorldId,
-    isHelpOpen,
-    setIsHelpOpen,
-    isSearchOpen,
-    setIsSearchOpen,
-    isSettingsOpen,
-    setIsSettingsOpen,
-    isUiHidden,
-    setIsUiHidden,
-    showUiHint,
-    setShowUiHint,
-    hintShownRef,
-    handleCopyCode,
-    isDragEnabled,
-    toggleDragEnabled,
-    isMotionFrozen,
-    toggleMotionFreeze,
-  } = useExperienceState();
+  // Enhanced handlers that update scene config properly
+  const handleChangeBackground = useCallback((direction: 'next' | 'prev') => {
+    changeBackground(direction);
+  }, [changeBackground]);
 
-  const {
-    showEntryTransition,
-    showWorldTransition,
-    handleEntryTransitionEnd,
-    handleWorldTransitionEnd,
-  } = useExperienceTransitions(isTransitioning);
+  const handleChangeGeometry = useCallback((direction: 'next' | 'prev') => {
+    changeGeometry(direction);
+  }, [changeGeometry]);
 
-  const {
-    handleGoHome,
-    handleToggleShortcuts,
-  } = useExperienceCallbacks();
+  const handleJumpToBackground = useCallback((backgroundIndex: number) => {
+    jumpToBackground(backgroundIndex);
+    // Update scene config when background changes
+    if (backgrounds && backgrounds[backgroundIndex] && editableSceneConfig) {
+      const targetBackground = backgrounds[backgroundIndex];
+      const updatedConfig = updateSceneConfigBackground(editableSceneConfig, targetBackground);
+      setEditableSceneConfig(updatedConfig);
+    }
+  }, [jumpToBackground, backgrounds, editableSceneConfig]);
 
-  const {
-    handleEntryTransitionEndWithHint,
-  } = useExperienceEffects({
-    worldData: currentGeometry ? {
-      ...currentGeometry,
-      scene_config: { type: currentGeometry.geometry_type }
-    } : null,
+  const handleJumpToGeometry = useCallback((geometryIndex: number) => {
+    jumpToGeometry(geometryIndex);
+    // Update scene config when geometry changes
+    if (geometries && geometries[geometryIndex] && editableSceneConfig) {
+      const targetGeometry = geometries[geometryIndex];
+      const updatedConfig = updateSceneConfigGeometry(editableSceneConfig, targetGeometry);
+      setEditableSceneConfig(updatedConfig);
+    }
+  }, [jumpToGeometry, geometries, editableSceneConfig]);
+
+  // Experience effects
+  const { handleEntryTransitionEndWithHint } = useExperienceEffects({
+    worldData: currentGeometry,
     currentWorldId,
     setEditableSceneConfig,
     setCurrentWorldId,
@@ -87,91 +124,29 @@ const ExperienceLogic = () => {
     handleEntryTransitionEnd,
   });
 
-  // Show minimal scene while loading instead of blocking overlay
+  // Loading states
+  const backgroundsLoading = !backgrounds;
+  const geometriesLoading = !geometries;
+  const isLoading = backgroundsLoading || geometriesLoading;
 
   if (isLoading) {
-    console.log('🔍 Still loading because:', { backgroundsLoading, geometriesLoading });
-    // Show minimal scene while loading instead of blocking overlay
-    return (
-      <ExperienceContainer
-        worldData={{ name: "Loading..." }}
-        editableSceneConfig={{
-          type: 'TorusKnot',
-          day: {
-            lights: [{ type: 'ambient', intensity: 1 }],
-            material: { materialType: 'standard' },
-            background: { type: 'void' },
-            mainObjectColor: '#ffffff'
-          },
-          night: {
-            lights: [{ type: 'ambient', intensity: 0.5 }],
-            material: { materialType: 'standard' },
-            background: { type: 'void' },
-            mainObjectColor: '#ffffff'
-          }
-        }}
-        isTransitioning={true}
-        currentWorldIndex={0}
-        isObjectLocked={true}
-        theme={theme}
-        worlds={[]}
-        isSettingsOpen={false}
-        isUiHidden={false}
-        showUiHint={false}
-        isHelpOpen={false}
-        isSearchOpen={false}
-        showEntryTransition={false}
-        showWorldTransition={false}
-        toggleObjectLock={() => {}}
-        toggleTheme={toggleTheme}
-        setEditableSceneConfig={() => {}}
-        setIsHelpOpen={() => {}}
-        setIsSearchOpen={() => {}}
-        setIsSettingsOpen={() => {}}
-        setIsUiHidden={() => {}}
-        handleChangeBackground={() => {}}
-        handleChangeGeometry={() => {}}
-        handleJumpToWorld={() => {}}
-        handleCopyCode={() => {}}
-        handleGoHome={() => {}}
-        handleToggleShortcuts={() => {}}
-        handleEntryTransitionEndWithHint={() => {}}
-        handleWorldTransitionEnd={() => {}}
-        isDragEnabled={false}
-        onToggleDrag={() => {}}
-        isMotionFrozen={false}
-        onToggleMotion={() => {}}
-        currentBackground={null}
-        currentGeometry={null}
-      />
-    );
-  }
-
-  if (isError) {
-    console.log('🔍 Error state:', { backgroundsError, geometriesError });
-    return <LoadingOverlay message="Could not load experience data." theme="night" />;
+    return <LoadingOverlay message="Loading experience..." theme="night" />;
   }
 
   // Ensure data is available
   if (!currentGeometry || !currentBackground) {
-    console.log('🔍 Missing data:', { 
-      hasCurrentGeometry: !!currentGeometry, 
-      hasCurrentBackground: !!currentBackground,
-      geometriesLength: geometries?.length,
-      backgroundsLength: backgrounds?.length 
-    });
     return <LoadingOverlay message="Waiting for data..." theme="night" />;
   }
 
   return (
     <ExperienceContainer
-      worldData={currentGeometry}
+      worldData={currentGeometry as any}
       editableSceneConfig={editableSceneConfig}
       isTransitioning={isTransitioning}
-      currentWorldIndex={currentBackgroundIndex}
+      currentWorldIndex={0}
       isObjectLocked={isObjectLocked}
       theme={theme}
-      worlds={backgrounds}
+      worlds={backgrounds as any[]}
       isSettingsOpen={isSettingsOpen}
       isUiHidden={isUiHidden}
       showUiHint={showUiHint}
@@ -186,8 +161,8 @@ const ExperienceLogic = () => {
       setIsSearchOpen={setIsSearchOpen}
       setIsSettingsOpen={setIsSettingsOpen}
       setIsUiHidden={setIsUiHidden}
-      handleChangeBackground={changeBackground}
-      handleChangeGeometry={changeGeometry}
+      handleChangeBackground={handleChangeBackground}
+      handleChangeGeometry={handleChangeGeometry}
       handleJumpToWorld={() => {}}
       handleCopyCode={handleCopyCode}
       handleGoHome={handleGoHome}
@@ -200,6 +175,8 @@ const ExperienceLogic = () => {
       onToggleMotion={toggleMotionFreeze}
       currentBackground={currentBackground}
       currentGeometry={currentGeometry}
+      onJumpToBackground={handleJumpToBackground}
+      onJumpToGeometry={handleJumpToGeometry}
     />
   );
 };

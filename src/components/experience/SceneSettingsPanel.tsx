@@ -26,13 +26,17 @@ interface SceneSettingsPanelProps {
   onUpdate: (config: SceneConfig) => void;
   isMotionFrozen?: boolean;
   onToggleMotion?: () => void;
+  onJumpToBackground?: (index: number) => void;
+  onJumpToGeometry?: (index: number) => void;
 }
 
 const SceneSettingsPanel = ({ 
   sceneConfig, 
   onUpdate, 
   isMotionFrozen = false, 
-  onToggleMotion 
+  onToggleMotion,
+  onJumpToBackground,
+  onJumpToGeometry
 }: SceneSettingsPanelProps) => {
   const { objects, selectedObjectId, actions } = useSceneObjectsContext();
   const selectedObject = objects.find(obj => obj.id === selectedObjectId);
@@ -201,7 +205,14 @@ const SceneSettingsPanel = ({
                   </label>
                   <Select 
                     value={currentBackground?.id?.toString()} 
-                    onValueChange={(value) => jumpToBackground(parseInt(value))}
+                    onValueChange={(value) => {
+                      if (onJumpToBackground) {
+                        const backgroundIndex = backgrounds?.findIndex(bg => bg.id === parseInt(value));
+                        if (backgroundIndex !== undefined && backgroundIndex !== -1) {
+                          onJumpToBackground(backgroundIndex);
+                        }
+                      }
+                    }}
                   >
                     <SelectTrigger className={`${colors.buttonSecondary}`}>
                       <SelectValue placeholder="Select background" />
@@ -223,7 +234,14 @@ const SceneSettingsPanel = ({
                   </label>
                   <Select 
                     value={currentGeometry?.id?.toString()} 
-                    onValueChange={(value) => jumpToGeometry(parseInt(value))}
+                    onValueChange={(value) => {
+                      if (onJumpToGeometry) {
+                        const geometryIndex = geometries?.findIndex(geo => geo.id === parseInt(value));
+                        if (geometryIndex !== undefined && geometryIndex !== -1) {
+                          onJumpToGeometry(geometryIndex);
+                        }
+                      }
+                    }}
                   >
                     <SelectTrigger className={`${colors.buttonSecondary}`}>
                       <SelectValue placeholder="Select geometry" />

@@ -3,9 +3,13 @@ import { useEffect } from 'react';
 import { isSceneConfig } from '@/lib/typeguards';
 import { SceneConfig } from '@/types/scene';
 import { logEvent } from '@/lib/logger';
+import { createSceneConfigFromGeometry } from '@/utils/sceneConfigUtils';
+import type { Database } from "@/integrations/supabase/types";
+
+type DefaultGeometry = Database['public']['Tables']['default_geometries']['Row'];
 
 interface UseExperienceEffectsProps {
-  worldData: { id: number; scene_config?: { type?: string } } | null;
+  worldData: DefaultGeometry | null;
   currentWorldId: number | null;
   setEditableSceneConfig: (config: SceneConfig) => void;
   setCurrentWorldId: (id: number) => void;
@@ -31,24 +35,10 @@ export const useExperienceEffects = ({
   // World data effect - updated for geometry-based system
   useEffect(() => {
     if (worldData && worldData.id !== currentWorldId) {
-      // For geometry objects, create a basic scene config from the geometry type
-      const basicSceneConfig: SceneConfig = {
-        type: worldData.scene_config?.type || 'TorusKnot',
-        day: {
-          lights: [{ type: 'ambient', intensity: 1 }],
-          material: { materialType: 'standard' as const },
-          background: { type: 'void' },
-          mainObjectColor: '#ffffff'
-        },
-        night: {
-          lights: [{ type: 'ambient', intensity: 0.5 }],
-          material: { materialType: 'standard' as const },
-          background: { type: 'void' },
-          mainObjectColor: '#ffffff'
-        }
-      };
+      // Create proper scene config from geometry data
+      const sceneConfig = createSceneConfigFromGeometry(worldData);
       
-      setEditableSceneConfig(basicSceneConfig);
+      setEditableSceneConfig(sceneConfig);
       setCurrentWorldId(worldData.id);
       if (isSettingsOpen) {
         setIsSettingsOpen(false);
