@@ -36,50 +36,50 @@ const SceneSettingsPanel = ({
   const { theme } = useExperience();
   const { isMobile, isTablet, isDesktop } = useDeviceType();
 
-  // Responsive settings based on device type
-  const panelWidth = isMobile ? 'w-full' : isTablet ? 'w-80' : 'w-96';
+  // Responsive settings - ensure no content cutoff
+  const panelWidth = isMobile ? 'w-full' : 'w-full max-w-md';
   const headerPadding = isMobile ? 'p-3' : 'p-4';
   const contentPadding = isMobile ? 'p-3' : 'p-4';
   const spacingY = isMobile ? 'space-y-4' : 'space-y-6';
 
-  // Clean, modern color schemes inspired by Excalidraw
+  // Enhanced color schemes for better integration with the experience
   const colorScheme = {
     day: {
-      background: 'bg-white',
-      border: 'border-gray-200',
-      headerBg: 'bg-white',
-      headerBorder: 'border-gray-200',
+      background: 'bg-white/95 backdrop-blur-sm',
+      border: 'border-gray-200/60',
+      headerBg: 'bg-white/90 backdrop-blur-md',
+      headerBorder: 'border-gray-200/40',
       primaryText: 'text-gray-900',
       secondaryText: 'text-gray-600',
       accentText: 'text-gray-800',
-      accentHover: 'hover:bg-gray-50',
-      separatorColor: 'bg-gray-100',
-      collapsibleHover: 'hover:bg-gray-50',
+      accentHover: 'hover:bg-gray-50/80 transition-all duration-200',
+      separatorColor: 'bg-gray-100/60',
+      collapsibleHover: 'hover:bg-gray-50/80 hover:shadow-sm transition-all duration-300 ease-out',
       infoIcon: 'text-gray-500 hover:text-gray-700',
-      cardBg: 'bg-gray-50/50',
-      buttonSecondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700 border-gray-200',
+      cardBg: 'bg-white/40 backdrop-blur-sm',
+      buttonSecondary: 'bg-gray-100/80 hover:bg-gray-200/80 text-gray-700 border-gray-200/60',
     },
     night: {
-      background: 'bg-gray-950',
-      border: 'border-gray-800',
-      headerBg: 'bg-gray-950',
-      headerBorder: 'border-gray-800',
+      background: 'bg-gray-950/95 backdrop-blur-sm',
+      border: 'border-gray-800/60',
+      headerBg: 'bg-gray-950/90 backdrop-blur-md',
+      headerBorder: 'border-gray-800/40',
       primaryText: 'text-gray-100',
       secondaryText: 'text-gray-400',
       accentText: 'text-gray-200',
-      accentHover: 'hover:bg-gray-900',
-      separatorColor: 'bg-gray-800',
-      collapsibleHover: 'hover:bg-gray-900',
+      accentHover: 'hover:bg-gray-900/80 transition-all duration-200',
+      separatorColor: 'bg-gray-800/60',
+      collapsibleHover: 'hover:bg-gray-900/80 hover:shadow-lg hover:shadow-gray-900/20 transition-all duration-300 ease-out',
       infoIcon: 'text-gray-500 hover:text-gray-300',
-      cardBg: 'bg-gray-900/50',
-      buttonSecondary: 'bg-gray-800 hover:bg-gray-700 text-gray-300 border-gray-700',
+      cardBg: 'bg-gray-900/40 backdrop-blur-sm',
+      buttonSecondary: 'bg-gray-800/80 hover:bg-gray-700/80 text-gray-300 border-gray-700/60',
     }
   };
 
   const colors = colorScheme[theme];
 
   return (
-    <div className={`h-full ${panelWidth} ${colors.background} ${colors.border} border-l overflow-hidden z-40 relative flex flex-col`}>
+    <div className={`h-full ${panelWidth} ${colors.background} ${colors.border} border-l z-40 relative flex flex-col shadow-2xl shadow-black/10`}>
       <div className={`${colors.headerBg} z-10 ${colors.headerBorder} border-b ${headerPadding} flex-shrink-0`}>
         <div className="flex items-center justify-between mb-2">
           <h2 className={`${colors.primaryText} flex items-center gap-2 font-medium ${isMobile ? 'text-base' : 'text-lg'}`}>
@@ -113,72 +113,127 @@ const SceneSettingsPanel = ({
                 <Info className={`w-4 h-4 ${colors.infoIcon} cursor-help transition-colors`} />
               </TooltipTrigger>
               <TooltipContent side="left">
-                <p>Adding many objects may impact performance.</p>
+                <p>All controls update objects in real-time.</p>
               </TooltipContent>
             </Tooltip>
           </div>
         </div>
         <p className={`${colors.secondaryText} ${isMobile ? 'text-xs' : 'text-sm'}`}>
-          Modify the main object or add new ones to the scene.
+          All scene controls in one view - no hidden content.
         </p>
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className={`grid w-full grid-cols-2 mx-4 mt-4 ${colors.cardBg} ${colors.border} rounded-lg overflow-hidden`}>
-            <TabsTrigger
-              value="main"
-              className={`flex items-center gap-2 border-b-2 border-transparent ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText} data-[state=active]:border-b-blue-500`}
-            >
-              <Palette className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-              Main Object
-            </TabsTrigger>
-            <TabsTrigger
-              value="objects"
-              className={`flex items-center gap-2 border-b-2 border-transparent ${isMobile ? 'text-xs' : 'text-sm'} data-[state=active]:${colors.background} data-[state=active]:${colors.primaryText} data-[state=active]:border-b-blue-500`}
-            >
-              <Shapes className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'}`} />
-              Scene Objects ({objects.length})
-            </TabsTrigger>
-          </TabsList>
+      {/* Single scrollable view - no tabs, no content cutoff */}
+      <div className="flex-1 overflow-y-auto scene-editor-scrollbar">
+        <div className={`${contentPadding} ${spacingY}`}>
+          
+          {/* Main Object Section */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label="Toggle main object controls"
+              >
+                <div className="flex items-center gap-2">
+                  <Palette className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-blue-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Main Object</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm`}>
+                <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
 
-          <TabsContent value="main" className="flex-1 overflow-y-auto mt-0 mx-4 mb-4">
-            <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mt-4`}>
-              <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
-            </div>
-          </TabsContent>
-
-          <TabsContent value="objects" className="flex-1 overflow-y-auto mt-0 mx-4 mb-4">
-            <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mt-4`}>
-              <div className={`${isMobile ? 'space-y-3' : 'space-y-4'}`}>
+          {/* Add Objects Section */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label="Toggle add objects panel"
+              >
+                <div className="flex items-center gap-2">
+                  <Shapes className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-emerald-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Add Objects</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm`}>
                 <ObjectAddPanel 
                   isAddingObject={isAddingObject}
                   onToggleAddMode={() => setIsAddingObject(!isAddingObject)}
                 />
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Scene Objects List */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label={`Toggle scene objects list (${objects.length} objects)`}
+              >
+                <div className="flex items-center gap-2">
+                  <Shapes className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-purple-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Scene Objects ({objects.length})</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm`}>
                 <SceneObjectsList
                   objects={objects}
                   selectedObjectId={selectedObjectId}
                   onSelectObject={actions.selectObject}
                 />
-                {selectedObject ? (
-                  <div className={`mt-4 pt-4 border-t ${colors.separatorColor}`}>
-                    <h4 className={`${colors.primaryText} font-medium mb-3 ${isMobile ? 'text-sm' : 'text-base'}`}>
-                      Object Properties
-                    </h4>
-                    <ObjectGuiControls 
-                      object={selectedObject}
-                      onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
-                    />
-                  </div>
-                ) : (
-                  <div className={`text-center ${isMobile ? 'text-xs' : 'text-sm'} ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
-                    Select an object to edit its properties
-                  </div>
-                )}
               </div>
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Object Properties */}
+          {selectedObject && (
+            <Collapsible defaultOpen={true}>
+              <CollapsibleTrigger asChild>
+                <Button 
+                  variant="ghost" 
+                  className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                  aria-label={`Toggle properties for ${selectedObject.type} object`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-orange-600`} />
+                    <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>{selectedObject.type.charAt(0).toUpperCase() + selectedObject.type.slice(1)} Properties</span>
+                  </div>
+                  <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+                </Button>
+              </CollapsibleTrigger>
+              <CollapsibleContent>
+                <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm`}>
+                  <ObjectGuiControls 
+                    object={selectedObject}
+                    onUpdate={(updates) => actions.updateObject(selectedObject.id, updates)}
+                  />
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
+          {!selectedObject && objects.length > 0 && (
+            <div className={`text-center ${isMobile ? 'text-xs' : 'text-sm'} ${colors.secondaryText} py-6 ${colors.cardBg} rounded-lg border border-dashed ${colors.border}`}>
+              <p>Select an object above to edit its properties</p>
             </div>
-          </TabsContent>
-        </Tabs>
+          )}
+
+        </div>
       </div>
     </div>
   );

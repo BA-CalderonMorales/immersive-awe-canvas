@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { Mesh, Vector3 } from 'three';
 import { ThreeEvent, useThree } from '@react-three/fiber';
 import { SceneObject } from '@/types/sceneObjects';
@@ -21,6 +21,16 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
   
   const dragStartPosition = useRef<Vector3>(new Vector3());
   const dragOffset = useRef<Vector3>(new Vector3());
+
+  // Critical fix: Sync object state changes with Three.js mesh properties
+  useEffect(() => {
+    if (meshRef.current && !isDragging) {
+      // Update mesh position, rotation, and scale when object state changes
+      meshRef.current.position.set(...object.position);
+      meshRef.current.rotation.set(...object.rotation);
+      meshRef.current.scale.set(...object.scale);
+    }
+  }, [object.position, object.rotation, object.scale, isDragging]);
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation(); // Prevent scene click from deselecting

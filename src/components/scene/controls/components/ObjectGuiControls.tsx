@@ -24,9 +24,9 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
 
     const gui = new GUI({ 
       container: guiContainerRef.current, 
-      title: `Properties: ${object.type}`,
+      title: `${object.type.charAt(0).toUpperCase() + object.type.slice(1)} Properties`,
       autoPlace: false,
-      width: 320
+      width: Math.min(400, guiContainerRef.current.clientWidth - 32) // Responsive width with padding
     });
     guiRef.current = gui;
 
@@ -35,61 +35,118 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
     guiElement.setAttribute('data-theme', theme);
     guiElement.classList.add(`theme-${theme}`);
 
-    // Position controls
-    const positionFolder = gui.addFolder('Position');
+    // CRITICAL FIX: Position controls with enhanced reactive proxy and immediate 3D updates
+    const positionFolder = gui.addFolder('🎯 Position');
     const positionProxy = { x: object.position[0], y: object.position[1], z: object.position[2] };
     
-    positionFolder.add(positionProxy, 'x', -10, 10, 0.1).name('X').onChange((value: number) => {
-      onUpdate({ position: [value, object.position[1], object.position[2]] });
+    positionFolder.add(positionProxy, 'x', -10, 10, 0.01).name('X Position').onChange((value: number) => {
+      positionProxy.x = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        position: [value, positionProxy.y, positionProxy.z] 
+      });
     });
-    positionFolder.add(positionProxy, 'y', -10, 10, 0.1).name('Y').onChange((value: number) => {
-      onUpdate({ position: [object.position[0], value, object.position[2]] });
+    positionFolder.add(positionProxy, 'y', -10, 10, 0.01).name('Y Position').onChange((value: number) => {
+      positionProxy.y = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        position: [positionProxy.x, value, positionProxy.z] 
+      });
     });
-    positionFolder.add(positionProxy, 'z', -10, 10, 0.1).name('Z').onChange((value: number) => {
-      onUpdate({ position: [object.position[0], object.position[1], value] });
+    positionFolder.add(positionProxy, 'z', -10, 10, 0.01).name('Z Position').onChange((value: number) => {
+      positionProxy.z = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        position: [positionProxy.x, positionProxy.y, value] 
+      });
     });
 
-    // Rotation controls
-    const rotationFolder = gui.addFolder('Rotation');
+    // CRITICAL FIX: Rotation controls with enhanced reactive proxy and immediate 3D updates
+    const rotationFolder = gui.addFolder('🔄 Rotation');
     const rotationProxy = { x: object.rotation[0], y: object.rotation[1], z: object.rotation[2] };
     
-    rotationFolder.add(rotationProxy, 'x', 0, Math.PI * 2, 0.1).name('X').onChange((value: number) => {
-      onUpdate({ rotation: [value, object.rotation[1], object.rotation[2]] });
+    rotationFolder.add(rotationProxy, 'x', 0, Math.PI * 2, 0.01).name('X Rotation').onChange((value: number) => {
+      rotationProxy.x = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        rotation: [value, rotationProxy.y, rotationProxy.z] 
+      });
     });
-    rotationFolder.add(rotationProxy, 'y', 0, Math.PI * 2, 0.1).name('Y').onChange((value: number) => {
-      onUpdate({ rotation: [object.rotation[0], value, object.rotation[2]] });
+    rotationFolder.add(rotationProxy, 'y', 0, Math.PI * 2, 0.01).name('Y Rotation').onChange((value: number) => {
+      rotationProxy.y = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        rotation: [rotationProxy.x, value, rotationProxy.z] 
+      });
     });
-    rotationFolder.add(rotationProxy, 'z', 0, Math.PI * 2, 0.1).name('Z').onChange((value: number) => {
-      onUpdate({ rotation: [object.rotation[0], object.rotation[1], value] });
+    rotationFolder.add(rotationProxy, 'z', 0, Math.PI * 2, 0.01).name('Z Rotation').onChange((value: number) => {
+      rotationProxy.z = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        rotation: [rotationProxy.x, rotationProxy.y, value] 
+      });
     });
 
-    // Scale controls
-    const scaleFolder = gui.addFolder('Scale');
+    // CRITICAL FIX: Scale controls with enhanced UX and immediate 3D updates
+    const scaleFolder = gui.addFolder('📏 Scale');
     const uniformScale = { value: object.scale[0] };
-    scaleFolder.add(uniformScale, 'value', 0.1, 5, 0.1).name('Uniform').onChange((value: number) => {
-      onUpdate({ scale: [value, value, value] });
+    scaleFolder.add(uniformScale, 'value', 0.1, 5, 0.01).name('Uniform Scale').onChange((value: number) => {
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        scale: [value, value, value] 
+      });
     });
 
-    // Material controls
-    const materialFolder = gui.addFolder('Material');
-    materialFolder.addColor({ color: object.color }, 'color').onChange((value: string) => {
-      onUpdate({ color: value });
+    // CRITICAL FIX: Material controls with enhanced reactive proxy and immediate 3D updates
+    const materialFolder = gui.addFolder('🎨 Material');
+    const colorProxy = { color: object.color };
+    const materialProxy = { ...object.material };
+    
+    materialFolder.addColor(colorProxy, 'color').name('Object Color').onChange((value: string) => {
+      colorProxy.color = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        color: value 
+      });
     });
     
     if (object.material.metalness !== undefined) {
-      materialFolder.add(object.material, 'metalness', 0, 1, 0.01).onChange((value: number) => {
-        onUpdate({ material: { ...object.material, metalness: value } });
+      materialFolder.add(materialProxy, 'metalness', 0, 1, 0.01).name('Metalness').onChange((value: number) => {
+        materialProxy.metalness = value;
+        // CRITICAL: Force immediate update with new object reference
+        onUpdate({ 
+          ...object,
+          material: { ...object.material, metalness: value } 
+        });
       });
     }
     
     if (object.material.roughness !== undefined) {
-      materialFolder.add(object.material, 'roughness', 0, 1, 0.01).onChange((value: number) => {
-        onUpdate({ material: { ...object.material, roughness: value } });
+      materialFolder.add(materialProxy, 'roughness', 0, 1, 0.01).name('Roughness').onChange((value: number) => {
+        materialProxy.roughness = value;
+        // CRITICAL: Force immediate update with new object reference
+        onUpdate({ 
+          ...object,
+          material: { ...object.material, roughness: value } 
+        });
       });
     }
 
-    materialFolder.add(object.material, 'opacity', 0, 1, 0.01).onChange((value: number) => {
-      onUpdate({ material: { ...object.material, opacity: value, transparent: value < 1 } });
+    materialFolder.add(materialProxy, 'opacity', 0, 1, 0.01).name('Opacity').onChange((value: number) => {
+      materialProxy.opacity = value;
+      // CRITICAL: Force immediate update with new object reference
+      onUpdate({ 
+        ...object,
+        material: { ...object.material, opacity: value, transparent: value < 1 } 
+      });
     });
 
     positionFolder.open();
@@ -104,13 +161,10 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
   }, [object, onUpdate, theme]);
 
   return (
-    <div className="space-y-4">
-      <ColorInput label="Color" value={object.color} onChange={(value) => onUpdate({ color: value })} />
-      <div
-        ref={guiContainerRef}
-        className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
-      />
-    </div>
+    <div 
+      ref={guiContainerRef} 
+      className="w-full min-h-0 [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none [&_.lil-gui_.controller]:min-h-[28px] [&_.lil-gui_.folder>.title]:font-medium"
+    />
   );
 };
 

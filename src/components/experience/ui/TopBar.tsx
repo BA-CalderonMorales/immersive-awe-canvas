@@ -77,11 +77,12 @@ const TopBar = ({
   return (
     <div
       style={textStyle}
-      className={`absolute top-0 left-0 w-full p-4 sm:p-8 pointer-events-none flex justify-between items-start transition-opacity duration-300 backdrop-blur-md shadow-[var(--shadow-elegant)] ${barClasses} ${
+      className={`absolute top-0 left-0 w-full p-3 sm:p-4 md:p-5 lg:p-6 pointer-events-none flex justify-between items-start transition-opacity duration-300 backdrop-blur-md shadow-[var(--shadow-elegant)] ${barClasses} ${
         isTransitioning ? 'opacity-0' : 'opacity-100'
       } ${isSettingsOpen ? 'z-10' : 'z-50'}`}
     >
-      <div className="flex items-center gap-2 pointer-events-auto flex-1 min-w-0 mr-4">
+      {/* Left side: Home and Info buttons grouped together */}
+      <div className="flex items-center gap-2 sm:gap-3 pointer-events-auto">
         <GlassButton
           icon={Home}
           label="Go Home"
@@ -90,12 +91,6 @@ const TopBar = ({
           theme={theme}
           uiColor={uiColor}
         />
-
-        {!isMobile && (
-          <h2 className="text-lg sm:text-2xl md:text-3xl font-bold h-8 sm:h-10 flex items-center truncate flex-shrink min-w-0">
-            {worldName}
-          </h2>
-        )}
         
         <InfoTooltip 
           uiStyle={buttonStyle}
@@ -108,6 +103,13 @@ const TopBar = ({
           instructions={instructions}
           theme={theme}
         />
+      </div>
+
+      {/* Center/Right side: World title */}
+      <div className="flex-1 flex justify-center sm:justify-end items-center min-w-0 mx-4 pointer-events-none">
+        <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold h-6 sm:h-8 md:h-9 flex items-center truncate">
+          {worldName}
+        </h2>
       </div>
       
       <TopBarActions 

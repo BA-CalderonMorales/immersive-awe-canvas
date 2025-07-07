@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -16,7 +16,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Github, LifeBuoy, Move } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { appVersion } from "@/lib/version";
+import { appVersion, getDynamicVersionInfo, type VersionInfo } from "@/lib/version";
 import { cn } from "@/lib/utils";
 import IssueReportForm from "./IssueReportForm";
 
@@ -27,6 +27,25 @@ interface HelpDialogProps {
 
 const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
   const [showIssueForm, setShowIssueForm] = useState(false);
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [isLoadingVersion, setIsLoadingVersion] = useState(false);
+
+  // Fetch version information when dialog opens
+  useEffect(() => {
+    if (isOpen && !versionInfo && !isLoadingVersion) {
+      setIsLoadingVersion(true);
+      getDynamicVersionInfo()
+        .then(info => {
+          setVersionInfo(info);
+        })
+        .catch(error => {
+          console.warn('Failed to fetch version info:', error);
+        })
+        .finally(() => {
+          setIsLoadingVersion(false);
+        });
+    }
+  }, [isOpen, versionInfo, isLoadingVersion]);
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
@@ -115,10 +134,29 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
               </Accordion>
             </ScrollArea>
             <DialogFooter className="pt-4 flex-col sm:flex-row sm:justify-between items-center border-t mt-4">
-              <p className="text-xs text-muted-foreground mb-2 sm:mb-0">Version: {appVersion}</p>
-              <Button onClick={() => setShowIssueForm(true)}>
-                <Github className="mr-2 h-4 w-4" /> Report an Issue
-              </Button>
+              <div className="text-xs text-muted-foreground mb-2 sm:mb-0">
+                {isLoadingVersion ? (
+                  <span>Loading version...</span>
+                ) : versionInfo ? (
+                  <span>Version: {versionInfo.version}</span>
+                ) : (
+                  <span>Version: {appVersion}</span>
+                )}
+              </div>
+              <div className="flex gap-2">
+                {versionInfo && versionInfo.url && (
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => window.open(versionInfo.url, '_blank')}
+                  >
+                    <Github className="mr-2 h-4 w-4" /> Release Notes
+                  </Button>
+                )}
+                <Button size="sm" onClick={() => setShowIssueForm(true)}>
+                  <Github className="mr-2 h-4 w-4" /> Report Issue
+                </Button>
+              </div>
             </DialogFooter>
           </>
         )}

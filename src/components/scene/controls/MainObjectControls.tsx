@@ -30,7 +30,7 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
       container: guiContainerRef.current, 
       title: 'Main Object Properties',
       autoPlace: false,
-      width: 320
+      width: Math.min(400, guiContainerRef.current.clientWidth - 32) // Responsive width with padding
     });
     guiRef.current = gui;
 
@@ -41,9 +41,26 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
 
     const updateConfig = createConfigUpdater(sceneConfig, onUpdate);
 
-    // Main Object Color
-    gui.addColor(themeConfig, 'mainObjectColor').name('Color').onChange((value: string) => {
-      updateConfig(c => { c[theme].mainObjectColor = value; });
+    // Create a proxy object for reactive updates with better state management
+    const colorProxy = { color: themeConfig.mainObjectColor };
+
+    // CRITICAL FIX: Main Object Color with immediate update and proper reactivity
+    const colorController = gui.addColor(colorProxy, 'color').name('Main Color');
+    colorController.onChange((value: string) => {
+      // Update proxy immediately for UI responsiveness
+      colorProxy.color = value;
+      
+      // CRITICAL: Create new config object to trigger React re-render
+      const newConfig = {
+        ...sceneConfig,
+        [theme]: {
+          ...sceneConfig[theme],
+          mainObjectColor: value
+        }
+      };
+      
+      // Trigger immediate update to force re-render of main object
+      onUpdate(newConfig);
     });
 
     // Material Controls - early return if no material
@@ -65,13 +82,10 @@ const MainObjectControls = ({ sceneConfig, onUpdate }: MainObjectControlsProps) 
   };
 
   return (
-    <div className="space-y-4">
-      <ColorInput label="Color" value={themeConfig.mainObjectColor} onChange={handleColorChange} />
-      <div
-        ref={guiContainerRef}
-        className="w-full [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none"
-      />
-    </div>
+    <div 
+      ref={guiContainerRef} 
+      className="w-full min-h-0 [&_.lil-gui]:static [&_.lil-gui]:max-w-none [&_.lil-gui]:w-full [&_.lil-gui]:bg-transparent [&_.lil-gui]:border-0 [&_.lil-gui]:shadow-none [&_.lil-gui_.controller]:min-h-[28px]"
+    />
   );
 };
 
