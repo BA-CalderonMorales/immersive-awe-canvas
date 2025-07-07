@@ -13,17 +13,24 @@ interface DynamicSceneProps {
   isLocked: boolean;
   isDragEnabled?: boolean;
   isMotionFrozen?: boolean;
+  /**
+   * Optional scene configuration overrides. When provided, the scene will use
+   * this configuration instead of deriving one from the current geometry and
+   * background. This allows the settings panel to update the live scene.
+   */
+  sceneConfig?: SceneConfig;
   onDragStateChange?: (isDragging: boolean) => void;
 }
 
 const DynamicScene = ({ 
   currentBackground, 
   currentGeometry, 
-  theme, 
-  isLocked, 
-  isDragEnabled, 
-  isMotionFrozen, 
-  onDragStateChange 
+  theme,
+  isLocked,
+  isDragEnabled,
+  isMotionFrozen,
+  sceneConfig,
+  onDragStateChange
 }: DynamicSceneProps) => {
   const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
   const { isDragging } = useSceneObjectsContext();
@@ -35,6 +42,12 @@ const DynamicScene = ({
     }
   }, [isDragging, isDragEnabled]);
   const dynamicSceneConfig = useMemo<SceneConfig>(() => {
+    // If a scene configuration is provided (e.g. from the settings panel), use
+    // it directly. This ensures live edits immediately affect the scene.
+    if (sceneConfig) {
+      return sceneConfig;
+    }
+
     if (!currentBackground || !currentGeometry) {
       return {
         type: 'TorusKnot',
@@ -87,7 +100,7 @@ const DynamicScene = ({
     };
 
     return sceneConfig;
-  }, [currentBackground, currentGeometry, theme]);
+  }, [sceneConfig, currentBackground, currentGeometry, theme]);
 
   return (
     <AnimatePresence mode="wait">

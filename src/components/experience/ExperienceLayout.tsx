@@ -75,12 +75,13 @@ const ExperienceLayout = ({
       >
         <ResizablePanel>
           <div className="w-full h-full relative overflow-hidden">
-            <DynamicScene 
+            <DynamicScene
               currentBackground={currentBackground}
               currentGeometry={currentGeometry}
               theme={theme}
               isLocked={isObjectLocked}
               isDragEnabled={isDragEnabled}
+              sceneConfig={editableSceneConfig}
               isMotionFrozen={isMotionFrozen}
             />
           </div>
