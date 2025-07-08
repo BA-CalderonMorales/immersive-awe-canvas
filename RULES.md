@@ -19,11 +19,11 @@ Use these npm/bun scripts during feature work:
 - `npm start` or `bun dev` – run the development server
 - `npm run ios` or `bun ios` – run the iOS app
 - `npm run android` or `bun android` – run the Android app
-- `npm test` or `bun test` – run the full test suite
+- `npm test` or `bun run test` – run the full test suite
 - `npm run typecheck` or `bun typecheck` – run TypeScript checks
-- `npm run build` or `bun build` – build release artifacts
+- `npm run build` or `bun run build` – build release artifacts
 
-Run `npm ci` or `bun install`, `npm test` or `bun test`, `npm run typecheck` or `bun typecheck`, and `npm run build` or `bun build` before pushing changes. CI uses the same commands.
+Run `npm ci` or `bun install`, `npm test` or `bun run test`, `npm run typecheck` or `bun typecheck`, and `npm run build` or `bun run build` before pushing changes. CI uses the same commands.
 
 ## Commit Standards
 

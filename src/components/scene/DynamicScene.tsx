@@ -111,6 +111,13 @@ const DynamicScene = ({
         <Canvas
           camera={{ position: [0, 0, 12], fov: 75 }}
           className="w-full h-full"
+          gl={{ 
+            antialias: false,
+            alpha: true,
+            powerPreference: 'default'
+          }}
+          dpr={1}
+          performance={{ min: 0.5 }}
         >
           <OrbitControls 
             ref={orbitControlsRef}

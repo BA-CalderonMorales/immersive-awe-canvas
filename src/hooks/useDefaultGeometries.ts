@@ -20,9 +20,18 @@ const fetchDefaultGeometries = async (): Promise<DefaultGeometry[]> => {
 export const useDefaultGeometries = () => {
   const [currentGeometryIndex, setCurrentGeometryIndex] = useState(0);
 
-  const { data: geometries, isLoading, isError } = useQuery<DefaultGeometry[]>({
+  const { data: geometries, isLoading, isError, error } = useQuery<DefaultGeometry[]>({
     queryKey: ['default_geometries'],
     queryFn: fetchDefaultGeometries,
+  });
+
+  // Debug logging
+  console.log('useDefaultGeometries debug:', { 
+    geometries, 
+    isLoading, 
+    isError, 
+    error: error?.message,
+    geometriesLength: geometries?.length 
   });
 
   const currentGeometry = useMemo(() => {

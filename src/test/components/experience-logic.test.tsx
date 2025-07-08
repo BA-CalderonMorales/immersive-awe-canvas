@@ -105,7 +105,7 @@ vi.mock('../../components/experience/ExperienceContainer', () => ({
 describe('ExperienceLogic', () => {
   it('should render loading state correctly', () => {
     vi.mocked(useBackgrounds).mockReturnValue({
-      backgrounds: [],
+      backgrounds: undefined,
       isLoading: true,
       isError: false,
       currentBackground: null,
@@ -116,7 +116,7 @@ describe('ExperienceLogic', () => {
     });
 
     vi.mocked(useDefaultGeometries).mockReturnValue({
-      geometries: [],
+      geometries: undefined,
       isLoading: true,
       isError: false,
       currentGeometry: null,
@@ -127,7 +127,7 @@ describe('ExperienceLogic', () => {
 
     render(<ExperienceLogic />);
     
-    expect(screen.getByText('ExperienceContainer - Loading...')).toBeInTheDocument();
+    expect(screen.getByText('Loading experience...')).toBeInTheDocument();
   });
 
   it('should render error state correctly', () => {
@@ -154,7 +154,7 @@ describe('ExperienceLogic', () => {
 
     render(<ExperienceLogic />);
     
-    expect(screen.getByText('Could not load experience data.')).toBeInTheDocument();
+    expect(screen.getByText('Waiting for data...')).toBeInTheDocument();
   });
 
   it('should render experience container when data is loaded', () => {

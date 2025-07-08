@@ -129,14 +129,29 @@ const ExperienceLogic = () => {
   const geometriesLoading = !geometries;
   const isLoading = backgroundsLoading || geometriesLoading;
 
+  // Debug logging
+  console.log('ExperienceLogic debug:', {
+    backgroundsLoading,
+    geometriesLoading, 
+    isLoading,
+    currentGeometry,
+    currentBackground,
+    backgrounds: backgrounds?.length,
+    geometries: geometries?.length
+  });
+
   if (isLoading) {
+    console.log('ExperienceLogic: Showing loading overlay');
     return <LoadingOverlay message="Loading experience..." theme="night" />;
   }
 
   // Ensure data is available
   if (!currentGeometry || !currentBackground) {
+    console.log('ExperienceLogic: Waiting for data...', { currentGeometry, currentBackground });
     return <LoadingOverlay message="Waiting for data..." theme="night" />;
   }
+
+  console.log('ExperienceLogic: Rendering ExperienceContainer');
 
   return (
     <ExperienceContainer

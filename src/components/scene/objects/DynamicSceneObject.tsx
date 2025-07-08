@@ -34,18 +34,36 @@ const DynamicSceneObject = ({ object, isSelected, onSelect }: DynamicSceneObject
     
     if (meshRef.current && !isDragging) {
       console.log('🎯 Updating mesh properties:', {
-        oldPosition: [meshRef.current.position.x, meshRef.current.position.y, meshRef.current.position.z],
+        oldPosition: [
+          meshRef.current.position?.x ?? 0, 
+          meshRef.current.position?.y ?? 0, 
+          meshRef.current.position?.z ?? 0
+        ],
         newPosition: object.position,
-        oldRotation: [meshRef.current.rotation.x, meshRef.current.rotation.y, meshRef.current.rotation.z],
+        oldRotation: [
+          meshRef.current.rotation?.x ?? 0, 
+          meshRef.current.rotation?.y ?? 0, 
+          meshRef.current.rotation?.z ?? 0
+        ],
         newRotation: object.rotation,
-        oldScale: [meshRef.current.scale.x, meshRef.current.scale.y, meshRef.current.scale.z],
+        oldScale: [
+          meshRef.current.scale?.x ?? 1, 
+          meshRef.current.scale?.y ?? 1, 
+          meshRef.current.scale?.z ?? 1
+        ],
         newScale: object.scale
       });
       
       // Update mesh position, rotation, and scale when object state changes
-      meshRef.current.position.set(...object.position);
-      meshRef.current.rotation.set(...object.rotation);
-      meshRef.current.scale.set(...object.scale);
+      if (meshRef.current.position?.set) {
+        meshRef.current.position.set(...object.position);
+      }
+      if (meshRef.current.rotation?.set) {
+        meshRef.current.rotation.set(...object.rotation);
+      }
+      if (meshRef.current.scale?.set) {
+        meshRef.current.scale.set(...object.scale);
+      }
       
       console.log('🎯 Mesh updated successfully');
     } else {

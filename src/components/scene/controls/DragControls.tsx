@@ -73,8 +73,12 @@ const DragControls = ({ enabled, onDragStart, onDragEnd }: DragControlsProps) =>
         const object = event.object;
         
         // Update object state immediately for real-time feedback
-        if (object.userData?.objectId) {
-          const position: [number, number, number] = [object.position.x, object.position.y, object.position.z];
+        if (object.userData?.objectId && object.position) {
+          const position: [number, number, number] = [
+            object.position.x ?? 0, 
+            object.position.y ?? 0, 
+            object.position.z ?? 0
+          ];
           actions.updateObject(object.userData.objectId, { position });
         }
       };

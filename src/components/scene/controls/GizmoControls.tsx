@@ -71,24 +71,24 @@ const GizmoControls = ({ enabled, mode = 'translate', onDragStateChange }: Gizmo
       return;
     }
     
-    if (!selectedObject) return;
+    if (!selectedObject || !selectedMesh.current) return;
     
     const position: [number, number, number] = [
-      selectedMesh.current.position.x,
-      selectedMesh.current.position.y,
-      selectedMesh.current.position.z
+      selectedMesh.current.position?.x ?? 0,
+      selectedMesh.current.position?.y ?? 0,
+      selectedMesh.current.position?.z ?? 0
     ];
     
     const rotation: [number, number, number] = [
-      selectedMesh.current.rotation.x,
-      selectedMesh.current.rotation.y,
-      selectedMesh.current.rotation.z
+      selectedMesh.current.rotation?.x ?? 0,
+      selectedMesh.current.rotation?.y ?? 0,
+      selectedMesh.current.rotation?.z ?? 0
     ];
     
     const scale: [number, number, number] = [
-      selectedMesh.current.scale.x,
-      selectedMesh.current.scale.y,
-      selectedMesh.current.scale.z
+      selectedMesh.current.scale?.x ?? 1,
+      selectedMesh.current.scale?.y ?? 1,
+      selectedMesh.current.scale?.z ?? 1
     ];
 
     actions.updateObject(selectedObject.id, { position, rotation, scale });

@@ -21,9 +21,18 @@ export const useBackgrounds = () => {
   const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
-  const { data: backgrounds, isLoading, isError } = useQuery<Background[]>({
+  const { data: backgrounds, isLoading, isError, error } = useQuery<Background[]>({
     queryKey: ['backgrounds'],
     queryFn: fetchBackgrounds,
+  });
+
+  // Debug logging
+  console.log('useBackgrounds debug:', { 
+    backgrounds, 
+    isLoading, 
+    isError, 
+    error: error?.message,
+    backgroundsLength: backgrounds?.length 
   });
 
   const currentBackground = useMemo(() => {
