@@ -104,18 +104,75 @@ bun run version:major  # Breaking changes (1.0.0 → 2.0.0)
 - **Build Tool:** Vite with optimized production builds
 - **Deployment:** GitHub Actions with automated releases
 
+### Modular Architecture
+
+This project follows a modular architecture with clear separation between client and server concerns:
+
+#### 🖥️ Client Module (`src/modules/client/`)
+Contains all UI-related code:
+- **Components**: React components for rendering the user interface
+- **Hooks**: Client-side state management and UI logic
+- **Context**: React context providers for shared state
+- **Utils**: Client-side utility functions
+- **Types**: Client-side type definitions
+
+#### 🗄️ Server Module (`src/modules/server/`)
+Contains all backend-related code:
+- **Database**: Supabase client configuration and types
+- **API**: Data fetching hooks and external API integrations
+- **Utils**: Server-side utilities (logging, security)
+- **Types**: Server-side type definitions
+
 ### Project Structure
 ```
 src/
-├── components/          # React components
-│   ├── scene/          # 3D scene components
-│   ├── experience/     # Main experience logic
-│   └── ui/            # Reusable UI components
-├── hooks/             # Custom React hooks
+├── modules/             # Modular architecture
+│   ├── client/         # UI-related code
+│   │   ├── components/ # React components
+│   │   ├── hooks/      # Client-side hooks
+│   │   ├── context/    # React contexts
+│   │   ├── utils/      # Client utilities
+│   │   └── types/      # Client types
+│   ├── server/         # Backend-related code
+│   │   ├── database/   # Supabase client & types
+│   │   ├── api/        # Data fetching & APIs
+│   │   ├── utils/      # Server utilities
+│   │   └── types/      # Server types
+│   └── index.ts        # Module exports
+├── components/         # Legacy components (re-exported via modules)
+├── hooks/             # Legacy hooks (re-exported via modules)
 ├── lib/               # Utility functions
 ├── types/             # TypeScript type definitions
 └── integrations/      # External service integrations
 ```
+
+### Using the Modular Architecture
+
+#### For UI Development
+If you're working on the user interface:
+
+```typescript
+// Import client-side functionality
+import { ComponentName } from '@/modules/client';
+import { useClientHook } from '@/modules/client/hooks';
+```
+
+#### For Backend Development
+If you're working with data and APIs:
+
+```typescript
+// Import server-side functionality
+import { useWorlds } from '@/modules/server';
+import { supabase } from '@/modules/server/database';
+```
+
+### Benefits of This Architecture
+
+1. **Clear Separation of Concerns**: UI and backend code are clearly separated
+2. **Better Onboarding**: New developers can focus on either client or server work
+3. **Improved Maintainability**: Easier to locate and modify specific functionality
+4. **Backward Compatibility**: Existing imports continue to work
+5. **Scalability**: Easy to add new features to appropriate modules
 
 ## Contributing
 
@@ -134,6 +191,13 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for semantic
 - Use immutable patterns where possible
 - Keep components small and focused
 - Maintain 60fps performance standards
+
+When adding new features:
+- **UI Components/Logic**: Add to `src/modules/client/`
+- **Data Fetching/APIs**: Add to `src/modules/server/`
+- **Shared Types**: Consider where the type is primarily used
+
+This modular approach helps maintain clean code organization and makes the codebase more approachable for new contributors.
 
 ## License
 
