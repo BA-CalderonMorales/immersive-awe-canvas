@@ -5,7 +5,7 @@ import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 export default defineConfig({
   plugins: [
     pluginReact({
-      fastRefresh: true,
+      fastRefresh: false,
     }),
     pluginTypeCheck({
       enable: true,
