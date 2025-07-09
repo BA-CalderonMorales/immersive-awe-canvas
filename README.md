@@ -5,10 +5,10 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 
 **Live Demo:** [immersive-awe-canvas.lovable.app](https://immersive-awe-canvas.lovable.app)
 
-## ✨ Features
+## Features
 
 <details>
-<summary><strong>🎯 Core 3D Experience</strong></summary>
+<summary><strong>Core 3D Experience</strong></summary>
 
 - **Multiple Scene Types:** TorusKnot, WobbleField, CrystallineSpire, DistortionSphere, MorphingIcosahedron, WavyGrid, and JellyTorus
 - **Dynamic Day/Night Themes:** Toggle between light and dark modes with per-world color schemes
@@ -19,7 +19,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 </details>
 
 <details>
-<summary><strong>🎮 Professional Object Manipulation</strong></summary>
+<summary><strong>Professional Object Manipulation</strong></summary>
 
 - **Blender-Style Gizmos:** Precise transform controls with visual axis indicators
 - **Smooth Drag Controls:** Fluid object movement with lerp interpolation
@@ -30,7 +30,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 </details>
 
 <details>
-<summary><strong>🛠️ Advanced Scene Editing</strong></summary>
+<summary><strong>Advanced Scene Editing</strong></summary>
 
 - **Live Scene Editor:** Professional settings panel with MVVM architecture
 - **Add/Remove Objects:** Dynamic scene composition with multiple geometry types
@@ -42,7 +42,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 </details>
 
 <details>
-<summary><strong>👨‍💻 Developer Experience</strong></summary>
+<summary><strong>Developer Experience</strong></summary>
 
 - **Semantic Versioning:** Automated GitHub releases following conventional commits
 - **TypeScript:** Full type safety with strict mode enabled
@@ -54,7 +54,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 </details>
 
 <details>
-<summary><strong>🎨 User Interface</strong></summary>
+<summary><strong>User Interface</strong></summary>
 
 - **Responsive Design:** Optimized layouts for desktop, tablet, and mobile devices
 - **Keyboard Shortcuts:** Complete keyboard navigation and control system
@@ -65,7 +65,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 </details>
 
 <details>
-<summary><strong>⚡ Technical Features</strong></summary>
+<summary><strong>Technical Features</strong></summary>
 
 - **Supabase Integration:** Backend data management with type-safe APIs
 - **RSBuild:** Fast development and optimized production builds
@@ -75,7 +75,7 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 
 </details>
 
-## 🚀 Quick Start
+## Quick Start
 
 <details>
 <summary><strong>Prerequisites</strong></summary>
@@ -160,7 +160,7 @@ npm run build
 
 </details>
 
-## 🎮 Controls
+## Controls
 
 <details>
 <summary><strong>Mouse/Touch Interactions</strong></summary>
@@ -192,7 +192,7 @@ npm run build
 
 </details>
 
-## 🏢 Architecture
+## Architecture
 
 <details>
 <summary><strong>Technology Stack</strong></summary>
@@ -213,7 +213,7 @@ npm run build
 
 This project uses a **modular monorepo architecture** with clear separation of concerns across multiple workspaces:
 
-#### 🖥️ Client Workspace (`client/`)
+#### Client Workspace (`client/`)
 Frontend React application with modern architecture:
 - **Components**: Organized by feature with scene, UI, and layout components
 - **Hooks**: Custom React hooks for state management and API integration
@@ -222,7 +222,7 @@ Frontend React application with modern architecture:
 - **Types**: TypeScript definitions for client-side data structures
 - **Test**: Comprehensive test suite with Vitest (54 tests)
 
-#### 🗄️ Server Workspace (`server/`)
+#### Server Workspace (`server/`)
 Backend utilities and API integrations:
 - **GitHub API**: Dynamic version fetching from GitHub releases
 - **Security**: Input validation and sanitization utilities
@@ -230,14 +230,14 @@ Backend utilities and API integrations:
 - **Validation**: Type guards and data validation functions
 - **Utils**: Server-side utility functions
 
-#### 🖾 Database Workspace (`database/`)
+#### Database Workspace (`database/`)
 Supabase integration and database management:
 - **Types**: Auto-generated TypeScript types from Supabase schema
 - **Migrations**: Database schema migrations
 - **Queries**: Reusable database query functions
 - **Hooks**: React hooks for database operations
 
-#### 🛠️ Utils Workspace (`utils/`)
+#### Utils Workspace (`utils/`)
 Shared utilities across all workspaces:
 - **Common Functions**: Utility functions used by both client and server
 - **Type Guards**: Shared type validation functions
@@ -329,13 +329,13 @@ import { formatDate } from '@utils/utils';
 <details>
 <summary><strong>Architecture Benefits</strong></summary>
 
-1. **🏢 Monorepo Structure**: All related code in one repository with clear workspace boundaries
-2. **🔄 Clear Separation**: Client, server, database, and utils are logically separated
-3. **🚀 Developer Experience**: Easy to navigate and understand project structure
-4. **🔧 Maintainability**: Changes are isolated to appropriate workspaces
-5. **📊 Scalability**: Easy to add new features without architectural debt
-6. **🧪 Testing**: Comprehensive test coverage with proper mocking strategies
-7. **🔄 Type Safety**: Full TypeScript coverage across all workspaces
+1. **Monorepo Structure**: All related code in one repository with clear workspace boundaries
+2. **Clear Separation**: Client, server, database, and utils are logically separated
+3. **Developer Experience**: Easy to navigate and understand project structure
+4. **Maintainability**: Changes are isolated to appropriate workspaces
+5. **Scalability**: Easy to add new features without architectural debt
+6. **Testing**: Comprehensive test coverage with proper mocking strategies
+7. **Type Safety**: Full TypeScript coverage across all workspaces
 
 </details>
 
