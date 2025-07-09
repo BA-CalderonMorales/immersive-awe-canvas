@@ -37,6 +37,7 @@ export default defineConfig({
     distPath: {
       root: 'dist',
     },
+    assetPrefix: process.env.VITE_DEPLOY_TARGET === 'github' ? '/immersive-awe-canvas/' : '/',
   },
   dev: {
     hmr: true,
