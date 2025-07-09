@@ -4,7 +4,9 @@ import { pluginTypeCheck } from '@rsbuild/plugin-type-check';
 
 export default defineConfig({
   plugins: [
-    pluginReact(),
+    pluginReact({
+      fastRefresh: true,
+    }),
     pluginTypeCheck({
       enable: true,
     }),
@@ -48,7 +50,12 @@ export default defineConfig({
   },
   tools: {
     rspack: (config) => {
-      // Add any custom rspack configuration here
+      // Ensure React Fast Refresh is properly configured
+      if (config.mode === 'development') {
+        config.optimization = config.optimization || {};
+        config.optimization.providedExports = false;
+        config.optimization.usedExports = false;
+      }
       return config;
     },
   },
