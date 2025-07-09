@@ -1,7 +1,7 @@
 import { useMemo, useRef, useEffect } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
-import { SceneConfig } from '@/types/scene';
+import { SceneConfig, BackgroundConfig } from '@/types/scene';
 import { motion, AnimatePresence } from "framer-motion";
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicWorld from './DynamicWorld';
@@ -68,7 +68,7 @@ const DynamicScene = ({
       roughness: 0.5
     };
 
-    const backgroundConfig = currentBackground.background_config || { type: 'void' };
+    const backgroundConfig = (currentBackground.background_config as BackgroundConfig) || { type: 'void' };
     
     console.log('🎯 Using database defaults (no user config):', currentGeometry);
 

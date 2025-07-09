@@ -9,7 +9,7 @@ export type { VersionInfo } from './github-api';
 const packageVersion = "1.0.0"; // This gets updated automatically by our versioning system
 
 // The commit hash is injected at build time via the VITE_GIT_COMMIT_HASH environment variable.
-const commitHash = import.meta.env.VITE_GIT_COMMIT_HASH || "dev";
+const commitHash = (typeof import.meta !== 'undefined' && import.meta.env?.VITE_GIT_COMMIT_HASH) || "dev";
 const timeZone = 'America/Chicago';
 
 const now = new Date();

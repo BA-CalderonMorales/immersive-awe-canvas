@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { isSceneConfig } from "@/lib/typeguards";
+import type { SceneConfig, BackgroundConfig } from "@/types";
 import ExperienceTransitions from "./ExperienceTransitions";
 import ExperienceLayout from "./ExperienceLayout";
 import ExperienceUI from "./ExperienceUI";
@@ -8,12 +9,12 @@ import LoadingOverlay from "./LoadingOverlay";
 
 interface ExperienceContainerContentProps {
   worldData: { slug: string; [key: string]: unknown } | null;
-  editableSceneConfig: { type: string; [key: string]: unknown };
+  editableSceneConfig: SceneConfig;
   isTransitioning: boolean;
   currentWorldIndex: number;
   isObjectLocked: boolean;
   theme: 'day' | 'night';
-  worlds: { slug: string; [key: string]: unknown }[];
+  worlds: { id: number; slug: string; [key: string]: unknown }[];
   // UI state
   isSettingsOpen: boolean;
   isUiHidden: boolean;
@@ -26,7 +27,7 @@ interface ExperienceContainerContentProps {
   // Callbacks
   toggleObjectLock: () => void;
   toggleTheme: () => void;
-  setEditableSceneConfig: (config: { type: string; [key: string]: unknown }) => void;
+  setEditableSceneConfig: (config: SceneConfig) => void;
   setIsHelpOpen: (open: boolean) => void;
   setIsSearchOpen: (open: boolean) => void;
   setIsSettingsOpen: (open: boolean) => void;
@@ -44,7 +45,7 @@ interface ExperienceContainerContentProps {
   onToggleDrag: () => void;
   isMotionFrozen?: boolean;
   onToggleMotion?: () => void;
-  currentBackground?: { type: string; [key: string]: unknown };
+  currentBackground?: BackgroundConfig;
   currentGeometry?: { type: string; [key: string]: unknown };
 }
 
@@ -88,7 +89,7 @@ const ExperienceContainerContent = ({
 }: ExperienceContainerContentProps) => {
   // Direct UI color calculation
   const uiColor = worldData ? 
-    (theme === 'day' ? (worldData.ui_day_color || 'white') : (worldData.ui_night_color || 'white')) : 
+    (theme === 'day' ? (worldData.ui_day_color as string || 'white') : (worldData.ui_night_color as string || 'white')) : 
     'white';
 
   if (!worldData) {
@@ -141,7 +142,7 @@ const ExperienceContainerContent = ({
         />
 
         <ExperienceUI
-          worldName={worldData.name}
+          worldName={worldData.name as string}
           theme={theme}
           isTransitioning={isTransitioning}
           editableSceneConfig={editableSceneConfig}

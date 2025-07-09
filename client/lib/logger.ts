@@ -1,6 +1,7 @@
 
 import { supabase } from '@database/supabase/client';
 import { sanitizeLogData } from './security';
+import type { Json } from '@database/supabase/types';
 
 export const logEvent = async ({
   eventType,
@@ -21,7 +22,7 @@ export const logEvent = async ({
       {
         event_type: sanitizedEventType,
         event_source: sanitizedEventSource,
-        metadata: sanitizedMetadata,
+        metadata: sanitizedMetadata as Json,
       },
     ]);
     

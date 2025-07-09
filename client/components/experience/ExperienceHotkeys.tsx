@@ -18,7 +18,7 @@ interface ExperienceHotkeysProps {
   isHelpOpen: boolean;
   isSearchOpen: boolean;
   isSettingsOpen: boolean;
-  worlds: { id: number; slug: string }[];
+  worlds: { id: number; slug: string; [key: string]: unknown }[];
   jumpToWorld: (worldId: number) => void;
   onToggleDrag?: () => void;
 }
@@ -113,7 +113,7 @@ const ExperienceHotkeys = ({
       <WorldSearchDialog
         isOpen={isSearchOpen}
         onOpenChange={setIsSearchOpen}
-        worlds={worlds}
+        worlds={worlds as any}
         onSelectWorld={jumpToWorld}
       />
     </>

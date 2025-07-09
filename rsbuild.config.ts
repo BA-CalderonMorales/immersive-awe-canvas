@@ -7,11 +7,6 @@ export default defineConfig({
     pluginReact(),
     pluginTypeCheck({
       enable: true,
-      forkTsChecker: {
-        typescript: {
-          configFile: './tsconfig.json',
-        },
-      },
     }),
   ],
   html: {
@@ -20,6 +15,9 @@ export default defineConfig({
   source: {
     entry: {
       index: './client/main.tsx',
+    },
+    define: {
+      'import.meta.env.VITE_GIT_COMMIT_HASH': JSON.stringify(process.env.VITE_GIT_COMMIT_HASH || 'dev'),
     },
   },
   resolve: {

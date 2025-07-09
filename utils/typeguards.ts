@@ -20,8 +20,8 @@ export function isSceneConfig(config: Json | null): config is SceneConfig {
   const c = config as Record<string, unknown>;
   const validSceneTypes = ['TorusKnot', 'WobbleField', 'DistortionSphere', 'MorphingIcosahedron', 'WavyGrid', 'CrystallineSpire', 'JellyTorus'];
   return 'type' in c && typeof c.type === 'string' && validSceneTypes.includes(c.type) &&
-         'day' in c && isSceneThemeConfig(c.day) &&
-         'night' in c && isSceneThemeConfig(c.night);
+         'day' in c && isSceneThemeConfig(c.day as Json) &&
+         'night' in c && isSceneThemeConfig(c.night as Json);
 }
 
 export const isValidObjectType = (type: unknown): boolean => {

@@ -1,19 +1,28 @@
 /**
- * Server Module Entry Point
+ * Client Library Entry Point
  * 
- * This module contains all backend-related code including:
- * - Database client and configuration
- * - Data fetching and mutations
- * - Server-side utilities
- * - API integrations
- * - Backend types and schemas
+ * This module contains all client-side utilities including:
+ * - UI utilities and helpers
+ * - Client-side validation
+ * - Type guards
+ * - Utility functions
  */
 
-// Database Integration
-export * from './integrations/supabase/client';
-export * from './integrations/supabase/types';
+// Core utilities
+export * from './utils';
+export * from './validation';
+export * from './typeguards';
+export * from './version';
 
-// Server Utilities
-export * from './github-api';
-export * from './logger';
+// Client-specific utilities
+export * from './keyboardUtils';
+export * from './sceneConfigUtils';
+
+// Security utilities
 export * from './security';
+
+// Logging utilities
+export * from './logger';
+
+// GitHub API utilities
+export * from './github-api';

@@ -2,6 +2,7 @@ import { Suspense, useState, useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import { EffectComposer, Bloom } from '@react-three/postprocessing';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 
 type WorldContainerProps = {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ const WorldContainer = ({
   const [isDragging, setIsDragging] = useState(false);
   const [isObjectDragging, setIsObjectDragging] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
-  const orbitControlsRef = useRef<{ enabled: boolean } | null>(null);
+  const orbitControlsRef = useRef<OrbitControlsImpl>(null);
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
