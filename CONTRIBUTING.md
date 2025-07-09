@@ -97,7 +97,7 @@ This project aims to create an **immersive 3D canvas experience** with:
 - **Three.js** + **React Three Fiber** for 3D rendering
 - **Tailwind CSS** + **shadcn/ui** for design system
 - **Supabase** for backend services
-- **Vite** for fast development builds
+- **RSBuild** for fast development builds and optimized production bundles
 
 ## 🤝 Getting Help
 

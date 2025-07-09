@@ -1,197 +1,343 @@
 
 # Immersive Awe Canvas
 
-A professional 3D canvas experience for exploring and manipulating interactive geometries in your browser. Built with React, Three.js, and modern web technologies.
+A professional 3D canvas experience for exploring and manipulating interactive geometries in your browser. Built with React, Three.js, RSBuild, and modern web technologies using a modular monorepo architecture.
 
 **Live Demo:** [immersive-awe-canvas.lovable.app](https://immersive-awe-canvas.lovable.app)
 
-## Features
+## ✨ Features
 
-### Core 3D Experience
+<details>
+<summary><strong>🎯 Core 3D Experience</strong></summary>
+
 - **Multiple Scene Types:** TorusKnot, WobbleField, CrystallineSpire, DistortionSphere, MorphingIcosahedron, WavyGrid, and JellyTorus
 - **Dynamic Day/Night Themes:** Toggle between light and dark modes with per-world color schemes
 - **Smooth Animations:** Optimized 60fps animations with glitch-free geometry rendering
 - **World Navigation:** Seamless transitions between different 3D environments
+- **Anti-aliasing:** High-quality rendering with MSAA support
 
-### Professional Object Manipulation
+</details>
+
+<details>
+<summary><strong>🎮 Professional Object Manipulation</strong></summary>
+
 - **Blender-Style Gizmos:** Precise transform controls with visual axis indicators
 - **Smooth Drag Controls:** Fluid object movement with lerp interpolation
 - **Object Selection:** Click-to-select with visual wireframe feedback
 - **Real-time Updates:** Immediate visual feedback during manipulation
+- **Mobile-Optimized:** Enhanced gizmo sensitivity for touch devices
 
-### Advanced Scene Editing
-- **Live Scene Editor:** Professional settings panel with organized sections
+</details>
+
+<details>
+<summary><strong>🛠️ Advanced Scene Editing</strong></summary>
+
+- **Live Scene Editor:** Professional settings panel with MVVM architecture
 - **Add/Remove Objects:** Dynamic scene composition with multiple geometry types
 - **Material Controls:** Real-time adjustment of colors, metalness, roughness, and transparency
 - **Transform Properties:** Position, rotation, and scale controls with precise input
 - **Object Management:** Organized object list with selection and property editing
+- **Collapsible Sections:** Organized UI with glassmorphism effects
 
-### Developer Experience
+</details>
+
+<details>
+<summary><strong>👨‍💻 Developer Experience</strong></summary>
+
 - **Semantic Versioning:** Automated GitHub releases following conventional commits
 - **TypeScript:** Full type safety with strict mode enabled
-- **Modern Architecture:** Component-based design with reusable hooks and utilities
-- **Performance Optimized:** Efficient rendering with proper animation lifecycle management
+- **Modern Architecture:** Modular monorepo with client/server/database/utils separation
+- **Performance Optimized:** RSBuild with tree shaking and hot module replacement
+- **Comprehensive Testing:** Vitest with 54 passing tests and proper mocking
+- **MVVM Pattern:** Clean separation of concerns with ViewModels for complex UI logic
 
-### User Interface
-- **Responsive Design:** Optimized layouts for desktop and mobile devices
+</details>
+
+<details>
+<summary><strong>🎨 User Interface</strong></summary>
+
+- **Responsive Design:** Optimized layouts for desktop, tablet, and mobile devices
 - **Keyboard Shortcuts:** Complete keyboard navigation and control system
 - **Accessibility:** Professional contrast ratios and intuitive interactions
 - **Clean Design:** Minimalist interface inspired by Excalidraw and Blender
+- **Theme Support:** Dynamic day/night mode switching
 
-### Technical Features
-- **Supabase Integration:** Backend data management and potential for user features
-- **Hot Module Replacement:** Fast development iteration with Vite
-- **Component Library:** Comprehensive UI components with shadcn/ui
-- **Build Optimization:** Production-ready builds with tree shaking and minification
+</details>
 
-## Quick Start
+<details>
+<summary><strong>⚡ Technical Features</strong></summary>
 
-### Prerequisites
-- Node.js 18 or higher
-- **[Bun](https://bun.sh/)** (recommended for optimal performance)
+- **Supabase Integration:** Backend data management with type-safe APIs
+- **RSBuild:** Fast development and optimized production builds
+- **Component Library:** Comprehensive UI components with shadcn/ui and Radix UI
+- **Build Optimization:** Production-ready builds with code splitting and asset optimization
+- **GitHub Integration:** Dynamic version display from GitHub releases API
 
-> **⚡ Why Bun?** We recommend using Bun instead of npm for the fastest development experience. Bun provides significantly faster package installation, test execution, and build times.
+</details>
 
-### Installation
+## 🚀 Quick Start
+
+<details>
+<summary><strong>Prerequisites</strong></summary>
+
+- **Node.js 18+** - Required for development
+- **[Bun](https://bun.sh/)** - Recommended for optimal performance
+- **Git** - For version control
+
+> **⚡ Why Bun?** We use Bun for significantly faster package installation, test execution, and build times compared to npm/yarn.
+
+</details>
+
+<details>
+<summary><strong>Installation & Setup</strong></summary>
+
 ```bash
-git clone <repository-url>
+# Clone the repository
+git clone https://github.com/BA-CalderonMorales/immersive-awe-canvas.git
 cd immersive-awe-canvas
 
 # Install Bun (if not already installed)
 curl -fsSL https://bun.sh/install | bash
 
-# Install dependencies and start development
+# Install dependencies
 bun install
+
+# Start development server with RSBuild
 bun run dev
 ```
 
-### Development Commands
+The development server will start at `http://localhost:8080` with hot module replacement enabled.
+
+</details>
+
+<details>
+<summary><strong>Development Commands</strong></summary>
+
 ```bash
-bun install       # Install dependencies
-bun run dev       # Start development server
-bun run test      # Run test suite
-bun run typecheck # TypeScript validation
-bun run build     # Production build
-bun run preview   # Preview production build
+# Core Development
+bun install          # Install all dependencies
+bun run dev          # Start RSBuild dev server (localhost:8080)
+bun run build        # Production build with RSBuild
+bun run build:dev    # Development build
+bun run preview      # Preview production build
+
+# Quality Assurance
+bun run test         # Run Vitest test suite (54 tests)
+bun run typecheck    # TypeScript validation
+bun run lint         # ESLint code analysis
+
+# Monorepo Management
+bun run install:all  # Install dependencies for all workspaces
 ```
 
-### Alternative with npm
-If you prefer to use npm (may yield different results):
+</details>
+
+<details>
+<summary><strong>Alternative Package Managers</strong></summary>
+
+While Bun is recommended, you can use npm if needed:
+
 ```bash
 npm install
 npm run dev
 npm run test
-npm run typecheck
 npm run build
 ```
 
-### Versioning Commands
-```bash
-bun run version:patch  # Bug fixes (1.0.0 → 1.0.1)
-bun run version:minor  # Features (1.0.0 → 1.1.0)
-bun run version:major  # Breaking changes (1.0.0 → 2.0.0)
-```
+**Note:** Different package managers may yield different dependency resolution results.
 
-## Controls
+</details>
 
-### Mouse/Touch
+<details>
+<summary><strong>Automated Versioning</strong></summary>
+
+**⚠️ Important:** This project uses automated semantic versioning. Manual version commands are **not used**.
+
+- Versions are automatically bumped based on conventional commits
+- Use proper commit prefixes: `fix:`, `feat:`, `BREAKING CHANGE:`
+- GitHub Actions handles releases automatically
+- See `RULES.md` for detailed versioning guidelines
+
+</details>
+
+## 🎮 Controls
+
+<details>
+<summary><strong>Mouse/Touch Interactions</strong></summary>
+
 - **Look Around:** Click and drag to rotate camera
 - **Zoom:** Mouse wheel or pinch gestures
 - **Select Objects:** Click on any geometry to select
 - **Gizmo Control:** Drag transform gizmos for precise movement
+- **Mobile Optimized:** Enhanced touch sensitivity for mobile devices
 
-### Keyboard Shortcuts
-- `Space` - Toggle day/night theme
-- `N` / `P` - Next/previous world
-- `Z` - Toggle drag mode for object manipulation
-- `V` - Hide/show UI
-- `E` - Toggle settings panel
-- `S` or `Ctrl+K` - Search worlds
-- `H` - Help dialog
-- `G` - Go to home
-- `C` - Copy scene configuration
-- `.` (Period) - Freeze/unfreeze animations
-- `Esc` - Close dialogs
+</details>
 
-## Architecture
+<details>
+<summary><strong>Keyboard Shortcuts</strong></summary>
 
-### Technology Stack
+| Key | Action |
+|-----|--------|
+| `Space` | Toggle day/night theme |
+| `N` / `P` | Next/previous world |
+| `Z` | Toggle drag mode for object manipulation |
+| `V` | Hide/show UI |
+| `E` | Toggle settings panel |
+| `S` or `Ctrl+K` | Search worlds |
+| `H` | Help dialog |
+| `G` | Go to home |
+| `C` | Copy scene configuration |
+| `.` (Period) | Freeze/unfreeze animations |
+| `Esc` | Close dialogs |
+
+</details>
+
+## 🏢 Architecture
+
+<details>
+<summary><strong>Technology Stack</strong></summary>
+
+- **Build System:** RSBuild with React plugin and TypeScript support
 - **Frontend:** React 18, TypeScript, Tailwind CSS
 - **3D Graphics:** Three.js, React Three Fiber, React Three Drei
 - **UI Components:** shadcn/ui, Radix UI primitives
 - **Backend:** Supabase (PostgreSQL, real-time subscriptions)
-- **Build Tool:** Vite with optimized production builds
-- **Deployment:** GitHub Actions with automated releases
+- **Testing:** Vitest with comprehensive mocking and 54 test cases
+- **Deployment:** GitHub Actions with automated semantic releases
+- **Package Manager:** Bun for optimal performance
 
-### Modular Architecture
+</details>
 
-This project follows a modular architecture with clear separation between client and server concerns:
+<details>
+<summary><strong>Monorepo Structure</strong></summary>
 
-#### 🖥️ Client Module (`src/modules/client/`)
-Contains all UI-related code:
-- **Components**: React components for rendering the user interface
-- **Hooks**: Client-side state management and UI logic
-- **Context**: React context providers for shared state
-- **Utils**: Client-side utility functions
-- **Types**: Client-side type definitions
+This project uses a **modular monorepo architecture** with clear separation of concerns across multiple workspaces:
 
-#### 🗄️ Server Module (`src/modules/server/`)
-Contains all backend-related code:
-- **Database**: Supabase client configuration and types
-- **API**: Data fetching hooks and external API integrations
-- **Utils**: Server-side utilities (logging, security)
-- **Types**: Server-side type definitions
+#### 🖥️ Client Workspace (`client/`)
+Frontend React application with modern architecture:
+- **Components**: Organized by feature with scene, UI, and layout components
+- **Hooks**: Custom React hooks for state management and API integration
+- **Context**: React context providers for global state (SceneObjects, Experience, etc.)
+- **Pages**: Route-based page components
+- **Types**: TypeScript definitions for client-side data structures
+- **Test**: Comprehensive test suite with Vitest (54 tests)
 
-### Project Structure
+#### 🗄️ Server Workspace (`server/`)
+Backend utilities and API integrations:
+- **GitHub API**: Dynamic version fetching from GitHub releases
+- **Security**: Input validation and sanitization utilities
+- **Logging**: Structured logging with different levels
+- **Validation**: Type guards and data validation functions
+- **Utils**: Server-side utility functions
+
+#### 🖾 Database Workspace (`database/`)
+Supabase integration and database management:
+- **Types**: Auto-generated TypeScript types from Supabase schema
+- **Migrations**: Database schema migrations
+- **Queries**: Reusable database query functions
+- **Hooks**: React hooks for database operations
+
+#### 🛠️ Utils Workspace (`utils/`)
+Shared utilities across all workspaces:
+- **Common Functions**: Utility functions used by both client and server
+- **Type Guards**: Shared type validation functions
+- **Constants**: Application-wide constants and configurations
+
+</details>
+
+<details>
+<summary><strong>Directory Structure</strong></summary>
+
 ```
-src/
-├── modules/             # Modular architecture
-│   ├── client/         # UI-related code
-│   │   ├── components/ # React components
-│   │   ├── hooks/      # Client-side hooks
-│   │   ├── context/    # React contexts
-│   │   ├── utils/      # Client utilities
-│   │   └── types/      # Client types
-│   ├── server/         # Backend-related code
-│   │   ├── database/   # Supabase client & types
-│   │   ├── api/        # Data fetching & APIs
-│   │   ├── utils/      # Server utilities
-│   │   └── types/      # Server types
-│   └── index.ts        # Module exports
-├── components/         # Legacy components (re-exported via modules)
-├── hooks/             # Legacy hooks (re-exported via modules)
-├── lib/               # Utility functions
-├── types/             # TypeScript type definitions
-└── integrations/      # External service integrations
+immersive-awe-canvas/
+├── client/                    # Frontend React application
+│   ├── components/           # React components organized by feature
+│   │   ├── scene/           # 3D scene components (objects, controls, materials)
+│   │   ├── ui/              # UI components (buttons, dialogs, forms)
+│   │   └── layout/          # Layout components (headers, sidebars)
+│   ├── context/             # React context providers
+│   │   ├── ExperienceContext.tsx
+│   │   ├── SceneObjectsContext.tsx
+│   │   └── KeyboardShortcutsContext.tsx
+│   ├── hooks/               # Custom React hooks
+│   │   ├── useWorlds.ts
+│   │   ├── use-mobile.ts
+│   │   └── useExperience.ts
+│   ├── pages/               # Route-based page components
+│   ├── types/               # Client-side TypeScript definitions
+│   ├── test/                # Test files and utilities
+│   └── lib/                 # Client-side utilities
+├── server/                   # Backend utilities and API integrations
+│   ├── github-api.ts        # GitHub releases API integration
+│   ├── security.ts          # Input validation and sanitization
+│   ├── logger.ts            # Structured logging utilities
+│   ├── validation.ts        # Type guards and validation
+│   └── utils.ts             # Server-side utility functions
+├── database/                 # Supabase integration (future expansion)
+│   ├── types/               # Auto-generated Supabase types
+│   ├── migrations/          # Database schema migrations
+│   └── queries/             # Reusable database queries
+├── utils/                    # Shared utilities across workspaces
+│   ├── typeguards.ts        # Shared type validation
+│   ├── utils.ts             # Common utility functions
+│   └── constants.ts         # Application constants
+├── public/                   # Static assets
+├── dist/                     # Built application (generated)
+├── rsbuild.config.ts         # RSBuild configuration
+├── vitest.config.ts          # Vitest testing configuration
+├── package.json              # Root package.json with workspaces
+└── tsconfig.json             # TypeScript configuration
 ```
 
-### Using the Modular Architecture
+</details>
 
-#### For UI Development
-If you're working on the user interface:
+<details>
+<summary><strong>Import Patterns & Usage</strong></summary>
+
+#### Client-Side Development
+Working with UI components and React logic:
 
 ```typescript
-// Import client-side functionality
-import { ComponentName } from '@/modules/client';
-import { useClientHook } from '@/modules/client/hooks';
+// Import client components and hooks
+import { SceneEditor } from '@/components/scene/editor/SceneEditor';
+import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
+import { useWorlds } from '@/hooks/useWorlds';
+import { SceneConfig } from '@/types/scene';
 ```
 
-#### For Backend Development
-If you're working with data and APIs:
+#### Server-Side Integration
+Working with APIs and backend utilities:
 
 ```typescript
-// Import server-side functionality
-import { useWorlds } from '@/modules/server';
-import { supabase } from '@/modules/server/database';
+// Import server utilities
+import { fetchGitHubReleases } from '@server/github-api';
+import { validateInput } from '@server/security';
+import { logger } from '@server/logger';
 ```
 
-### Benefits of This Architecture
+#### Shared Utilities
+Using common functions across workspaces:
 
-1. **Clear Separation of Concerns**: UI and backend code are clearly separated
-2. **Better Onboarding**: New developers can focus on either client or server work
-3. **Improved Maintainability**: Easier to locate and modify specific functionality
-4. **Backward Compatibility**: Existing imports continue to work
-5. **Scalability**: Easy to add new features to appropriate modules
+```typescript
+// Import shared utilities
+import { isValidString } from '@utils/typeguards';
+import { formatDate } from '@utils/utils';
+```
+
+</details>
+
+<details>
+<summary><strong>Architecture Benefits</strong></summary>
+
+1. **🏢 Monorepo Structure**: All related code in one repository with clear workspace boundaries
+2. **🔄 Clear Separation**: Client, server, database, and utils are logically separated
+3. **🚀 Developer Experience**: Easy to navigate and understand project structure
+4. **🔧 Maintainability**: Changes are isolated to appropriate workspaces
+5. **📊 Scalability**: Easy to add new features without architectural debt
+6. **🧪 Testing**: Comprehensive test coverage with proper mocking strategies
+7. **🔄 Type Safety**: Full TypeScript coverage across all workspaces
+
+</details>
 
 ## Contributing
 

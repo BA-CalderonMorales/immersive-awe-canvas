@@ -21,7 +21,7 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 **Preferred Tools:**
 
 - **Language**: TypeScript (strict mode)
-- **Testing**: Jest/Vitest + React Testing Library
+- **Testing**: Vitest + React Testing Library
 - **State Management**: Prefer immutable patterns
 - **Package Manager/Runtime**: Bun (for install, run, test, and build)
 - **Version Management**: Semantic-release with conventional commits
@@ -99,7 +99,7 @@ gh workflow run manage-releases.yml --field action=delete-tag --field tag=vX.X.X
 
 ### Testing Tools
 
-- **Jest** or **Vitest** for testing frameworks
+- **Vitest** for testing framework
 - **React Testing Library** for React components
 - **MSW (Mock Service Worker)** for API mocking when needed
 - All test code must follow the same TypeScript strict mode rules as production code
