@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause, Save, Library } from 'lucide-react';
+import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause, Save, Library, RotateCcw } from 'lucide-react';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -18,8 +18,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useExperience } from '@/hooks/useExperience';
 import { useDeviceType } from '@/hooks/use-mobile';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
-import { useBackgrounds } from '@/hooks/useBackgrounds';
+import { useSceneSettingsViewModel } from '@/hooks/useSceneSettingsViewModel';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -44,8 +43,9 @@ const SceneSettingsPanel = ({
   const [activeTab, setActiveTab] = useState('main');
   const { theme } = useExperience();
   const { isMobile, isTablet, isDesktop } = useDeviceType();
-  const { currentGeometry, geometries, jumpToGeometry } = useDefaultGeometries();
-  const { currentBackground, backgrounds, jumpToBackground } = useBackgrounds();
+  
+  // Use the new ViewModel
+  const viewModel = useSceneSettingsViewModel(sceneConfig, onUpdate);
 
   // Responsive settings - ensure no content cutoff
   const panelWidth = isMobile ? 'w-full' : 'w-full max-w-md';
@@ -101,8 +101,8 @@ const SceneSettingsPanel = ({
             {/* Scene Management Buttons */}
             <SaveSceneDialog 
               sceneConfig={sceneConfig}
-              baseGeometryId={currentGeometry?.id}
-              baseGeometryName={currentGeometry?.name}
+              baseGeometryId={viewModel.currentGeometry?.id}
+              baseGeometryName={viewModel.currentGeometry?.name}
               trigger={
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -141,27 +141,41 @@ const SceneSettingsPanel = ({
               }
             />
             
-            {onToggleMotion && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onToggleMotion}
-                    className={`p-1.5 h-auto ${colors.accentHover}`}
-                  >
-                    {isMotionFrozen ? (
-                      <Play className="w-4 h-4 text-emerald-500" />
-                    ) : (
-                      <Pause className="w-4 h-4 text-orange-500" />
-                    )}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="left">
-                  {isMotionFrozen ? 'Resume animation' : 'Freeze animation'}
-                </TooltipContent>
-              </Tooltip>
-            )}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={viewModel.handleToggleMotion}
+                  className={`p-1.5 h-auto ${colors.accentHover}`}
+                >
+                  {viewModel.isMotionFrozen ? (
+                    <Play className="w-4 h-4 text-emerald-500" />
+                  ) : (
+                    <Pause className="w-4 h-4 text-orange-500" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                {viewModel.isMotionFrozen ? 'Resume animation' : 'Freeze animation'}
+              </TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={viewModel.handleResetScene}
+                  className={`p-1.5 h-auto ${colors.accentHover}`}
+                >
+                  <RotateCcw className="w-4 h-4 text-red-500" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="left">
+                Reset to default scene
+              </TooltipContent>
+            </Tooltip>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Info className={`w-4 h-4 ${colors.infoIcon} cursor-help transition-colors`} />
@@ -204,21 +218,14 @@ const SceneSettingsPanel = ({
                     Background
                   </label>
                   <Select 
-                    value={currentBackground?.id?.toString()} 
-                    onValueChange={(value) => {
-                      if (onJumpToBackground) {
-                        const backgroundIndex = backgrounds?.findIndex(bg => bg.id === parseInt(value));
-                        if (backgroundIndex !== undefined && backgroundIndex !== -1) {
-                          onJumpToBackground(backgroundIndex);
-                        }
-                      }
-                    }}
+                    value={viewModel.selectedBackgroundId || ''} 
+                    onValueChange={viewModel.handleBackgroundChange}
                   >
                     <SelectTrigger className={`${colors.buttonSecondary}`}>
                       <SelectValue placeholder="Select background" />
                     </SelectTrigger>
                     <SelectContent>
-                      {backgrounds?.map((bg, index) => (
+                      {viewModel.availableBackgrounds.map((bg, index) => (
                         <SelectItem key={bg.id} value={bg.id.toString()}>
                           {bg.name}
                         </SelectItem>
@@ -233,21 +240,14 @@ const SceneSettingsPanel = ({
                     Main Geometry
                   </label>
                   <Select 
-                    value={currentGeometry?.id?.toString()} 
-                    onValueChange={(value) => {
-                      if (onJumpToGeometry) {
-                        const geometryIndex = geometries?.findIndex(geo => geo.id === parseInt(value));
-                        if (geometryIndex !== undefined && geometryIndex !== -1) {
-                          onJumpToGeometry(geometryIndex);
-                        }
-                      }
-                    }}
+                    value={viewModel.selectedGeometryId || ''} 
+                    onValueChange={viewModel.handleGeometryChange}
                   >
                     <SelectTrigger className={`${colors.buttonSecondary}`}>
                       <SelectValue placeholder="Select geometry" />
                     </SelectTrigger>
                     <SelectContent>
-                      {geometries?.map((geo, index) => (
+                      {viewModel.availableGeometries.map((geo, index) => (
                         <SelectItem key={geo.id} value={geo.id.toString()}>
                           {geo.name}
                         </SelectItem>
