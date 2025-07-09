@@ -4,26 +4,25 @@ import { render, createMockSceneObject } from '../test-utils';
 import ObjectGuiControls from '../../components/scene/controls/components/ObjectGuiControls';
 
 vi.mock('lil-gui', () => {
+  class MockController {
+    onChange = vi.fn().mockReturnThis();
+    name = vi.fn().mockReturnThis();
+    setValue = vi.fn().mockReturnThis();
+    min = vi.fn().mockReturnThis();
+    max = vi.fn().mockReturnThis();
+    step = vi.fn().mockReturnThis();
+    updateDisplay = vi.fn().mockReturnThis();
+  }
+
   class MockGUI {
     domElement = document.createElement('div');
-    destroy() {}
-    addColor() {
-      return {
-        onChange: () => {},
-        name: () => ({ onChange: () => {} })
-      };
-    }
-    add() {
-      return {
-        onChange: () => {},
-        name: () => ({ onChange: () => {} })
-      };
-    }
-    addFolder() {
-      return new MockGUI();
-    }
-    open() {}
+    destroy = vi.fn();
+    add = vi.fn(() => new MockController());
+    addColor = vi.fn(() => new MockController());
+    addFolder = vi.fn(() => new MockGUI());
+    open = vi.fn();
   }
+  
   return { default: MockGUI };
 });
 

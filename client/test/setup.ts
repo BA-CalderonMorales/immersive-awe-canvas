@@ -1,4 +1,5 @@
-import { vi } from 'vitest';
+import React from 'react';
+import { vi, beforeAll, afterAll } from 'vitest';
 import '@testing-library/jest-dom';
 
 // Mock ResizeObserver
@@ -37,3 +38,32 @@ vi.mock('@/hooks/useWorlds', () => ({
     isTransitioning: false,
   }),
 }));
+
+// Make React available globally for tests
+(global as any).React = React;
+
+// Mock Three.js components to prevent React warnings in tests
+// Simple approach: just suppress the warnings by mocking console.error during tests
+const originalError = console.error;
+beforeAll(() => {
+  console.error = (...args: any[]) => {
+    // Suppress React warnings about Three.js components
+    if (
+      typeof args[0] === 'string' && (
+        args[0].includes('Warning: <') ||
+        args[0].includes('Warning: React does not recognize') ||
+        args[0].includes('Warning: The tag <') ||
+        args[0].includes('Warning: Function components cannot be given refs') ||
+        args[0].includes('Warning: Unknown event handler property') ||
+        args[0].includes('Warning: Received `false` for a non-boolean attribute')
+      )
+    ) {
+      return; // Suppress these warnings
+    }
+    originalError.apply(console, args);
+  };
+});
+
+afterAll(() => {
+  console.error = originalError;
+});

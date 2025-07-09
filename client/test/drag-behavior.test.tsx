@@ -52,9 +52,39 @@ vi.mock('@react-three/fiber', () => ({
 }));
 
 vi.mock('@react-three/drei', async () => {
+  const TransformControls = React.forwardRef<
+    { attach: (object: unknown) => void; detach: () => void },
+    { children?: React.ReactNode; [key: string]: any }
+  >(({ children, ...props }, ref) => {
+    // Expose the methods that GizmoControls expects
+    React.useImperativeHandle(ref, () => ({
+      attach: vi.fn(),
+      detach: vi.fn(),
+    }));
+    
+    return (
+      <div 
+        data-testid="transform-controls" 
+        data-three-component="transform-controls"
+        {...Object.keys(props).reduce((acc, key) => {
+          // Convert Three.js props to data attributes to avoid React warnings
+          if (typeof props[key] === 'function') {
+            return acc; // Skip function props
+          }
+          acc[`data-${key.toLowerCase()}`] = String(props[key]);
+          return acc;
+        }, {} as Record<string, string>)}
+      >
+        {children}
+      </div>
+    );
+  });
+  
+  TransformControls.displayName = 'MockTransformControls';
+  
   return {
     useMatcapTexture: vi.fn().mockReturnValue([null]),
-    TransformControls: ({ children, ...props }: { children?: React.ReactNode; [key: string]: unknown }) => <div data-testid="transform-controls" {...props}>{children}</div>
+    TransformControls
   };
 });
 
@@ -133,7 +163,7 @@ describe('Drag Behavior Tests', () => {
       // Wait for the component to find the mesh and render
       await waitFor(() => {
         const gizmo = getByTestId('transform-controls');
-        expect(gizmo).toHaveAttribute('size', '2'); // Mobile size
+        expect(gizmo).toHaveAttribute('data-size', '2'); // Mobile size
       });
     });
 
@@ -154,7 +184,7 @@ describe('Drag Behavior Tests', () => {
       // Wait for the component to find the mesh and render
       await waitFor(() => {
         const gizmo = getByTestId('transform-controls');
-        expect(gizmo).toHaveAttribute('size', '1.2'); // Desktop size
+        expect(gizmo).toHaveAttribute('data-size', '1.2'); // Desktop size
       });
     });
   });
