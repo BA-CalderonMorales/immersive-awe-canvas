@@ -1,6 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react';
-import GUI from 'lil-gui';
-import { SceneConfig, MaterialConfig, LightConfig, BackgroundConfig } from '@/types/scene';
+import GUI, { Controller } from 'lil-gui';
+import { SceneConfig, MaterialConfig, LightConfig, BackgroundConfig, SceneThemeConfig } from '@/types/scene';
 import { MaterialControlsBuilder } from './MaterialControlsBuilder';
 import { BackgroundControlsBuilder } from './BackgroundControlsBuilder';
 import { LightControlsBuilder } from './LightControlsBuilder';
@@ -11,7 +11,7 @@ import { LightControlsBuilder } from './LightControlsBuilder';
  */
 export class GuiControlsViewModel {
   private gui: GUI | null = null;
-  private controllers: Map<string, any> = new Map();
+  private controllers: Map<string, Controller> = new Map();
   private folders: Map<string, GUI> = new Map();
   private theme: 'day' | 'night' = 'day';
   private sceneConfig: SceneConfig | null = null;
@@ -88,7 +88,7 @@ export class GuiControlsViewModel {
   /**
    * Build main object controls
    */
-  private buildMainObjectControls(themeConfig: any): void {
+  private buildMainObjectControls(themeConfig: SceneThemeConfig): void {
     if (!this.gui || !this.sceneConfig || !this.onUpdate) return;
 
     const mainFolder = this.gui.addFolder('🎨 Main Object');
@@ -112,7 +112,7 @@ export class GuiControlsViewModel {
   /**
    * Build material controls
    */
-  private buildMaterialControls(themeConfig: any): void {
+  private buildMaterialControls(themeConfig: SceneThemeConfig): void {
     if (!this.gui || !this.sceneConfig || !this.onUpdate) return;
 
     const materialFolder = this.gui.addFolder('⚡ Material');
@@ -132,7 +132,7 @@ export class GuiControlsViewModel {
   /**
    * Build background controls
    */
-  private buildBackgroundControls(themeConfig: any): void {
+  private buildBackgroundControls(themeConfig: SceneThemeConfig): void {
     if (!this.gui || !this.sceneConfig || !this.onUpdate) return;
 
     const backgroundFolder = this.gui.addFolder('🌅 Background');
@@ -152,7 +152,7 @@ export class GuiControlsViewModel {
   /**
    * Build light controls
    */
-  private buildLightControls(themeConfig: any): void {
+  private buildLightControls(themeConfig: SceneThemeConfig): void {
     if (!this.gui || !this.sceneConfig || !this.onUpdate) return;
 
     const lightsFolder = this.gui.addFolder('💡 Lights');
@@ -238,7 +238,7 @@ export class GuiControlsViewModel {
   /**
    * Get controller by name
    */
-  getController(name: string): any | undefined {
+  getController(name: string): Controller | undefined {
     return this.controllers.get(name);
   }
 

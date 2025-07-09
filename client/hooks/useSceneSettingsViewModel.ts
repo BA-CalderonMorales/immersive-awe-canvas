@@ -50,7 +50,7 @@ export const useSceneSettingsViewModel = (
     });
   }, [sceneConfig, onSceneUpdate, theme]);
 
-  const updateMaterialProperty = useCallback((property: string, value: any) => {
+  const updateMaterialProperty = useCallback((property: string, value: string | number | boolean) => {
     const updater = createConfigUpdater(sceneConfig, onSceneUpdate);
     updater(config => {
       config[theme].material = {
@@ -60,7 +60,7 @@ export const useSceneSettingsViewModel = (
     });
   }, [sceneConfig, onSceneUpdate, theme]);
 
-  const updateLightProperty = useCallback((lightIndex: number, property: string, value: any) => {
+  const updateLightProperty = useCallback((lightIndex: number, property: string, value: string | number | boolean | number[]) => {
     const updater = createConfigUpdater(sceneConfig, onSceneUpdate);
     updater(config => {
       if (config[theme].lights[lightIndex]) {
@@ -72,7 +72,7 @@ export const useSceneSettingsViewModel = (
     });
   }, [sceneConfig, onSceneUpdate, theme]);
 
-  const updateBackgroundProperty = useCallback((property: string, value: any) => {
+  const updateBackgroundProperty = useCallback((property: string, value: string | number | boolean) => {
     const updater = createConfigUpdater(sceneConfig, onSceneUpdate);
     updater(config => {
       config[theme].background = {
