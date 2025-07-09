@@ -1,23 +1,16 @@
 {
-  "name": "immersive-awe-canvas",
-  "private": true,
+  "name": "@immersive-awe-canvas/client",
   "version": "0.0.1",
   "type": "module",
-  "description": "A modular 3D canvas experience with client/server architecture",
-  "workspaces": [
-    "client",
-    "server",
-    "utils"
-  ],
+  "description": "Client-side UI components and logic for Immersive Awe Canvas",
+  "main": "index.ts",
+  "private": true,
   "scripts": {
-    "dev": "rsbuild dev",
-    "build": "rsbuild build",
-    "build:dev": "rsbuild build --mode development",
-    "lint": "eslint .",
-    "preview": "rsbuild preview",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "test": "vitest run",
-    "typecheck": "tsc --noEmit",
-    "install:all": "bun install --workspaces"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.0",
@@ -51,14 +44,11 @@
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
     "@react-three/postprocessing": "^2.19.1",
-    "@rsbuild/core": "^1.4.5",
-    "@rsbuild/plugin-react": "^1.3.4",
-    "@rsbuild/plugin-type-check": "^1.2.3",
-    "@supabase/supabase-js": "^2.50.0",
     "@tanstack/react-query": "^5.56.2",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.3.1",
     "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^4.5.2",
     "animejs": "^3.2.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
@@ -68,9 +58,7 @@
     "embla-carousel-react": "^8.3.0",
     "framer-motion": "^12.18.1",
     "input-otp": "^1.2.4",
-    "jsdom": "^24.1.3",
     "lil-gui": "^0.19.2",
-    "lovable-tagger": "^1.1.8",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
     "postprocessing": "^6.37.4",
@@ -90,20 +78,10 @@
     "zod": "^3.25.67"
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
-    "@tailwindcss/typography": "^0.5.15",
     "@types/node": "^22.5.5",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "autoprefixer": "^10.4.20",
-    "eslint": "^9.9.0",
-    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
-    "eslint-plugin-react-refresh": "^0.4.9",
-    "globals": "^15.9.0",
-    "postcss": "^8.4.47",
-    "tailwindcss": "^3.4.11",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.1",
-    "vitest": "^3.2.4"
+    "vitest": "^1.5.0"
   }
 }

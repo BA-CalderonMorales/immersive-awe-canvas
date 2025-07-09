@@ -1,0 +1,20 @@
+[install]
+# Faster installs with parallel downloads
+parallel = true
+
+# Use workspaces for better monorepo support
+workspaces = true
+
+# Prefer local registry for faster installs
+cache = "~/.bun/install/cache"
+
+[install.scopes]
+# Configure any scoped packages if needed
+
+[run]
+# Enable hot reload for better dev experience
+watch = true
+
+# Optimization settings
+[build]
+minify = true

@@ -48,22 +48,41 @@ A professional 3D canvas experience for exploring and manipulating interactive g
 
 ### Prerequisites
 - Node.js 18 or higher
-- bun
+- **[Bun](https://bun.sh/)** (recommended for optimal performance)
+
+> **⚡ Why Bun?** We recommend using Bun instead of npm for the fastest development experience. Bun provides significantly faster package installation, test execution, and build times.
 
 ### Installation
 ```bash
 git clone <repository-url>
 cd immersive-awe-canvas
+
+# Install Bun (if not already installed)
+curl -fsSL https://bun.sh/install | bash
+
+# Install dependencies and start development
 bun install
-bun dev
+bun run dev
 ```
 
 ### Development Commands
 ```bash
-bun test           # Run test suite
-bun typecheck      # TypeScript validation
-bun build          # Production build
-bun run preview    # Preview production build
+bun install       # Install dependencies
+bun run dev       # Start development server
+bun run test      # Run test suite
+bun run typecheck # TypeScript validation
+bun run build     # Production build
+bun run preview   # Preview production build
+```
+
+### Alternative with npm
+If you prefer to use npm (may yield different results):
+```bash
+npm install
+npm run dev
+npm run test
+npm run typecheck
+npm run build
 ```
 
 ### Versioning Commands

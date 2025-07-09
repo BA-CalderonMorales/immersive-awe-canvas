@@ -4,10 +4,16 @@ import tailwindcssAnimate from "tailwindcss-animate";
 export default {
 	darkMode: ["class"],
 	content: [
-		"./pages/**/*.{ts,tsx}",
-		"./components/**/*.{ts,tsx}",
-		"./app/**/*.{ts,tsx}",
-		"./src/**/*.{ts,tsx}",
+		"./client/components/**/*.{tsx,ts}",
+		"./client/pages/**/*.{tsx,ts}",
+		"./client/hooks/**/*.{tsx,ts}",
+		"./client/lib/**/*.{tsx,ts}",
+		"./client/context/**/*.{tsx,ts}",
+		"./client/types/**/*.{tsx,ts}",
+		"./client/utils/**/*.{tsx,ts}",
+		"./client/test/**/*.{tsx,ts}",
+		"./client/*.{tsx,ts}",
+		"./index.html",
 	],
 	prefix: "",
 	theme: {
