@@ -74,6 +74,10 @@ const WorldContainer = ({
         <Canvas
           camera={{ position: [0, 0, 20], fov: 75 }}
           onDoubleClick={onToggleLock}
+          gl={{ 
+            antialias: true,
+            powerPreference: 'high-performance' 
+          }}
           style={{
             cursor: isDragEnabled ? 'move' : (isDragging || isObjectDragging ? 'grabbing' : 'grab'),
             width: '100%',

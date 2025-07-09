@@ -56,6 +56,7 @@ const BackgroundScene = ({ theme = 'night' }: { theme?: 'day' | 'night' }) => {
     <Canvas
       camera={{ position: [0, 0, 8], fov: 75 }}
       className="w-full h-full"
+      gl={{ antialias: true }}
     >
       <SceneContent theme={theme} />
     </Canvas>

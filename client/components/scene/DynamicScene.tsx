@@ -112,11 +112,11 @@ const DynamicScene = ({
           camera={{ position: [0, 0, 12], fov: 75 }}
           className="w-full h-full"
           gl={{ 
-            antialias: false,
+            antialias: true,
             alpha: true,
-            powerPreference: 'default'
+            powerPreference: 'high-performance'
           }}
-          dpr={1}
+          dpr={[1, 2]}
           performance={{ min: 0.5 }}
         >
           <OrbitControls 
