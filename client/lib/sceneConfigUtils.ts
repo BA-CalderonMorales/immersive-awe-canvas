@@ -83,3 +83,34 @@ export const updateSceneConfigGeometry = (
     }
   };
 };
+
+// Available geometry types for default scene assignment
+const GEOMETRY_TYPES: SceneConfig['type'][] = [
+  'TorusKnot',
+  'WobbleField', 
+  'CrystallineSpire',
+  'DistortionSphere',
+  'MorphingIcosahedron',
+  'WavyGrid',
+  'JellyTorus'
+];
+
+/**
+ * Gets a unique default geometry type for each background ID
+ * This ensures each scene has a different default main object
+ */
+export const getDefaultGeometryForBackground = (
+  backgroundId: number,
+  availableGeometries?: DefaultGeometry[]
+): SceneConfig['type'] => {
+  // If we have actual geometry data, use the mapped approach
+  if (availableGeometries && availableGeometries.length > 0) {
+    const geometryIndex = (backgroundId - 1) % availableGeometries.length;
+    const selectedGeometry = availableGeometries[geometryIndex];
+    return selectedGeometry.geometry_type as SceneConfig['type'];
+  }
+  
+  // Fallback to hardcoded types based on background ID
+  const geometryIndex = (backgroundId - 1) % GEOMETRY_TYPES.length;
+  return GEOMETRY_TYPES[geometryIndex];
+};

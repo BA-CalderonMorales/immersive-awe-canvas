@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { useBackgrounds } from '@/hooks/useBackgrounds';
 import { useDefaultGeometries } from '@/hooks/useDefaultGeometries';
 import { useExperienceEffects } from '@/hooks/useExperienceEffects';
@@ -7,13 +7,13 @@ import { useHotkeyActions } from '@/hooks/useHotkeyActions';
 import ExperienceContainer from './ExperienceContainer';
 import LoadingOverlay from './LoadingOverlay';
 import { SceneConfig } from '@/types/scene';
-import { updateSceneConfigBackground, updateSceneConfigGeometry } from '@/lib/sceneConfigUtils';
+import { updateSceneConfigBackground, updateSceneConfigGeometry, getDefaultGeometryForBackground } from '@/lib/sceneConfigUtils';
 import type { Database } from "@database/supabase/types";
 
 type DefaultGeometry = Database['public']['Tables']['default_geometries']['Row'];
 
 const ExperienceLogic = () => {
-  // Basic state
+  // Basic state - Initialize with default, will be updated when background loads
   const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig>({
     type: 'TorusKnot',
     day: {
@@ -46,6 +46,24 @@ const ExperienceLogic = () => {
   const { backgrounds, currentBackground, isTransitioning, changeBackground, jumpToBackground } = useBackgrounds();
   const { geometries, currentGeometry, changeGeometry, jumpToGeometry } = useDefaultGeometries();
   const { theme, toggleTheme } = useExperience();
+
+  // Initialize scene config with unique geometry when background and geometries are first loaded
+  useEffect(() => {
+    if (currentBackground && geometries && geometries.length > 0) {
+      const defaultGeometryType = getDefaultGeometryForBackground(
+        currentBackground.id, 
+        geometries
+      );
+      
+      // Only update if the geometry type is different to avoid unnecessary re-renders
+      if (editableSceneConfig.type !== defaultGeometryType) {
+        setEditableSceneConfig(prev => ({
+          ...prev,
+          type: defaultGeometryType
+        }));
+      }
+    }
+  }, [currentBackground?.id, geometries, editableSceneConfig.type]);
 
   // Helper functions
   const toggleObjectLock = useCallback(() => setIsObjectLocked(prev => !prev), []);
@@ -84,8 +102,35 @@ const ExperienceLogic = () => {
 
   // Enhanced handlers that update scene config properly
   const handleChangeBackground = useCallback((direction: 'next' | 'prev') => {
+    const currentIndex = backgrounds?.findIndex(bg => bg.id === currentBackground?.id) || 0;
+    let newIndex;
+    
+    if (direction === 'next') {
+      newIndex = backgrounds ? (currentIndex + 1) % backgrounds.length : 0;
+    } else {
+      newIndex = backgrounds ? (currentIndex - 1 + backgrounds.length) % backgrounds.length : 0;
+    }
+    
     changeBackground(direction);
-  }, [changeBackground]);
+    
+    // Update scene config with new background and unique geometry
+    if (backgrounds && backgrounds[newIndex] && editableSceneConfig) {
+      const targetBackground = backgrounds[newIndex];
+      let updatedConfig = updateSceneConfigBackground(editableSceneConfig, targetBackground);
+      
+      // Set unique default geometry for this background
+      const defaultGeometryType = getDefaultGeometryForBackground(
+        targetBackground.id, 
+        geometries
+      );
+      updatedConfig = {
+        ...updatedConfig,
+        type: defaultGeometryType
+      };
+      
+      setEditableSceneConfig(updatedConfig);
+    }
+  }, [changeBackground, backgrounds, currentBackground, editableSceneConfig, geometries]);
 
   const handleChangeGeometry = useCallback((direction: 'next' | 'prev') => {
     changeGeometry(direction);
@@ -96,10 +141,21 @@ const ExperienceLogic = () => {
     // Update scene config when background changes
     if (backgrounds && backgrounds[backgroundIndex] && editableSceneConfig) {
       const targetBackground = backgrounds[backgroundIndex];
-      const updatedConfig = updateSceneConfigBackground(editableSceneConfig, targetBackground);
+      let updatedConfig = updateSceneConfigBackground(editableSceneConfig, targetBackground);
+      
+      // Set unique default geometry for this background
+      const defaultGeometryType = getDefaultGeometryForBackground(
+        targetBackground.id, 
+        geometries
+      );
+      updatedConfig = {
+        ...updatedConfig,
+        type: defaultGeometryType
+      };
+      
       setEditableSceneConfig(updatedConfig);
     }
-  }, [jumpToBackground, backgrounds, editableSceneConfig]);
+  }, [jumpToBackground, backgrounds, editableSceneConfig, geometries]);
 
   const handleJumpToGeometry = useCallback((geometryIndex: number) => {
     jumpToGeometry(geometryIndex);

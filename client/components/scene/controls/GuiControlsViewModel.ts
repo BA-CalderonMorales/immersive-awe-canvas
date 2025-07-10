@@ -209,7 +209,7 @@ export class GuiControlsViewModel {
     
     // Update main color
     const colorController = this.controllers.get('mainColor');
-    if (colorController) {
+    if (colorController && typeof colorController.setValue === 'function') {
       colorController.setValue(themeConfig.mainObjectColor);
     }
 
@@ -222,7 +222,7 @@ export class GuiControlsViewModel {
    */
   private refreshControllers(): void {
     this.controllers.forEach(controller => {
-      if (controller && controller.updateDisplay) {
+      if (controller && typeof controller.updateDisplay === 'function') {
         controller.updateDisplay();
       }
     });

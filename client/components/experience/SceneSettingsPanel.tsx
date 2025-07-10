@@ -5,6 +5,9 @@ import { Settings, Info, Shapes, ChevronsUpDown, Palette, Play, Pause, Save, Lib
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Slider } from '@/components/ui/slider';
 import { SceneConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import SceneObjectsList from '../scene/controls/components/SceneObjectsList';
@@ -18,7 +21,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { useExperience } from '@/hooks/useExperience';
 import { useDeviceType } from '@/hooks/use-mobile';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useSceneSettingsViewModel } from '@/hooks/useSceneSettingsViewModel';
+import { useSettingsPanelViewModel } from '@/hooks/useSettingsPanelViewModel';
 
 interface SceneSettingsPanelProps {
   sceneConfig: SceneConfig;
@@ -45,7 +48,12 @@ const SceneSettingsPanel = ({
   const { isMobile, isTablet, isDesktop } = useDeviceType();
   
   // Use the new ViewModel
-  const viewModel = useSceneSettingsViewModel(sceneConfig, onUpdate);
+  const viewModel = useSettingsPanelViewModel({
+    sceneConfig,
+    onSceneUpdate: onUpdate,
+    isMotionFrozen,
+    onToggleMotion
+  });
 
   // Responsive settings - ensure no content cutoff
   const panelWidth = isMobile ? 'w-full' : 'w-full max-w-md';
@@ -101,8 +109,8 @@ const SceneSettingsPanel = ({
             {/* Scene Management Buttons */}
             <SaveSceneDialog 
               sceneConfig={sceneConfig}
-              baseGeometryId={viewModel.currentGeometry?.id}
-              baseGeometryName={viewModel.currentGeometry?.name}
+              baseGeometryId={undefined}
+              baseGeometryName={undefined}
               trigger={
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -146,13 +154,14 @@ const SceneSettingsPanel = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={viewModel.handleToggleMotion}
+                  onClick={viewModel.toggleMotion}
                   className={`p-1.5 h-auto ${colors.accentHover}`}
+                  data-testid="motion-toggle-button"
                 >
                   {viewModel.isMotionFrozen ? (
-                    <Play className="w-4 h-4 text-emerald-500" />
+                    <Play className="w-4 h-4 text-emerald-500" data-testid="play-icon" />
                   ) : (
-                    <Pause className="w-4 h-4 text-orange-500" />
+                    <Pause className="w-4 h-4 text-orange-500" data-testid="pause-icon" />
                   )}
                 </Button>
               </TooltipTrigger>
@@ -166,8 +175,9 @@ const SceneSettingsPanel = ({
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={viewModel.handleResetScene}
+                  onClick={viewModel.resetScene}
                   className={`p-1.5 h-auto ${colors.accentHover}`}
+                  data-testid="reset-scene-button"
                 >
                   <RotateCcw className="w-4 h-4 text-red-500" />
                 </Button>
@@ -212,48 +222,14 @@ const SceneSettingsPanel = ({
             </CollapsibleTrigger>
             <CollapsibleContent>
               <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm space-y-4`}>
-                {/* Background Selection */}
+                {/* Scene Type Selection */}
                 <div className="space-y-2">
-                  <label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
-                    Background
-                  </label>
-                  <Select 
-                    value={viewModel.selectedBackgroundId || ''} 
-                    onValueChange={viewModel.handleBackgroundChange}
-                  >
-                    <SelectTrigger className={`${colors.buttonSecondary}`}>
-                      <SelectValue placeholder="Select background" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {viewModel.availableBackgrounds.map((bg, index) => (
-                        <SelectItem key={bg.id} value={bg.id.toString()}>
-                          {bg.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Geometry Selection */}
-                <div className="space-y-2">
-                  <label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
-                    Main Geometry
-                  </label>
-                  <Select 
-                    value={viewModel.selectedGeometryId || ''} 
-                    onValueChange={viewModel.handleGeometryChange}
-                  >
-                    <SelectTrigger className={`${colors.buttonSecondary}`}>
-                      <SelectValue placeholder="Select geometry" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {viewModel.availableGeometries.map((geo, index) => (
-                        <SelectItem key={geo.id} value={geo.id.toString()}>
-                          {geo.name}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Scene Type
+                  </Label>
+                  <div className={`${colors.buttonSecondary} p-2 rounded text-sm`}>
+                    Current: {sceneConfig.type}
+                  </div>
                 </div>
               </div>
             </CollapsibleContent>
@@ -275,14 +251,191 @@ const SceneSettingsPanel = ({
               </Button>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm`}>
-                <MainObjectControls sceneConfig={sceneConfig} onUpdate={onUpdate} />
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm space-y-4`}>
+                
+                {/* Main Object Color */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Object Color
+                  </Label>
+                  <Input
+                    type="text"
+                    value={viewModel.mainObjectColor}
+                    onChange={(e) => viewModel.updateMainObjectColor(e.target.value)}
+                    placeholder="#ffffff"
+                    className={`${colors.buttonSecondary}`}
+                    data-testid="main-object-color-input"
+                  />
+                </div>
+
+                {/* Material Type */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Material Type
+                  </Label>
+                  <Select 
+                    value={viewModel.materialConfig.materialType} 
+                    onValueChange={viewModel.updateMaterialType}
+                  >
+                    <SelectTrigger className={`${colors.buttonSecondary}`} data-testid="material-type-select">
+                      <SelectValue placeholder="Select material type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="standard">Standard</SelectItem>
+                      <SelectItem value="physical">Physical</SelectItem>
+                      <SelectItem value="basic">Basic</SelectItem>
+                      <SelectItem value="toon">Toon</SelectItem>
+                      <SelectItem value="lambert">Lambert</SelectItem>
+                      <SelectItem value="phong">Phong</SelectItem>
+                      <SelectItem value="normal">Normal</SelectItem>
+                      <SelectItem value="matcap">Matcap</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Material Metalness */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Metalness: {viewModel.materialConfig.metalness?.toFixed(2) || '0.50'}
+                  </Label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={viewModel.materialConfig.metalness || 0.5}
+                    onChange={(e) => viewModel.updateMaterialMetalness(parseFloat(e.target.value))}
+                    className="w-full"
+                    data-testid="material-metalness-slider"
+                  />
+                </div>
+
+                {/* Material Roughness */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Roughness: {viewModel.materialConfig.roughness?.toFixed(2) || '0.50'}
+                  </Label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="1"
+                    step="0.1"
+                    value={viewModel.materialConfig.roughness || 0.5}
+                    onChange={(e) => viewModel.updateMaterialRoughness(parseFloat(e.target.value))}
+                    className="w-full"
+                    data-testid="material-roughness-slider"
+                  />
+                </div>
+
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Light Controls Section */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label="Toggle light controls"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-yellow-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Lighting</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm space-y-4`}>
+                
+                {/* Ambient Light Intensity */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Ambient Light: {viewModel.ambientLightIntensity.toFixed(2)}
+                  </Label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.1"
+                    value={viewModel.ambientLightIntensity}
+                    onChange={(e) => viewModel.updateAmbientLightIntensity(parseFloat(e.target.value))}
+                    className="w-full"
+                    data-testid="ambient-light-intensity-slider"
+                  />
+                </div>
+
+                {/* Directional Light Intensity */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Directional Light: {viewModel.directionalLightIntensity.toFixed(2)}
+                  </Label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="3"
+                    step="0.1"
+                    value={viewModel.directionalLightIntensity}
+                    onChange={(e) => viewModel.updateDirectionalLightIntensity(parseFloat(e.target.value))}
+                    className="w-full"
+                    data-testid="directional-light-intensity-slider"
+                  />
+                </div>
+
+              </div>
+            </CollapsibleContent>
+          </Collapsible>
+
+          {/* Background Controls Section */}
+          <Collapsible defaultOpen={true}>
+            <CollapsibleTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={`w-full justify-between ${colors.collapsibleHover} ${colors.primaryText} mb-3 h-auto py-3 px-4 rounded-xl border ${colors.border} group`}
+                aria-label="Toggle background controls"
+              >
+                <div className="flex items-center gap-2">
+                  <Settings className={`${isMobile ? 'w-4 h-4' : 'w-5 h-5'} text-purple-600`} />
+                  <span className={`font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>Background</span>
+                </div>
+                <ChevronsUpDown className={`${isMobile ? 'w-3 h-3' : 'w-4 h-4'} ${colors.secondaryText} group-hover:scale-110 transition-transform duration-200`} />
+              </Button>
+            </CollapsibleTrigger>
+            <CollapsibleContent>
+              <div className={`${colors.cardBg} rounded-xl ${isMobile ? 'p-3' : 'p-4'} border ${colors.border} mb-4 shadow-sm space-y-4`}>
+                
+                {/* Background Type */}
+                <div className="space-y-2">
+                  <Label className={`${colors.primaryText} font-medium ${isMobile ? 'text-sm' : 'text-base'}`}>
+                    Background Type
+                  </Label>
+                  <Select 
+                    value={viewModel.backgroundConfig.type} 
+                    onValueChange={viewModel.updateBackgroundType}
+                  >
+                    <SelectTrigger className={`${colors.buttonSecondary}`} data-testid="background-type-select">
+                      <SelectValue placeholder="Select background type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="void">Void</SelectItem>
+                      <SelectItem value="stars">Stars</SelectItem>
+                      <SelectItem value="sky">Sky</SelectItem>
+                      <SelectItem value="gradient">Gradient</SelectItem>
+                      <SelectItem value="noise">Noise</SelectItem>
+                      <SelectItem value="plasma">Plasma</SelectItem>
+                      <SelectItem value="aurora">Aurora</SelectItem>
+                      <SelectItem value="sunset">Sunset</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
               </div>
             </CollapsibleContent>
           </Collapsible>
 
           {/* Add Objects Section */}
-          <Collapsible defaultOpen={true}>
+          <Collapsible defaultOpen={false}>
             <CollapsibleTrigger asChild>
               <Button 
                 variant="ghost" 
@@ -307,7 +460,7 @@ const SceneSettingsPanel = ({
           </Collapsible>
 
           {/* Scene Objects List */}
-          <Collapsible defaultOpen={true}>
+          <Collapsible defaultOpen={false}>
             <CollapsibleTrigger asChild>
               <Button 
                 variant="ghost" 
@@ -334,7 +487,7 @@ const SceneSettingsPanel = ({
 
           {/* Object Properties */}
           {selectedObject && (
-            <Collapsible defaultOpen={true}>
+            <Collapsible defaultOpen={false}>
               <CollapsibleTrigger asChild>
                 <Button 
                   variant="ghost" 

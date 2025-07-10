@@ -11,7 +11,9 @@ import { createConfigUpdater } from '@/components/scene/controls/ConfigUpdateUti
  */
 export const useSceneSettingsViewModel = (
   sceneConfig: SceneConfig,
-  onSceneUpdate: (config: SceneConfig) => void
+  onSceneUpdate: (config: SceneConfig) => void,
+  isMotionFrozen?: boolean,
+  onToggleMotion?: () => void
 ) => {
   const { theme } = useExperience();
   const { 
@@ -28,7 +30,6 @@ export const useSceneSettingsViewModel = (
   } = useBackgrounds();
 
   // Local state for UI interactions
-  const [isMotionFrozen, setIsMotionFrozen] = useState(false);
   const [selectedBackgroundId, setSelectedBackgroundId] = useState<string | null>(null);
   const [selectedGeometryId, setSelectedGeometryId] = useState<string | null>(null);
 
@@ -102,8 +103,10 @@ export const useSceneSettingsViewModel = (
 
   // Motion freeze handler
   const handleToggleMotion = useCallback(() => {
-    setIsMotionFrozen(prev => !prev);
-  }, []);
+    if (onToggleMotion) {
+      onToggleMotion();
+    }
+  }, [onToggleMotion]);
 
   // Scene reset handler
   const handleResetScene = useCallback(() => {
@@ -161,7 +164,7 @@ export const useSceneSettingsViewModel = (
     // State
     theme,
     themeConfig,
-    isMotionFrozen,
+    isMotionFrozen: isMotionFrozen || false,
     selectedBackgroundId,
     selectedGeometryId,
     currentBackground,
