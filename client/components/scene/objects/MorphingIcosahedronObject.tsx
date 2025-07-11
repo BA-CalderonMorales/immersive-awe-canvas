@@ -24,10 +24,20 @@ const MorphingIcosahedronObject = ({ color, materialConfig, isLocked, isMotionFr
     if (meshRef.current?.userData.isBeingDragged) return;
     if (isMotionFrozen) return;
     if (!isLocked && meshRef.current) {
-      // Balanced rotation speeds for smooth motion
-      meshRef.current.rotation.x = state.clock.elapsedTime * 0.3;
-      meshRef.current.rotation.y = state.clock.elapsedTime * 0.4;
-      meshRef.current.rotation.z = state.clock.elapsedTime * 0.15;
+      // Phi-based rotation using golden ratio for natural harmony
+      const phi = 1.618; // Golden ratio
+      const time = state.clock.elapsedTime;
+      
+      meshRef.current.rotation.x = time * (0.2 / phi);
+      meshRef.current.rotation.y = time * (0.3 / phi);
+      meshRef.current.rotation.z = time * (0.1 / phi);
+      
+      // Morphing scale effect - breathes with Fibonacci sequence timing
+      const morphScale = 1 + Math.sin(time * 0.618) * 0.08; // 0.618 = 1/phi
+      meshRef.current.scale.setScalar(morphScale);
+      
+      // Subtle position oscillation
+      meshRef.current.position.y = Math.sin(time * 0.5) * 0.05;
     }
   });
 
@@ -48,13 +58,13 @@ const MorphingIcosahedronObject = ({ color, materialConfig, isLocked, isMotionFr
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
     >
-      <icosahedronGeometry args={[1, 2]} />
+      <icosahedronGeometry args={[1, 1]} />
       <DynamicMaterial materialConfig={materialConfig} color={color} />
       
       {/* Wireframe overlay - show when drag is enabled or when hovered */}
       {(isDragEnabled || isHovered) && (
         <mesh>
-          <icosahedronGeometry args={[1, 2]} />
+          <icosahedronGeometry args={[1, 1]} />
           <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
         </mesh>
       )}

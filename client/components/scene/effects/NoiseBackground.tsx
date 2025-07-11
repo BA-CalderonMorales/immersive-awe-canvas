@@ -26,26 +26,74 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
     uniform vec3 color;
     varying vec2 vUv;
     
-    // Simple noise function
-    float random(vec2 st) {
-      return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
+    // Advanced noise functions for cosmic depth
+    float hash(float n) {
+      return fract(sin(n) * 43758.5453123);
     }
     
     float noise(vec2 st) {
       vec2 i = floor(st);
       vec2 f = fract(st);
-      float a = random(i);
-      float b = random(i + vec2(1.0, 0.0));
-      float c = random(i + vec2(0.0, 1.0));
-      float d = random(i + vec2(1.0, 1.0));
-      vec2 u = f * f * (3.0 - 2.0 * f);
-      return mix(a, b, u.x) + (c - a)* u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+      f = f * f * (3.0 - 2.0 * f);
+      float n = i.x + i.y * 57.0;
+      return mix(mix(hash(n), hash(n + 1.0), f.x),
+                 mix(hash(n + 57.0), hash(n + 58.0), f.x), f.y);
+    }
+    
+    float fbm(vec2 st) {
+      float value = 0.0;
+      float amplitude = 0.5;
+      vec2 freq = vec2(1.0);
+      for(int i = 0; i < 4; i++) {
+        value += amplitude * noise(st * freq);
+        freq *= 2.0;
+        amplitude *= 0.5;
+      }
+      return value;
+    }
+    
+    // Create cosmic nebula effect
+    vec3 cosmic(vec2 uv, float time) {
+      vec2 st = uv * noiseScale;
+      
+      // Multiple noise layers for depth
+      float noise1 = fbm(st + time * 0.1);
+      float noise2 = fbm(st * 2.0 + time * 0.05);
+      float noise3 = fbm(st * 4.0 + time * 0.02);
+      
+      // Create nebula structure
+      float nebula = noise1 * 0.6 + noise2 * 0.3 + noise3 * 0.1;
+      
+      // Add cosmic density variation
+      float density = smoothstep(0.3, 0.8, nebula);
+      
+      // Create depth with radial falloff
+      float depth = 1.0 - length(uv - 0.5) * 1.2;
+      depth = smoothstep(0.0, 1.0, depth);
+      
+      // Color mixing with cosmic atmosphere
+      vec3 baseColor = color;
+      vec3 nebulaColor = mix(baseColor * 0.5, baseColor * 1.5, density);
+      
+      // Add atmospheric glow
+      vec3 glow = baseColor * 0.3 * (1.0 - depth);
+      
+      return mix(nebulaColor, nebulaColor + glow, depth);
     }
     
     void main() {
-      vec2 st = vUv * noiseScale;
-      float n = noise(st + time);
-      vec3 finalColor = color * (0.5 + n * noiseIntensity);
+      vec2 uv = vUv;
+      
+      // Create immersive cosmic environment
+      vec3 finalColor = cosmic(uv, time);
+      
+      // Add subtle brightness variation
+      float brightness = 0.7 + fbm(uv * 8.0 + time * 0.05) * 0.3;
+      finalColor *= brightness;
+      
+      // Ensure minimum visibility
+      finalColor = max(finalColor, color * 0.2);
+      
       gl_FragColor = vec4(finalColor, 1.0);
     }
   `;
@@ -64,19 +112,18 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
   });
 
   return (
-    <>
-      <color attach="background" args={[config.color || '#1a1a2e']} />
-      <mesh ref={meshRef} scale={[100, 100, 1]} position={[0, 0, -30]}>
-        <planeGeometry args={[1, 1]} />
-        <shaderMaterial
-          vertexShader={vertexShader}
-          fragmentShader={fragmentShader}
-          uniforms={uniforms}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-    </>
+    <mesh ref={meshRef} scale={[10000, 10000, 10000]} renderOrder={-1000}>
+      <sphereGeometry args={[1, 64, 32]} />
+      <shaderMaterial
+        vertexShader={vertexShader}
+        fragmentShader={fragmentShader}
+        uniforms={uniforms}
+        side={THREE.BackSide}
+        depthWrite={false}
+        depthTest={false}
+        fog={false}
+      />
+    </mesh>
   );
 };
 

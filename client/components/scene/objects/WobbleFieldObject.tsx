@@ -1,14 +1,10 @@
 
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Group } from 'three';
+import { Group, DoubleSide } from 'three';
 import { MaterialConfig } from '@/types/scene';
 import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
 import DynamicMaterial from '../materials/DynamicMaterial';
-import InstancedFieldElements from './wobbleField/InstancedFieldElements';
-import EnergyStreams from './wobbleField/EnergyStreams';
-import PortalEffects from './wobbleField/PortalEffects';
-import { generateChaoticField } from './wobbleField/fieldGenerator';
 
 const MAIN_OBJECT_NAME = 'main-scene-object';
 
@@ -23,16 +19,19 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked, isMotionFrozen }: 
   const groupRef = useRef<Group>(null!);
   const [isHovered, setIsHovered] = useState(false);
   const { isDragEnabled } = useSceneObjectsContext();
-  
-  // Generate field data once
-  const fieldData = generateChaoticField();
 
   useFrame((state) => {
     if (groupRef.current?.userData.isBeingDragged) return;
     if (isMotionFrozen) return;
     if (!isLocked && groupRef.current) {
-      // Smooth, consistent rotation
-      groupRef.current.rotation.y = state.clock.elapsedTime * 0.08;
+      // Subtle morphing rotations - advanced 3D artist technique
+      groupRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.3) * 0.1;
+      groupRef.current.rotation.y = state.clock.elapsedTime * 0.2;
+      groupRef.current.rotation.z = Math.cos(state.clock.elapsedTime * 0.4) * 0.05;
+      
+      // Breathing scale effect with golden ratio pacing
+      const breathingScale = 1 + Math.sin(state.clock.elapsedTime * 0.618) * 0.05;
+      groupRef.current.scale.setScalar(breathingScale);
     }
   });
 
@@ -53,33 +52,47 @@ const WobbleFieldObject = ({ color, materialConfig, isLocked, isMotionFrozen }: 
       onPointerOver={handlePointerEnter}
       onPointerOut={handlePointerLeave}
     >
-      {/* Main central sphere */}
+      {/* Main torus - elegant and simple */}
       <mesh>
-        <sphereGeometry args={[0.8, 64, 64]} />
+        <torusGeometry args={[1, 0.4, 16, 50]} />
         <DynamicMaterial materialConfig={materialConfig} color={color} />
         
         {/* Wireframe overlay - show when drag is enabled or when hovered */}
         {(isDragEnabled || isHovered) && (
           <mesh>
-            <sphereGeometry args={[0.8, 64, 64]} />
+            <torusGeometry args={[1, 0.4, 16, 50]} />
             <meshBasicMaterial wireframe color="#ffff00" transparent opacity={0.5} />
           </mesh>
         )}
       </mesh>
 
-      {/* Field elements */}
-      <InstancedFieldElements 
-        color={color} 
-        materialConfig={materialConfig}
-        fieldData={fieldData}
-        isLocked={isLocked}
-      />
-      
-      {/* Energy streams */}
-      <EnergyStreams materialConfig={materialConfig} />
-      
-      {/* Portal effects */}
-      <PortalEffects materialConfig={materialConfig} />
+      {/* Inner sphere with negative space effect */}
+      <mesh>
+        <sphereGeometry args={[0.6, 32, 32]} />
+        <DynamicMaterial 
+          materialConfig={{
+            ...materialConfig,
+            transparent: true,
+            opacity: 0.3,
+            materialType: 'standard'
+          }} 
+          color={color} 
+        />
+      </mesh>
+
+      {/* Outer ring for depth */}
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[1.8, 0.05, 8, 32]} />
+        <DynamicMaterial 
+          materialConfig={{
+            ...materialConfig,
+            transparent: true,
+            opacity: 0.6,
+            materialType: 'standard'
+          }} 
+          color={color} 
+        />
+      </mesh>
     </group>
   );
 };

@@ -82,8 +82,31 @@ const VoidBackground = ({ theme }: VoidBackgroundProps) => {
 
   return (
     <>
-      {/* Void gradient background */}
-      <color attach="background" args={[theme === 'day' ? '#f8fafc' : '#0f0f23']} />
+      {/* Deep void gradient sphere */}
+      <mesh scale={[10000, 10000, 10000]} renderOrder={-1000}>
+        <sphereGeometry args={[1, 64, 32]} />
+        <meshBasicMaterial 
+          color={theme === 'day' ? '#f0f4f8' : '#060814'}
+          side={2}
+          depthWrite={false}
+          depthTest={false}
+          fog={false}
+        />
+      </mesh>
+      
+      {/* Atmospheric depth layers */}
+      <mesh scale={[8000, 8000, 8000]} renderOrder={-999}>
+        <sphereGeometry args={[1, 32, 16]} />
+        <meshBasicMaterial 
+          color={theme === 'day' ? '#e2e8f0' : '#0a0d18'}
+          transparent
+          opacity={0.3}
+          side={2}
+          depthWrite={false}
+          depthTest={false}
+          fog={false}
+        />
+      </mesh>
       
       {/* Floating geometric fragments */}
       <instancedMesh ref={meshRef} args={[undefined, undefined, 40]}>

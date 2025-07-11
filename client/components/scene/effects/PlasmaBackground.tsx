@@ -55,13 +55,16 @@ const PlasmaBackground = ({ config }: PlasmaBackgroundProps) => {
   });
 
   return (
-    <mesh ref={meshRef} scale={[50, 50, 1]} position={[0, 0, -25]}>
-      <planeGeometry args={[1, 1]} />
+    <mesh ref={meshRef} scale={[10000, 10000, 10000]} renderOrder={-1000}>
+      <sphereGeometry args={[1, 64, 32]} />
       <shaderMaterial
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
         uniforms={uniforms}
-        side={THREE.DoubleSide}
+        side={THREE.BackSide}
+        depthWrite={false}
+        depthTest={false}
+        fog={false}
       />
     </mesh>
   );
