@@ -82,19 +82,44 @@ const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
       );
     
     case 'gradient':
-      return <GradientBackground config={background} />;
+      return (
+        <>
+          <color attach="background" args={[background.colorBottom || '#000000']} />
+          <GradientBackground config={background} />
+        </>
+      );
     
     case 'noise':
-      return <NoiseBackground config={background} />;
+      return (
+        <>
+          <color attach="background" args={[background.color || '#1a1a2e']} />
+          <NoiseBackground config={background} />
+        </>
+      );
     
     case 'plasma':
-      return <PlasmaBackground config={background} />;
+      return (
+        <>
+          <color attach="background" args={['#000011']} />
+          <PlasmaBackground config={background} />
+        </>
+      );
     
     case 'aurora':
-      return <AuroraBackground config={background} />;
+      return (
+        <>
+          <color attach="background" args={['#000011']} />
+          <AuroraBackground config={background} />
+        </>
+      );
     
     case 'sunset':
-      return <SunsetBackground config={background} />;
+      return (
+        <>
+          <color attach="background" args={['#1a1a2e']} />
+          <SunsetBackground config={background} />
+        </>
+      );
     
     case 'void':
       return <VoidBackground theme={theme} />;
