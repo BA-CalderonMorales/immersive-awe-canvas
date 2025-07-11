@@ -52,27 +52,42 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
     
     void main() {
       vec2 uv = vUv;
+      vec2 center = vec2(0.5);
       
-      // Create immersive depth with atmospheric perspective
-      float depth = 1.0 - length(uv - 0.5) * 1.4;
+      // Create immersive depth with enhanced atmospheric perspective
+      float distance = length(uv - center);
+      float depth = 1.0 - pow(distance * 1.6, 1.2);
       depth = smoothstep(0.0, 1.0, depth);
       
-      // Atmospheric noise for visual interest
-      float atmosphere = fbm(uv * 4.0 + time * 0.1) * 0.1;
+      // Multi-layered atmospheric noise for rich detail
+      float atmosphere1 = fbm(uv * 6.0 + time * 0.08) * 0.15;
+      float atmosphere2 = fbm(uv * 12.0 + time * 0.05) * 0.08;
+      float atmosphere3 = fbm(uv * 24.0 + time * 0.03) * 0.04;
+      float totalAtmosphere = atmosphere1 + atmosphere2 + atmosphere3;
       
-      // Enhanced gradient with depth and atmosphere
-      float gradient = uv.y + sin(uv.x * 6.28318 + time) * 0.03 + atmosphere;
-      gradient = smoothstep(0.0, 1.0, gradient);
+      // Dynamic gradient with swirling motion
+      float swirl = sin(atan(uv.y - center.y, uv.x - center.x) * 2.0 + time * 0.2) * 0.05;
+      float gradient = uv.y + sin(uv.x * 8.0 + time * 0.5) * 0.04 + totalAtmosphere + swirl;
+      gradient = smoothstep(0.1, 0.9, gradient);
       
-      // Color mixing with atmospheric depth
-      vec3 color = mix(colorBottom, colorTop, gradient);
+      // Enhanced color mixing with energy layers
+      vec3 baseColor = mix(colorBottom, colorTop, gradient);
       
-      // Add subtle atmospheric glow
-      vec3 atmosphericGlow = mix(colorBottom, colorTop, 0.5) * 0.2;
-      color += atmosphericGlow * (1.0 - depth);
+      // Add dynamic atmospheric effects
+      vec3 atmosphericGlow = mix(colorBottom, colorTop, 0.5);
+      vec3 energyLayer = atmosphericGlow * 0.3 * (1.0 - depth);
+      vec3 depthGlow = atmosphericGlow * 0.2 * depth * sin(time * 0.3 + distance * 10.0);
       
-      // Depth fade for immersion
-      color *= 0.8 + depth * 0.2;
+      // Combine all layers
+      vec3 color = baseColor + energyLayer + depthGlow;
+      
+      // Add subtle color shifting over time
+      color.r += sin(time * 0.2 + uv.x * 3.0) * 0.02;
+      color.g += cos(time * 0.25 + uv.y * 4.0) * 0.02;
+      color.b += sin(time * 0.3 + distance * 8.0) * 0.02;
+      
+      // Enhanced depth fade for immersion
+      color *= 0.7 + depth * 0.3;
       
       gl_FragColor = vec4(color, 1.0);
     }

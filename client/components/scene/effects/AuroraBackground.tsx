@@ -56,48 +56,63 @@ const AuroraBackground = ({ config }: AuroraBackgroundProps) => {
     void main() {
       vec2 uv = vUv;
       
-      // Create immersive aurora with depth
-      float depth = 1.0 - length(uv - 0.5) * 1.5;
+      // Create immersive aurora with enhanced depth and movement
+      vec2 center = vec2(0.5);
+      float distance = length(uv - center);
+      float depth = 1.0 - pow(distance * 1.3, 1.1);
       depth = smoothstep(0.0, 1.0, depth);
       
-      // Multiple wave layers for complexity
-      float wave1 = sin(uv.x * 6.0 + time * auroraSpeed) * 0.15;
-      float wave2 = sin(uv.x * 10.0 + time * auroraSpeed * 1.3) * 0.08;
-      float wave3 = sin(uv.x * 14.0 + time * auroraSpeed * 1.7) * 0.05;
+      // Enhanced wave layers with varying frequencies and amplitudes
+      float wave1 = sin(uv.x * 8.0 + time * auroraSpeed * 0.8) * 0.18;
+      float wave2 = sin(uv.x * 12.0 + time * auroraSpeed * 1.1) * 0.12;
+      float wave3 = sin(uv.x * 16.0 + time * auroraSpeed * 1.4) * 0.08;
+      float wave4 = sin(uv.x * 20.0 + time * auroraSpeed * 1.8) * 0.04;
       
-      // Add noise for organic movement
-      float organicNoise = fbm(uv * 4.0 + time * 0.2) * 0.1;
+      // Add complex organic movement with multiple noise layers
+      float organicNoise1 = fbm(uv * 6.0 + time * 0.15) * 0.12;
+      float organicNoise2 = fbm(uv * 12.0 + time * 0.08) * 0.06;
+      float organicNoise3 = fbm(uv * 24.0 + time * 0.04) * 0.03;
       
-      float totalWave = wave1 + wave2 + wave3 + organicNoise;
+      // Create swirling motion
+      float swirl = sin(atan(uv.y - center.y, uv.x - center.x) * 1.5 + time * auroraSpeed * 0.3) * 0.08;
       
-      // Create aurora bands with smooth transitions
-      float aurora1 = smoothstep(0.2, 0.5, uv.y + totalWave);
-      aurora1 *= smoothstep(0.7, 0.4, uv.y + totalWave);
+      float totalWave = wave1 + wave2 + wave3 + wave4 + organicNoise1 + organicNoise2 + organicNoise3 + swirl;
       
-      float aurora2 = smoothstep(0.4, 0.65, uv.y + totalWave * 0.7);
-      aurora2 *= smoothstep(0.85, 0.6, uv.y + totalWave * 0.7);
+      // Create multiple aurora layers with enhanced transitions
+      float aurora1 = smoothstep(0.15, 0.45, uv.y + totalWave * 1.2);
+      aurora1 *= smoothstep(0.65, 0.35, uv.y + totalWave * 1.2);
       
-      float aurora3 = smoothstep(0.6, 0.8, uv.y + totalWave * 0.5);
-      aurora3 *= smoothstep(0.95, 0.75, uv.y + totalWave * 0.5);
+      float aurora2 = smoothstep(0.3, 0.6, uv.y + totalWave * 0.8);
+      aurora2 *= smoothstep(0.8, 0.5, uv.y + totalWave * 0.8);
       
-      // Color mixing with atmospheric depth
-      vec3 color1 = mix(auroraColor1, auroraColor2, sin(time * 0.3 + uv.x * 3.14159) * 0.5 + 0.5);
-      vec3 color2 = mix(auroraColor2, auroraColor3, cos(time * 0.5 + uv.x * 2.0) * 0.5 + 0.5);
-      vec3 color3 = mix(auroraColor3, auroraColor1, sin(time * 0.7 + uv.x * 1.5) * 0.5 + 0.5);
+      float aurora3 = smoothstep(0.45, 0.75, uv.y + totalWave * 0.6);
+      aurora3 *= smoothstep(0.9, 0.65, uv.y + totalWave * 0.6);
       
-      // Blend aurora layers
-      vec3 finalColor = color1 * aurora1 + color2 * aurora2 + color3 * aurora3;
+      float aurora4 = smoothstep(0.6, 0.85, uv.y + totalWave * 0.4);
+      aurora4 *= smoothstep(0.95, 0.75, uv.y + totalWave * 0.4);
       
-      // Add atmospheric glow
-      vec3 atmosphericGlow = mix(auroraColor1, auroraColor3, 0.5) * 0.1;
-      finalColor += atmosphericGlow * (1.0 - depth);
+      // Enhanced color mixing with atmospheric depth and movement
+      vec3 color1 = mix(auroraColor1, auroraColor2, sin(time * 0.25 + uv.x * 4.0 + distance * 8.0) * 0.5 + 0.5);
+      vec3 color2 = mix(auroraColor2, auroraColor3, cos(time * 0.35 + uv.x * 3.0 + distance * 6.0) * 0.5 + 0.5);
+      vec3 color3 = mix(auroraColor3, auroraColor1, sin(time * 0.45 + uv.x * 2.0 + distance * 4.0) * 0.5 + 0.5);
+      vec3 color4 = mix(auroraColor1 * 1.2, auroraColor3 * 0.8, cos(time * 0.55 + uv.x * 1.5 + distance * 3.0) * 0.5 + 0.5);
       
-      // Apply intensity and depth
-      finalColor *= auroraIntensity;
-      float totalAurora = max(aurora1, max(aurora2, aurora3));
+      // Blend aurora layers with enhanced weighting
+      vec3 finalColor = color1 * aurora1 * 1.2 + color2 * aurora2 * 1.0 + color3 * aurora3 * 0.8 + color4 * aurora4 * 0.6;
       
-      // Enhanced alpha for better blending
-      float alpha = totalAurora * depth;
+      // Add enhanced atmospheric effects
+      vec3 atmosphericGlow = mix(auroraColor1, auroraColor3, 0.5) * 0.15;
+      vec3 depthGlow = mix(auroraColor2, auroraColor1, 0.3) * 0.1 * depth;
+      vec3 energyStreams = mix(auroraColor1, auroraColor2, sin(time * 0.8) * 0.5 + 0.5) * 0.05;
+      
+      finalColor += atmosphericGlow * (1.0 - depth) + depthGlow + energyStreams;
+      
+      // Apply intensity with dynamic enhancement
+      finalColor *= auroraIntensity * (0.8 + sin(time * 0.2) * 0.2);
+      float totalAurora = max(aurora1, max(aurora2, max(aurora3, aurora4)));
+      
+      // Enhanced alpha with depth and movement
+      float alpha = totalAurora * depth * (0.7 + sin(time * 0.3 + distance * 5.0) * 0.3);
       
       gl_FragColor = vec4(finalColor, alpha);
     }

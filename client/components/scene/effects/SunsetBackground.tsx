@@ -70,8 +70,8 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
         float height = p.y;
         float distance = length(p);
         
-        // Sun position (slightly off-center for more natural look)
-        vec2 sunPos = vec2(0.15, -0.1 + sin(t * 0.05) * 0.02);
+        // Dynamic sun position with subtle movement
+        vec2 sunPos = vec2(0.12 + sin(t * 0.03) * 0.08, -0.08 + sin(t * 0.05) * 0.04);
         float sunDistance = length(p - sunPos);
         
         // Atmospheric layers
@@ -100,17 +100,30 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
         float scattering = pow(max(0.0, scatterAngle), 8.0) * 0.4;
         skyColor += sunColor * scattering * horizonBlend;
         
-        // Realistic cloud simulation
-        vec2 cloudUv = p * 3.0 + vec2(t * 0.02, 0.0);
-        float cloudNoise = fbm(cloudUv);
-        float cloudDensity = smoothstep(0.1, 0.6, cloudNoise) * smoothstep(0.3, -0.3, height);
+        // Enhanced cloud simulation with multiple layers
+        vec2 cloudUv1 = p * 2.5 + vec2(t * 0.015, sin(t * 0.008) * 0.1);
+        vec2 cloudUv2 = p * 4.0 + vec2(t * 0.025, cos(t * 0.012) * 0.08);
+        vec2 cloudUv3 = p * 6.5 + vec2(t * 0.035, sin(t * 0.02) * 0.05);
         
-        // Cloud lighting based on sun position
-        float cloudLight = max(0.3, dot(normalize(vec3(cloudUv, 0.1)), normalize(vec3(sunPos, 0.2))));
-        vec3 cloudColor = mix(cloudShadow, cloudHighlight, cloudLight);
+        float cloudNoise1 = fbm(cloudUv1);
+        float cloudNoise2 = fbm(cloudUv2) * 0.7;
+        float cloudNoise3 = fbm(cloudUv3) * 0.4;
         
-        // Blend clouds with sky
-        skyColor = mix(skyColor, cloudColor, cloudDensity * 0.7);
+        float combinedCloudNoise = cloudNoise1 + cloudNoise2 + cloudNoise3;
+        float cloudDensity1 = smoothstep(0.15, 0.65, combinedCloudNoise) * smoothstep(0.4, -0.2, height);
+        float cloudDensity2 = smoothstep(0.3, 0.8, combinedCloudNoise * 1.2) * smoothstep(0.2, -0.4, height);
+        
+        // Enhanced cloud lighting with sun influence
+        float sunInfluence = exp(-distance * 3.0) * 0.5;
+        float cloudLight1 = max(0.2, dot(normalize(vec3(cloudUv1, 0.1)), normalize(vec3(sunPos, 0.3))) + sunInfluence);
+        float cloudLight2 = max(0.15, dot(normalize(vec3(cloudUv2, 0.08)), normalize(vec3(sunPos, 0.25))) + sunInfluence * 0.7);
+        
+        vec3 cloudColor1 = mix(cloudShadow, cloudHighlight, cloudLight1);
+        vec3 cloudColor2 = mix(cloudShadow * 0.8, cloudHighlight * 1.2, cloudLight2);
+        
+        // Blend multiple cloud layers with sky
+        skyColor = mix(skyColor, cloudColor1, cloudDensity1 * 0.8);
+        skyColor = mix(skyColor, cloudColor2, cloudDensity2 * 0.4);
         
         // Color temperature adjustment for time of day
         float timeWarmth = 0.9 + sin(t * 0.1) * 0.1;

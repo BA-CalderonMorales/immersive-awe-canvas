@@ -52,33 +52,48 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
       return value;
     }
     
-    // Create cosmic nebula effect
+    // Create immersive cosmic nebula effect with depth
     vec3 cosmic(vec2 uv, float time) {
       vec2 st = uv * noiseScale;
+      vec2 center = vec2(0.5);
       
-      // Multiple noise layers for depth
-      float noise1 = fbm(st + time * 0.1);
-      float noise2 = fbm(st * 2.0 + time * 0.05);
-      float noise3 = fbm(st * 4.0 + time * 0.02);
+      // Enhanced noise layers for depth and movement
+      float noise1 = fbm(st + time * 0.08 + sin(time * 0.05) * 0.2);
+      float noise2 = fbm(st * 1.8 + time * 0.12 + cos(time * 0.07) * 0.15);
+      float noise3 = fbm(st * 3.2 + time * 0.04);
+      float noise4 = fbm(st * 6.4 + time * 0.02);
       
-      // Create nebula structure
-      float nebula = noise1 * 0.6 + noise2 * 0.3 + noise3 * 0.1;
+      // Create complex nebula structure with swirling patterns
+      float nebula = noise1 * 0.5 + noise2 * 0.25 + noise3 * 0.15 + noise4 * 0.1;
       
-      // Add cosmic density variation
-      float density = smoothstep(0.3, 0.8, nebula);
+      // Add swirling motion
+      float swirl = sin(atan(uv.y - center.y, uv.x - center.x) * 3.0 + time * 0.3) * 0.1;
+      nebula += swirl;
       
-      // Create depth with radial falloff
-      float depth = 1.0 - length(uv - 0.5) * 1.2;
+      // Create multiple density layers
+      float density1 = smoothstep(0.2, 0.7, nebula);
+      float density2 = smoothstep(0.4, 0.9, nebula + noise2 * 0.2);
+      float density3 = smoothstep(0.6, 1.0, nebula + noise3 * 0.3);
+      
+      // Enhanced depth with distance falloff
+      float distance = length(uv - center);
+      float depth = 1.0 - pow(distance * 1.8, 1.5);
       depth = smoothstep(0.0, 1.0, depth);
       
-      // Color mixing with cosmic atmosphere
+      // Dynamic color mixing with multiple layers
       vec3 baseColor = color;
-      vec3 nebulaColor = mix(baseColor * 0.5, baseColor * 1.5, density);
+      vec3 nebulaColor1 = mix(baseColor * 0.3, baseColor * 1.2, density1);
+      vec3 nebulaColor2 = mix(baseColor * 0.6, baseColor * 1.8, density2);
+      vec3 nebulaColor3 = mix(baseColor * 0.8, baseColor * 2.2, density3);
       
-      // Add atmospheric glow
-      vec3 glow = baseColor * 0.3 * (1.0 - depth);
+      // Blend layers with depth weighting
+      vec3 finalNebula = nebulaColor1 * 0.5 + nebulaColor2 * 0.3 + nebulaColor3 * 0.2;
       
-      return mix(nebulaColor, nebulaColor + glow, depth);
+      // Add atmospheric glow and energy streams
+      vec3 atmosphericGlow = baseColor * 0.4 * (1.0 - depth);
+      vec3 energyStreams = baseColor * 1.5 * pow(density3, 2.0) * (sin(time * 0.5) * 0.5 + 0.5);
+      
+      return mix(finalNebula + atmosphericGlow + energyStreams, finalNebula, depth * 0.7);
     }
     
     void main() {

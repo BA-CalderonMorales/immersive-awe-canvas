@@ -29,29 +29,31 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
         gold: '5A492B_DEC583_987D4D_AC9C74',
     };
     
-    const [matcap] = useMatcapTexture(MATCAP_TEXTURES[materialConfig.matcapTexture || 'chrome'], 256);
+    // Safe matcap texture loading with fallback
+    const matcapKey = materialConfig.matcapTexture as keyof typeof MATCAP_TEXTURES || 'chrome';
+    const [matcap] = useMatcapTexture(MATCAP_TEXTURES[matcapKey] || MATCAP_TEXTURES.chrome, 256);
 
     const commonProps = {
         color: color,
-        wireframe: materialConfig.wireframe,
-        emissive: materialConfig.emissive,
-        emissiveIntensity: materialConfig.emissiveIntensity,
-        transparent: materialConfig.transparent,
-        opacity: materialConfig.opacity,
+        wireframe: materialConfig.wireframe || false,
+        emissive: materialConfig.emissive || '#000000',
+        emissiveIntensity: materialConfig.emissiveIntensity || 0,
+        transparent: materialConfig.transparent || false,
+        opacity: materialConfig.opacity !== undefined ? materialConfig.opacity : 1,
     };
 
     switch (materialConfig.materialType) {
         case 'physical':
             return <meshPhysicalMaterial
                 {...commonProps}
-                roughness={materialConfig.roughness}
-                metalness={materialConfig.metalness}
-                clearcoat={materialConfig.clearcoat}
-                clearcoatRoughness={materialConfig.clearcoatRoughness}
-                ior={materialConfig.ior}
-                thickness={materialConfig.thickness}
-                specularIntensity={materialConfig.specularIntensity}
-                specularColor={materialConfig.specularColor}
+                roughness={materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5}
+                metalness={materialConfig.metalness !== undefined ? materialConfig.metalness : 0}
+                clearcoat={materialConfig.clearcoat || 0}
+                clearcoatRoughness={materialConfig.clearcoatRoughness || 0}
+                ior={materialConfig.ior || 1.5}
+                thickness={materialConfig.thickness || 0}
+                specularIntensity={materialConfig.specularIntensity || 1}
+                specularColor={materialConfig.specularColor || '#ffffff'}
             />;
         case 'toon':
             return <meshToonMaterial
@@ -59,21 +61,32 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
                 gradientMap={materialConfig.gradientMap === 'five' ? fiveTone : threeTone}
             />;
         case 'matcap':
-            return <meshMatcapMaterial {...commonProps} matcap={matcap} />;
+            return <meshMatcapMaterial 
+                {...commonProps} 
+                matcap={matcap}
+            />;
         case 'lambert':
             return <meshLambertMaterial {...commonProps} />;
         case 'phong':
-            return <meshPhongMaterial {...commonProps} shininess={materialConfig.shininess} specular={materialConfig.specularColor} />;
+            return <meshPhongMaterial 
+                {...commonProps} 
+                shininess={materialConfig.shininess !== undefined ? materialConfig.shininess : 30} 
+                specular={materialConfig.specularColor || '#111111'} 
+            />;
         case 'normal':
-            return <meshNormalMaterial {...commonProps} />;
+            return <meshNormalMaterial 
+                wireframe={materialConfig.wireframe || false}
+                transparent={materialConfig.transparent || false}
+                opacity={materialConfig.opacity !== undefined ? materialConfig.opacity : 1}
+            />;
         case 'basic':
             return <meshBasicMaterial {...commonProps} />;
         case 'standard':
         default:
             return <meshStandardMaterial
                 {...commonProps}
-                roughness={materialConfig.roughness}
-                metalness={materialConfig.metalness}
+                roughness={materialConfig.roughness !== undefined ? materialConfig.roughness : 0.5}
+                metalness={materialConfig.metalness !== undefined ? materialConfig.metalness : 0}
             />;
     }
 };
