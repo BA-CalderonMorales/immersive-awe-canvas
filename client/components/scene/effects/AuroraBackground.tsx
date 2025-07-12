@@ -118,11 +118,11 @@ const AuroraBackground = ({ config }: AuroraBackgroundProps) => {
     }
   `;
 
-  const defaultColors = config.auroraColors || ['#00ff88', '#0088ff', '#ff0088'];
+  const defaultColors = (config as any).auroraColors || config.auroraColors || ['#00ff88', '#0088ff', '#ff0088'];
   const uniforms = {
     time: { value: 0 },
-    auroraSpeed: { value: config.auroraSpeed || 0.5 },
-    auroraIntensity: { value: config.auroraIntensity || 2.0 },
+    auroraSpeed: { value: (config as any).auroraSpeed || config.auroraSpeed || 0.4 },
+    auroraIntensity: { value: (config as any).auroraIntensity || config.auroraIntensity || 1.8 },
     auroraColor1: { value: new THREE.Color(defaultColors[0]) },
     auroraColor2: { value: new THREE.Color(defaultColors[1]) },
     auroraColor3: { value: new THREE.Color(defaultColors[2]) }

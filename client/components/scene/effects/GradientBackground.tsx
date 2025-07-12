@@ -94,14 +94,14 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
   `;
 
   const uniforms = {
-    colorTop: { value: new THREE.Color(config.colorTop || '#ff6b6b') },
-    colorBottom: { value: new THREE.Color(config.colorBottom || '#4ecdc4') },
+    colorTop: { value: new THREE.Color(config.colorTop || '#667eea') },
+    colorBottom: { value: new THREE.Color(config.colorBottom || '#764ba2') },
     time: { value: 0 }
   };
 
   useFrame((state) => {
-    if (materialRef.current && config.speed) {
-      materialRef.current.uniforms.time.value = state.clock.getElapsedTime() * config.speed;
+    if (materialRef.current && (config.speed || (config as any).speed)) {
+      materialRef.current.uniforms.time.value = state.clock.getElapsedTime() * (config.speed || (config as any).speed || 0.3);
     }
   });
 

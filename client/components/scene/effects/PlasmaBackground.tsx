@@ -92,9 +92,9 @@ const PlasmaBackground = ({ config }: PlasmaBackgroundProps) => {
   const uniforms = {
     time: { value: 0 },
     plasmaSpeed: { value: config.plasmaSpeed || 1.0 },
-    plasmaIntensity: { value: config.plasmaIntensity || 0.5 },
-    plasmaColor1: { value: new THREE.Color(config.plasmaColor1 || '#ff0080') },
-    plasmaColor2: { value: new THREE.Color(config.plasmaColor2 || '#0080ff') }
+    plasmaIntensity: { value: config.plasmaIntensity || 0.8 },
+    plasmaColor1: { value: new THREE.Color(config.plasmaColor1 || '#ff0066') },
+    plasmaColor2: { value: new THREE.Color(config.plasmaColor2 || '#0066ff') }
   };
 
   useFrame((state) => {

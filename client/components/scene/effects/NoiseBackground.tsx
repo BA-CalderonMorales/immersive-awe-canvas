@@ -115,14 +115,14 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
 
   const uniforms = {
     time: { value: 0 },
-    noiseScale: { value: config.noiseScale || 10.0 },
-    noiseIntensity: { value: config.noiseIntensity || 0.5 },
-    color: { value: new THREE.Color(config.color || '#1a1a2e') }
+    noiseScale: { value: (config as any).noiseScale || config.noiseScale || 8.0 },
+    noiseIntensity: { value: (config as any).noiseIntensity || config.noiseIntensity || 1.1 },
+    color: { value: new THREE.Color(config.color || '#1a237e') }
   };
 
   useFrame((state) => {
     if (uniforms.time) {
-      uniforms.time.value = state.clock.getElapsedTime() * (config.noiseSpeed || 0.1);
+      uniforms.time.value = state.clock.getElapsedTime() * ((config as any).noiseSpeed || config.noiseSpeed || 0.08);
     }
   });
 
