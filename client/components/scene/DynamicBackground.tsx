@@ -38,21 +38,53 @@ const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
   
   switch (background.type) {
     case 'sky':
-      return <Sky sunPosition={background.sunPosition || [100, 20, 100]} />;
+      return (
+        <>
+           <Sky 
+            sunPosition={background.sunPosition || [120, 25, 80]} 
+            turbidity={(background as any).atmosphericDensity || 1.2}
+            rayleigh={(background as any).lightScattering || 1.5}
+          />
+          {/* Add subtle atmospheric movement */}
+          <mesh scale={[8000, 8000, 8000]} renderOrder={-995}>
+            <sphereGeometry args={[1, 64, 32]} />
+            <meshBasicMaterial 
+              color="#f0f4f8"
+              transparent
+              opacity={0.1}
+              side={2}
+              depthWrite={false}
+              fog={false}
+            />
+          </mesh>
+        </>
+      );
     
     case 'stars':
       return (
         <>
           <color attach="background" args={['#000008']} />
           <Stars 
-            radius={background.radius || 100}
-            depth={background.depth || 50}
-            count={background.count || 5000}
-            factor={background.factor || 4}
-            saturation={background.saturation || 0}
+            radius={background.radius || 300}
+            depth={background.depth || 80}
+            count={background.count || 8000}
+            factor={background.factor || 6}
+            saturation={background.saturation || 0.1}
             fade={background.fade !== false}
-            speed={background.speed || 1}
+            speed={background.speed || 0.3}
           />
+          {/* Add atmospheric glow for living feeling */}
+          <mesh scale={[5000, 5000, 5000]} renderOrder={-998}>
+            <sphereGeometry args={[1, 32, 16]} />
+            <meshBasicMaterial 
+              color="#0a0f1a"
+              transparent
+              opacity={(background as any).atmosphericGlow || 0.2}
+              side={2}
+              depthWrite={false}
+              fog={false}
+            />
+          </mesh>
         </>
       );
     
@@ -61,13 +93,25 @@ const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
         <>
           <VoidBackground theme={theme} />
           <Sparkles 
-            count={background.count || 100}
-            scale={background.scale || 10}
-            size={background.size || 2}
-            speed={background.speed || 0.3}
-            opacity={background.opacity || 1}
-            color={background.color || '#ffffff'}
+            count={background.count || 300}
+            scale={background.scale || 25}
+            size={background.size || 3}
+            speed={background.speed || 0.2}
+            opacity={background.opacity || 0.8}
+            color={background.color || '#e6f3ff'}
           />
+          {/* Add energy field layers for organic feeling */}
+          <mesh scale={[6000, 6000, 6000]} renderOrder={-997}>
+            <sphereGeometry args={[1, 32, 16]} />
+            <meshBasicMaterial 
+              color="#1a237e"
+              transparent
+              opacity={0.15}
+              side={2}
+              depthWrite={false}
+              fog={false}
+            />
+          </mesh>
         </>
       );
     
@@ -130,12 +174,24 @@ const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
           <fog 
             attach="fog" 
             args={[
-              background.color || '#ffffff', 
-              background.near || 1, 
-              background.far || 100
+              background.color || '#f8fafc', 
+              background.near || 5, 
+              background.far || 200
             ]} 
           />
-          <color attach="background" args={[background.color || '#ffffff']} />
+          <color attach="background" args={[background.color || '#f8fafc']} />
+          {/* Enhanced atmospheric layers for breathing effect */}
+          <mesh scale={[12000, 12000, 12000]} renderOrder={-996}>
+            <sphereGeometry args={[1, 64, 32]} />
+            <meshBasicMaterial 
+              color={background.color || '#f8fafc'}
+              transparent
+              opacity={(background as any).ambientGlow || 0.3}
+              side={2}
+              depthWrite={false}
+              fog={false}
+            />
+          </mesh>
           {renderClouds()}
         </>
       );
@@ -143,7 +199,23 @@ const DynamicBackground = ({ background, extras }: DynamicBackgroundProps) => {
     case 'environment':
       return (
         <>
-          <Environment preset={background.preset || 'sunset'} background blur={background.blur} />
+          <Environment 
+            preset={background.preset || 'city'} 
+            background 
+            blur={background.blur || 0.1}
+          />
+          {/* Add atmospheric perspective for depth */}
+          <mesh scale={[10000, 10000, 10000]} renderOrder={-994}>
+            <sphereGeometry args={[1, 32, 16]} />
+            <meshBasicMaterial 
+              color="#2a2a3a"
+              transparent
+              opacity={0.08}
+              side={2}
+              depthWrite={false}
+              fog={false}
+            />
+          </mesh>
           {renderClouds()}
         </>
       );
