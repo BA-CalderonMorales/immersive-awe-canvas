@@ -10,10 +10,11 @@
  */
 
 // Database Integration
-export * from './integrations/supabase/client';
-export * from './integrations/supabase/types';
+export * from '../database/supabase/client';
+export * from '../database/supabase/types';
 
 // Server Utilities
-export * from './github-api';
 export * from './logger';
 export * from './security';
+export * from './typeguards';
+export * from './version';

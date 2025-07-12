@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lightenColor, darkenColor, isHexColor, getContrastingTextColor } from './utils';
+import { lightenColor, darkenColor, isHexColor, getContrastingTextColor } from '@utils/utils';
 
 describe('color utilities', () => {
   it('lightens black by 50%', () => {

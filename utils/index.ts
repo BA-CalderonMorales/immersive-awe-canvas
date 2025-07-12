@@ -6,6 +6,7 @@
  */
 
 // Core utilities
+export * from './utils';
 export * from './validation';
 export * from './version';
 export * from './typeguards';

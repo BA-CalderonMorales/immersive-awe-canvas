@@ -1,9 +1,9 @@
 
 import { formatInTimeZone } from 'date-fns-tz';
-import { getVersionInfo, type VersionInfo } from './github-api';
+import { getVersionInfo, type VersionInfo } from '@utils/github-api';
 
 // Re-export types for external use
-export type { VersionInfo } from './github-api';
+export type { VersionInfo } from '@utils/github-api';
 
 // Get version from package.json - this will be updated by semantic versioning
 const packageVersion = "1.0.0"; // This gets updated automatically by our versioning system

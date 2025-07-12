@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button"
 import { Github, LifeBuoy, Move } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { appVersion, getDynamicVersionInfo, type VersionInfo } from "@/lib/version";
-import { cn } from "@/lib/utils";
+import { cn } from "@utils/utils";
 import IssueReportForm from "./IssueReportForm";
 
 interface HelpDialogProps {

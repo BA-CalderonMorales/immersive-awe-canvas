@@ -8,21 +8,14 @@
  * - Utility functions
  */
 
-// Core utilities
-export * from './utils';
-export * from './validation';
-export * from './typeguards';
-export * from './version';
-
 // Client-specific utilities
 export * from './keyboardUtils';
 export * from './sceneConfigUtils';
+export * from './typeguards';
+export * from './version';
 
 // Security utilities
 export * from './security';
 
 // Logging utilities
 export * from './logger';
-
-// GitHub API utilities
-export * from './github-api';
