@@ -1,41 +1,41 @@
 {
-  "swarm_system": {
-    "version": "1.0.0",
-    "last_updated": "2025-01-22T03:48:00.000Z"
-  },
-  "agent_defaults": {
-    "memory_retention": "persistent",
-    "coordination_mode": "collaborative",
-    "quality_standards": {
-      "tdd_required": true,
-      "test_coverage_target": 100,
-      "typescript_strict": true,
-      "conventional_commits": true
+    "swarm_system": {
+        "version": "1.0.0",
+        "last_updated": "2025-01-22T03:48:00.000Z"
+    },
+    "agent_defaults": {
+        "memory_retention": "persistent",
+        "coordination_mode": "collaborative",
+        "quality_standards": {
+            "tdd_required": true,
+            "test_coverage_target": 100,
+            "typescript_strict": true,
+            "conventional_commits": true
+        }
+    },
+    "project_context": {
+        "name": "immersive-awe-canvas",
+        "type": "3D_workspace_platform",
+        "primary_technologies": [
+            "React",
+            "TypeScript",
+            "Three.js",
+            "Tailwind",
+            "Vitest"
+        ],
+        "build_system": "rsbuild",
+        "package_manager": "bun",
+        "code_quality": "biome"
+    },
+    "coordination_settings": {
+        "max_parallel_agents": 8,
+        "preferred_topology": "hierarchical",
+        "memory_sync_interval": 300,
+        "session_persistence": true
+    },
+    "development_guidelines": {
+        "reference_document": "memory/agents/MEMORY.md",
+        "workflow_rules": "memory/agents/RULES.md",
+        "shared_knowledge": "memory/agents/shared/common_knowledge.md"
     }
-  },
-  "project_context": {
-    "name": "immersive-awe-canvas",
-    "type": "3D_workspace_platform",
-    "primary_technologies": [
-      "React",
-      "TypeScript", 
-      "Three.js",
-      "Tailwind",
-      "Vitest"
-    ],
-    "build_system": "rsbuild",
-    "package_manager": "bun",
-    "code_quality": "biome"
-  },
-  "coordination_settings": {
-    "max_parallel_agents": 8,
-    "preferred_topology": "hierarchical",
-    "memory_sync_interval": 300,
-    "session_persistence": true
-  },
-  "development_guidelines": {
-    "reference_document": "memory/agents/MEMORY.md",
-    "workflow_rules": "memory/agents/RULES.md",
-    "shared_knowledge": "memory/agents/shared/common_knowledge.md"
-  }
 }
