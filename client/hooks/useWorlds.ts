@@ -66,7 +66,12 @@ export const useWorlds = (initialSlug?: string) => {
                 );
                 setCurrentWorldIndex(index);
             }
-        } else if (worlds && worlds.length > 0 && !initialSlug && currentWorldIndex === 0) {
+        } else if (
+            worlds &&
+            worlds.length > 0 &&
+            !initialSlug &&
+            currentWorldIndex === 0
+        ) {
             // If no initial slug provided, default to first world (only if still at 0)
             setCurrentWorldIndex(0);
         }
