@@ -111,6 +111,7 @@ const createWrapper = () => {
 describe("useWorlds", () => {
     beforeEach(() => {
         vi.clearAllMocks();
+        vi.clearAllTimers();
     });
 
     it("should load worlds successfully", async () => {
@@ -154,12 +155,18 @@ describe("useWorlds", () => {
             expect(result.current.isLoading).toBe(false);
         });
 
+        // Ensure we start from index 0
+        expect(result.current.currentWorldIndex).toBe(0);
+
         // Jump to second world
         act(() => {
             result.current.jumpToWorld(1);
         });
 
-        // Wait for the timeout in jumpToWorld to complete
+        // Should be transitioning immediately
+        expect(result.current.isTransitioning).toBe(true);
+
+        // Wait for the timeout in jumpToWorld to complete (1000ms + buffer)
         await waitFor(
             () => {
                 expect(result.current.currentWorldIndex).toBe(1);
@@ -167,6 +174,8 @@ describe("useWorlds", () => {
             { timeout: 2000 }
         );
 
+        // Should no longer be transitioning
+        expect(result.current.isTransitioning).toBe(false);
         expect(result.current.worldData?.slug).toBe("distortion-sphere");
     });
 

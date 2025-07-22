@@ -66,11 +66,11 @@ export const useWorlds = (initialSlug?: string) => {
                 );
                 setCurrentWorldIndex(index);
             }
-        } else if (worlds && worlds.length > 0 && !initialSlug) {
-            // If no initial slug provided, default to first world
+        } else if (worlds && worlds.length > 0 && !initialSlug && currentWorldIndex === 0) {
+            // If no initial slug provided, default to first world (only if still at 0)
             setCurrentWorldIndex(0);
         }
-    }, [initialWorld, worlds, initialSlug, currentWorldIndex]);
+    }, [initialWorld, worlds, initialSlug]);
 
     const worldData = useMemo(() => {
         if (!worlds || worlds.length === 0) return null;
@@ -116,7 +116,6 @@ export const useWorlds = (initialSlug?: string) => {
                 return;
             }
 
-            console.log("Jumping to world index:", index);
             setIsTransitioning(true);
 
             setTimeout(() => {

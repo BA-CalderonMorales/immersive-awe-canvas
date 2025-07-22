@@ -157,14 +157,14 @@ const CinematicBackground = ({ config }: CinematicBackgroundProps) => {
             speed: { value: config.speed || 1.0 },
             complexity: { value: config.complexity || 3.0 },
             brightness: { value: config.brightness || 1.2 },
-            colorPrimary: { 
-                value: new THREE.Color(config.colorPrimary || "#4a90ff") 
+            colorPrimary: {
+                value: new THREE.Color(config.colorPrimary || "#4a90ff"),
             },
-            colorSecondary: { 
-                value: new THREE.Color(config.colorSecondary || "#ff6b6b") 
+            colorSecondary: {
+                value: new THREE.Color(config.colorSecondary || "#ff6b6b"),
             },
-            colorAccent: { 
-                value: new THREE.Color(config.colorAccent || "#ffd93d") 
+            colorAccent: {
+                value: new THREE.Color(config.colorAccent || "#ffd93d"),
             },
         }),
         [config]
@@ -198,9 +198,12 @@ const CinematicBackground = ({ config }: CinematicBackgroundProps) => {
             sizes[i] = Math.random() * 4 + 1;
         }
 
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-        geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        geometry.setAttribute(
+            "position",
+            new THREE.BufferAttribute(positions, 3)
+        );
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        geometry.setAttribute("size", new THREE.BufferAttribute(sizes, 1));
 
         return geometry;
     }, []);
@@ -209,7 +212,7 @@ const CinematicBackground = ({ config }: CinematicBackgroundProps) => {
         return new THREE.ShaderMaterial({
             uniforms: {
                 time: { value: 0 },
-                pointTexture: { value: null }
+                pointTexture: { value: null },
             },
             vertexShader: `
                 attribute float size;
@@ -242,11 +245,11 @@ const CinematicBackground = ({ config }: CinematicBackgroundProps) => {
             transparent: true,
             vertexColors: true,
             blending: THREE.AdditiveBlending,
-            depthWrite: false
+            depthWrite: false,
         });
     }, []);
 
-    useFrame((state) => {
+    useFrame(state => {
         const time = state.clock.getElapsedTime();
         if (uniforms.time) {
             uniforms.time.value = time;
@@ -279,7 +282,7 @@ const CinematicBackground = ({ config }: CinematicBackgroundProps) => {
                     transparent
                 />
             </mesh>
-            
+
             {/* Particle system for added sparkle */}
             <points
                 ref={particleSystemRef}
