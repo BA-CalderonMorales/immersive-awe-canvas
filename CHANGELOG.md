@@ -8,41 +8,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### ✨ Added
+
 - TorusKnot default geometry configuration with improved material settings
 - New vibrant backgrounds: Cosmic Plasma, Ethereal Gradient, Crystal Sparkles
 - New geometries: Morphing Icosahedron, Wavy Grid, Jelly Torus
 - Scene environment controls in settings panel for background and geometry selection
 
 ### ✨ Enhanced
+
 - Significantly improved scene vibrancy and color contrast across all backgrounds and default geometries
 - Updated Starry Night background saturation from 0.014 to 0.8 for much more vibrant stars
 - Enhanced Sunset Glory background with warmer, more vibrant orange-yellow gradient colors
 - Boosted Aurora Dreams intensity and speed for more dynamic visual effects
 - Improved all default geometry colors for better day/night contrast and vibrancy:
-  - Genesis Torus: Bright gold (#FFD700) for day, sky blue (#87CEEB) for night with emissive glow
-  - Distortion Sphere: Vibrant orange-red (#FF6347) for day, royal blue (#4169E1) for night
-  - Wobble Field: Dark turquoise (#00CED1) for day, lime green (#32CD32) for night
-  - Crystalline Spire: Plum (#DDA0DD) for day, medium purple (#9370DB) for night
+    - Genesis Torus: Bright gold (#FFD700) for day, sky blue (#87CEEB) for night with emissive glow
+    - Distortion Sphere: Vibrant orange-red (#FF6347) for day, royal blue (#4169E1) for night
+    - Wobble Field: Dark turquoise (#00CED1) for day, lime green (#32CD32) for night
+    - Crystalline Spire: Plum (#DDA0DD) for day, medium purple (#9370DB) for night
 - Enhanced material properties with increased metalness, reduced roughness, and emissive lighting
 - Objects now provide perfect contrast with backgrounds and reflect vibrant environment colors
 
 ### 🐛 Bug Fixes
+
 - Temporarily disable componentTagger plugin to fix Three.js compatibility issues causing runtime errors
 - Consolidate test structure by moving all tests from `src/components/__tests__/` to `src/test/` directory
 - Fix missing Three.js Canvas rendering by adding required onDragStateChange prop to WorldView component
 - Fix flickering eyeball and info icons by consolidating conflicting hint state systems
 - Fix scene object rendering and enable mobile gizmo controls for touch interaction
-- Debug main object movement issue with comprehensive logging and test case validation  
+- Debug main object movement issue with comprehensive logging and test case validation
 - Implement proper drag behavior: green wireframes in drag mode while preserving normal gizmo functionality
 - Add enhanced mobile gizmo sensitivity and click-outside deselection behavior
 - Create corrected test suite validating all drag requirements without breaking normal object movement
 
 ### 🧹 Chore
+
 - Reorganize test files to follow consistent structure as per RULES.md
 
 ## [1.1.0] - 2025-07-03
 
 ### ✨ Features
+
 - Implement object addition and improve settings UI
 - support shorthand hex colors
 - Add GitHub star CTA to LikeDialog
@@ -74,9 +79,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implement carousel and navigation
 
 ### 🐛 Bug Fixes
+
 - pass sanitized slug to experience
 
 ### 🔧 Maintenance
+
 - update README.md
 - Update preview.yml
 - forcing style on canvas.
@@ -84,6 +91,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - update README.md
 
 ### 📝 Other Changes
+
 - Fix: Resolve git push permission issue
 - Fix changelog generation
 - Fix:
@@ -469,7 +477,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create an engaging and interactive site
 - Use tech stack vite_react_shadcn_ts
 
-
 ## [1.0.4] - 2025-07-03
 
 ### Features
@@ -595,7 +602,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 - Add immersive 3D canvas experience with interactive geometries
-- Implement Blender-style gizmo controls for precise object manipulation  
+- Implement Blender-style gizmo controls for precise object manipulation
 - Add smooth drag controls with lerp interpolation for fluid movement
 - Create dynamic scene objects with proper selection and wireframe feedback
 - Implement professional settings panel with Excalidraw-inspired design

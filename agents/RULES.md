@@ -18,10 +18,11 @@ These rules keep development consistent across the project. The document is inte
 - `bun install` – install dependencies
 - `bun run dev` – run the development server
 - `bun run test` – run the full test suite
-- `bun run typecheck` – run TypeScript checks  
+- `bun run typecheck` – run TypeScript checks
 - `bun run build` – build release artifacts
 
 **Alternative:** If using npm (may yield different results):
+
 - `npm install`, `npm run dev`, `npm run test`, `npm run typecheck`, `npm run build`
 
 Run `bun install`, `bun run test`, `bun run typecheck`, and `bun run build` before pushing changes. CI uses the same commands.
@@ -32,7 +33,7 @@ Commits must use [Conventional Commits](https://www.conventionalcommits.org/en/v
 
 ```
 feat: add dark mode toggle
-fix: handle null todo values  
+fix: handle null todo values
 chore: update dependencies
 perf: optimize render performance
 docs: update API documentation
@@ -43,6 +44,7 @@ docs: update API documentation
 **IMPORTANT**: Project follows semantic versioning starting from v0.0.1. Version bumps are automated via semantic-release.
 
 **PATCH** version bumps (e.g., 0.0.1 → 0.0.2):
+
 - `chore:` commits - maintenance and tooling changes
 - `perf:` commits - performance improvements
 - `docs:` commits - documentation updates
@@ -51,10 +53,12 @@ docs: update API documentation
 - `hotfix:` commits - emergency bug fixes
 
 **MINOR** version bumps (e.g., 0.0.1 → 0.1.0):
+
 - `fix:` commits - bug fixes and corrections
 - `feat:` commits - new features and functionality
 
 **MAJOR** version bumps (e.g., 0.1.0 → 1.0.0):
+
 - `breaking:` commits - breaking changes
 - `refactor:` commits - code restructuring (potentially breaking)
 

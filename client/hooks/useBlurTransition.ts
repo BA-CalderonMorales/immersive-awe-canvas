@@ -1,36 +1,35 @@
-
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 export const useBlurTransition = () => {
-  const [isBlurring, setIsBlurring] = useState(false);
-  const [isReady, setIsReady] = useState(false);
+    const [isBlurring, setIsBlurring] = useState(false);
+    const [isReady, setIsReady] = useState(false);
 
-  const startBlurTransition = useCallback(() => {
-    setIsBlurring(true);
-    setIsReady(false);
-  }, []);
+    const startBlurTransition = useCallback(() => {
+        setIsBlurring(true);
+        setIsReady(false);
+    }, []);
 
-  const completeBlurTransition = useCallback(() => {
-    setIsBlurring(false);
-    setIsReady(true);
-  }, []);
+    const completeBlurTransition = useCallback(() => {
+        setIsBlurring(false);
+        setIsReady(true);
+    }, []);
 
-  // Auto-start blur on mount
-  useEffect(() => {
-    startBlurTransition();
-    
-    // Simulate loading time
-    const timer = setTimeout(() => {
-      completeBlurTransition();
-    }, 800);
+    // Auto-start blur on mount
+    useEffect(() => {
+        startBlurTransition();
 
-    return () => clearTimeout(timer);
-  }, [startBlurTransition, completeBlurTransition]);
+        // Simulate loading time
+        const timer = setTimeout(() => {
+            completeBlurTransition();
+        }, 800);
 
-  return {
-    isBlurring,
-    isReady,
-    startBlurTransition,
-    completeBlurTransition,
-  };
+        return () => clearTimeout(timer);
+    }, [startBlurTransition, completeBlurTransition]);
+
+    return {
+        isBlurring,
+        isReady,
+        startBlurTransition,
+        completeBlurTransition,
+    };
 };

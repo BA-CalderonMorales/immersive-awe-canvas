@@ -35,6 +35,7 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 **CONVENTIONAL COMMITS ARE MANDATORY**: Every commit must follow conventional commit format:
 
 **PATCH** version bumps (0.0.1 → 0.0.2):
+
 - `chore:` → maintenance and tooling changes
 - `perf:` → performance improvements
 - `docs:` → documentation updates
@@ -43,10 +44,12 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 - `hotfix:` → emergency bug fixes
 
 **MINOR** version bumps (0.0.1 → 0.1.0):
+
 - `fix:` → bug fixes and corrections
 - `feat:` → new features and functionality
 
 **MAJOR** version bumps (0.1.0 → 1.0.0):
+
 - `breaking:` → breaking changes
 - `refactor:` → code restructuring (potentially breaking)
 
@@ -63,11 +66,13 @@ I follow Test-Driven Development (TDD) with a strong emphasis on behavior-driven
 ### CI/CD Workflow Requirements
 
 **CRITICAL**: Always use `bun run test` in GitHub Actions, never `bun test` directly:
+
 - `bun test` uses Bun's built-in test runner (incompatible with Vitest syntax)
 - `bun run test` uses the npm script which runs Vitest properly
 - Test files use Vitest syntax (`vi.mock`, `vi.fn()`) which requires Vitest runner
 
 **Workflow Files**:
+
 - `semantic-release.yml`: Automated releases on main branch push
 - `manage-releases.yml`: Manual release/tag deletion for version resets
 
@@ -121,36 +126,36 @@ Use factory functions with optional overrides for test data:
 
 ```typescript
 const getMockPaymentPostPaymentRequest = (
-  overrides?: Partial<PostPaymentsRequestV3>
+    overrides?: Partial<PostPaymentsRequestV3>
 ): PostPaymentsRequestV3 => {
-  return {
-    CardAccountId: "1234567890123456",
-    Amount: 100,
-    Source: "Web",
-    AccountStatus: "Normal",
-    LastName: "Doe",
-    DateOfBirth: "1980-01-01",
-    PayingCardDetails: {
-      Cvv: "123",
-      Token: "token",
-    },
-    AddressDetails: getMockAddressDetails(),
-    Brand: "Visa",
-    ...overrides,
-  };
+    return {
+        CardAccountId: "1234567890123456",
+        Amount: 100,
+        Source: "Web",
+        AccountStatus: "Normal",
+        LastName: "Doe",
+        DateOfBirth: "1980-01-01",
+        PayingCardDetails: {
+            Cvv: "123",
+            Token: "token",
+        },
+        AddressDetails: getMockAddressDetails(),
+        Brand: "Visa",
+        ...overrides,
+    };
 };
 
 const getMockAddressDetails = (
-  overrides?: Partial<AddressDetails>
+    overrides?: Partial<AddressDetails>
 ): AddressDetails => {
-  return {
-    HouseNumber: "123",
-    HouseName: "Test House",
-    AddressLine1: "Test Address Line 1",
-    AddressLine2: "Test Address Line 2",
-    City: "Test City",
-    ...overrides,
-  };
+    return {
+        HouseNumber: "123",
+        HouseName: "Test House",
+        AddressLine1: "Test Address Line 1",
+        AddressLine2: "Test Address Line 2",
+        City: "Test City",
+        ...overrides,
+    };
 };
 ```
 
@@ -169,20 +174,20 @@ Key principles:
 ```json
 // tsconfig.json
 {
-  "compilerOptions": {
-    "strict": true,
-    "noImplicitAny": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "strictBindCallApply": true,
-    "strictPropertyInitialization": true,
-    "noImplicitThis": true,
-    "alwaysStrict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noImplicitReturns": true,
-    "noFallthroughCasesInSwitch": true
-  }
+    "compilerOptions": {
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true
+    }
 }
 ```
 
@@ -218,29 +223,29 @@ import { z } from "zod";
 
 // Define schemas first - these provide runtime validation
 const AddressDetailsSchema = z.object({
-  houseNumber: z.string(),
-  houseName: z.string().optional(),
-  addressLine1: z.string().min(1),
-  addressLine2: z.string().optional(),
-  city: z.string().min(1),
-  postcode: z.string().regex(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i),
+    houseNumber: z.string(),
+    houseName: z.string().optional(),
+    addressLine1: z.string().min(1),
+    addressLine2: z.string().optional(),
+    city: z.string().min(1),
+    postcode: z.string().regex(/^[A-Z]{1,2}\d[A-Z\d]? ?\d[A-Z]{2}$/i),
 });
 
 const PayingCardDetailsSchema = z.object({
-  cvv: z.string().regex(/^\d{3,4}$/),
-  token: z.string().min(1),
+    cvv: z.string().regex(/^\d{3,4}$/),
+    token: z.string().min(1),
 });
 
 const PostPaymentsRequestV3Schema = z.object({
-  cardAccountId: z.string().length(16),
-  amount: z.number().positive(),
-  source: z.enum(["Web", "Mobile", "API"]),
-  accountStatus: z.enum(["Normal", "Restricted", "Closed"]),
-  lastName: z.string().min(1),
-  dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
-  payingCardDetails: PayingCardDetailsSchema,
-  addressDetails: AddressDetailsSchema,
-  brand: z.enum(["Visa", "Mastercard", "Amex"]),
+    cardAccountId: z.string().length(16),
+    amount: z.number().positive(),
+    source: z.enum(["Web", "Mobile", "API"]),
+    accountStatus: z.enum(["Normal", "Restricted", "Closed"]),
+    lastName: z.string().min(1),
+    dateOfBirth: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+    payingCardDetails: PayingCardDetailsSchema,
+    addressDetails: AddressDetailsSchema,
+    brand: z.enum(["Visa", "Mastercard", "Amex"]),
 });
 
 // Derive types from schemas
@@ -250,20 +255,20 @@ type PostPaymentsRequestV3 = z.infer<typeof PostPaymentsRequestV3Schema>;
 
 // Use schemas at runtime boundaries
 export const parsePaymentRequest = (data: unknown): PostPaymentsRequestV3 => {
-  return PostPaymentsRequestV3Schema.parse(data);
+    return PostPaymentsRequestV3Schema.parse(data);
 };
 
 // Example of schema composition for complex domains
 const BaseEntitySchema = z.object({
-  id: z.string().uuid(),
-  createdAt: z.date(),
-  updatedAt: z.date(),
+    id: z.string().uuid(),
+    createdAt: z.date(),
+    updatedAt: z.date(),
 });
 
 const CustomerSchema = BaseEntitySchema.extend({
-  email: z.string().email(),
-  tier: z.enum(["standard", "premium", "enterprise"]),
-  creditLimit: z.number().positive(),
+    email: z.string().email(),
+    tier: z.enum(["standard", "premium", "enterprise"]),
+    creditLimit: z.number().positive(),
 });
 
 type Customer = z.infer<typeof CustomerSchema>;
@@ -276,12 +281,12 @@ type Customer = z.infer<typeof CustomerSchema>;
 ```typescript
 // ❌ WRONG - Defining schemas in test files
 const ProjectSchema = z.object({
-  id: z.string(),
-  workspaceId: z.string(),
-  ownerId: z.string().nullable(),
-  name: z.string(),
-  createdAt: z.coerce.date(),
-  updatedAt: z.coerce.date(),
+    id: z.string(),
+    workspaceId: z.string(),
+    ownerId: z.string().nullable(),
+    name: z.string(),
+    createdAt: z.coerce.date(),
+    updatedAt: z.coerce.date(),
 });
 
 // ✅ CORRECT - Import schemas from the shared schema package
@@ -307,19 +312,19 @@ import { ProjectSchema, type Project } from "@your-org/schemas";
 import { ProjectSchema, type Project } from "@your-org/schemas";
 
 const getMockProject = (overrides?: Partial<Project>): Project => {
-  const baseProject = {
-    id: "proj_123",
-    workspaceId: "ws_456",
-    ownerId: "user_789",
-    name: "Test Project",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
+    const baseProject = {
+        id: "proj_123",
+        workspaceId: "ws_456",
+        ownerId: "user_789",
+        name: "Test Project",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+    };
 
-  const projectData = { ...baseProject, ...overrides };
+    const projectData = { ...baseProject, ...overrides };
 
-  // Validate against real schema to catch type mismatches
-  return ProjectSchema.parse(projectData);
+    // Validate against real schema to catch type mismatches
+    return ProjectSchema.parse(projectData);
 };
 ```
 
@@ -340,28 +345,28 @@ I follow a "functional light" approach:
 ```typescript
 // Good - Pure function with immutable updates
 const applyDiscount = (order: Order, discountPercent: number): Order => {
-  return {
-    ...order,
-    items: order.items.map((item) => ({
-      ...item,
-      price: item.price * (1 - discountPercent / 100),
-    })),
-    totalPrice: order.items.reduce(
-      (sum, item) => sum + item.price * (1 - discountPercent / 100),
-      0
-    ),
-  };
+    return {
+        ...order,
+        items: order.items.map(item => ({
+            ...item,
+            price: item.price * (1 - discountPercent / 100),
+        })),
+        totalPrice: order.items.reduce(
+            (sum, item) => sum + item.price * (1 - discountPercent / 100),
+            0
+        ),
+    };
 };
 
 // Good - Composition over complex logic
 const processOrder = (order: Order): ProcessedOrder => {
-  return pipe(
-    order,
-    validateOrder,
-    applyPromotions,
-    calculateTax,
-    assignWarehouse
-  );
+    return pipe(
+        order,
+        validateOrder,
+        applyPromotions,
+        calculateTax,
+        assignWarehouse
+    );
 };
 
 // When heavy FP abstractions ARE appropriate:
@@ -369,18 +374,18 @@ const processOrder = (order: Order): ProcessedOrder => {
 // - Error handling chains that benefit from Result/Either types
 // Example with Result type for complex error handling:
 type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+    | { success: true; data: T }
+    | { success: false; error: E };
 
 const chainPaymentOperations = (
-  payment: Payment
+    payment: Payment
 ): Result<Receipt, PaymentError> => {
-  return pipe(
-    validatePayment(payment),
-    chain(authorizePayment),
-    chain(capturePayment),
-    map(generateReceipt)
-  );
+    return pipe(
+        validatePayment(payment),
+        chain(authorizePayment),
+        chain(capturePayment),
+        map(generateReceipt)
+    );
 };
 ```
 
@@ -406,13 +411,13 @@ Code should be self-documenting through clear naming and structure. Comments ind
 ```typescript
 // Avoid: Comments explaining what the code does
 const calculateDiscount = (price: number, customer: Customer): number => {
-  // Check if customer is premium
-  if (customer.tier === "premium") {
-    // Apply 20% discount for premium customers
-    return price * 0.8;
-  }
-  // Regular customers get 10% discount
-  return price * 0.9;
+    // Check if customer is premium
+    if (customer.tier === "premium") {
+        // Apply 20% discount for premium customers
+        return price * 0.8;
+    }
+    // Regular customers get 10% discount
+    return price * 0.9;
 };
 
 // Good: Self-documenting code with clear names
@@ -420,54 +425,55 @@ const PREMIUM_DISCOUNT_MULTIPLIER = 0.8;
 const STANDARD_DISCOUNT_MULTIPLIER = 0.9;
 
 const isPremiumCustomer = (customer: Customer): boolean => {
-  return customer.tier === "premium";
+    return customer.tier === "premium";
 };
 
 const calculateDiscount = (price: number, customer: Customer): number => {
-  const discountMultiplier = isPremiumCustomer(customer)
-    ? PREMIUM_DISCOUNT_MULTIPLIER
-    : STANDARD_DISCOUNT_MULTIPLIER;
+    const discountMultiplier = isPremiumCustomer(customer)
+        ? PREMIUM_DISCOUNT_MULTIPLIER
+        : STANDARD_DISCOUNT_MULTIPLIER;
 
-  return price * discountMultiplier;
+    return price * discountMultiplier;
 };
 
 // Avoid: Complex logic with comments
 const processPayment = (payment: Payment): ProcessedPayment => {
-  // First validate the payment
-  if (!validatePayment(payment)) {
-    throw new Error("Invalid payment");
-  }
+    // First validate the payment
+    if (!validatePayment(payment)) {
+        throw new Error("Invalid payment");
+    }
 
-  // Check if we need to apply 3D secure
-  if (payment.amount > 100 && payment.card.type === "credit") {
-    // Apply 3D secure for credit cards over £100
-    const securePayment = apply3DSecure(payment);
-    // Process the secure payment
-    return executePayment(securePayment);
-  }
+    // Check if we need to apply 3D secure
+    if (payment.amount > 100 && payment.card.type === "credit") {
+        // Apply 3D secure for credit cards over £100
+        const securePayment = apply3DSecure(payment);
+        // Process the secure payment
+        return executePayment(securePayment);
+    }
 
-  // Process the payment
-  return executePayment(payment);
+    // Process the payment
+    return executePayment(payment);
 };
 
 // Good: Extract to well-named functions
 const requires3DSecure = (payment: Payment): boolean => {
-  const SECURE_PAYMENT_THRESHOLD = 100;
-  return (
-    payment.amount > SECURE_PAYMENT_THRESHOLD && payment.card.type === "credit"
-  );
+    const SECURE_PAYMENT_THRESHOLD = 100;
+    return (
+        payment.amount > SECURE_PAYMENT_THRESHOLD &&
+        payment.card.type === "credit"
+    );
 };
 
 const processPayment = (payment: Payment): ProcessedPayment => {
-  if (!validatePayment(payment)) {
-    throw new PaymentValidationError("Invalid payment");
-  }
+    if (!validatePayment(payment)) {
+        throw new PaymentValidationError("Invalid payment");
+    }
 
-  const securedPayment = requires3DSecure(payment)
-    ? apply3DSecure(payment)
-    : payment;
+    const securedPayment = requires3DSecure(payment)
+        ? apply3DSecure(payment)
+        : payment;
 
-  return executePayment(securedPayment);
+    return executePayment(securedPayment);
 };
 ```
 
@@ -480,71 +486,71 @@ Use options objects for function parameters as the default pattern. Only use pos
 ```typescript
 // Avoid: Multiple positional parameters
 const createPayment = (
-  amount: number,
-  currency: string,
-  cardId: string,
-  customerId: string,
-  description?: string,
-  metadata?: Record<string, unknown>,
-  idempotencyKey?: string
+    amount: number,
+    currency: string,
+    cardId: string,
+    customerId: string,
+    description?: string,
+    metadata?: Record<string, unknown>,
+    idempotencyKey?: string
 ): Payment => {
-  // implementation
+    // implementation
 };
 
 // Calling it is unclear
 const payment = createPayment(
-  100,
-  "GBP",
-  "card_123",
-  "cust_456",
-  undefined,
-  { orderId: "order_789" },
-  "key_123"
+    100,
+    "GBP",
+    "card_123",
+    "cust_456",
+    undefined,
+    { orderId: "order_789" },
+    "key_123"
 );
 
 // Good: Options object with clear property names
 type CreatePaymentOptions = {
-  amount: number;
-  currency: string;
-  cardId: string;
-  customerId: string;
-  description?: string;
-  metadata?: Record<string, unknown>;
-  idempotencyKey?: string;
+    amount: number;
+    currency: string;
+    cardId: string;
+    customerId: string;
+    description?: string;
+    metadata?: Record<string, unknown>;
+    idempotencyKey?: string;
 };
 
 const createPayment = (options: CreatePaymentOptions): Payment => {
-  const {
-    amount,
-    currency,
-    cardId,
-    customerId,
-    description,
-    metadata,
-    idempotencyKey,
-  } = options;
+    const {
+        amount,
+        currency,
+        cardId,
+        customerId,
+        description,
+        metadata,
+        idempotencyKey,
+    } = options;
 
-  // implementation
+    // implementation
 };
 
 // Clear and readable at call site
 const payment = createPayment({
-  amount: 100,
-  currency: "GBP",
-  cardId: "card_123",
-  customerId: "cust_456",
-  metadata: { orderId: "order_789" },
-  idempotencyKey: "key_123",
+    amount: 100,
+    currency: "GBP",
+    cardId: "card_123",
+    customerId: "cust_456",
+    metadata: { orderId: "order_789" },
+    idempotencyKey: "key_123",
 });
 
 // Avoid: Boolean flags as parameters
 const fetchCustomers = (
-  includeInactive: boolean,
-  includePending: boolean,
-  includeDeleted: boolean,
-  sortByDate: boolean
+    includeInactive: boolean,
+    includePending: boolean,
+    includeDeleted: boolean,
+    sortByDate: boolean
 ): Customer[] => {
-  // implementation
+    // implementation
 };
 
 // Confusing at call site
@@ -552,59 +558,59 @@ const customers = fetchCustomers(true, false, false, true);
 
 // Good: Options object with clear intent
 type FetchCustomersOptions = {
-  includeInactive?: boolean;
-  includePending?: boolean;
-  includeDeleted?: boolean;
-  sortBy?: "date" | "name" | "value";
+    includeInactive?: boolean;
+    includePending?: boolean;
+    includeDeleted?: boolean;
+    sortBy?: "date" | "name" | "value";
 };
 
 const fetchCustomers = (options: FetchCustomersOptions = {}): Customer[] => {
-  const {
-    includeInactive = false,
-    includePending = false,
-    includeDeleted = false,
-    sortBy = "name",
-  } = options;
+    const {
+        includeInactive = false,
+        includePending = false,
+        includeDeleted = false,
+        sortBy = "name",
+    } = options;
 
-  // implementation
+    // implementation
 };
 
 // Self-documenting at call site
 const customers = fetchCustomers({
-  includeInactive: true,
-  sortBy: "date",
+    includeInactive: true,
+    sortBy: "date",
 });
 
 // Good: Configuration objects for complex operations
 type ProcessOrderOptions = {
-  order: Order;
-  shipping: {
-    method: "standard" | "express" | "overnight";
-    address: Address;
-  };
-  payment: {
-    method: PaymentMethod;
-    saveForFuture?: boolean;
-  };
-  promotions?: {
-    codes?: string[];
-    autoApply?: boolean;
-  };
+    order: Order;
+    shipping: {
+        method: "standard" | "express" | "overnight";
+        address: Address;
+    };
+    payment: {
+        method: PaymentMethod;
+        saveForFuture?: boolean;
+    };
+    promotions?: {
+        codes?: string[];
+        autoApply?: boolean;
+    };
 };
 
 const processOrder = (options: ProcessOrderOptions): ProcessedOrder => {
-  const { order, shipping, payment, promotions = {} } = options;
+    const { order, shipping, payment, promotions = {} } = options;
 
-  // Clear access to nested options
-  const orderWithPromotions = promotions.autoApply
-    ? applyAvailablePromotions(order)
-    : order;
+    // Clear access to nested options
+    const orderWithPromotions = promotions.autoApply
+        ? applyAvailablePromotions(order)
+        : order;
 
-  return executeOrder({
-    ...orderWithPromotions,
-    shippingMethod: shipping.method,
-    paymentMethod: payment.method,
-  });
+    return executeOrder({
+        ...orderWithPromotions,
+        shippingMethod: shipping.method,
+        paymentMethod: payment.method,
+    });
 };
 
 // Acceptable: Single parameter for simple transforms
@@ -613,9 +619,9 @@ const getName = (user: User): string => user.name;
 
 // Acceptable: Well-established patterns
 const numbers = [1, 2, 3];
-const doubled = numbers.map((n) => n * 2);
+const doubled = numbers.map(n => n * 2);
 const users = fetchUsers();
-const names = users.map((user) => user.name);
+const names = users.map(user => user.name);
 ```
 
 **Guidelines for options objects:**
@@ -660,107 +666,107 @@ Follow Red-Green-Refactor strictly:
 ```typescript
 // Step 1: Red - Start with the simplest behavior
 describe("Order processing", () => {
-  it("should calculate total with shipping cost", () => {
-    const order = createOrder({
-      items: [{ price: 30, quantity: 1 }],
-      shippingCost: 5.99,
+    it("should calculate total with shipping cost", () => {
+        const order = createOrder({
+            items: [{ price: 30, quantity: 1 }],
+            shippingCost: 5.99,
+        });
+
+        const processed = processOrder(order);
+
+        expect(processed.total).toBe(35.99);
+        expect(processed.shippingCost).toBe(5.99);
     });
-
-    const processed = processOrder(order);
-
-    expect(processed.total).toBe(35.99);
-    expect(processed.shippingCost).toBe(5.99);
-  });
 });
 
 // Step 2: Green - Minimal implementation
 const processOrder = (order: Order): ProcessedOrder => {
-  const itemsTotal = order.items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+    const itemsTotal = order.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
 
-  return {
-    ...order,
-    shippingCost: order.shippingCost,
-    total: itemsTotal + order.shippingCost,
-  };
+    return {
+        ...order,
+        shippingCost: order.shippingCost,
+        total: itemsTotal + order.shippingCost,
+    };
 };
 
 // Step 3: Red - Add test for free shipping behavior
 describe("Order processing", () => {
-  it("should calculate total with shipping cost", () => {
-    // ... existing test
-  });
-
-  it("should apply free shipping for orders over \u00a350", () => {
-    const order = createOrder({
-      items: [{ price: 60, quantity: 1 }],
-      shippingCost: 5.99,
+    it("should calculate total with shipping cost", () => {
+        // ... existing test
     });
 
-    const processed = processOrder(order);
+    it("should apply free shipping for orders over \u00a350", () => {
+        const order = createOrder({
+            items: [{ price: 60, quantity: 1 }],
+            shippingCost: 5.99,
+        });
 
-    expect(processed.shippingCost).toBe(0);
-    expect(processed.total).toBe(60);
-  });
+        const processed = processOrder(order);
+
+        expect(processed.shippingCost).toBe(0);
+        expect(processed.total).toBe(60);
+    });
 });
 
 // Step 4: Green - NOW we can add the conditional because both paths are tested
 const processOrder = (order: Order): ProcessedOrder => {
-  const itemsTotal = order.items.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+    const itemsTotal = order.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+    );
 
-  const shippingCost = itemsTotal > 50 ? 0 : order.shippingCost;
+    const shippingCost = itemsTotal > 50 ? 0 : order.shippingCost;
 
-  return {
-    ...order,
-    shippingCost,
-    total: itemsTotal + shippingCost,
-  };
+    return {
+        ...order,
+        shippingCost,
+        total: itemsTotal + shippingCost,
+    };
 };
 
 // Step 5: Add edge case tests to ensure 100% behavior coverage
 describe("Order processing", () => {
-  // ... existing tests
+    // ... existing tests
 
-  it("should charge shipping for orders exactly at \u00a350", () => {
-    const order = createOrder({
-      items: [{ price: 50, quantity: 1 }],
-      shippingCost: 5.99,
+    it("should charge shipping for orders exactly at \u00a350", () => {
+        const order = createOrder({
+            items: [{ price: 50, quantity: 1 }],
+            shippingCost: 5.99,
+        });
+
+        const processed = processOrder(order);
+
+        expect(processed.shippingCost).toBe(5.99);
+        expect(processed.total).toBe(55.99);
     });
-
-    const processed = processOrder(order);
-
-    expect(processed.shippingCost).toBe(5.99);
-    expect(processed.total).toBe(55.99);
-  });
 });
 
 // Step 6: Refactor - Extract constants and improve readability
 const FREE_SHIPPING_THRESHOLD = 50;
 
 const calculateItemsTotal = (items: OrderItem[]): number => {
-  return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    return items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 };
 
 const qualifiesForFreeShipping = (itemsTotal: number): boolean => {
-  return itemsTotal > FREE_SHIPPING_THRESHOLD;
+    return itemsTotal > FREE_SHIPPING_THRESHOLD;
 };
 
 const processOrder = (order: Order): ProcessedOrder => {
-  const itemsTotal = calculateItemsTotal(order.items);
-  const shippingCost = qualifiesForFreeShipping(itemsTotal)
-    ? 0
-    : order.shippingCost;
+    const itemsTotal = calculateItemsTotal(order.items);
+    const shippingCost = qualifiesForFreeShipping(itemsTotal)
+        ? 0
+        : order.shippingCost;
 
-  return {
-    ...order,
-    shippingCost,
-    total: itemsTotal + shippingCost,
-  };
+    return {
+        ...order,
+        shippingCost,
+        total: itemsTotal + shippingCost,
+    };
 };
 ```
 
@@ -801,11 +807,11 @@ Create abstractions only when code shares the same semantic meaning and purpose.
 ```typescript
 // Similar structure, DIFFERENT semantic meaning - DO NOT ABSTRACT
 const validatePaymentAmount = (amount: number): boolean => {
-  return amount > 0 && amount <= 10000;
+    return amount > 0 && amount <= 10000;
 };
 
 const validateTransferAmount = (amount: number): boolean => {
-  return amount > 0 && amount <= 10000;
+    return amount > 0 && amount <= 10000;
 };
 
 // These might have the same structure today, but they represent different
@@ -816,30 +822,30 @@ const validateTransferAmount = (amount: number): boolean => {
 
 // Similar structure, SAME semantic meaning - SAFE TO ABSTRACT
 const formatUserDisplayName = (firstName: string, lastName: string): string => {
-  return `${firstName} ${lastName}`.trim();
+    return `${firstName} ${lastName}`.trim();
 };
 
 const formatCustomerDisplayName = (
-  firstName: string,
-  lastName: string
+    firstName: string,
+    lastName: string
 ): string => {
-  return `${firstName} ${lastName}`.trim();
+    return `${firstName} ${lastName}`.trim();
 };
 
 const formatEmployeeDisplayName = (
-  firstName: string,
-  lastName: string
+    firstName: string,
+    lastName: string
 ): string => {
-  return `${firstName} ${lastName}`.trim();
+    return `${firstName} ${lastName}`.trim();
 };
 
 // These all represent the same concept: "how we format a person's name for display"
 // They share semantic meaning, not just structure
 const formatPersonDisplayName = (
-  firstName: string,
-  lastName: string
+    firstName: string,
+    lastName: string
 ): string => {
-  return `${firstName} ${lastName}`.trim();
+    return `${firstName} ${lastName}`.trim();
 };
 
 // Replace all call sites throughout the codebase:
@@ -872,15 +878,15 @@ DRY (Don't Repeat Yourself) is about not duplicating **knowledge** in the system
 ```typescript
 // This is NOT a DRY violation - different knowledge despite similar code
 const validateUserAge = (age: number): boolean => {
-  return age >= 18 && age <= 100;
+    return age >= 18 && age <= 100;
 };
 
 const validateProductRating = (rating: number): boolean => {
-  return rating >= 1 && rating <= 5;
+    return rating >= 1 && rating <= 5;
 };
 
 const validateYearsOfExperience = (years: number): boolean => {
-  return years >= 0 && years <= 50;
+    return years >= 0 && years <= 50;
 };
 
 // These functions have similar structure (checking numeric ranges), but they
@@ -893,15 +899,15 @@ const validateYearsOfExperience = (years: number): boolean => {
 
 // Another example of code that looks similar but represents different knowledge:
 const formatUserDisplayName = (user: User): string => {
-  return `${user.firstName} ${user.lastName}`.trim();
+    return `${user.firstName} ${user.lastName}`.trim();
 };
 
 const formatAddressLine = (address: Address): string => {
-  return `${address.street} ${address.number}`.trim();
+    return `${address.street} ${address.number}`.trim();
 };
 
 const formatCreditCardLabel = (card: CreditCard): string => {
-  return `${card.type} ${card.lastFourDigits}`.trim();
+    return `${card.type} ${card.lastFourDigits}`.trim();
 };
 
 // Despite the pattern "combine two strings with space and trim", these represent
@@ -909,24 +915,27 @@ const formatCreditCardLabel = (card: CreditCard): string => {
 
 // This IS a DRY violation - same knowledge in multiple places
 class Order {
-  calculateTotal(): number {
-    const itemsTotal = this.items.reduce((sum, item) => sum + item.price, 0);
-    const shippingCost = itemsTotal > 50 ? 0 : 5.99; // Knowledge duplicated!
-    return itemsTotal + shippingCost;
-  }
+    calculateTotal(): number {
+        const itemsTotal = this.items.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
+        const shippingCost = itemsTotal > 50 ? 0 : 5.99; // Knowledge duplicated!
+        return itemsTotal + shippingCost;
+    }
 }
 
 class OrderSummary {
-  getShippingCost(itemsTotal: number): number {
-    return itemsTotal > 50 ? 0 : 5.99; // Same knowledge!
-  }
+    getShippingCost(itemsTotal: number): number {
+        return itemsTotal > 50 ? 0 : 5.99; // Same knowledge!
+    }
 }
 
 class ShippingCalculator {
-  calculate(orderAmount: number): number {
-    if (orderAmount > 50) return 0; // Same knowledge again!
-    return 5.99;
-  }
+    calculate(orderAmount: number): number {
+        if (orderAmount > 50) return 0; // Same knowledge again!
+        return 5.99;
+    }
 }
 
 // Refactored - knowledge in one place
@@ -934,15 +943,18 @@ const FREE_SHIPPING_THRESHOLD = 50;
 const STANDARD_SHIPPING_COST = 5.99;
 
 const calculateShippingCost = (itemsTotal: number): number => {
-  return itemsTotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
+    return itemsTotal > FREE_SHIPPING_THRESHOLD ? 0 : STANDARD_SHIPPING_COST;
 };
 
 // Now all classes use the single source of truth
 class Order {
-  calculateTotal(): number {
-    const itemsTotal = this.items.reduce((sum, item) => sum + item.price, 0);
-    return itemsTotal + calculateShippingCost(itemsTotal);
-  }
+    calculateTotal(): number {
+        const itemsTotal = this.items.reduce(
+            (sum, item) => sum + item.price,
+            0
+        );
+        return itemsTotal + calculateShippingCost(itemsTotal);
+    }
 }
 ```
 
@@ -953,40 +965,40 @@ Refactoring must never break existing consumers of your code:
 ```typescript
 // Original implementation
 export const processPayment = (payment: Payment): ProcessedPayment => {
-  // Complex logic all in one function
-  if (payment.amount <= 0) {
-    throw new Error("Invalid amount");
-  }
+    // Complex logic all in one function
+    if (payment.amount <= 0) {
+        throw new Error("Invalid amount");
+    }
 
-  if (payment.amount > 10000) {
-    throw new Error("Amount too large");
-  }
+    if (payment.amount > 10000) {
+        throw new Error("Amount too large");
+    }
 
-  // ... 50 more lines of validation and processing
+    // ... 50 more lines of validation and processing
 
-  return result;
+    return result;
 };
 
 // Refactored - external API unchanged, internals improved
 export const processPayment = (payment: Payment): ProcessedPayment => {
-  validatePaymentAmount(payment.amount);
-  validatePaymentMethod(payment.method);
+    validatePaymentAmount(payment.amount);
+    validatePaymentMethod(payment.method);
 
-  const authorizedPayment = authorizePayment(payment);
-  const capturedPayment = capturePayment(authorizedPayment);
+    const authorizedPayment = authorizePayment(payment);
+    const capturedPayment = capturePayment(authorizedPayment);
 
-  return generateReceipt(capturedPayment);
+    return generateReceipt(capturedPayment);
 };
 
 // New internal functions - not exported
 const validatePaymentAmount = (amount: number): void => {
-  if (amount <= 0) {
-    throw new Error("Invalid amount");
-  }
+    if (amount <= 0) {
+        throw new Error("Invalid amount");
+    }
 
-  if (amount > 10000) {
-    throw new Error("Amount too large");
-  }
+    if (amount > 10000) {
+        throw new Error("Amount too large");
+    }
 };
 
 // Tests continue to pass without modification because external API unchanged
@@ -1029,22 +1041,22 @@ Before considering refactoring complete, verify:
 ```typescript
 // After getting tests green with minimal implementation:
 describe("Order processing", () => {
-  it("calculates total with items and shipping", () => {
-    const order = { items: [{ price: 30 }, { price: 20 }], shipping: 5 };
-    expect(calculateOrderTotal(order)).toBe(55);
-  });
+    it("calculates total with items and shipping", () => {
+        const order = { items: [{ price: 30 }, { price: 20 }], shipping: 5 };
+        expect(calculateOrderTotal(order)).toBe(55);
+    });
 
-  it("applies free shipping over \u00a350", () => {
-    const order = { items: [{ price: 30 }, { price: 25 }], shipping: 5 };
-    expect(calculateOrderTotal(order)).toBe(55);
-  });
+    it("applies free shipping over \u00a350", () => {
+        const order = { items: [{ price: 30 }, { price: 25 }], shipping: 5 };
+        expect(calculateOrderTotal(order)).toBe(55);
+    });
 });
 
 // Green implementation (minimal):
 const calculateOrderTotal = (order: Order): number => {
-  const itemsTotal = order.items.reduce((sum, item) => sum + item.price, 0);
-  const shipping = itemsTotal > 50 ? 0 : order.shipping;
-  return itemsTotal + shipping;
+    const itemsTotal = order.items.reduce((sum, item) => sum + item.price, 0);
+    const shipping = itemsTotal > 50 ? 0 : order.shipping;
+    return itemsTotal + shipping;
 };
 
 // Commit the working version
@@ -1059,20 +1071,20 @@ const calculateOrderTotal = (order: Order): number => {
 const FREE_SHIPPING_THRESHOLD = 50;
 
 const calculateItemsTotal = (items: OrderItem[]): number => {
-  return items.reduce((sum, item) => sum + item.price, 0);
+    return items.reduce((sum, item) => sum + item.price, 0);
 };
 
 const calculateShipping = (
-  baseShipping: number,
-  itemsTotal: number
+    baseShipping: number,
+    itemsTotal: number
 ): number => {
-  return itemsTotal > FREE_SHIPPING_THRESHOLD ? 0 : baseShipping;
+    return itemsTotal > FREE_SHIPPING_THRESHOLD ? 0 : baseShipping;
 };
 
 const calculateOrderTotal = (order: Order): number => {
-  const itemsTotal = calculateItemsTotal(order.items);
-  const shipping = calculateShipping(order.shipping, itemsTotal);
-  return itemsTotal + shipping;
+    const itemsTotal = calculateItemsTotal(order.items);
+    const shipping = calculateShipping(order.shipping, itemsTotal);
+    return itemsTotal + shipping;
 };
 
 // Run tests - they still pass!
@@ -1088,16 +1100,16 @@ const calculateOrderTotal = (order: Order): number => {
 ```typescript
 // After getting this test green:
 describe("Discount calculation", () => {
-  it("should apply 10% discount", () => {
-    const originalPrice = 100;
-    const discountedPrice = applyDiscount(originalPrice, 0.1);
-    expect(discountedPrice).toBe(90);
-  });
+    it("should apply 10% discount", () => {
+        const originalPrice = 100;
+        const discountedPrice = applyDiscount(originalPrice, 0.1);
+        expect(discountedPrice).toBe(90);
+    });
 });
 
 // Green implementation:
 const applyDiscount = (price: number, discountRate: number): number => {
-  return price * (1 - discountRate);
+    return price * (1 - discountRate);
 };
 
 // Assess refactoring opportunities:
@@ -1115,14 +1127,14 @@ const applyDiscount = (price: number, discountRate: number): number => {
 
 - Each commit should represent a complete, working change
 - Use conventional commits format:
-  ```
-  feat: add payment validation
-  fix: correct date formatting in payment processor
-  refactor: extract payment validation logic
-  test: add edge cases for payment validation
-  chore: update dependencies
-  breaking: major API change
-  ```
+    ```
+    feat: add payment validation
+    fix: correct date formatting in payment processor
+    refactor: extract payment validation logic
+    test: add edge cases for payment validation
+    chore: update dependencies
+    breaking: major API change
+    ```
 - Include test changes with feature changes in the same commit
 
 ### Semantic Versioning
@@ -1195,34 +1207,37 @@ Use Result types or early returns:
 ```typescript
 // Good - Result type pattern
 type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+    | { success: true; data: T }
+    | { success: false; error: E };
 
 const processPayment = (
-  payment: Payment
+    payment: Payment
 ): Result<ProcessedPayment, PaymentError> => {
-  if (!isValidPayment(payment)) {
-    return { success: false, error: new PaymentError("Invalid payment") };
-  }
+    if (!isValidPayment(payment)) {
+        return { success: false, error: new PaymentError("Invalid payment") };
+    }
 
-  if (!hasSufficientFunds(payment)) {
-    return { success: false, error: new PaymentError("Insufficient funds") };
-  }
+    if (!hasSufficientFunds(payment)) {
+        return {
+            success: false,
+            error: new PaymentError("Insufficient funds"),
+        };
+    }
 
-  return { success: true, data: executePayment(payment) };
+    return { success: true, data: executePayment(payment) };
 };
 
 // Also good - early returns with exceptions
 const processPayment = (payment: Payment): ProcessedPayment => {
-  if (!isValidPayment(payment)) {
-    throw new PaymentError("Invalid payment");
-  }
+    if (!isValidPayment(payment)) {
+        throw new PaymentError("Invalid payment");
+    }
 
-  if (!hasSufficientFunds(payment)) {
-    throw new PaymentError("Insufficient funds");
-  }
+    if (!hasSufficientFunds(payment)) {
+        throw new PaymentError("Insufficient funds");
+    }
 
-  return executePayment(payment);
+    return executePayment(payment);
 };
 ```
 
@@ -1231,32 +1246,32 @@ const processPayment = (payment: Payment): ProcessedPayment => {
 ```typescript
 // Good - tests behavior through public API
 describe("PaymentProcessor", () => {
-  it("should decline payment when insufficient funds", () => {
-    const payment = getMockPaymentPostPaymentRequest({ Amount: 1000 });
-    const account = getMockAccount({ Balance: 500 });
+    it("should decline payment when insufficient funds", () => {
+        const payment = getMockPaymentPostPaymentRequest({ Amount: 1000 });
+        const account = getMockAccount({ Balance: 500 });
 
-    const result = processPayment(payment, account);
+        const result = processPayment(payment, account);
 
-    expect(result.success).toBe(false);
-    expect(result.error.message).toBe("Insufficient funds");
-  });
+        expect(result.success).toBe(false);
+        expect(result.error.message).toBe("Insufficient funds");
+    });
 
-  it("should process valid payment successfully", () => {
-    const payment = getMockPaymentPostPaymentRequest({ Amount: 100 });
-    const account = getMockAccount({ Balance: 500 });
+    it("should process valid payment successfully", () => {
+        const payment = getMockPaymentPostPaymentRequest({ Amount: 100 });
+        const account = getMockAccount({ Balance: 500 });
 
-    const result = processPayment(payment, account);
+        const result = processPayment(payment, account);
 
-    expect(result.success).toBe(true);
-    expect(result.data.remainingBalance).toBe(400);
-  });
+        expect(result.success).toBe(true);
+        expect(result.data.remainingBalance).toBe(400);
+    });
 });
 
 // Avoid - testing implementation details
 describe("PaymentProcessor", () => {
-  it("should call checkBalance method", () => {
-    // This tests implementation, not behavior
-  });
+    it("should call checkBalance method", () => {
+        // This tests implementation, not behavior
+    });
 });
 ```
 
@@ -1267,71 +1282,74 @@ Example showing how validation code gets 100% coverage without testing it direct
 ```typescript
 // payment-validator.ts (implementation detail)
 export const validatePaymentAmount = (amount: number): boolean => {
-  return amount > 0 && amount <= 10000;
+    return amount > 0 && amount <= 10000;
 };
 
 export const validateCardDetails = (card: PayingCardDetails): boolean => {
-  return /^\d{3,4}$/.test(card.cvv) && card.token.length > 0;
+    return /^\d{3,4}$/.test(card.cvv) && card.token.length > 0;
 };
 
 // payment-processor.ts (public API)
 export const processPayment = (
-  request: PaymentRequest
+    request: PaymentRequest
 ): Result<Payment, PaymentError> => {
-  // Validation is used internally but not exposed
-  if (!validatePaymentAmount(request.amount)) {
-    return { success: false, error: new PaymentError("Invalid amount") };
-  }
+    // Validation is used internally but not exposed
+    if (!validatePaymentAmount(request.amount)) {
+        return { success: false, error: new PaymentError("Invalid amount") };
+    }
 
-  if (!validateCardDetails(request.payingCardDetails)) {
-    return { success: false, error: new PaymentError("Invalid card details") };
-  }
+    if (!validateCardDetails(request.payingCardDetails)) {
+        return {
+            success: false,
+            error: new PaymentError("Invalid card details"),
+        };
+    }
 
-  // Process payment...
-  return { success: true, data: executedPayment };
+    // Process payment...
+    return { success: true, data: executedPayment };
 };
 
 // payment-processor.test.ts
 describe("Payment processing", () => {
-  // These tests achieve 100% coverage of validation code
-  // without directly testing the validator functions
+    // These tests achieve 100% coverage of validation code
+    // without directly testing the validator functions
 
-  it("should reject payments with negative amounts", () => {
-    const payment = getMockPaymentPostPaymentRequest({ amount: -100 });
-    const result = processPayment(payment);
+    it("should reject payments with negative amounts", () => {
+        const payment = getMockPaymentPostPaymentRequest({ amount: -100 });
+        const result = processPayment(payment);
 
-    expect(result.success).toBe(false);
-    expect(result.error.message).toBe("Invalid amount");
-  });
-
-  it("should reject payments exceeding maximum amount", () => {
-    const payment = getMockPaymentPostPaymentRequest({ amount: 10001 });
-    const result = processPayment(payment);
-
-    expect(result.success).toBe(false);
-    expect(result.error.message).toBe("Invalid amount");
-  });
-
-  it("should reject payments with invalid CVV format", () => {
-    const payment = getMockPaymentPostPaymentRequest({
-      payingCardDetails: { cvv: "12", token: "valid-token" },
+        expect(result.success).toBe(false);
+        expect(result.error.message).toBe("Invalid amount");
     });
-    const result = processPayment(payment);
 
-    expect(result.success).toBe(false);
-    expect(result.error.message).toBe("Invalid card details");
-  });
+    it("should reject payments exceeding maximum amount", () => {
+        const payment = getMockPaymentPostPaymentRequest({ amount: 10001 });
+        const result = processPayment(payment);
 
-  it("should process valid payments successfully", () => {
-    const payment = getMockPaymentPostPaymentRequest({
-      amount: 100,
-      payingCardDetails: { cvv: "123", token: "valid-token" },
+        expect(result.success).toBe(false);
+        expect(result.error.message).toBe("Invalid amount");
     });
-    const result = processPayment(payment);
 
-    expect(result.success).toBe(true);
-    expect(result.data.status).toBe("completed");
-  });
+    it("should reject payments with invalid CVV format", () => {
+        const payment = getMockPaymentPostPaymentRequest({
+            payingCardDetails: { cvv: "12", token: "valid-token" },
+        });
+        const result = processPayment(payment);
+
+        expect(result.success).toBe(false);
+        expect(result.error.message).toBe("Invalid card details");
+    });
+
+    it("should process valid payments successfully", () => {
+        const payment = getMockPaymentPostPaymentRequest({
+            amount: 100,
+            payingCardDetails: { cvv: "123", token: "valid-token" },
+        });
+        const result = processPayment(payment);
+
+        expect(result.success).toBe(true);
+        expect(result.data.status).toBe("completed");
+    });
 });
 ```
 
@@ -1361,41 +1379,41 @@ describe("PaymentForm", () => {
 ```typescript
 // Avoid: Mutation
 const addItem = (items: Item[], newItem: Item) => {
-  items.push(newItem); // Mutates array
-  return items;
+    items.push(newItem); // Mutates array
+    return items;
 };
 
 // Prefer: Immutable update
 const addItem = (items: Item[], newItem: Item): Item[] => {
-  return [...items, newItem];
+    return [...items, newItem];
 };
 
 // Avoid: Nested conditionals
 if (user) {
-  if (user.isActive) {
-    if (user.hasPermission) {
-      // do something
+    if (user.isActive) {
+        if (user.hasPermission) {
+            // do something
+        }
     }
-  }
 }
 
 // Prefer: Early returns
 if (!user || !user.isActive || !user.hasPermission) {
-  return;
+    return;
 }
 // do something
 
 // Avoid: Large functions
 const processOrder = (order: Order) => {
-  // 100+ lines of code
+    // 100+ lines of code
 };
 
 // Prefer: Composed small functions
 const processOrder = (order: Order) => {
-  const validatedOrder = validateOrder(order);
-  const pricedOrder = calculatePricing(validatedOrder);
-  const finalOrder = applyDiscounts(pricedOrder);
-  return submitOrder(finalOrder);
+    const validatedOrder = validateOrder(order);
+    const pricedOrder = calculatePricing(validatedOrder);
+    const finalOrder = applyDiscounts(pricedOrder);
+    return submitOrder(finalOrder);
 };
 ```
 
@@ -1403,6 +1421,7 @@ const processOrder = (order: Order) => {
 
 The following classic software engineering laws guide decision-making. Each law
 includes expanded interpretations and real-world examples in the project wiki.
+
 - **Murphy's Law** – anything that can go wrong will go wrong.
 - **Brook's Law** – adding people to a late project makes it later.
 - **Hofstadter's Law** – everything takes longer than expected.
@@ -1432,16 +1451,19 @@ includes expanded interpretations and real-world examples in the project wiki.
 The key is to write clean, testable, functional code that evolves through small, safe increments. Every change should be driven by a test that describes the desired behavior, and the implementation should be the simplest thing that makes that test pass. When in doubt, favor simplicity and readability over cleverness.
 
 ## Hosting Environments
+
 We have two environments for this project: one deployed via GitHub Pages and another using lovable.app. Do not modify configuration files for these setups unless absolutely necessary.
 
 ## 3D Immersive Workspace Design Guide
 
 ### Project Vision
+
 Create workspaces with a large quantity of 3D art that people can play with and iterate on. Each scene should serve as an immersive, interactive environment that inspires creativity and experimentation.
 
 ### Core Design Principles
 
 #### 1. Visual Impact Requirements
+
 - **Unique**: Each scene must have distinct visual identity and geometry
 - **Immersive**: Users should feel transported to another world
 - **Captivating**: Immediate visual appeal that holds attention
@@ -1451,13 +1473,16 @@ Create workspaces with a large quantity of 3D art that people can play with and 
 - **Fun**: Engaging and playful interactions
 
 #### 2. Technical Standards
+
 - **Visibility**: All objects must be clearly visible and well-lit
 - **Performance**: Smooth 60fps experience across devices
 - **Responsiveness**: Objects react meaningfully to interactions
 - **Scalability**: Works on both desktop and mobile
 
 #### 3. Geometry Diversity Strategy
+
 Utilize the full spectrum of Three.js geometries:
+
 - **Basic**: BoxGeometry, SphereGeometry, PlaneGeometry
 - **Complex**: TorusKnotGeometry, IcosahedronGeometry, DodecahedronGeometry
 - **Parametric**: LatheGeometry, ExtrudeGeometry, TubeGeometry
@@ -1465,6 +1490,7 @@ Utilize the full spectrum of Three.js geometries:
 - **Artistic**: PolyhedronGeometry, TetrahedronGeometry, OctahedronGeometry
 
 #### 4. Material & Lighting Philosophy
+
 - **Day Theme**: Bright, energetic, exploratory mood
 - **Night Theme**: Mysterious, contemplative, ambient mood
 - **Dynamic Materials**: MeshDistortMaterial, MeshWobbleMaterial for life
@@ -1472,12 +1498,14 @@ Utilize the full spectrum of Three.js geometries:
 - **Color Psychology**: Intentional color choices that evoke emotion
 
 #### 5. Background & Environment Design
+
 - **Contextual**: Backgrounds that support the main geometry's story
 - **Layered**: Multiple depth levels for visual richness
 - **Interactive**: Environments that respond to user presence
 - **Atmospheric**: Fog, particles, and effects that create mood
 
 #### 6. Animation & Interaction Standards
+
 - **Organic Motion**: Natural, fluid animations that feel alive
 - **Mouse Responsiveness**: Meaningful reactions to cursor movement
 - **Lock State**: Clear visual feedback when motion is frozen
@@ -1499,24 +1527,30 @@ Utilize the full spectrum of Three.js geometries:
 ### Implementation Strategy
 
 #### Phase 1: Geometry Revolution
+
 Replace basic spheres with complex, meaningful geometries that tell a story.
 
 #### Phase 2: Material Magic
+
 Implement advanced materials that bring scenes to life with dynamic properties.
 
 #### Phase 3: Environmental Storytelling
+
 Create backgrounds and lighting that support each scene's unique narrative.
 
 #### Phase 4: Interactive Polish
+
 Add subtle interactions and animations that reward exploration.
 
 ### Asset Guidelines
+
 - **Free Use Only**: Ensure all assets are freely available
 - **Performance First**: Optimize geometry complexity for real-time rendering
 - **Consistent Style**: Maintain cohesive visual language across scenes
 - **Scalable Complexity**: Design works at multiple LOD levels
 
 ### Success Metrics
+
 - Visual impact: "Wow" factor on first view
 - Engagement: Users want to interact and explore
 - Performance: Smooth experience across devices

@@ -1,0 +1,101 @@
+{
+    "$schema": "https://biomejs.dev/schemas/2.1.2/schema.json",
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git"
+    },
+    "linter": {
+        "enabled": true,
+        "rules": {
+            "recommended": true,
+            "a11y": {
+                "recommended": true
+            },
+            "correctness": {
+                "recommended": true
+            },
+            "performance": {
+                "recommended": true
+            },
+            "style": {
+                "recommended": true
+            },
+            "suspicious": {
+                "recommended": true
+            },
+            "complexity": {
+                "recommended": true
+            }
+        }
+    },
+    "formatter": {
+        "enabled": true,
+        "formatWithErrors": false,
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 80,
+        "lineEnding": "lf",
+        "attributePosition": "auto"
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "double",
+            "jsxQuoteStyle": "double",
+            "quoteProperties": "asNeeded",
+            "trailingCommas": "es5",
+            "semicolons": "always",
+            "arrowParentheses": "asNeeded",
+            "bracketSpacing": true,
+            "bracketSameLine": false
+        }
+    },
+    "json": {
+        "formatter": {
+            "indentStyle": "space",
+            "indentWidth": 4,
+            "lineWidth": 80,
+            "trailingCommas": "none"
+        }
+    },
+    "css": {
+        "formatter": {
+            "indentStyle": "space",
+            "indentWidth": 4,
+            "lineWidth": 80,
+            "quoteStyle": "double"
+        }
+    },
+    "files": {
+        "maxSize": 5242880,
+        "includes": [
+            "**/*.js",
+            "**/*.jsx",
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.json",
+            "**/*.css",
+            "**/*.scss"
+        ]
+    },
+    "overrides": [
+        {
+            "includes": [
+                "**/node_modules/**",
+                "**/dist/**",
+                "**/build/**",
+                "**/.next/**",
+                "**/.cache/**",
+                "**/*.min.js",
+                "**/*.min.css",
+                "**/coverage/**",
+                "**/.git/**"
+            ],
+            "formatter": {
+                "enabled": false
+            },
+            "linter": {
+                "enabled": false
+            }
+        }
+    ]
+}

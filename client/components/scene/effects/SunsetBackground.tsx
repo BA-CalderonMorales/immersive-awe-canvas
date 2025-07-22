@@ -1,18 +1,18 @@
-import { useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { BackgroundConfig } from '@/types/scene';
-import * as THREE from 'three';
+import { useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { BackgroundConfig } from "@/types/scene";
+import * as THREE from "three";
 
 interface SunsetBackgroundProps {
-  config: BackgroundConfig;
+    config: BackgroundConfig;
 }
 
 const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
-  const { scene, camera } = useThree();
-  const geometryRef = useRef<THREE.SphereGeometry>(null!);
-  const materialRef = useRef<THREE.ShaderMaterial>(null!);
+    const { scene, camera } = useThree();
+    const geometryRef = useRef<THREE.SphereGeometry>(null!);
+    const materialRef = useRef<THREE.ShaderMaterial>(null!);
 
-  const vertexShader = `
+    const vertexShader = `
     varying vec2 vUv;
     varying vec3 vWorldPosition;
     
@@ -24,7 +24,7 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
     }
   `;
 
-  const fragmentShader = `
+    const fragmentShader = `
     uniform float time;
     varying vec2 vUv;
     varying vec3 vWorldPosition;
@@ -150,31 +150,32 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
     }
   `;
 
-  const uniforms = {
-    time: { value: 0 }
-  };
+    const uniforms = {
+        time: { value: 0 },
+    };
 
-  useFrame((state) => {
-    if (materialRef.current) {
-      materialRef.current.uniforms.time.value = state.clock.getElapsedTime();
-    }
-  });
+    useFrame(state => {
+        if (materialRef.current) {
+            materialRef.current.uniforms.time.value =
+                state.clock.getElapsedTime();
+        }
+    });
 
-  return (
-    <mesh scale={[2000, 2000, 2000]} renderOrder={-1}>
-      <sphereGeometry args={[1, 64, 32]} />
-      <shaderMaterial
-        ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        side={THREE.BackSide}
-        depthWrite={false}
-        depthTest={false}
-        transparent={false}
-      />
-    </mesh>
-  );
+    return (
+        <mesh scale={[2000, 2000, 2000]} renderOrder={-1}>
+            <sphereGeometry args={[1, 64, 32]} />
+            <shaderMaterial
+                ref={materialRef}
+                vertexShader={vertexShader}
+                fragmentShader={fragmentShader}
+                uniforms={uniforms}
+                side={THREE.BackSide}
+                depthWrite={false}
+                depthTest={false}
+                transparent={false}
+            />
+        </mesh>
+    );
 };
 
 export default SunsetBackground;

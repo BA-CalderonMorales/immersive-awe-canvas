@@ -1,75 +1,120 @@
-
 export type LightConfig = {
-  type: 'ambient' | 'directional' | 'point' | 'hemisphere';
-  intensity?: number;
-  color?: string;
-  position?: [number, number, number];
-  groundColor?: string;
-  ref?: 'pulsing' | 'flicker' | 'swirl' | 'slowPulse';
+    type: "ambient" | "directional" | "point" | "hemisphere";
+    intensity?: number;
+    color?: string;
+    position?: [number, number, number];
+    groundColor?: string;
+    ref?: "pulsing" | "flicker" | "swirl" | "slowPulse";
 };
 
-export type EnvironmentPreset = 'apartment' | 'city' | 'dawn' | 'forest' | 'lobby' | 'night' | 'park' | 'studio' | 'sunset' | 'warehouse';
+export type EnvironmentPreset =
+    | "apartment"
+    | "city"
+    | "dawn"
+    | "forest"
+    | "lobby"
+    | "night"
+    | "park"
+    | "studio"
+    | "sunset"
+    | "warehouse";
 
 export type BackgroundConfig = {
-  type: 'sky' | 'stars' | 'fog' | 'sparkles' | 'color' | 'environment' | 'gradient' | 'noise' | 'plasma' | 'void' | 'aurora' | 'sunset';
-  // Sky properties
-  sunPosition?: [number, number, number];
-  
-  // Stars properties
-  radius?: number;
-  depth?: number;
-  count?: number;
-  factor?: number;
-  saturation?: number;
-  fade?: boolean;
-  speed?: number;
-  
-  // Fog properties
-  color?: string;
-  near?: number;
-  far?: number;
-  density?: number;
-  
-  // Sparkles properties
-  size?: number;
-  opacity?: number;
-  scale?: number;
-  
-  // Color/Gradient properties
-  colorTop?: string;
-  colorBottom?: string;
-  
-  // Noise properties
-  noiseScale?: number;
-  noiseIntensity?: number;
-  noiseSpeed?: number;
-  
-  // Plasma properties
-  plasmaSpeed?: number;
-  plasmaIntensity?: number;
-  plasmaColor1?: string;
-  plasmaColor2?: string;
-  
-  // Aurora properties
-  auroraSpeed?: number;
-  auroraIntensity?: number;
-  auroraColors?: string[];
-  
-  // Environment properties
-  preset?: EnvironmentPreset;
-  blur?: number;
+    type:
+        | "sky"
+        | "stars"
+        | "fog"
+        | "sparkles"
+        | "color"
+        | "environment"
+        | "gradient"
+        | "noise"
+        | "plasma"
+        | "void"
+        | "aurora"
+        | "sunset"
+        | "nebula";
+    // Sky properties
+    sunPosition?: [number, number, number];
+
+    // Stars properties
+    radius?: number;
+    depth?: number;
+    count?: number;
+    factor?: number;
+    saturation?: number;
+    fade?: boolean;
+    speed?: number;
+
+    // Fog properties
+    color?: string;
+    near?: number;
+    far?: number;
+    density?: number;
+
+    // Sparkles properties
+    size?: number;
+    opacity?: number;
+    scale?: number;
+
+    // Color/Gradient properties
+    colorTop?: string;
+    colorBottom?: string;
+
+    // Noise properties
+    noiseScale?: number;
+    noiseIntensity?: number;
+    noiseSpeed?: number;
+
+    // Plasma properties
+    plasmaSpeed?: number;
+    plasmaIntensity?: number;
+    plasmaColor1?: string;
+    plasmaColor2?: string;
+    plasmaColor3?: string;
+    turbulence?: number;
+    contrast?: number;
+    brightness?: number;
+
+    // Aurora properties
+    auroraSpeed?: number;
+    auroraIntensity?: number;
+    auroraColors?: string[];
+
+    // Nebula properties
+    nebulaSpeed?: number;
+    nebulaIntensity?: number;
+    gasDensity?: number;
+    dustDensity?: number;
+    stellarWindStrength?: number;
+    nebulaColor1?: string;
+    nebulaColor2?: string;
+    nebulaColor3?: string;
+    starColor?: string;
+
+    // Environment properties
+    preset?: EnvironmentPreset;
+    blur?: number;
 };
 
 export type ExtraConfig = {
-    type: 'cloud';
+    type: "cloud";
     position: [number, number, number];
     speed: number;
     opacity: number;
     segments?: number;
-}
+};
 
 export type MaterialConfig = {
-    materialType?: 'standard' | 'physical' | 'toon' | 'lambert' | 'phong' | 'normal' | 'basic' | 'matcap';
+    materialType?:
+        | "standard"
+        | "physical"
+        | "toon"
+        | "lambert"
+        | "phong"
+        | "normal"
+        | "basic"
+        | "matcap";
     wireframe?: boolean;
     // Common properties
     roughness?: number;
@@ -92,10 +137,10 @@ export type MaterialConfig = {
     // Phong material properties
     shininess?: number;
     // Toon material properties
-    gradientMap?: 'three' | 'five';
+    gradientMap?: "three" | "five";
     // Matcap material properties
-    matcapTexture?: 'chrome' | 'purple' | 'gold';
-}
+    matcapTexture?: "chrome" | "purple" | "gold";
+};
 
 export type TorusKnotConfig = {
     p?: number;
@@ -104,19 +149,26 @@ export type TorusKnotConfig = {
     tube?: number;
     tubularSegments?: number;
     radialSegments?: number;
-}
+};
 
 export type SceneThemeConfig = {
-  mainObjectColor: string;
-  material: MaterialConfig;
-  background: BackgroundConfig;
-  lights: LightConfig[];
-  extras?: ExtraConfig[];
-  torusKnot?: TorusKnotConfig;
+    mainObjectColor: string;
+    material: MaterialConfig;
+    background: BackgroundConfig;
+    lights: LightConfig[];
+    extras?: ExtraConfig[];
+    torusKnot?: TorusKnotConfig;
 };
 
 export type SceneConfig = {
-  type: 'TorusKnot' | 'WobbleField' | 'DistortionSphere' | 'MorphingIcosahedron' | 'WavyGrid' | 'CrystallineSpire' | 'JellyTorus';
-  day: SceneThemeConfig;
-  night: SceneThemeConfig;
+    type:
+        | "TorusKnot"
+        | "WobbleField"
+        | "DistortionSphere"
+        | "MorphingIcosahedron"
+        | "WavyGrid"
+        | "CrystallineSpire"
+        | "JellyTorus";
+    day: SceneThemeConfig;
+    night: SceneThemeConfig;
 };

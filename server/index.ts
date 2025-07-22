@@ -1,6 +1,6 @@
 /**
  * Server Module Entry Point
- * 
+ *
  * This module contains all backend-related code including:
  * - Database client and configuration
  * - Data fetching and mutations
@@ -10,11 +10,11 @@
  */
 
 // Database Integration
-export * from '../database/supabase/client';
-export * from '../database/supabase/types';
+export * from "../database/supabase/client";
+export * from "../database/supabase/types";
 
 // Server Utilities
-export * from './logger';
-export * from './security';
-export * from './typeguards';
-export * from './version';
+export * from "./logger";
+export * from "./security";
+export * from "./typeguards";
+export * from "./version";

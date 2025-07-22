@@ -1,17 +1,17 @@
-import { useRef } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
-import { BackgroundConfig } from '@/types/scene';
-import * as THREE from 'three';
+import { useRef } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { BackgroundConfig } from "@/types/scene";
+import * as THREE from "three";
 
 interface GradientBackgroundProps {
-  config: BackgroundConfig;
+    config: BackgroundConfig;
 }
 
 const GradientBackground = ({ config }: GradientBackgroundProps) => {
-  const { scene } = useThree();
-  const materialRef = useRef<THREE.ShaderMaterial>(null!);
+    const { scene } = useThree();
+    const materialRef = useRef<THREE.ShaderMaterial>(null!);
 
-  const vertexShader = `
+    const vertexShader = `
     varying vec2 vUv;
     void main() {
       vUv = uv;
@@ -19,7 +19,7 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
     }
   `;
 
-  const fragmentShader = `
+    const fragmentShader = `
     uniform vec3 colorTop;
     uniform vec3 colorBottom;
     uniform float time;
@@ -93,33 +93,37 @@ const GradientBackground = ({ config }: GradientBackgroundProps) => {
     }
   `;
 
-  const uniforms = {
-    colorTop: { value: new THREE.Color(config.colorTop || '#667eea') },
-    colorBottom: { value: new THREE.Color(config.colorBottom || '#764ba2') },
-    time: { value: 0 }
-  };
+    const uniforms = {
+        colorTop: { value: new THREE.Color(config.colorTop || "#667eea") },
+        colorBottom: {
+            value: new THREE.Color(config.colorBottom || "#764ba2"),
+        },
+        time: { value: 0 },
+    };
 
-  useFrame((state) => {
-    if (materialRef.current && (config.speed || (config as any).speed)) {
-      materialRef.current.uniforms.time.value = state.clock.getElapsedTime() * (config.speed || (config as any).speed || 0.3);
-    }
-  });
+    useFrame(state => {
+        if (materialRef.current && (config.speed || (config as any).speed)) {
+            materialRef.current.uniforms.time.value =
+                state.clock.getElapsedTime() *
+                (config.speed || (config as any).speed || 0.3);
+        }
+    });
 
-  return (
-    <mesh scale={[10000, 10000, 10000]} renderOrder={-1000}>
-      <sphereGeometry args={[1, 64, 32]} />
-      <shaderMaterial
-        ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        side={THREE.BackSide}
-        depthWrite={false}
-        depthTest={false}
-        fog={false}
-      />
-    </mesh>
-  );
+    return (
+        <mesh scale={[10000, 10000, 10000]} renderOrder={-1000}>
+            <sphereGeometry args={[1, 64, 32]} />
+            <shaderMaterial
+                ref={materialRef}
+                vertexShader={vertexShader}
+                fragmentShader={fragmentShader}
+                uniforms={uniforms}
+                side={THREE.BackSide}
+                depthWrite={false}
+                depthTest={false}
+                fog={false}
+            />
+        </mesh>
+    );
 };
 
 export default GradientBackground;

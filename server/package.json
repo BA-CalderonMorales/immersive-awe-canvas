@@ -1,15 +1,15 @@
 {
-  "name": "@immersive-awe-canvas/server",
-  "version": "0.0.1",
-  "type": "module",
-  "description": "Server-side backend logic and integrations for Immersive Awe Canvas",
-  "main": "index.ts",
-  "private": true,
-  "dependencies": {
-    "@supabase/supabase-js": "^2.50.0"
-  },
-  "devDependencies": {
-    "@types/node": "^22.5.5",
-    "typescript": "^5.5.3"
-  }
+    "name": "@immersive-awe-canvas/server",
+    "version": "0.0.1",
+    "type": "module",
+    "description": "Server-side backend logic and integrations for Immersive Awe Canvas",
+    "main": "index.ts",
+    "private": true,
+    "dependencies": {
+        "@supabase/supabase-js": "^2.50.0"
+    },
+    "devDependencies": {
+        "@types/node": "^22.5.5",
+        "typescript": "^5.5.3"
+    }
 }

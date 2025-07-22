@@ -1,17 +1,16 @@
-
-import { useRef } from 'react';
-import { useFrame } from '@react-three/fiber';
-import { BackgroundConfig } from '@/types/scene';
-import * as THREE from 'three';
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
+import { BackgroundConfig } from "@/types/scene";
+import * as THREE from "three";
 
 interface NoiseBackgroundProps {
-  config: BackgroundConfig;
+    config: BackgroundConfig;
 }
 
 const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
-  const meshRef = useRef<THREE.Mesh>(null!);
+    const meshRef = useRef<THREE.Mesh>(null!);
 
-  const vertexShader = `
+    const vertexShader = `
     varying vec2 vUv;
     void main() {
       vUv = uv;
@@ -19,7 +18,7 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
     }
   `;
 
-  const fragmentShader = `
+    const fragmentShader = `
     uniform float time;
     uniform float noiseScale;
     uniform float noiseIntensity;
@@ -113,33 +112,40 @@ const NoiseBackground = ({ config }: NoiseBackgroundProps) => {
     }
   `;
 
-  const uniforms = {
-    time: { value: 0 },
-    noiseScale: { value: (config as any).noiseScale || config.noiseScale || 8.0 },
-    noiseIntensity: { value: (config as any).noiseIntensity || config.noiseIntensity || 1.1 },
-    color: { value: new THREE.Color(config.color || '#1a237e') }
-  };
+    const uniforms = {
+        time: { value: 0 },
+        noiseScale: {
+            value: (config as any).noiseScale || config.noiseScale || 8.0,
+        },
+        noiseIntensity: {
+            value:
+                (config as any).noiseIntensity || config.noiseIntensity || 1.1,
+        },
+        color: { value: new THREE.Color(config.color || "#1a237e") },
+    };
 
-  useFrame((state) => {
-    if (uniforms.time) {
-      uniforms.time.value = state.clock.getElapsedTime() * ((config as any).noiseSpeed || config.noiseSpeed || 0.08);
-    }
-  });
+    useFrame(state => {
+        if (uniforms.time) {
+            uniforms.time.value =
+                state.clock.getElapsedTime() *
+                ((config as any).noiseSpeed || config.noiseSpeed || 0.08);
+        }
+    });
 
-  return (
-    <mesh ref={meshRef} scale={[10000, 10000, 10000]} renderOrder={-1000}>
-      <sphereGeometry args={[1, 64, 32]} />
-      <shaderMaterial
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        side={THREE.BackSide}
-        depthWrite={false}
-        depthTest={false}
-        fog={false}
-      />
-    </mesh>
-  );
+    return (
+        <mesh ref={meshRef} scale={[10000, 10000, 10000]} renderOrder={-1000}>
+            <sphereGeometry args={[1, 64, 32]} />
+            <shaderMaterial
+                vertexShader={vertexShader}
+                fragmentShader={fragmentShader}
+                uniforms={uniforms}
+                side={THREE.BackSide}
+                depthWrite={false}
+                depthTest={false}
+                fog={false}
+            />
+        </mesh>
+    );
 };
 
 export default NoiseBackground;

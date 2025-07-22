@@ -1,47 +1,55 @@
-import { createContext, useContext, ReactNode, useState } from 'react';
-import { useSceneObjects } from '@/hooks/useSceneObjects';
-import { ObjectManagerState, ObjectManagerActions, SceneObject } from '@/types/sceneObjects';
+import { createContext, useContext, ReactNode, useState } from "react";
+import { useSceneObjects } from "@/hooks/useSceneObjects";
+import {
+    ObjectManagerState,
+    ObjectManagerActions,
+    SceneObject,
+} from "@/types/sceneObjects";
 
 interface SceneObjectsContextType extends ObjectManagerState {
-  actions: ObjectManagerActions;
-  selectedObject: SceneObject | null;
-  isDragEnabled: boolean;
-  isDragging: boolean;
-  setIsDragging: (isDragging: boolean) => void;
+    actions: ObjectManagerActions;
+    selectedObject: SceneObject | null;
+    isDragEnabled: boolean;
+    isDragging: boolean;
+    setIsDragging: (isDragging: boolean) => void;
 }
 
 const SceneObjectsContext = createContext<SceneObjectsContextType | null>(null);
 
 interface SceneObjectsProviderProps {
-  children: ReactNode;
-  mainObjectColor?: string;
-  isDragEnabled?: boolean;
+    children: ReactNode;
+    mainObjectColor?: string;
+    isDragEnabled?: boolean;
 }
 
-export const SceneObjectsProvider = ({ 
-  children, 
-  mainObjectColor = '#ffffff',
-  isDragEnabled = false
+export const SceneObjectsProvider = ({
+    children,
+    mainObjectColor = "#ffffff",
+    isDragEnabled = false,
 }: SceneObjectsProviderProps) => {
-  const sceneObjectsData = useSceneObjects(mainObjectColor);
-  const [isDragging, setIsDragging] = useState(false);
+    const sceneObjectsData = useSceneObjects(mainObjectColor);
+    const [isDragging, setIsDragging] = useState(false);
 
-  return (
-    <SceneObjectsContext.Provider value={{
-      ...sceneObjectsData,
-      isDragEnabled,
-      isDragging,
-      setIsDragging
-    }}>
-      {children}
-    </SceneObjectsContext.Provider>
-  );
+    return (
+        <SceneObjectsContext.Provider
+            value={{
+                ...sceneObjectsData,
+                isDragEnabled,
+                isDragging,
+                setIsDragging,
+            }}
+        >
+            {children}
+        </SceneObjectsContext.Provider>
+    );
 };
 
 export const useSceneObjectsContext = () => {
-  const context = useContext(SceneObjectsContext);
-  if (!context) {
-    throw new Error('useSceneObjectsContext must be used within a SceneObjectsProvider');
-  }
-  return context;
+    const context = useContext(SceneObjectsContext);
+    if (!context) {
+        throw new Error(
+            "useSceneObjectsContext must be used within a SceneObjectsProvider"
+        );
+    }
+    return context;
 };

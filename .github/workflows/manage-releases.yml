@@ -1,125 +1,125 @@
 name: Manage Releases
 
 on:
-  workflow_dispatch:
-    inputs:
-      action:
-        type: choice
-        description: 'Action to perform'
-        required: true
-        options:
-        - delete-from-tag
-        - delete-single-tag
-      tag:
-        description: 'Tag to delete from (delete-from-tag) or specific tag to delete (delete-single-tag)'
-        required: true
+    workflow_dispatch:
+        inputs:
+            action:
+                type: choice
+                description: "Action to perform"
+                required: true
+                options:
+                    - delete-from-tag
+                    - delete-single-tag
+            tag:
+                description: "Tag to delete from (delete-from-tag) or specific tag to delete (delete-single-tag)"
+                required: true
 
 jobs:
-  manage-releases:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: read
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    manage-releases:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            actions: read
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - name: Delete from tag onwards
-        if: ${{ github.event.inputs.action == 'delete-from-tag' }}
-        run: |
-          FROM_TAG="${{ github.event.inputs.tag }}"
-          echo "🗑️ Deleting releases and tags from $FROM_TAG onwards..."
-          
-          if [ -z "$FROM_TAG" ]; then
-            echo "❌ Error: No starting tag specified for delete-from-tag action"
-            exit 1
-          fi
-          
-          # Verify the starting tag exists
-          if ! git rev-parse "$FROM_TAG" >/dev/null 2>&1; then
-            echo "❌ Error: Starting tag $FROM_TAG does not exist"
-            exit 1
-          fi
-          
-          echo "📋 Fetching all tags..."
-          all_tags=$(git tag -l --sort=-version:refname)
-          
-          if [ -z "$all_tags" ]; then
-            echo "ℹ️ No tags found in repository"
-            exit 0
-          fi
-          
-          echo "Found tags (newest first):"
-          echo "$all_tags"
-          
-          # Find tags to delete (from FROM_TAG onwards, including FROM_TAG)
-          tags_to_delete=""
-          found_start=false
-          
-          echo "$all_tags" | while read -r tag; do
-            if [ "$tag" = "$FROM_TAG" ]; then
-              found_start=true
-            fi
-            
-            if [ "$found_start" = true ] && [ -n "$tag" ]; then
-              echo "🎯 Will delete: $tag"
-              
-              # Delete the release if it exists
-              if gh release view "$tag" >/dev/null 2>&1; then
-                echo "  Deleting release: $tag"
-                gh release delete "$tag" --yes || echo "  Failed to delete release $tag"
-              else
-                echo "  ℹ️ No release found for $tag"
-              fi
-              
-              # Delete the tag
-              echo "  Deleting local tag: $tag"
-              git tag -d "$tag" || echo "  Failed to delete local tag $tag"
-              echo "  Deleting remote tag: $tag"
-              git push origin --delete "$tag" || echo "  Failed to delete remote tag $tag"
-              echo "  ✅ Tag $tag processed"
-            fi
-          done
-          
-          echo "✅ Cleanup from $FROM_TAG onwards completed!"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            - name: Delete from tag onwards
+              if: ${{ github.event.inputs.action == 'delete-from-tag' }}
+              run: |
+                  FROM_TAG="${{ github.event.inputs.tag }}"
+                  echo "🗑️ Deleting releases and tags from $FROM_TAG onwards..."
 
-      - name: Delete a single tag and release
-        if: ${{ github.event.inputs.action == 'delete-single-tag' }}
-        run: |
-          TAG="${{ github.event.inputs.tag }}"
-          echo "🗑️ Deleting specific release and tag: $TAG"
-          
-          if [ -z "$TAG" ]; then
-            echo "❌ Error: No tag specified for delete-tag action"
-            exit 1
-          fi
-          
-          # Delete the release if it exists
-          echo "Checking if release $TAG exists..."
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            echo "Deleting release: $TAG"
-            gh release delete "$TAG" --yes
-            echo "✅ Release $TAG deleted successfully"
-          else
-            echo "ℹ️ Release $TAG does not exist, skipping"
-          fi
-          
-          # Delete the tag if it exists
-          echo "Checking if tag $TAG exists..."
-          if git rev-parse "$TAG" >/dev/null 2>&1; then
-            echo "Deleting local tag: $TAG"
-            git tag -d "$TAG"
-            echo "Deleting remote tag: $TAG"
-            git push origin --delete "$TAG"
-            echo "✅ Tag $TAG deleted successfully"
-          else
-            echo "ℹ️ Tag $TAG does not exist, skipping"
-          fi
-          
-          echo "✅ Cleanup completed!"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  if [ -z "$FROM_TAG" ]; then
+                    echo "❌ Error: No starting tag specified for delete-from-tag action"
+                    exit 1
+                  fi
+
+                  # Verify the starting tag exists
+                  if ! git rev-parse "$FROM_TAG" >/dev/null 2>&1; then
+                    echo "❌ Error: Starting tag $FROM_TAG does not exist"
+                    exit 1
+                  fi
+
+                  echo "📋 Fetching all tags..."
+                  all_tags=$(git tag -l --sort=-version:refname)
+
+                  if [ -z "$all_tags" ]; then
+                    echo "ℹ️ No tags found in repository"
+                    exit 0
+                  fi
+
+                  echo "Found tags (newest first):"
+                  echo "$all_tags"
+
+                  # Find tags to delete (from FROM_TAG onwards, including FROM_TAG)
+                  tags_to_delete=""
+                  found_start=false
+
+                  echo "$all_tags" | while read -r tag; do
+                    if [ "$tag" = "$FROM_TAG" ]; then
+                      found_start=true
+                    fi
+                    
+                    if [ "$found_start" = true ] && [ -n "$tag" ]; then
+                      echo "🎯 Will delete: $tag"
+                      
+                      # Delete the release if it exists
+                      if gh release view "$tag" >/dev/null 2>&1; then
+                        echo "  Deleting release: $tag"
+                        gh release delete "$tag" --yes || echo "  Failed to delete release $tag"
+                      else
+                        echo "  ℹ️ No release found for $tag"
+                      fi
+                      
+                      # Delete the tag
+                      echo "  Deleting local tag: $tag"
+                      git tag -d "$tag" || echo "  Failed to delete local tag $tag"
+                      echo "  Deleting remote tag: $tag"
+                      git push origin --delete "$tag" || echo "  Failed to delete remote tag $tag"
+                      echo "  ✅ Tag $tag processed"
+                    fi
+                  done
+
+                  echo "✅ Cleanup from $FROM_TAG onwards completed!"
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Delete a single tag and release
+              if: ${{ github.event.inputs.action == 'delete-single-tag' }}
+              run: |
+                  TAG="${{ github.event.inputs.tag }}"
+                  echo "🗑️ Deleting specific release and tag: $TAG"
+
+                  if [ -z "$TAG" ]; then
+                    echo "❌ Error: No tag specified for delete-tag action"
+                    exit 1
+                  fi
+
+                  # Delete the release if it exists
+                  echo "Checking if release $TAG exists..."
+                  if gh release view "$TAG" >/dev/null 2>&1; then
+                    echo "Deleting release: $TAG"
+                    gh release delete "$TAG" --yes
+                    echo "✅ Release $TAG deleted successfully"
+                  else
+                    echo "ℹ️ Release $TAG does not exist, skipping"
+                  fi
+
+                  # Delete the tag if it exists
+                  echo "Checking if tag $TAG exists..."
+                  if git rev-parse "$TAG" >/dev/null 2>&1; then
+                    echo "Deleting local tag: $TAG"
+                    git tag -d "$TAG"
+                    echo "Deleting remote tag: $TAG"
+                    git push origin --delete "$TAG"
+                    echo "✅ Tag $TAG deleted successfully"
+                  else
+                    echo "ℹ️ Tag $TAG does not exist, skipping"
+                  fi
+
+                  echo "✅ Cleanup completed!"
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

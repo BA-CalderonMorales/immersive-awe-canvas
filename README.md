@@ -1,4 +1,3 @@
-
 # Immersive Awe Canvas
 
 A professional 3D canvas experience for exploring and manipulating interactive geometries in your browser. Built with React, Three.js, RSBuild, and modern web technologies using a modular monorepo architecture.
@@ -176,19 +175,19 @@ npm run build
 <details>
 <summary><strong>Keyboard Shortcuts</strong></summary>
 
-| Key | Action |
-|-----|--------|
-| `Space` | Toggle day/night theme |
-| `N` / `P` | Next/previous world |
-| `Z` | Toggle drag mode for object manipulation |
-| `V` | Hide/show UI |
-| `E` | Toggle settings panel |
-| `S` or `Ctrl+K` | Search worlds |
-| `H` | Help dialog |
-| `G` | Go to home |
-| `C` | Copy scene configuration |
-| `.` (Period) | Freeze/unfreeze animations |
-| `Esc` | Close dialogs |
+| Key             | Action                                   |
+| --------------- | ---------------------------------------- |
+| `Space`         | Toggle day/night theme                   |
+| `N` / `P`       | Next/previous world                      |
+| `Z`             | Toggle drag mode for object manipulation |
+| `V`             | Hide/show UI                             |
+| `E`             | Toggle settings panel                    |
+| `S` or `Ctrl+K` | Search worlds                            |
+| `H`             | Help dialog                              |
+| `G`             | Go to home                               |
+| `C`             | Copy scene configuration                 |
+| `.` (Period)    | Freeze/unfreeze animations               |
+| `Esc`           | Close dialogs                            |
 
 </details>
 
@@ -214,7 +213,9 @@ npm run build
 This project uses a **modular monorepo architecture** with clear separation of concerns across multiple workspaces:
 
 #### Client Workspace (`client/`)
+
 Frontend React application with modern architecture:
+
 - **Components**: Organized by feature with scene, UI, and layout components
 - **Hooks**: Custom React hooks for state management and API integration
 - **Context**: React context providers for global state (SceneObjects, Experience, etc.)
@@ -223,7 +224,9 @@ Frontend React application with modern architecture:
 - **Test**: Comprehensive test suite with Vitest (54 tests)
 
 #### Server Workspace (`server/`)
+
 Backend utilities and API integrations:
+
 - **GitHub API**: Dynamic version fetching from GitHub releases
 - **Security**: Input validation and sanitization utilities
 - **Logging**: Structured logging with different levels
@@ -231,14 +234,18 @@ Backend utilities and API integrations:
 - **Utils**: Server-side utility functions
 
 #### Database Workspace (`database/`)
+
 Supabase integration and database management:
+
 - **Types**: Auto-generated TypeScript types from Supabase schema
 - **Migrations**: Database schema migrations
 - **Queries**: Reusable database query functions
 - **Hooks**: React hooks for database operations
 
 #### Utils Workspace (`utils/`)
+
 Shared utilities across all workspaces:
+
 - **Common Functions**: Utility functions used by both client and server
 - **Type Guards**: Shared type validation functions
 - **Constants**: Application-wide constants and configurations
@@ -295,33 +302,36 @@ immersive-awe-canvas/
 <summary><strong>Import Patterns & Usage</strong></summary>
 
 #### Client-Side Development
+
 Working with UI components and React logic:
 
 ```typescript
 // Import client components and hooks
-import { SceneEditor } from '@/components/scene/editor/SceneEditor';
-import { useSceneObjectsContext } from '@/context/SceneObjectsContext';
-import { useWorlds } from '@/hooks/useWorlds';
-import { SceneConfig } from '@/types/scene';
+import { SceneEditor } from "@/components/scene/editor/SceneEditor";
+import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import { useWorlds } from "@/hooks/useWorlds";
+import { SceneConfig } from "@/types/scene";
 ```
 
 #### Server-Side Integration
+
 Working with APIs and backend utilities:
 
 ```typescript
 // Import server utilities
-import { fetchGitHubReleases } from '@server/github-api';
-import { validateInput } from '@server/security';
-import { logger } from '@server/logger';
+import { fetchGitHubReleases } from "@server/github-api";
+import { validateInput } from "@server/security";
+import { logger } from "@server/logger";
 ```
 
 #### Shared Utilities
+
 Using common functions across workspaces:
 
 ```typescript
 // Import shared utilities
-import { isValidString } from '@utils/typeguards';
-import { formatDate } from '@utils/utils';
+import { isValidString } from "@utils/typeguards";
+import { formatDate } from "@utils/utils";
 ```
 
 </details>
@@ -344,13 +354,16 @@ import { formatDate } from '@utils/utils';
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ### Commit Standards
+
 We use [Conventional Commits](https://www.conventionalcommits.org/) for semantic versioning:
+
 - `feat:` - New features (minor version bump)
-- `fix:` - Bug fixes (patch version bump)  
+- `fix:` - Bug fixes (patch version bump)
 - `perf:` - Performance improvements (patch version bump)
 - `feat!:` or `BREAKING CHANGE:` - Breaking changes (major version bump)
 
 ### Development Guidelines
+
 - Follow TypeScript strict mode
 - Write tests for new functionality
 - Use immutable patterns where possible
@@ -358,6 +371,7 @@ We use [Conventional Commits](https://www.conventionalcommits.org/) for semantic
 - Maintain 60fps performance standards
 
 When adding new features:
+
 - **UI Components/Logic**: Add to `src/modules/client/`
 - **Data Fetching/APIs**: Add to `src/modules/server/`
 - **Shared Types**: Consider where the type is primarily used

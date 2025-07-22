@@ -1,6 +1,6 @@
 /**
  * Client Module Entry Point
- * 
+ *
  * This module contains all UI-related code including:
  * - React components
  * - UI state management hooks
@@ -10,19 +10,19 @@
  */
 
 // Main App Component
-export { default as App } from './App';
+export { default as App } from "./App";
 
 // Components
-export * from './components';
+export * from "./components";
 
 // Hooks
-export * from './hooks';
+export * from "./hooks";
 
 // Context
-export * from './context';
+export * from "./context";
 
 // Pages
-export * from './pages';
+export * from "./pages";
 
 // Types
-export * from './types';
+export * from "./types";

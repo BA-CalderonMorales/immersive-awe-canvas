@@ -1,2 +1,2 @@
-export { default as InfoButton } from './InfoButton';
-export { default as OnboardingHints } from './OnboardingHints';
+export { default as InfoButton } from "./InfoButton";
+export { default as OnboardingHints } from "./OnboardingHints";
