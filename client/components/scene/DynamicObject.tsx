@@ -1,11 +1,11 @@
-import { SceneConfig, SceneThemeConfig } from "@/types/scene";
-import TorusKnotObject from "./objects/TorusKnotObject";
-import WobbleFieldObject from "./objects/WobbleFieldObject";
-import DistortionSphereObject from "./objects/DistortionSphereObject";
-import MorphingIcosahedronObject from "./objects/MorphingIcosahedronObject";
-import WavyGridObject from "./objects/WavyGridObject";
+import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
 import CrystallineSpireObject from "./objects/CrystallineSpireObject";
+import DistortionSphereObject from "./objects/DistortionSphereObject";
 import JellyTorusObject from "./objects/JellyTorusObject";
+import MorphingIcosahedronObject from "./objects/MorphingIcosahedronObject";
+import TorusKnotObject from "./objects/TorusKnotObject";
+import WavyGridObject from "./objects/WavyGridObject";
+import WobbleFieldObject from "./objects/WobbleFieldObject";
 
 interface DynamicObjectProps {
     type: SceneConfig["type"];

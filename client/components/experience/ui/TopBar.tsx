@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { Home } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useInstructions } from "@/hooks/useInstructions";
+import GlassButton from "./GlassButton";
 import InfoTooltip from "./InfoTooltip";
 import TopBarActions from "./TopBarActions";
-import { Home } from "lucide-react";
-import GlassButton from "./GlassButton";
 
 interface TopBarProps {
     worldName: string;

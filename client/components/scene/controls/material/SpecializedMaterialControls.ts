@@ -1,5 +1,5 @@
-import GUI from "lil-gui";
-import { MaterialConfig, SceneConfig } from "@/types/scene";
+import type GUI from "lil-gui";
+import type { MaterialConfig, SceneConfig } from "@/types/scene";
 
 export class SpecializedMaterialControls {
     private material: MaterialConfig;

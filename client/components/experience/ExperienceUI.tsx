@@ -1,13 +1,13 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { SceneConfig } from "@/types/scene";
-import { logEvent } from "@/lib/logger";
-import { useDeviceType } from "@/hooks/use-mobile";
-import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useState } from "react";
-import HiddenUiView from "./ui/HiddenUiView";
-import TopBar from "./ui/TopBar";
-import NavigationControls from "./ui/NavigationControls";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
+import { useDeviceType } from "@/hooks/use-mobile";
+import { logEvent } from "@/lib/logger";
+import type { SceneConfig } from "@/types/scene";
 import BottomBar from "./ui/BottomBar";
+import HiddenUiView from "./ui/HiddenUiView";
+import NavigationControls from "./ui/NavigationControls";
+import TopBar from "./ui/TopBar";
 
 interface ExperienceUIProps {
     worldName: string;
@@ -73,7 +73,7 @@ const ExperienceUI = ({
         logEvent({ eventType: "button_click", eventSource: "go_home" });
     };
 
-    const handleChangeBackground = (direction: "next" | "prev") => {
+    const _handleChangeBackground = (direction: "next" | "prev") => {
         onChangeBackground(direction);
         logEvent({
             eventType: "button_click",

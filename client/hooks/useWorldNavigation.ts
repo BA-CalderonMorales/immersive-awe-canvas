@@ -24,7 +24,7 @@ export const useWorldNavigation = ({
                     : (currentWorldIndex - 1 + worlds.length) % worlds.length;
 
             const nextWorld = worlds[nextIndex];
-            if (nextWorld && nextWorld.slug) {
+            if (nextWorld?.slug) {
                 console.log("Navigating to world:", nextWorld.slug);
                 navigate(`/experience/${nextWorld.slug}`);
             }

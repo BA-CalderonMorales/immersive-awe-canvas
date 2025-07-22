@@ -6,13 +6,8 @@
  * providing a clean separation between UI and business logic
  */
 
-import { useState, useCallback, useEffect } from "react";
-import {
-    SceneConfig,
-    MaterialConfig,
-    LightConfig,
-    BackgroundConfig,
-} from "@/types/scene";
+import { useCallback, useState } from "react";
+import type { SceneConfig } from "@/types/scene";
 import { useExperience } from "./useExperience";
 
 type SettingsAction =
@@ -118,7 +113,7 @@ const updateSceneConfig = (
                 },
             };
 
-        case "UPDATE_LIGHT_PROPERTY":
+        case "UPDATE_LIGHT_PROPERTY": {
             const updatedLights = [...currentConfig[theme].lights];
             if (updatedLights[action.payload.lightIndex]) {
                 updatedLights[action.payload.lightIndex] = {
@@ -133,6 +128,7 @@ const updateSceneConfig = (
                     lights: updatedLights,
                 },
             };
+        }
 
         case "UPDATE_BACKGROUND_PROPERTY":
             return {

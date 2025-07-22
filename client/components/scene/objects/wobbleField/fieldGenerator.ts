@@ -1,13 +1,11 @@
 import {
     ConeGeometry,
     CylinderGeometry,
-    RingGeometry,
-    BufferGeometry,
-    Float32BufferAttribute,
-    IcosahedronGeometry,
-    TetrahedronGeometry,
-    OctahedronGeometry,
     DodecahedronGeometry,
+    IcosahedronGeometry,
+    OctahedronGeometry,
+    RingGeometry,
+    TetrahedronGeometry,
 } from "three";
 
 export const CONTEMPLATIVE_FIELD_COUNT = 80; // Increased for richer wobble field

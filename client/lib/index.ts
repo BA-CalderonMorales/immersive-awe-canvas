@@ -10,12 +10,10 @@
 
 // Client-specific utilities
 export * from "./keyboardUtils";
-export * from "./sceneConfigUtils";
-export * from "./typeguards";
-export * from "./version";
-
-// Security utilities
-export * from "./security";
-
 // Logging utilities
 export * from "./logger";
+export * from "./sceneConfigUtils";
+// Security utilities
+export * from "./security";
+export * from "./typeguards";
+export * from "./version";

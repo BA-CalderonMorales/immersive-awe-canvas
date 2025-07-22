@@ -3,17 +3,23 @@
  * Displays saved scenes with load, edit, delete, and export functionality
  */
 
-import { useState } from "react";
+import { formatDistanceToNow } from "date-fns";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+    Calendar,
+    Copy,
+    Download,
+    Globe,
+    Library,
+    Lock,
+    Play,
+    Search,
+    Tag,
+    Trash2,
+    Upload,
+} from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
@@ -21,26 +27,19 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    Library,
-    Search,
-    Play,
-    Edit,
-    Trash2,
-    Download,
-    Copy,
-    Upload,
-    Calendar,
-    Tag,
-    Globe,
-    Lock,
-} from "lucide-react";
-import { SceneConfig } from "@/types/scene";
-import { UserScene } from "@/types/userScenes";
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import { useUserScenes } from "@/hooks/useUserScenes";
-import { formatDistanceToNow } from "date-fns";
+import type { SceneConfig } from "@/types/scene";
+import type { UserScene } from "@/types/userScenes";
 
 interface UserScenesManagerProps {
     onLoadScene: (sceneConfig: SceneConfig) => void;
@@ -125,7 +124,7 @@ const UserScenesManager = ({
             "Enter a name for the duplicated scene:",
             `${scene.name} (Copy)`
         );
-        if (newName && newName.trim()) {
+        if (newName?.trim()) {
             try {
                 await actions.duplicateScene(scene.id, newName.trim());
             } catch (error) {

@@ -1,4 +1,4 @@
-import { LightConfig } from "@/types/scene";
+import type { LightConfig } from "@/types/scene";
 import AnimatedPointLight from "./lights/AnimatedPointLight";
 
 const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {

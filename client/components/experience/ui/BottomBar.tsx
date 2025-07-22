@@ -1,11 +1,11 @@
+import { Copy, HelpCircle, Move, Search, Settings } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { SceneConfig } from "@/types/scene";
-import { Copy, Settings, HelpCircle, Search, Move } from "lucide-react";
+import type { SceneConfig } from "@/types/scene";
 import SceneSettingsPanel from "../SceneSettingsPanel";
 import GlassButton from "./GlassButton";
 

@@ -1,8 +1,7 @@
-import { describe, it, expect, vi } from "vitest";
-import { fireEvent } from "@testing-library/react";
-import { render } from "../test-utils";
+import { describe, expect, it, vi } from "vitest";
+import type { SceneConfig } from "@/types/scene";
 import MainObjectControls from "../../components/scene/controls/MainObjectControls";
-import { SceneConfig } from "@/types/scene";
+import { render } from "../test-utils";
 
 vi.mock("lil-gui", () => {
     class MockController {

@@ -1,8 +1,8 @@
-import { useRef, useEffect } from "react";
 import { useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
+import * as THREE from "three";
 import { DragControls as ThreeDragControls } from "three-stdlib";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
-import * as THREE from "three";
 
 const MAIN_OBJECT_NAME = "main-scene-object";
 
@@ -124,14 +124,14 @@ const DragControls = ({
         };
     }, [
         enabled,
-        objects.length,
         camera,
         gl,
         scene,
         actions,
         setIsDragging,
         onDragStart,
-        onDragEnd,
+        onDragEnd, // Find all user-added objects
+        objects.forEach,
     ]);
 
     return null;

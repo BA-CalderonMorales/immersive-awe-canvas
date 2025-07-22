@@ -1,5 +1,5 @@
-import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 
 export const useOrbitControlsState = () => {

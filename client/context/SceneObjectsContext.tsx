@@ -1,8 +1,8 @@
-import { createContext, useContext, ReactNode, useState } from "react";
+import { createContext, type ReactNode, useContext, useState } from "react";
 import { useSceneObjects } from "@/hooks/useSceneObjects";
-import {
-    ObjectManagerState,
+import type {
     ObjectManagerActions,
+    ObjectManagerState,
     SceneObject,
 } from "@/types/sceneObjects";
 

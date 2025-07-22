@@ -1,9 +1,9 @@
-import { useRef, useEffect, useCallback, useState } from "react";
 import { TransformControls } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type * as THREE from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import { useDeviceType } from "@/hooks/use-mobile";
-import * as THREE from "three";
 
 interface GizmoControlsProps {
     enabled: boolean;

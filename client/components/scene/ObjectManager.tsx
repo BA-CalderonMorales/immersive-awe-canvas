@@ -1,6 +1,6 @@
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
-import DynamicSceneObject from "./objects/DynamicSceneObject";
 import GizmoControls from "./controls/GizmoControls";
+import DynamicSceneObject from "./objects/DynamicSceneObject";
 
 interface ObjectManagerProps {
     isDragEnabled?: boolean;

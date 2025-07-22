@@ -1,13 +1,13 @@
+import { Info } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Tooltip,
     TooltipContent,
-    TooltipTrigger,
     TooltipProvider,
+    TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { Info } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useState, useEffect, useMemo, useRef } from "react";
 
 interface InfoButtonProps {
     theme: "day" | "night";

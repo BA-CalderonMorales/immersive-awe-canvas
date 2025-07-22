@@ -1,8 +1,8 @@
 import { useMemo } from "react";
-import { Group } from "three";
-import { MaterialConfig } from "@/types/scene";
+import type { Group } from "three";
+import type { MaterialConfig } from "@/types/scene";
 import DynamicMaterial from "../../materials/DynamicMaterial";
-import { SpireFormation } from "./useSpireFormations";
+import type { SpireFormation } from "./useSpireFormations";
 
 interface SpireStructureProps {
     formation: SpireFormation;

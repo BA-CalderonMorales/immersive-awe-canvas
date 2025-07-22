@@ -1,7 +1,7 @@
-import { MaterialConfig } from "@/types/scene";
+import { useMatcapTexture } from "@react-three/drei";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { useMatcapTexture } from "@react-three/drei";
+import type { MaterialConfig } from "@/types/scene";
 
 interface DynamicMaterialProps {
     materialConfig: MaterialConfig;
@@ -125,7 +125,6 @@ const DynamicMaterial = ({ materialConfig, color }: DynamicMaterialProps) => {
             );
         case "basic":
             return <meshBasicMaterial {...commonProps} />;
-        case "standard":
         default:
             return (
                 <meshStandardMaterial

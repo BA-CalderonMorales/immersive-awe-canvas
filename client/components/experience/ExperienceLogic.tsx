@@ -1,21 +1,20 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useBackgrounds } from "@/hooks/useBackgrounds";
 import { useDefaultGeometries } from "@/hooks/useDefaultGeometries";
-import { useExperienceEffects } from "@/hooks/useExperienceEffects";
 import { useExperience } from "@/hooks/useExperience";
+import { useExperienceEffects } from "@/hooks/useExperienceEffects";
 import { useHotkeyActions } from "@/hooks/useHotkeyActions";
-import ExperienceContainer from "./ExperienceContainer";
-import LoadingOverlay from "./LoadingOverlay";
-import { SceneConfig } from "@/types/scene";
 import {
+    getDefaultGeometryForBackground,
     updateSceneConfigBackground,
     updateSceneConfigGeometry,
-    getDefaultGeometryForBackground,
 } from "@/lib/sceneConfigUtils";
-import type { Database } from "@database/supabase/types";
+import type { SceneConfig } from "@/types/scene";
+import ExperienceContainer from "./ExperienceContainer";
+import LoadingOverlay from "./LoadingOverlay";
 
-type DefaultGeometry =
-    Database["public"]["Tables"]["default_geometries"]["Row"];
+// type DefaultGeometry =
+//     Database["public"]["Tables"]["default_geometries"]["Row"];
 
 const ExperienceLogic = () => {
     // Basic state - Initialize with default, will be updated when background loads
@@ -77,7 +76,12 @@ const ExperienceLogic = () => {
                 }));
             }
         }
-    }, [currentBackground?.id, geometries, editableSceneConfig.type]);
+    }, [
+        currentBackground?.id,
+        geometries,
+        editableSceneConfig.type,
+        currentBackground,
+    ]);
 
     // Helper functions
     const toggleObjectLock = useCallback(
@@ -137,7 +141,7 @@ const ExperienceLogic = () => {
             const currentIndex =
                 backgrounds?.findIndex(bg => bg.id === currentBackground?.id) ||
                 0;
-            let newIndex;
+            let newIndex: number;
 
             if (direction === "next") {
                 newIndex = backgrounds
@@ -153,7 +157,7 @@ const ExperienceLogic = () => {
             changeBackground(direction);
 
             // Update scene config with new background and unique geometry
-            if (backgrounds && backgrounds[newIndex] && editableSceneConfig) {
+            if (backgrounds?.[newIndex] && editableSceneConfig) {
                 const targetBackground = backgrounds[newIndex];
                 let updatedConfig = updateSceneConfigBackground(
                     editableSceneConfig,
@@ -193,11 +197,7 @@ const ExperienceLogic = () => {
         (backgroundIndex: number) => {
             jumpToBackground(backgroundIndex);
             // Update scene config when background changes
-            if (
-                backgrounds &&
-                backgrounds[backgroundIndex] &&
-                editableSceneConfig
-            ) {
+            if (backgrounds?.[backgroundIndex] && editableSceneConfig) {
                 const targetBackground = backgrounds[backgroundIndex];
                 let updatedConfig = updateSceneConfigBackground(
                     editableSceneConfig,
@@ -224,11 +224,7 @@ const ExperienceLogic = () => {
         (geometryIndex: number) => {
             jumpToGeometry(geometryIndex);
             // Update scene config when geometry changes
-            if (
-                geometries &&
-                geometries[geometryIndex] &&
-                editableSceneConfig
-            ) {
+            if (geometries?.[geometryIndex] && editableSceneConfig) {
                 const targetGeometry = geometries[geometryIndex];
                 const updatedConfig = updateSceneConfigGeometry(
                     editableSceneConfig,

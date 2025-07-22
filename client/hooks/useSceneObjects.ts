@@ -1,10 +1,10 @@
-import { useState, useCallback, useEffect } from "react";
-import {
-    SceneObject,
-    ObjectManagerState,
-    ObjectManagerActions,
-} from "@/types/sceneObjects";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
+import type {
+    ObjectManagerActions,
+    ObjectManagerState,
+    SceneObject,
+} from "@/types/sceneObjects";
 
 const GEOMETRIES = [
     { type: "box" as const, name: "Box" },

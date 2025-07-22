@@ -3,7 +3,10 @@
  * Integrates with the Scene Settings Panel
  */
 
+import { Save, Tag, X } from "lucide-react";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -11,16 +14,13 @@ import {
     DialogTitle,
     DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Badge } from "@/components/ui/badge";
-import { Save, Tag, X } from "lucide-react";
-import { SceneConfig } from "@/types/scene";
-import { UserSceneCreateInput } from "@/types/userScenes";
+import { Textarea } from "@/components/ui/textarea";
 import { useUserScenes } from "@/hooks/useUserScenes";
+import type { SceneConfig } from "@/types/scene";
+import type { UserSceneCreateInput } from "@/types/userScenes";
 
 interface SaveSceneDialogProps {
     sceneConfig: SceneConfig;

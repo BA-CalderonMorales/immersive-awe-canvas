@@ -3,7 +3,7 @@
  * Ready for database persistence when enabled
  */
 
-import { SceneConfig } from "./scene";
+import type { SceneConfig } from "./scene";
 
 export interface UserScene {
     id: string;

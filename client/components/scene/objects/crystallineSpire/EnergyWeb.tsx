@@ -1,5 +1,5 @@
-import { MaterialConfig } from "@/types/scene";
 import { useExperience } from "@/hooks/useExperience";
+import type { MaterialConfig } from "@/types/scene";
 import DynamicMaterial from "../../materials/DynamicMaterial";
 
 interface EnergyWebProps {
@@ -29,8 +29,7 @@ const EnergyWeb = ({ color, materialConfig }: EnergyWebProps) => {
                     Math.sin(nextAngle) * radius,
                 ];
                 const distance = Math.sqrt(
-                    Math.pow(end[0] - start[0], 2) +
-                        Math.pow(end[2] - start[2], 2)
+                    (end[0] - start[0]) ** 2 + (end[2] - start[2]) ** 2
                 );
 
                 return (

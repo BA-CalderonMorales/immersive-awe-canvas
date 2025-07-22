@@ -188,8 +188,7 @@ export class ShaderProgramBuilder {
     }
 
     build() {
-        const finalFragmentShader =
-            this.includes.join("\n") + "\n" + this.fragmentShader;
+        const finalFragmentShader = `${this.includes.join("\n")}\n${this.fragmentShader}`;
 
         return {
             vertexShader: this.vertexShader,

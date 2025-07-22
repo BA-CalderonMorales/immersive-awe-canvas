@@ -1,8 +1,8 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen } from "../test-utils";
-import ExperienceLogic from "../../components/experience/ExperienceLogic";
+import { describe, expect, it, vi } from "vitest";
 import { useBackgrounds } from "@/hooks/useBackgrounds";
 import { useDefaultGeometries } from "@/hooks/useDefaultGeometries";
+import ExperienceLogic from "../../components/experience/ExperienceLogic";
+import { render, screen } from "../test-utils";
 
 // Mock all the hooks that ExperienceLogic actually uses
 vi.mock("@/hooks/useExperience", () => ({

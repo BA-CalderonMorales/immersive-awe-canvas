@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { logEvent } from "@/lib/logger";
 
 const LIKES_STORAGE_KEY = "world-likes";

@@ -1,5 +1,5 @@
-import GUI from "lil-gui";
-import { LightConfig, SceneConfig } from "@/types/scene";
+import type GUI from "lil-gui";
+import type { LightConfig, SceneConfig } from "@/types/scene";
 
 export class LightControlsBuilder {
     private gui: GUI;

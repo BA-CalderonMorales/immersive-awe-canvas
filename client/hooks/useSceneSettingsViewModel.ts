@@ -1,9 +1,9 @@
-import { useState, useCallback, useEffect } from "react";
-import { SceneConfig } from "@/types/scene";
-import { useExperience } from "./useExperience";
-import { useDefaultGeometries } from "./useDefaultGeometries";
-import { useBackgrounds } from "./useBackgrounds";
+import { useCallback, useEffect, useState } from "react";
 import { createConfigUpdater } from "@/components/scene/controls/ConfigUpdateUtils";
+import type { SceneConfig } from "@/types/scene";
+import { useBackgrounds } from "./useBackgrounds";
+import { useDefaultGeometries } from "./useDefaultGeometries";
+import { useExperience } from "./useExperience";
 
 /**
  * ViewModel for Scene Settings Panel

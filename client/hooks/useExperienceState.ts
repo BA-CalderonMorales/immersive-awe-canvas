@@ -1,7 +1,7 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import { SceneConfig } from "@/types/scene";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { logEvent } from "@/lib/logger";
+import type { SceneConfig } from "@/types/scene";
 
 export const useExperienceState = () => {
     const [editableSceneConfig, setEditableSceneConfig] =

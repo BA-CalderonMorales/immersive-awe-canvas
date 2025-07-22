@@ -1,6 +1,6 @@
-import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { InstancedMesh, Object3D, Vector3, Color } from "three";
+import { useRef } from "react";
+import { Color, type InstancedMesh, Object3D } from "three";
 
 interface EnergyFieldProps {
     theme: "day" | "night";

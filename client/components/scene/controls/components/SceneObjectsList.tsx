@@ -1,6 +1,4 @@
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { SceneObject } from "@/types/sceneObjects";
+import type { SceneObject } from "@/types/sceneObjects";
 
 interface SceneObjectsListProps {
     objects: SceneObject[];

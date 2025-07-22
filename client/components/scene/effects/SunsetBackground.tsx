@@ -1,7 +1,7 @@
-import { useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
-import { BackgroundConfig } from "@/types/scene";
+import { useRef } from "react";
 import * as THREE from "three";
+import type { BackgroundConfig } from "@/types/scene";
 
 interface SunsetBackgroundProps {
     config: BackgroundConfig;
@@ -9,7 +9,7 @@ interface SunsetBackgroundProps {
 
 const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
     const { scene, camera } = useThree();
-    const geometryRef = useRef<THREE.SphereGeometry>(null!);
+    const _geometryRef = useRef<THREE.SphereGeometry>(null!);
     const materialRef = useRef<THREE.ShaderMaterial>(null!);
 
     const vertexShader = `

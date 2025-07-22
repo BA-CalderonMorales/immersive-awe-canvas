@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
-import { Mesh, Vector3 } from "three";
-import { ThreeEvent, useThree } from "@react-three/fiber";
-import { SceneObject } from "@/types/sceneObjects";
+import { type ThreeEvent, useThree } from "@react-three/fiber";
+import { useEffect, useRef, useState } from "react";
+import { type Mesh, Vector3 } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import type { SceneObject } from "@/types/sceneObjects";
 import ObjectGeometry from "./components/ObjectGeometry";
 import ObjectMaterial from "./components/ObjectMaterial";
 
@@ -91,6 +91,7 @@ const DynamicSceneObject = ({
         object.scale[1],
         object.scale[2],
         isDragging,
+        object.id,
     ]);
 
     const handleClick = (e: ThreeEvent<MouseEvent>) => {
@@ -98,7 +99,7 @@ const DynamicSceneObject = ({
         onSelect(); // This should call actions.selectObject(object.id)
     };
 
-    const handlePointerEnter = (e: ThreeEvent<MouseEvent>) => {
+    const handlePointerEnter = (_e: ThreeEvent<MouseEvent>) => {
         if (!isDragEnabled) {
             setIsHovered(true);
             document.body.style.cursor = "pointer";
@@ -107,7 +108,7 @@ const DynamicSceneObject = ({
         }
     };
 
-    const handlePointerLeave = (e: ThreeEvent<MouseEvent>) => {
+    const handlePointerLeave = (_e: ThreeEvent<MouseEvent>) => {
         if (!isDragEnabled && !isDragging) {
             setIsHovered(false);
             document.body.style.cursor = "auto";

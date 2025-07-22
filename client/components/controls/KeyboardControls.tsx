@@ -21,7 +21,9 @@ const useKeyPress = () => {
             keys.current[e.code] = true;
         };
 
-        const onKeyUp = (e: KeyboardEvent) => (keys.current[e.code] = false);
+        const onKeyUp = (e: KeyboardEvent) => {
+            keys.current[e.code] = false;
+        };
 
         window.addEventListener("keydown", onKeyDown);
         window.addEventListener("keyup", onKeyUp);
@@ -42,16 +44,16 @@ const KeyboardControls = () => {
     useFrame(({ camera }, delta) => {
         const moveSpeed = speed * delta;
 
-        if (keys.current["ArrowUp"] || keys.current["KeyW"]) {
+        if (keys.current.ArrowUp || keys.current.KeyW) {
             camera.translateY(moveSpeed);
         }
-        if (keys.current["ArrowDown"] || keys.current["KeyS"]) {
+        if (keys.current.ArrowDown || keys.current.KeyS) {
             camera.translateY(-moveSpeed);
         }
-        if (keys.current["ArrowLeft"] || keys.current["KeyA"]) {
+        if (keys.current.ArrowLeft || keys.current.KeyA) {
             camera.translateX(-moveSpeed);
         }
-        if (keys.current["ArrowRight"] || keys.current["KeyD"]) {
+        if (keys.current.ArrowRight || keys.current.KeyD) {
             camera.translateX(moveSpeed);
         }
     });

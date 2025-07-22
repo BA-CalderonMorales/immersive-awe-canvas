@@ -1,18 +1,11 @@
-import { useRef, useState, useMemo } from "react";
-import { MaterialConfig } from "@/types/scene";
 import { useFrame } from "@react-three/fiber";
-import {
-    Group,
-    DoubleSide,
-    InstancedMesh,
-    Matrix4,
-    Vector3,
-    Color,
-} from "three";
+import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { type Group, type InstancedMesh, Matrix4, Vector3 } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
-import DynamicMaterial from "../materials/DynamicMaterial";
+import type { MaterialConfig } from "@/types/scene";
 import EnhancedGeometryShader from "../effects/EnhancedGeometryShader";
+import DynamicMaterial from "../materials/DynamicMaterial";
 
 const MAIN_OBJECT_NAME = "main-scene-object";
 

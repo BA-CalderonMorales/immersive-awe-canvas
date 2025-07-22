@@ -1,6 +1,6 @@
-import { useRef, useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Mesh } from "three";
+import { useRef, useState } from "react";
+import type { Mesh } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 
 const MAIN_OBJECT_NAME = "main-scene-object";

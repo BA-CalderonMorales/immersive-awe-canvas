@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@database/supabase/client";
 import type { Database } from "@database/supabase/types";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useMemo, useState } from "react";
 
 type DefaultGeometry =
     Database["public"]["Tables"]["default_geometries"]["Row"];

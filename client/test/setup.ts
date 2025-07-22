@@ -1,5 +1,5 @@
 import React from "react";
-import { vi, beforeAll, afterAll } from "vitest";
+import { afterAll, beforeAll, vi } from "vitest";
 import "@testing-library/jest-dom";
 
 // Mock ResizeObserver

@@ -1,8 +1,7 @@
-import { useEffect, useRef } from "react";
 import GUI from "lil-gui";
-import { SceneObject } from "@/types/sceneObjects";
+import { useEffect, useRef } from "react";
 import { useExperience } from "@/hooks/useExperience";
-import ColorInput from "@/components/ui/color-input";
+import type { SceneObject } from "@/types/sceneObjects";
 
 interface ObjectGuiControlsProps {
     object: SceneObject;
@@ -261,23 +260,7 @@ const ObjectGuiControls = ({ object, onUpdate }: ObjectGuiControlsProps) => {
         if (guiRef.current && (guiRef.current as any).refreshGUI) {
             (guiRef.current as any).refreshGUI();
         }
-    }, [
-        object.position[0],
-        object.position[1],
-        object.position[2],
-        object.rotation[0],
-        object.rotation[1],
-        object.rotation[2],
-        object.scale[0],
-        object.scale[1],
-        object.scale[2],
-        object.color,
-        object.material.metalness,
-        object.material.roughness,
-        object.material.opacity,
-        object.material.wireframe,
-        object.material.transparent,
-    ]);
+    }, []);
 
     return (
         <div

@@ -1,6 +1,6 @@
-import { useRef } from "react";
-import { MaterialConfig } from "@/types/scene";
 import { useFrame } from "@react-three/fiber";
+import { useRef } from "react";
+import type { MaterialConfig } from "@/types/scene";
 import DynamicMaterial from "../../materials/DynamicMaterial";
 
 interface PortalEffectsProps {

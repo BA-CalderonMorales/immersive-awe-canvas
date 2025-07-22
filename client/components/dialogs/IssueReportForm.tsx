@@ -1,11 +1,11 @@
+import { Link } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-    DialogHeader,
-    DialogTitle,
     DialogDescription,
     DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@/components/ui/dialog";
-import { Link } from "lucide-react";
 
 interface IssueReportFormProps {
     onBack: () => void;

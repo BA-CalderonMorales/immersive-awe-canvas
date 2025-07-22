@@ -1,4 +1,4 @@
-import { EyeOff, Sun, Moon } from "lucide-react";
+import { EyeOff, Moon, Sun } from "lucide-react";
 import GlassButton from "./GlassButton";
 import LikeDialog from "./LikeDialog";
 

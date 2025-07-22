@@ -1,5 +1,5 @@
+import { Grid3x3, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Plus, Grid3x3 } from "lucide-react";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import { useDeviceType } from "@/hooks/use-mobile";
 

@@ -4,10 +4,10 @@
  * Following TDD principles - tests first, then implementation
  */
 
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { SceneConfig } from "@/types/scene";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import type { SceneConfig } from "@/types/scene";
 
 // Mock data factories following TDD patterns
 const getMockSceneConfig = (overrides?: Partial<SceneConfig>): SceneConfig => ({

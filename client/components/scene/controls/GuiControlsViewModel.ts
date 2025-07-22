@@ -1,15 +1,9 @@
-import { useRef, useEffect, useCallback } from "react";
-import GUI, { Controller } from "lil-gui";
-import {
-    SceneConfig,
-    MaterialConfig,
-    LightConfig,
-    BackgroundConfig,
-    SceneThemeConfig,
-} from "@/types/scene";
-import { MaterialControlsBuilder } from "./MaterialControlsBuilder";
+import GUI, { type Controller } from "lil-gui";
+import { useCallback, useEffect, useRef } from "react";
+import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
 import { BackgroundControlsBuilder } from "./BackgroundControlsBuilder";
 import { LightControlsBuilder } from "./LightControlsBuilder";
+import { MaterialControlsBuilder } from "./MaterialControlsBuilder";
 
 /**
  * ViewModel for lil-gui controls

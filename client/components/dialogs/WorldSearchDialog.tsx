@@ -1,15 +1,15 @@
-import {
-    CommandDialog,
-    CommandInput,
-    CommandList,
-    CommandEmpty,
-    CommandGroup,
-    CommandItem,
-} from "@/components/ui/command";
-import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
-import { useNavigate } from "react-router-dom";
 import type { Database } from "@database/supabase/types";
 import { Globe } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import {
+    CommandDialog,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+    CommandList,
+} from "@/components/ui/command";
+import { DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 type World = Database["public"]["Tables"]["worlds"]["Row"];

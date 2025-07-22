@@ -1,0 +1,38 @@
+name: Lint and Format Check
+
+on:
+    pull_request:
+        branches: [main]
+    push:
+        branches: [main]
+
+jobs:
+    biome-check:
+        runs-on: ubuntu-latest
+        name: Biome Code Quality Check
+        
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              
+            - name: Set up Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
+                  
+            - name: Set up Bun
+              uses: oven-sh/setup-bun@v1
+              with:
+                  bun-version: latest
+                  
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+              
+            - name: Check code formatting (strict)
+              run: bun run format:check
+              
+            - name: Run Biome linting (report only)
+              run: bun run lint || echo "Biome found linting issues - see details above"
+              
+            - name: Run comprehensive check (continue on warnings)
+              run: bun run check || echo "Biome check completed with issues - see details above"

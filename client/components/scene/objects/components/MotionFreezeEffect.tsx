@@ -1,6 +1,6 @@
-import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Object3D } from "three";
+import { useEffect, useRef } from "react";
+import type { Object3D } from "three";
 
 interface MotionFreezeEffectProps {
     isMotionFrozen?: boolean;

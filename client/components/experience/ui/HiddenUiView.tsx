@@ -1,19 +1,19 @@
+import { ChevronDown, ChevronUp, Eye, Info } from "lucide-react";
+import OnboardingHints from "@/components/home/OnboardingHints";
 import { Button } from "@/components/ui/button";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Eye, ChevronDown, ChevronUp, Info } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useFirstVisit } from "@/hooks/useFirstVisit";
-import OnboardingHints from "@/components/home/OnboardingHints";
 
 interface HiddenUiViewProps {
     onToggleUiHidden: () => void;

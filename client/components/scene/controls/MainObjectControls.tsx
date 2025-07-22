@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { SceneConfig } from "@/types/scene";
 import { useExperience } from "@/hooks/useExperience";
+import type { SceneConfig } from "@/types/scene";
 import { useGuiControlsViewModel } from "./GuiControlsViewModel";
 
 interface MainObjectControlsProps {

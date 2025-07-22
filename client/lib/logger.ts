@@ -1,6 +1,6 @@
 import { supabase } from "@database/supabase/client";
-import { sanitizeLogData } from "./security";
 import type { Json } from "@database/supabase/types";
+import { sanitizeLogData } from "./security";
 
 export const logEvent = async ({
     eventType,

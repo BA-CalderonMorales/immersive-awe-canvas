@@ -1,17 +1,17 @@
 // Ruby-like elegant background registry system
 // Replaces the massive switch statement with extensible, self-registering patterns
 
-import { BackgroundConfig, ExtraConfig } from "@/types/scene";
-import VoidBackground from "../effects/VoidBackground";
+import { Cloud, Environment, Sky, Sparkles, Stars } from "@react-three/drei";
+import { useExperience } from "@/hooks/useExperience";
+import type { BackgroundConfig, ExtraConfig } from "@/types/scene";
+import CinematicBackground from "../effects/CinematicBackground";
+import EnhancedAuroraBackground from "../effects/EnhancedAuroraBackground";
 import GradientBackground from "../effects/GradientBackground";
+import NebulaBackground from "../effects/NebulaBackground";
 import NoiseBackground from "../effects/NoiseBackground";
 import PlasmaBackground from "../effects/PlasmaBackground";
-import AuroraBackground from "../effects/AuroraBackground";
 import SunsetBackground from "../effects/SunsetBackground";
-import NebulaBackground from "../effects/NebulaBackground";
-import EnhancedAuroraBackground from "../effects/EnhancedAuroraBackground";
-import { Sky, Stars, Sparkles, Cloud, Environment } from "@react-three/drei";
-import { useExperience } from "@/hooks/useExperience";
+import VoidBackground from "../effects/VoidBackground";
 
 interface BackgroundRendererProps {
     background: BackgroundConfig;
@@ -268,6 +268,16 @@ export const BackgroundRegistry = new BackgroundRegistryClass()
     .register("void", {
         render: ({ theme }) => <VoidBackground theme={theme || "night"} />,
         description: "Deep space void",
+    })
+
+    .register("cinematic", {
+        render: ({ background }) => (
+            <>
+                <color attach="background" args={["#000008"]} />
+                <CinematicBackground config={background} />
+            </>
+        ),
+        description: "Epic cinematic atmosphere with particles and energy",
     })
 
     .register("fog", {

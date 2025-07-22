@@ -1,6 +1,6 @@
-import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Mesh, Color } from "three";
+import { useRef } from "react";
+import type { Mesh } from "three";
 
 interface ObjectEffectsProps {
     isSelected: boolean;

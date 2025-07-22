@@ -1,4 +1,4 @@
-import { SceneConfig } from "@/types/scene";
+import type { SceneConfig } from "@/types/scene";
 
 export const createConfigUpdater = (
     sceneConfig: SceneConfig,

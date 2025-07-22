@@ -1,7 +1,7 @@
-import { Suspense } from "react";
+import { Cloud, Stars } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Stars, Cloud } from "@react-three/drei";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
+import { Bloom, EffectComposer } from "@react-three/postprocessing";
+import { Suspense } from "react";
 
 const SceneContent = ({ theme }: { theme: "day" | "night" }) => {
     return (

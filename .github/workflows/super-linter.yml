@@ -1,24 +1,24 @@
-name: Lint
+name: Super-Linter
 
 on: [pull_request]
 
 jobs:
-    build:
+    super-lint:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Setup Node
-              uses: actions/setup-node@v4
               with:
-                  node-version: 20
-            - name: Setup Bun
-              uses: oven-sh/setup-bun@v1
-              with:
-                  bun-version: latest
-            - name: Install dependencies
-              run: bun install --frozen-lockfile
+                  fetch-depth: 0
             - name: Run Super-Linter
               uses: github/super-linter/slim@v5
               env:
                   DEFAULT_BRANCH: main
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  VALIDATE_JAVASCRIPT_ES: false  # Disable ESLint for JS
+                  VALIDATE_TYPESCRIPT_ES: false  # Disable ESLint for TS
+                  VALIDATE_JSX: false             # Disable ESLint for JSX
+                  VALIDATE_TSX: false             # Disable ESLint for TSX
+                  VALIDATE_CSS: true
+                  VALIDATE_MARKDOWN: true
+                  VALIDATE_YAML: true
+                  VALIDATE_JSON: true

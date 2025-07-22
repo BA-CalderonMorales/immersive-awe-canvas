@@ -1,9 +1,9 @@
-import GUI from "lil-gui";
-import { MaterialConfig, SceneConfig } from "@/types/scene";
-import { CommonMaterialControls } from "./material/CommonMaterialControls";
-import { StandardPhysicalMaterialControls } from "./material/StandardPhysicalMaterialControls";
-import { SpecializedMaterialControls } from "./material/SpecializedMaterialControls";
+import type GUI from "lil-gui";
+import type { MaterialConfig, SceneConfig } from "@/types/scene";
 import { AnimationMaterialControls } from "./material/AnimationMaterialControls";
+import { CommonMaterialControls } from "./material/CommonMaterialControls";
+import { SpecializedMaterialControls } from "./material/SpecializedMaterialControls";
+import { StandardPhysicalMaterialControls } from "./material/StandardPhysicalMaterialControls";
 
 export class MaterialControlsBuilder {
     private parentFolder: GUI;

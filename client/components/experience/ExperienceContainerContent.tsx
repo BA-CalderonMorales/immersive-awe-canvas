@@ -1,10 +1,9 @@
-import { motion, AnimatePresence } from "framer-motion";
-import { isSceneConfig } from "@/lib/typeguards";
-import type { SceneConfig, BackgroundConfig } from "@/types";
-import ExperienceTransitions from "./ExperienceTransitions";
-import ExperienceLayout from "./ExperienceLayout";
-import ExperienceUI from "./ExperienceUI";
+import { AnimatePresence, motion } from "framer-motion";
+import type { BackgroundConfig, SceneConfig } from "@/types";
 import ExperienceHotkeys from "./ExperienceHotkeys";
+import ExperienceLayout from "./ExperienceLayout";
+import ExperienceTransitions from "./ExperienceTransitions";
+import ExperienceUI from "./ExperienceUI";
 import LoadingOverlay from "./LoadingOverlay";
 
 interface ExperienceContainerContentProps {

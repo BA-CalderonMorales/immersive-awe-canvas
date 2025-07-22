@@ -1,9 +1,9 @@
-import { useRef, useState, useMemo } from "react";
-import { MaterialConfig } from "@/types/scene";
 import { useFrame } from "@react-three/fiber";
-import { Group, TorusKnotGeometry } from "three";
+import { useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { type Group, TorusKnotGeometry } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import type { MaterialConfig } from "@/types/scene";
 import EnhancedGeometryShader from "../effects/EnhancedGeometryShader";
 
 const MAIN_OBJECT_NAME = "main-scene-object";

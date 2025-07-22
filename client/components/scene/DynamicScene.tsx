@@ -1,9 +1,9 @@
-import { useMemo, useRef, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import { SceneConfig, BackgroundConfig } from "@/types/scene";
-import { motion, AnimatePresence } from "framer-motion";
+import { Canvas } from "@react-three/fiber";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useMemo, useRef } from "react";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import type { BackgroundConfig, SceneConfig } from "@/types/scene";
 import DynamicWorld from "./DynamicWorld";
 
 interface DynamicSceneProps {
@@ -115,7 +115,7 @@ const DynamicScene = ({
         };
 
         return sceneConfig;
-    }, [editableSceneConfig, currentBackground, currentGeometry, theme]);
+    }, [editableSceneConfig, currentBackground, currentGeometry]);
 
     return (
         <AnimatePresence mode="wait">

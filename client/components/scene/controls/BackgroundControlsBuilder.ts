@@ -1,8 +1,8 @@
-import GUI from "lil-gui";
-import {
+import type GUI from "lil-gui";
+import type {
     BackgroundConfig,
-    SceneConfig,
     EnvironmentPreset,
+    SceneConfig,
 } from "@/types/scene";
 
 export class BackgroundControlsBuilder {

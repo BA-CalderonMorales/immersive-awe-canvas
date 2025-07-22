@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import { useKeyboardShortcuts } from "@/context/KeyboardShortcutsContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface KeyboardShortcutsOverlayProps {
     theme: "day" | "night";

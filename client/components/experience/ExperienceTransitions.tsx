@@ -1,6 +1,6 @@
 import TransitionSplash from "@/components/TransitionSplash";
-import WorldTransition from "@/components/transition/WorldTransition";
 import BlurTransition from "@/components/transition/BlurTransition";
+import WorldTransition from "@/components/transition/WorldTransition";
 
 interface ExperienceTransitionsProps {
     showEntryTransition: boolean;

@@ -1,6 +1,6 @@
 import { useIsMobile } from "@/hooks/use-mobile";
+import type { SceneConfig } from "@/types/scene";
 import ExperienceContainerContent from "./ExperienceContainerContent";
-import { SceneConfig } from "@/types/scene";
 
 interface ExperienceContainerProps {
     worldData: any;

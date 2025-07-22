@@ -1,4 +1,4 @@
-import { BackgroundConfig, ExtraConfig } from "@/types/scene";
+import type { BackgroundConfig, ExtraConfig } from "@/types/scene";
 import { BackgroundRenderer } from "./backgrounds/BackgroundRegistry";
 
 interface DynamicBackgroundProps {

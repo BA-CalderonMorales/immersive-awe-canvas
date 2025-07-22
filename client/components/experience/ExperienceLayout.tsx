@@ -3,9 +3,9 @@ import {
     ResizablePanel,
     ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { SceneConfig } from "@/types/scene";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useExperience } from "@/hooks/useExperience";
+import type { SceneConfig } from "@/types/scene";
 import DynamicScene from "../scene/DynamicScene";
 import SceneSettingsPanel from "./SceneSettingsPanel";
 
@@ -27,10 +27,10 @@ interface ExperienceLayoutProps {
 
 const ExperienceLayout = ({
     editableSceneConfig,
-    isTransitioning,
-    currentWorldIndex,
-    isObjectLocked,
-    onToggleObjectLock,
+    isTransitioning: _isTransitioning,
+    currentWorldIndex: _currentWorldIndex,
+    isObjectLocked: _isObjectLocked,
+    onToggleObjectLock: _onToggleObjectLock,
     isSettingsOpen,
     isMobile,
     onUpdateSceneConfig,
@@ -63,7 +63,7 @@ const ExperienceLayout = ({
                         currentGeometry={currentGeometry}
                         editableSceneConfig={editableSceneConfig}
                         theme={theme}
-                        isLocked={isObjectLocked}
+                        isLocked={_isObjectLocked}
                     />
                 </div>
             </SceneObjectsProvider>
@@ -91,7 +91,7 @@ const ExperienceLayout = ({
                             currentGeometry={currentGeometry}
                             editableSceneConfig={editableSceneConfig}
                             theme={theme}
-                            isLocked={isObjectLocked}
+                            isLocked={_isObjectLocked}
                             isDragEnabled={isDragEnabled}
                             isMotionFrozen={isMotionFrozen}
                         />
@@ -112,10 +112,10 @@ const ExperienceLayout = ({
                                 isMotionFrozen={isMotionFrozen}
                                 onToggleMotion={onToggleMotion}
                                 onJumpToBackground={
-                                    currentBackground ? index => {} : undefined
+                                    currentBackground ? _index => {} : undefined
                                 }
                                 onJumpToGeometry={
-                                    currentGeometry ? index => {} : undefined
+                                    currentGeometry ? _index => {} : undefined
                                 }
                             />
                         </ResizablePanel>

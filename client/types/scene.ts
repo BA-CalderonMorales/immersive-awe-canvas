@@ -33,7 +33,8 @@ export type BackgroundConfig = {
         | "void"
         | "aurora"
         | "sunset"
-        | "nebula";
+        | "nebula"
+        | "cinematic";
     // Sky properties
     sunPosition?: [number, number, number];
 
@@ -95,6 +96,12 @@ export type BackgroundConfig = {
     // Environment properties
     preset?: EnvironmentPreset;
     blur?: number;
+
+    // Cinematic properties
+    complexity?: number;
+    colorPrimary?: string;
+    colorSecondary?: string;
+    colorAccent?: string;
 };
 
 export type ExtraConfig = {

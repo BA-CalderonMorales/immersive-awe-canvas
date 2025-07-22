@@ -1,8 +1,8 @@
-import WorldContainer from "@/components/WorldContainer";
+import { useState } from "react";
 import KeyboardControls from "@/components/controls/KeyboardControls";
 import DynamicWorld from "@/components/scene/DynamicWorld";
-import { SceneConfig } from "@/types/scene";
-import { useState } from "react";
+import WorldContainer from "@/components/WorldContainer";
+import type { SceneConfig } from "@/types/scene";
 
 interface WorldViewProps {
     sceneConfig: SceneConfig;
@@ -21,7 +21,7 @@ const WorldView = ({
     onToggleLock,
     isDragEnabled,
 }: WorldViewProps) => {
-    const [isDragging, setIsDragging] = useState(false);
+    const [_isDragging, setIsDragging] = useState(false);
 
     const handleDragStateChange = (dragging: boolean) => {
         setIsDragging(dragging);

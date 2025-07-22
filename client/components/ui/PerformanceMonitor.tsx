@@ -1,8 +1,8 @@
-import { useRef, useState, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Cpu, Eye, Monitor, Zap } from "lucide-react";
+import { useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Monitor, Zap, Eye, Cpu } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PerformanceMetrics {
     fps: number;

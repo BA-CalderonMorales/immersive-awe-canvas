@@ -1,8 +1,8 @@
-import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { BackgroundConfig } from "@/types/scene";
+import { useRef } from "react";
 import * as THREE from "three";
-import { ShaderLibrary, RenderLayers } from "@/lib/shaderUtils";
+import { RenderLayers } from "@/lib/shaderUtils";
+import type { BackgroundConfig } from "@/types/scene";
 
 interface EnhancedAuroraBackgroundProps {
     config: BackgroundConfig;
@@ -52,12 +52,72 @@ const EnhancedAuroraBackground = ({
     varying float vElevation;
     varying float vDistanceFromCenter;
     
-    ${ShaderLibrary.noise.hash3}
-    ${ShaderLibrary.noise.simplex3d}
-    ${ShaderLibrary.noise.fbmDefault}
-    ${ShaderLibrary.atmospheric.rayleighScattering}
-    ${ShaderLibrary.atmospheric.miePhase}
-    ${ShaderLibrary.color.hsv2rgb}
+    precision mediump float;
+    
+    // Hash function for randomness
+    vec3 hash3(vec3 p) {
+      p = vec3(dot(p, vec3(127.1, 311.7, 74.7)),
+               dot(p, vec3(269.5, 183.3, 246.1)),
+               dot(p, vec3(113.5, 271.9, 124.6)));
+      return -1.0 + 2.0 * fract(sin(p) * 43758.5453123);
+    }
+    
+    // 3D Simplex noise
+    float simplex3d(vec3 p) {
+      const float K1 = 0.333333333;
+      const float K2 = 0.166666667;
+      
+      vec3 i = floor(p + (p.x + p.y + p.z) * K1);
+      vec3 d0 = p - (i - (i.x + i.y + i.z) * K2);
+      
+      vec3 e = step(vec3(0.0), d0 - d0.yzx);
+      vec3 i1 = e * (1.0 - e.zxy);
+      vec3 i2 = 1.0 - e.zxy * (1.0 - e);
+      
+      vec3 d1 = d0 - (i1 - 1.0 * K2);
+      vec3 d2 = d0 - (i2 - 2.0 * K2);
+      vec3 d3 = d0 - (1.0 - 3.0 * K2);
+      
+      vec4 h = max(0.6 - vec4(dot(d0, d0), dot(d1, d1), dot(d2, d2), dot(d3, d3)), 0.0);
+      vec4 n = h * h * h * h * vec4(dot(d0, hash3(i)), dot(d1, hash3(i + i1)),
+                                    dot(d2, hash3(i + i2)), dot(d3, hash3(i + 1.0)));
+      return dot(vec4(31.316), n);
+    }
+    
+    // FBM with default parameters
+    float fbm(vec3 p, int octaves) {
+      float value = 0.0;
+      float amplitude = 0.5;
+      float frequency = 1.0;
+      
+      for(int i = 0; i < 8; i++) {
+        if(i >= octaves) break;
+        value += amplitude * simplex3d(p * frequency);
+        frequency *= 2.02;
+        amplitude *= 0.485;
+      }
+      return value;
+    }
+    
+    // Rayleigh scattering for realistic atmosphere
+    vec3 rayleighScattering(float cosTheta, vec3 wavelength) {
+      const float PI = 3.14159265359;
+      return (3.0 / (16.0 * PI)) * (1.0 + cosTheta * cosTheta) / pow(wavelength, vec3(4.0));
+    }
+    
+    // Mie scattering with Henyey-Greenstein phase function
+    float miePhase(float cosTheta, float g) {
+      const float PI = 3.14159265359;
+      float g2 = g * g;
+      return (1.0 - g2) / (4.0 * PI * pow(1.0 + g2 - 2.0 * g * cosTheta, 1.5));
+    }
+    
+    // HSV to RGB conversion
+    vec3 hsv2rgb(vec3 c) {
+      vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+      vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+      return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+    }
     
     // Enhanced magnetic field simulation with dipole effects
     float magneticFieldDipole(vec3 pos, float time) {

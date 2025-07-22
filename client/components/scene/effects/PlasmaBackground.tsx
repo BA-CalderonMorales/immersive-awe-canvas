@@ -1,7 +1,7 @@
-import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { BackgroundConfig } from "@/types/scene";
+import { useRef } from "react";
 import * as THREE from "three";
+import type { BackgroundConfig } from "@/types/scene";
 
 interface PlasmaBackgroundProps {
     config: BackgroundConfig;

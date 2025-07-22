@@ -1,5 +1,9 @@
-import { SceneConfig, BackgroundConfig, MaterialConfig } from "@/types/scene";
 import type { Database } from "@database/supabase/types";
+import type {
+    BackgroundConfig,
+    MaterialConfig,
+    SceneConfig,
+} from "@/types/scene";
 
 type DefaultGeometry =
     Database["public"]["Tables"]["default_geometries"]["Row"];
@@ -16,7 +20,17 @@ export const createSceneConfigFromGeometry = (
     };
 
     const backgroundConfig =
-        (background?.background_config as BackgroundConfig) || { type: "void" };
+        (background?.background_config as BackgroundConfig) || { 
+            type: geometry.geometry_type === "WobbleField" ? "cinematic" : "void",
+            ...(geometry.geometry_type === "WobbleField" && {
+                complexity: 4.0,
+                brightness: 1.5,
+                colorPrimary: "#4a90ff",
+                colorSecondary: "#ff6b6b", 
+                colorAccent: "#ffd93d",
+                speed: 1.2
+            })
+        };
 
     return {
         type: geometry.geometry_type as SceneConfig["type"],

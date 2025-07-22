@@ -1,4 +1,4 @@
-import { SceneObject } from "@/types/sceneObjects";
+import type { SceneObject } from "@/types/sceneObjects";
 
 interface ObjectMaterialProps {
     material: SceneObject["material"];

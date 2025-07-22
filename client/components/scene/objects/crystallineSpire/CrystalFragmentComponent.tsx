@@ -1,8 +1,8 @@
-import { MaterialConfig } from "@/types/scene";
+import type { Group } from "three";
 import { useExperience } from "@/hooks/useExperience";
+import type { MaterialConfig } from "@/types/scene";
 import DynamicMaterial from "../../materials/DynamicMaterial";
-import { CrystalFragment } from "./useCrystalFragments";
-import { Group } from "three";
+import type { CrystalFragment } from "./useCrystalFragments";
 
 interface CrystalFragmentProps {
     fragment: CrystalFragment;

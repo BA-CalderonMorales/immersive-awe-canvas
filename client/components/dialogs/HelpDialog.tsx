@@ -1,12 +1,6 @@
-import { useState, useEffect } from "react";
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from "@/components/ui/dialog";
+import { cn } from "@utils/utils";
+import { Github, LifeBuoy, Move } from "lucide-react";
+import { useEffect, useState } from "react";
 import {
     Accordion,
     AccordionContent,
@@ -14,14 +8,20 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
-import { Github, LifeBuoy, Move } from "lucide-react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
     appVersion,
     getDynamicVersionInfo,
     type VersionInfo,
 } from "@/lib/version";
-import { cn } from "@utils/utils";
 import IssueReportForm from "./IssueReportForm";
 
 interface HelpDialogProps {
@@ -277,7 +277,7 @@ const HelpDialog = ({ isOpen, onOpenChange }: HelpDialogProps) => {
                                 )}
                             </div>
                             <div className="flex gap-2">
-                                {versionInfo && versionInfo.url && (
+                                {versionInfo?.url && (
                                     <Button
                                         variant="ghost"
                                         size="sm"

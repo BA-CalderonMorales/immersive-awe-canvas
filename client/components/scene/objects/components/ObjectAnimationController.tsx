@@ -1,7 +1,7 @@
-import { useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import { Mesh } from "three";
-import { SceneObject } from "@/types/sceneObjects";
+import { useEffect } from "react";
+import type { Mesh } from "three";
+import type { SceneObject } from "@/types/sceneObjects";
 
 interface ObjectAnimationControllerProps {
     meshRef: React.MutableRefObject<Mesh>;
@@ -27,7 +27,13 @@ const ObjectAnimationController = ({
             meshRef.current.rotation.set(...object.rotation);
             meshRef.current.scale.set(...object.scale);
         }
-    }, [object.position, object.rotation, object.scale, isDragging]);
+    }, [
+        object.position,
+        object.rotation,
+        object.scale,
+        isDragging,
+        meshRef.current,
+    ]);
 
     useFrame(state => {
         if (!meshRef.current) return;

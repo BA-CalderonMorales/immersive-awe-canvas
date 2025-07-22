@@ -1,9 +1,22 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export const useFirstVisit = () => {
     const [isFirstVisit, setIsFirstVisit] = useState(false);
     const [showOnboardingHints, setShowOnboardingHints] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+
+    const handleFirstInteraction = () => {
+        setShowOnboardingHints(false);
+        setIsFirstVisit(false);
+
+        if (typeof window !== "undefined") {
+            try {
+                localStorage.setItem("has-visited-immersive-canvas", "true");
+            } catch (error) {
+                console.warn("Could not save first visit state:", error);
+            }
+        }
+    };
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -63,20 +76,7 @@ export const useFirstVisit = () => {
                 handleCanvasInteraction
             );
         };
-    }, [showOnboardingHints]);
-
-    const handleFirstInteraction = () => {
-        setShowOnboardingHints(false);
-        setIsFirstVisit(false);
-
-        if (typeof window !== "undefined") {
-            try {
-                localStorage.setItem("has-visited-immersive-canvas", "true");
-            } catch (error) {
-                console.warn("Could not save first visit state:", error);
-            }
-        }
-    };
+    }, [showOnboardingHints, handleFirstInteraction]);
 
     return {
         isFirstVisit,

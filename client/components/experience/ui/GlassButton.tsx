@@ -1,11 +1,11 @@
+import { cn } from "@utils/utils";
+import type { LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
     Tooltip,
     TooltipContent,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { LucideIcon } from "lucide-react";
-import { cn } from "@utils/utils";
 
 interface GlassButtonProps {
     icon: LucideIcon;

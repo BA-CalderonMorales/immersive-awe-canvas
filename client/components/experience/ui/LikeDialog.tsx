@@ -1,4 +1,4 @@
-import { Heart, Coffee, Link, Star } from "lucide-react";
+import { Coffee, Heart, Link, Star } from "lucide-react";
 import {
     AlertDialog,
     AlertDialogAction,

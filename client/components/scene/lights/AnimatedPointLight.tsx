@@ -1,6 +1,6 @@
-import { useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { PointLight } from "three";
+import { useRef } from "react";
+import type { PointLight } from "three";
 
 interface AnimatedPointLightProps {
     animationType: "pulsing" | "flicker" | "swirl" | "slowPulse";

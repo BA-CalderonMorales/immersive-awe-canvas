@@ -1,11 +1,11 @@
-import ObjectManager from "./ObjectManager";
-import DynamicObject from "./DynamicObject";
-import DynamicLights from "./DynamicLights";
-import DynamicBackground from "./DynamicBackground";
-import { SceneConfig } from "@/types/scene";
+import type { ThreeEvent } from "@react-three/fiber";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import { useExperience } from "@/hooks/useExperience";
-import { ThreeEvent } from "@react-three/fiber";
+import type { SceneConfig } from "@/types/scene";
+import DynamicBackground from "./DynamicBackground";
+import DynamicLights from "./DynamicLights";
+import DynamicObject from "./DynamicObject";
+import ObjectManager from "./ObjectManager";
 
 interface DynamicWorldProps {
     sceneConfig: SceneConfig;
@@ -30,7 +30,7 @@ const DynamicWorld = ({
     const themeConfig = theme === "day" ? sceneConfig.day : sceneConfig.night;
 
     // Handle clicking on empty space to deselect objects when in drag mode
-    const handleSceneClick = (e: ThreeEvent<MouseEvent>) => {
+    const _handleSceneClick = (e: ThreeEvent<MouseEvent>) => {
         // Only deselect if in drag mode and clicking on background (not on any mesh/object)
         if (
             actualDragEnabled &&

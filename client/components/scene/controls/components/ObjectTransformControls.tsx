@@ -1,6 +1,6 @@
+import { Palette, RotateCcw, Scale, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RotateCcw, Scale, Palette, Trash2 } from "lucide-react";
-import { SceneObject } from "@/types/sceneObjects";
+import type { SceneObject } from "@/types/sceneObjects";
 
 interface ObjectTransformControlsProps {
     selectedObject: SceneObject;

@@ -1,5 +1,5 @@
-import { Label } from "@/components/ui/label";
 import { cn } from "@utils/utils";
+import { Label } from "@/components/ui/label";
 
 interface ColorInputProps {
     label: string;

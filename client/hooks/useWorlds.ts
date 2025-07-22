@@ -1,7 +1,7 @@
-import { useState, useMemo, useCallback, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@database/supabase/client";
 import type { Database } from "@database/supabase/types";
+import { useQuery } from "@tanstack/react-query";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type World = Database["public"]["Tables"]["worlds"]["Row"];
 
@@ -70,7 +70,7 @@ export const useWorlds = (initialSlug?: string) => {
             // If no initial slug provided, default to first world
             setCurrentWorldIndex(0);
         }
-    }, [initialWorld, worlds, initialSlug]);
+    }, [initialWorld, worlds, initialSlug, currentWorldIndex]);
 
     const worldData = useMemo(() => {
         if (!worlds || worlds.length === 0) return null;

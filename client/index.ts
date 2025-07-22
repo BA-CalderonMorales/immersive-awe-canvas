@@ -14,12 +14,10 @@ export { default as App } from "./App";
 
 // Components
 export * from "./components";
-
-// Hooks
-export * from "./hooks";
-
 // Context
 export * from "./context";
+// Hooks
+export * from "./hooks";
 
 // Pages
 export * from "./pages";

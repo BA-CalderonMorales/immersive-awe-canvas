@@ -13,17 +13,17 @@
  * Drag mode only adds: green wireframes + enhanced behavior, but doesn't break normal gizmo
  */
 
+import { render, waitFor } from "@testing-library/react";
 import React from "react";
-import { render, fireEvent, waitFor } from "@testing-library/react";
-import { describe, it, expect, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
+import GizmoControls from "@/components/scene/controls/GizmoControls";
+import DynamicSceneObject from "@/components/scene/objects/DynamicSceneObject";
+import TorusKnotObject from "@/components/scene/objects/TorusKnotObject";
 import {
     SceneObjectsProvider,
     useSceneObjectsContext,
 } from "@/context/SceneObjectsContext";
-import GizmoControls from "@/components/scene/controls/GizmoControls";
-import DynamicSceneObject from "@/components/scene/objects/DynamicSceneObject";
-import TorusKnotObject from "@/components/scene/objects/TorusKnotObject";
-import { useIsMobile, useDeviceType } from "@/hooks/use-mobile";
+import { useDeviceType, useIsMobile } from "@/hooks/use-mobile";
 
 // Mock Three.js and react-three-fiber
 const mockScene = {
@@ -140,7 +140,7 @@ const TestWrapper = ({
             if (selectedObjectId) {
                 actions.selectObject(selectedObjectId);
             }
-        }, [selectedObjectId]); // Remove actions from dependency array to prevent infinite loop
+        }, [selectedObjectId, actions.selectObject]); // Remove actions from dependency array to prevent infinite loop
 
         return <>{children}</>;
     };

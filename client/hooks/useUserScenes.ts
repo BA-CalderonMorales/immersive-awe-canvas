@@ -3,14 +3,14 @@
  * Currently uses localStorage, ready for database persistence
  */
 
-import { useState, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
-import {
+import type {
     UserScene,
     UserSceneCreateInput,
-    UserSceneUpdateInput,
-    UserScenesState,
     UserScenesActions,
+    UserScenesState,
+    UserSceneUpdateInput,
 } from "@/types/userScenes";
 
 const STORAGE_KEY = "immersive-awe-user-scenes";

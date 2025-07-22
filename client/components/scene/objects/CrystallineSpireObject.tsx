@@ -1,8 +1,8 @@
-import { useRef, useState } from "react";
-import { MaterialConfig } from "@/types/scene";
 import { useFrame } from "@react-three/fiber";
-import { Group, DoubleSide } from "three";
+import { useRef, useState } from "react";
+import type { Group } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import type { MaterialConfig } from "@/types/scene";
 import DynamicMaterial from "../materials/DynamicMaterial";
 
 const MAIN_OBJECT_NAME = "main-scene-object";

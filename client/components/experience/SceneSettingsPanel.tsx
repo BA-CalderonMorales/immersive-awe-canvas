@@ -1,49 +1,24 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-    CardDescription,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import {
-    Settings,
-    Info,
-    Shapes,
     ChevronsUpDown,
-    Palette,
-    Play,
-    Pause,
-    Save,
+    Info,
     Library,
+    Palette,
+    Pause,
+    Play,
     RotateCcw,
+    Save,
+    Settings,
+    Shapes,
 } from "lucide-react";
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
-import { SceneConfig } from "@/types/scene";
-import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
-import SceneObjectsList from "../scene/controls/components/SceneObjectsList";
-import ObjectAddPanel from "../scene/controls/components/ObjectAddPanel";
-import ObjectGuiControls from "../scene/controls/components/ObjectGuiControls";
-import MainObjectControls from "../scene/controls/MainObjectControls";
-import SaveSceneDialog from "../scene/controls/components/SaveSceneDialog";
-import UserScenesManager from "../scene/controls/components/UserScenesManager";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { useExperience } from "@/hooks/useExperience";
-import { useDeviceType } from "@/hooks/use-mobile";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
     Select,
     SelectContent,
@@ -51,7 +26,21 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
+import { useDeviceType } from "@/hooks/use-mobile";
+import { useExperience } from "@/hooks/useExperience";
 import { useSettingsPanelViewModel } from "@/hooks/useSettingsPanelViewModel";
+import type { SceneConfig } from "@/types/scene";
+import ObjectAddPanel from "../scene/controls/components/ObjectAddPanel";
+import ObjectGuiControls from "../scene/controls/components/ObjectGuiControls";
+import SaveSceneDialog from "../scene/controls/components/SaveSceneDialog";
+import SceneObjectsList from "../scene/controls/components/SceneObjectsList";
+import UserScenesManager from "../scene/controls/components/UserScenesManager";
 
 interface SceneSettingsPanelProps {
     sceneConfig: SceneConfig;
@@ -73,7 +62,7 @@ const SceneSettingsPanel = ({
     const { objects, selectedObjectId, actions } = useSceneObjectsContext();
     const selectedObject = objects.find(obj => obj.id === selectedObjectId);
     const [isAddingObject, setIsAddingObject] = useState(false);
-    const [activeTab, setActiveTab] = useState("main");
+    const [_activeTab, _setActiveTab] = useState("main");
     const { theme } = useExperience();
     const { isMobile, isTablet, isDesktop } = useDeviceType();
 

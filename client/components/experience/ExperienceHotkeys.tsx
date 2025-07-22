@@ -1,7 +1,7 @@
-import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
 import { useEffect } from "react";
 import HelpDialog from "@/components/dialogs/HelpDialog";
 import WorldSearchDialog from "@/components/dialogs/WorldSearchDialog";
+import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
 
 interface ExperienceHotkeysProps {
     toggleTheme: () => void;

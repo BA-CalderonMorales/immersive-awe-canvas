@@ -1,9 +1,8 @@
+import type { Database } from "@database/supabase/types";
 import { useEffect } from "react";
-import { isSceneConfig } from "@/lib/typeguards";
-import { SceneConfig } from "@/types/scene";
 import { logEvent } from "@/lib/logger";
 import { createSceneConfigFromGeometry } from "@/lib/sceneConfigUtils";
-import type { Database } from "@database/supabase/types";
+import type { SceneConfig } from "@/types/scene";
 
 type DefaultGeometry =
     Database["public"]["Tables"]["default_geometries"]["Row"];

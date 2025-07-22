@@ -1,7 +1,7 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { renderHook, waitFor, act } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { act, renderHook, waitFor } from "@testing-library/react";
 import React from "react";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Clear the global mock for this test file
 vi.unmock("@/hooks/useWorlds");
@@ -60,7 +60,7 @@ vi.mock("@database/supabase/client", () => ({
                     }
                     if (field === "slug") {
                         return {
-                            eq: vi.fn((field2: string, value2: unknown) => {
+                            eq: vi.fn((field2: string, _value2: unknown) => {
                                 if (field2 === "is_featured") {
                                     return {
                                         single: vi.fn(() => {

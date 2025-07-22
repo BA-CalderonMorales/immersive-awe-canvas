@@ -1,5 +1,5 @@
-import { SceneConfig, SceneThemeConfig } from "@/types/scene";
-import { Json } from "@database/supabase/types";
+import type { Json } from "@database/supabase/types";
+import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
 
 export function isSceneThemeConfig(
     config: Json | null

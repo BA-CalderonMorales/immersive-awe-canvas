@@ -155,7 +155,6 @@ export const useKeyboardEventHandler = ({
             onCopyCode,
             onToggleUi,
             onToggleLock,
-            onToggleShortcuts,
         ]
     );
 

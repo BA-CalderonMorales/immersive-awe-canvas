@@ -101,18 +101,14 @@ const EnhancedKeyboardControls = () => {
         const inputVector = new THREE.Vector3();
 
         // WASD + Arrow keys for movement
-        if (keys.current["ArrowUp"] || keys.current["KeyW"]) inputVector.z -= 1;
-        if (keys.current["ArrowDown"] || keys.current["KeyS"])
-            inputVector.z += 1;
-        if (keys.current["ArrowLeft"] || keys.current["KeyA"])
-            inputVector.x -= 1;
-        if (keys.current["ArrowRight"] || keys.current["KeyD"])
-            inputVector.x += 1;
+        if (keys.current.ArrowUp || keys.current.KeyW) inputVector.z -= 1;
+        if (keys.current.ArrowDown || keys.current.KeyS) inputVector.z += 1;
+        if (keys.current.ArrowLeft || keys.current.KeyA) inputVector.x -= 1;
+        if (keys.current.ArrowRight || keys.current.KeyD) inputVector.x += 1;
 
         // Vertical movement
-        if (keys.current["Space"]) inputVector.y += 1;
-        if (keys.current["KeyC"] || keys.current["ControlLeft"])
-            inputVector.y -= 1;
+        if (keys.current.Space) inputVector.y += 1;
+        if (keys.current.KeyC || keys.current.ControlLeft) inputVector.y -= 1;
 
         // Normalize input to prevent faster diagonal movement
         if (inputVector.length() > 0) {
@@ -121,7 +117,7 @@ const EnhancedKeyboardControls = () => {
 
         // Speed boost with Shift
         const speedMultiplier =
-            keys.current["ShiftLeft"] || keys.current["ShiftRight"]
+            keys.current.ShiftLeft || keys.current.ShiftRight
                 ? settings.boostMultiplier
                 : 1;
 
@@ -133,7 +129,7 @@ const EnhancedKeyboardControls = () => {
 
         // Apply damping when no input
         if (inputVector.length() === 0) {
-            velocity.multiplyScalar(Math.pow(settings.damping, deltaTime * 60));
+            velocity.multiplyScalar(settings.damping ** (deltaTime * 60));
         }
 
         // Transform movement to camera's local space for intuitive controls

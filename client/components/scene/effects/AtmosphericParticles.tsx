@@ -1,6 +1,6 @@
-import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { InstancedMesh, Object3D, Vector3, Color } from "three";
+import { useMemo, useRef } from "react";
+import { Color, type InstancedMesh, Object3D, Vector3 } from "three";
 
 interface AtmosphericParticlesProps {
     theme: "day" | "night";

@@ -1,10 +1,9 @@
-import { useRef, useMemo } from "react";
-import { MaterialConfig } from "@/types/scene";
-import { useFrame, useThree } from "@react-three/fiber";
-import { InstancedMesh, Object3D, Matrix4, Color, Vector3 } from "three";
 import { MeshWobbleMaterial } from "@react-three/drei";
-import DynamicMaterial from "../../materials/DynamicMaterial";
-import { HARMONY_MULTIPLIER, createRickGeometry } from "./fieldGenerator";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useMemo, useRef } from "react";
+import { Color, type InstancedMesh, Object3D } from "three";
+import type { MaterialConfig } from "@/types/scene";
+import { createRickGeometry, HARMONY_MULTIPLIER } from "./fieldGenerator";
 
 interface InstancedFieldElementsProps {
     color: string;
@@ -35,7 +34,7 @@ const InstancedFieldElements = ({
     const getWobbleDistortion = (
         position: number[],
         time: number,
-        objectIndex: number
+        _objectIndex: number
     ) => {
         const [x, y, z] = position;
         const distance = Math.sqrt(x * x + y * y + z * z);
@@ -104,7 +103,7 @@ const InstancedFieldElements = ({
                     fieldData.types[fieldIndex] ===
                     instancedMeshes[meshIndex].type
                 ) {
-                    const [x, y, z] = position;
+                    const [_x, _y, _z] = position;
                     const [sx, sy, sz] = fieldData.scales[fieldIndex];
                     const [rx, ry, rz] = fieldData.rotations[fieldIndex];
                     const meaning = fieldData.meanings[fieldIndex];

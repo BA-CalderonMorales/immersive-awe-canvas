@@ -1,6 +1,6 @@
-import { useRef, useMemo } from "react";
 import { useFrame } from "@react-three/fiber";
-import { InstancedMesh, Object3D, Vector3, Color } from "three";
+import { useMemo, useRef } from "react";
+import { Color, type InstancedMesh, Object3D, Vector3 } from "three";
 
 interface VoidBackgroundProps {
     theme: "day" | "night";
@@ -42,7 +42,7 @@ const VoidBackground = ({ theme }: VoidBackgroundProps) => {
 
         fragments.forEach((fragment, i) => {
             // Mystical drift with orbital patterns
-            const orbital =
+            const _orbital =
                 Math.sin(timeRef.current * 0.1 + fragment.phase) * 5;
             fragment.position.add(fragment.velocity);
             fragment.position.x +=

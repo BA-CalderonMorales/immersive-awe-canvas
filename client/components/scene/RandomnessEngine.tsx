@@ -1,8 +1,8 @@
 // Beautiful randomness engine that creates breathtaking, awe-inspiring effects
 // This adds the magic that makes the experience truly immersive
 
-import { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 
 interface RandomnessConfig {
