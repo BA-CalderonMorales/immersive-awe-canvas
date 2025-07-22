@@ -39,6 +39,9 @@ memory/sessions/*
 !memory/sessions/README.md
 memory/agents/*
 !memory/agents/README.md
+!memory/agents/MEMORY.md
+!memory/agents/RULES.md
+!memory/agents/shared/
 coordination/memory_bank/*
 coordination/subtasks/*
 coordination/orchestration/*
