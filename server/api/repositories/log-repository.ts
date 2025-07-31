@@ -1,11 +1,11 @@
 /**
  * Log Repository
- * 
+ *
  * Data access layer for log operations
  */
 
-import type { APIResult } from '@ba-calderonmorales/clean-api';
-import { supabaseAPIClient } from '../clients/supabase-client';
+import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { supabaseAPIClient } from "../clients/supabase-client";
 
 export interface LogEntity {
     id?: number;
@@ -40,8 +40,10 @@ export class LogRepository {
     /**
      * Create a new log entry
      */
-    async create(logData: Omit<LogEntity, 'id' | 'created_at' | 'updated_at'>): APIResult<LogEntity> {
-        return await supabaseAPIClient.insert<LogEntity>('logs', logData);
+    async create(
+        logData: Omit<LogEntity, "id" | "created_at" | "updated_at">
+    ): APIResult<LogEntity> {
+        return await supabaseAPIClient.insert<LogEntity>("logs", logData);
     }
 
     /**
@@ -51,40 +53,46 @@ export class LogRepository {
         const queryFilters: Record<string, string> = {};
 
         if (filters?.eventType) {
-            queryFilters['event_type'] = `eq.${filters.eventType}`;
+            queryFilters["event_type"] = `eq.${filters.eventType}`;
         }
 
         if (filters?.eventSource) {
-            queryFilters['event_source'] = `eq.${filters.eventSource}`;
+            queryFilters["event_source"] = `eq.${filters.eventSource}`;
         }
 
         if (filters?.startDate) {
-            queryFilters['created_at'] = `gte.${filters.startDate}`;
+            queryFilters["created_at"] = `gte.${filters.startDate}`;
         }
 
         if (filters?.endDate) {
-            queryFilters['created_at'] = `lte.${filters.endDate}`;
+            queryFilters["created_at"] = `lte.${filters.endDate}`;
         }
 
-        return await supabaseAPIClient.query<LogEntity>('logs', {
+        return await supabaseAPIClient.query<LogEntity>("logs", {
             filters: queryFilters,
             limit: filters?.limit,
             offset: filters?.offset,
-            orderBy: 'created_at.desc'
+            orderBy: "created_at.desc",
         });
     }
 
     /**
      * Find logs by event type
      */
-    async findByEventType(eventType: string, limit?: number): APIResult<LogEntity[]> {
+    async findByEventType(
+        eventType: string,
+        limit?: number
+    ): APIResult<LogEntity[]> {
         return this.findMany({ eventType, limit });
     }
 
     /**
      * Find logs by event source
      */
-    async findByEventSource(eventSource: string, limit?: number): APIResult<LogEntity[]> {
+    async findByEventSource(
+        eventSource: string,
+        limit?: number
+    ): APIResult<LogEntity[]> {
         return this.findMany({ eventSource, limit });
     }
 
@@ -98,29 +106,33 @@ export class LogRepository {
     /**
      * Count logs with optional filters
      */
-    async count(filters?: Omit<LogFilters, 'limit' | 'offset'>): APIResult<number> {
+    async count(
+        filters?: Omit<LogFilters, "limit" | "offset">
+    ): APIResult<number> {
         try {
             const queryFilters: Record<string, string> = {};
 
             if (filters?.eventType) {
-                queryFilters['event_type'] = `eq.${filters.eventType}`;
+                queryFilters["event_type"] = `eq.${filters.eventType}`;
             }
 
             if (filters?.eventSource) {
-                queryFilters['event_source'] = `eq.${filters.eventSource}`;
+                queryFilters["event_source"] = `eq.${filters.eventSource}`;
             }
 
             if (filters?.startDate) {
-                queryFilters['created_at'] = `gte.${filters.startDate}`;
+                queryFilters["created_at"] = `gte.${filters.startDate}`;
             }
 
             if (filters?.endDate) {
-                queryFilters['created_at'] = `lte.${filters.endDate}`;
+                queryFilters["created_at"] = `lte.${filters.endDate}`;
             }
 
-            const { data, error } = await supabaseAPIClient.query<{ count: number }>('logs', {
-                select: 'count()',
-                filters: queryFilters
+            const { data, error } = await supabaseAPIClient.query<{
+                count: number;
+            }>("logs", {
+                select: "count()",
+                filters: queryFilters,
             });
 
             if (error) {

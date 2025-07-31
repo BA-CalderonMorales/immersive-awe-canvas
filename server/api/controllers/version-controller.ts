@@ -1,10 +1,10 @@
 /**
  * Version Controller
- * 
+ *
  * Handles version-related API endpoints
  */
 
-import { versionService } from '../services/version-service';
+import { versionService } from "../services/version-service";
 
 export class VersionController {
     private static instance: VersionController;
@@ -28,13 +28,13 @@ export class VersionController {
                 data: {
                     appVersion: versionService.getAppVersion(),
                     buildInfo: versionService.getBuildInfo(),
-                    fullVersion: versionService.getFullVersion()
-                }
+                    fullVersion: versionService.getFullVersion(),
+                },
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Unknown error'
+                error: error instanceof Error ? error.message : "Unknown error",
             };
         }
     }
@@ -47,12 +47,15 @@ export class VersionController {
             const versionInfo = await versionService.getDynamicVersionInfo();
             return {
                 success: true,
-                data: versionInfo
+                data: versionInfo,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to fetch version info'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to fetch version info",
             };
         }
     }
@@ -63,22 +66,25 @@ export class VersionController {
     async getReleases(limit: number = 10) {
         try {
             const { data, error } = await versionService.getAllReleases(limit);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
-                data
+                data,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to fetch releases'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to fetch releases",
             };
         }
     }
@@ -93,13 +99,16 @@ export class VersionController {
                 success: true,
                 data: {
                     isLatest,
-                    currentVersion: versionService.getAppVersion()
-                }
+                    currentVersion: versionService.getAppVersion(),
+                },
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to check version'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to check version",
             };
         }
     }
@@ -112,12 +121,15 @@ export class VersionController {
             versionService.clearVersionCache();
             return {
                 success: true,
-                message: 'Version cache cleared'
+                message: "Version cache cleared",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to clear cache'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to clear cache",
             };
         }
     }

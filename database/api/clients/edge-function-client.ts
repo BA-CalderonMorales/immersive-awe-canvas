@@ -1,14 +1,17 @@
 /**
  * Supabase Edge Function Client
- * 
+ *
  * Client for interacting with Supabase Edge Functions using Clean API architecture
  */
 
-import { API } from '@ba-calderonmorales/clean-api';
-import { supabaseEdgeFunctionAPI, supabaseEdgeFunctionClient as configuredClient } from '../config.js';
+import { API } from "@ba-calderonmorales/clean-api";
+import {
+    supabaseEdgeFunctionAPI,
+    supabaseEdgeFunctionClient as configuredClient,
+} from "../config.js";
 
 // Create Edge Function API bucket
-export const edgeFunctionsAPI = new API('edge-functions');
+export const edgeFunctionsAPI = new API("edge-functions");
 
 /**
  * Issue Creation Data Interface
@@ -16,11 +19,11 @@ export const edgeFunctionsAPI = new API('edge-functions');
 export interface IssueData {
     issueLocation: string;
     device: string[];
-    inUS: 'yes' | 'no';
-    frequency: 'always' | 'sometimes' | 'rarely';
+    inUS: "yes" | "no";
+    frequency: "always" | "sometimes" | "rarely";
     expectedBehavior: string;
     workaround?: string;
-    canContact: 'yes' | 'no';
+    canContact: "yes" | "no";
     email?: string;
 }
 
@@ -41,21 +44,28 @@ export class SupabaseEdgeFunctionClient {
     /**
      * Create a GitHub issue via edge function
      */
-    async createGithubIssue(issueData: IssueData, appVersion?: string): Promise<EdgeFunctionResponse> {
+    async createGithubIssue(
+        issueData: IssueData,
+        appVersion?: string
+    ): Promise<EdgeFunctionResponse> {
         try {
-            const response = await configuredClient.request<EdgeFunctionResponse>({
-                url: supabaseEdgeFunctionAPI.routes.createGithubIssue,
-                method: 'POST',
-                data: {
-                    issueData,
-                    appVersion: appVersion || 'unknown'
-                }
-            });
+            const response =
+                await configuredClient.request<EdgeFunctionResponse>({
+                    url: supabaseEdgeFunctionAPI.routes.createGithubIssue,
+                    method: "POST",
+                    data: {
+                        issueData,
+                        appVersion: appVersion || "unknown",
+                    },
+                });
 
             return response;
         } catch (error) {
             return {
-                error: error instanceof Error ? error.message : 'Failed to create GitHub issue'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to create GitHub issue",
             };
         }
     }
@@ -65,16 +75,20 @@ export class SupabaseEdgeFunctionClient {
      */
     async processLogs(logData: any): Promise<EdgeFunctionResponse> {
         try {
-            const response = await configuredClient.request<EdgeFunctionResponse>({
-                url: supabaseEdgeFunctionAPI.routes.processLogs,
-                method: 'POST',
-                data: logData
-            });
+            const response =
+                await configuredClient.request<EdgeFunctionResponse>({
+                    url: supabaseEdgeFunctionAPI.routes.processLogs,
+                    method: "POST",
+                    data: logData,
+                });
 
             return response;
         } catch (error) {
             return {
-                error: error instanceof Error ? error.message : 'Failed to process logs'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to process logs",
             };
         }
     }
@@ -84,16 +98,20 @@ export class SupabaseEdgeFunctionClient {
      */
     async validateUser(userData: any): Promise<EdgeFunctionResponse> {
         try {
-            const response = await configuredClient.request<EdgeFunctionResponse>({
-                url: supabaseEdgeFunctionAPI.routes.validateUser,
-                method: 'POST',
-                data: userData
-            });
+            const response =
+                await configuredClient.request<EdgeFunctionResponse>({
+                    url: supabaseEdgeFunctionAPI.routes.validateUser,
+                    method: "POST",
+                    data: userData,
+                });
 
             return response;
         } catch (error) {
             return {
-                error: error instanceof Error ? error.message : 'Failed to validate user'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to validate user",
             };
         }
     }

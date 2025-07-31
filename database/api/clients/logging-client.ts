@@ -1,15 +1,18 @@
 /**
  * Database Logging Client
- * 
+ *
  * Specialized client for database logging operations using Clean API architecture
  */
 
-import { API } from '@ba-calderonmorales/clean-api';
-import { databaseLoggingAPI, supabaseRestClient as configuredClient } from '../config.js';
-import { Logger, LogLevel } from '../../shared/logger.js';
+import { API } from "@ba-calderonmorales/clean-api";
+import {
+    databaseLoggingAPI,
+    supabaseRestClient as configuredClient,
+} from "../config.js";
+import { Logger, LogLevel } from "../../shared/logger.js";
 
 // Create Logging API bucket
-export const loggingAPI = new API('database-logging');
+export const loggingAPI = new API("database-logging");
 
 /**
  * Log Entry for Database Operations
@@ -39,28 +42,32 @@ export class DatabaseLoggingClient {
     /**
      * Log an error event
      */
-    async logError(message: string, context?: Record<string, any>, eventSource = 'database-api'): Promise<void> {
-        const logEntry: Omit<DatabaseLogEntry, 'id' | 'created_at'> = {
-            event_type: 'error',
+    async logError(
+        message: string,
+        context?: Record<string, any>,
+        eventSource = "database-api"
+    ): Promise<void> {
+        const logEntry: Omit<DatabaseLogEntry, "id" | "created_at"> = {
+            event_type: "error",
             event_source: eventSource,
             level: LogLevel.ERROR,
             message,
             metadata: context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
 
         try {
             await configuredClient.request({
                 url: databaseLoggingAPI.routes.createLog,
-                method: 'POST',
-                data: logEntry
+                method: "POST",
+                data: logEntry,
             });
 
             // Also log locally
             this.logger.error(message, context);
         } catch (error) {
             // Fallback to console logging if database logging fails
-            console.error('Failed to log error to database:', error);
+            console.error("Failed to log error to database:", error);
             this.logger.error(message, context);
         }
     }
@@ -68,26 +75,30 @@ export class DatabaseLoggingClient {
     /**
      * Log a warning event
      */
-    async logWarning(message: string, context?: Record<string, any>, eventSource = 'database-api'): Promise<void> {
-        const logEntry: Omit<DatabaseLogEntry, 'id' | 'created_at'> = {
-            event_type: 'warning',
+    async logWarning(
+        message: string,
+        context?: Record<string, any>,
+        eventSource = "database-api"
+    ): Promise<void> {
+        const logEntry: Omit<DatabaseLogEntry, "id" | "created_at"> = {
+            event_type: "warning",
             event_source: eventSource,
             level: LogLevel.WARN,
             message,
             metadata: context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
 
         try {
             await configuredClient.request({
                 url: databaseLoggingAPI.routes.createLog,
-                method: 'POST',
-                data: logEntry
+                method: "POST",
+                data: logEntry,
             });
 
             this.logger.warn(message, context);
         } catch (error) {
-            console.warn('Failed to log warning to database:', error);
+            console.warn("Failed to log warning to database:", error);
             this.logger.warn(message, context);
         }
     }
@@ -95,26 +106,30 @@ export class DatabaseLoggingClient {
     /**
      * Log an info event
      */
-    async logInfo(message: string, context?: Record<string, any>, eventSource = 'database-api'): Promise<void> {
-        const logEntry: Omit<DatabaseLogEntry, 'id' | 'created_at'> = {
-            event_type: 'info',
+    async logInfo(
+        message: string,
+        context?: Record<string, any>,
+        eventSource = "database-api"
+    ): Promise<void> {
+        const logEntry: Omit<DatabaseLogEntry, "id" | "created_at"> = {
+            event_type: "info",
             event_source: eventSource,
             level: LogLevel.INFO,
             message,
             metadata: context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
 
         try {
             await configuredClient.request({
                 url: databaseLoggingAPI.routes.createLog,
-                method: 'POST',
-                data: logEntry
+                method: "POST",
+                data: logEntry,
             });
 
             this.logger.info(message, context);
         } catch (error) {
-            console.info('Failed to log info to database:', error);
+            console.info("Failed to log info to database:", error);
             this.logger.info(message, context);
         }
     }
@@ -122,26 +137,30 @@ export class DatabaseLoggingClient {
     /**
      * Log a debug event
      */
-    async logDebug(message: string, context?: Record<string, any>, eventSource = 'database-api'): Promise<void> {
-        const logEntry: Omit<DatabaseLogEntry, 'id' | 'created_at'> = {
-            event_type: 'debug',
+    async logDebug(
+        message: string,
+        context?: Record<string, any>,
+        eventSource = "database-api"
+    ): Promise<void> {
+        const logEntry: Omit<DatabaseLogEntry, "id" | "created_at"> = {
+            event_type: "debug",
             event_source: eventSource,
             level: LogLevel.DEBUG,
             message,
             metadata: context,
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
         };
 
         try {
             await configuredClient.request({
                 url: databaseLoggingAPI.routes.createLog,
-                method: 'POST',
-                data: logEntry
+                method: "POST",
+                data: logEntry,
             });
 
             this.logger.debug(message, context);
         } catch (error) {
-            console.debug('Failed to log debug to database:', error);
+            console.debug("Failed to log debug to database:", error);
             this.logger.debug(message, context);
         }
     }
@@ -151,7 +170,7 @@ export class DatabaseLoggingClient {
      */
     async getLogs(filters?: Record<string, any>): Promise<DatabaseLogEntry[]> {
         let url = databaseLoggingAPI.routes.getLogs;
-        
+
         if (filters) {
             const queryParams = new URLSearchParams();
             Object.entries(filters).forEach(([key, value]) => {
@@ -161,14 +180,18 @@ export class DatabaseLoggingClient {
         }
 
         try {
-            const response = await configuredClient.request<DatabaseLogEntry[]>({
-                url,
-                method: 'GET'
-            });
+            const response = await configuredClient.request<DatabaseLogEntry[]>(
+                {
+                    url,
+                    method: "GET",
+                }
+            );
 
             return response;
         } catch (error) {
-            this.logger.error('Failed to retrieve logs from database', { error: error instanceof Error ? error.message : 'Unknown error' });
+            this.logger.error("Failed to retrieve logs from database", {
+                error: error instanceof Error ? error.message : "Unknown error",
+            });
             return [];
         }
     }
@@ -187,16 +210,28 @@ export class DatabaseLoggingClient {
         const context = {
             method,
             url,
-            requestData: requestData ? JSON.stringify(requestData).slice(0, 1000) : undefined,
-            responseData: responseData ? JSON.stringify(responseData).slice(0, 1000) : undefined,
+            requestData: requestData
+                ? JSON.stringify(requestData).slice(0, 1000)
+                : undefined,
+            responseData: responseData
+                ? JSON.stringify(responseData).slice(0, 1000)
+                : undefined,
             duration: duration ? `${duration}ms` : undefined,
-            success
+            success,
         };
 
         if (success) {
-            await this.logInfo(`API Call: ${method} ${url}`, context, 'api-client');
+            await this.logInfo(
+                `API Call: ${method} ${url}`,
+                context,
+                "api-client"
+            );
         } else {
-            await this.logError(`API Call Failed: ${method} ${url}`, context, 'api-client');
+            await this.logError(
+                `API Call Failed: ${method} ${url}`,
+                context,
+                "api-client"
+            );
         }
     }
 }

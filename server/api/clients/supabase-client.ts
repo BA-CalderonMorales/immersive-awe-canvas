@@ -1,15 +1,15 @@
 /**
  * Supabase API Client
- * 
+ *
  * Handles all Supabase database communication using Clean API architecture
  */
 
-import { API } from '@ba-calderonmorales/clean-api';
-import type { APIResult } from '@ba-calderonmorales/clean-api';
-import { supabaseAPI, supabaseClient } from '../config';
+import { API } from "@ba-calderonmorales/clean-api";
+import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { supabaseAPI, supabaseClient } from "../config";
 
 // Supabase API bucket
-export const supabaseAPIBucket = new API('supabase');
+export const supabaseAPIBucket = new API("supabase");
 
 // Types for database operations
 interface LogEntry {
@@ -37,16 +37,16 @@ export class SupabaseAPIClient {
             const url = supabaseAPI.routes.logs;
             const response = await supabaseClient.request({
                 url,
-                method: 'POST',
+                method: "POST",
                 data: logData,
                 headers: {
-                    'Prefer': 'return=representation'
-                }
+                    Prefer: "return=representation",
+                },
             });
 
             return { data: response[0] };
         } catch (error) {
-            console.error('Error inserting log:', error);
+            console.error("Error inserting log:", error);
             return { error: error as Error };
         }
     }
@@ -65,16 +65,16 @@ export class SupabaseAPIClient {
             const queryParams = new URLSearchParams();
 
             if (params?.eventType) {
-                queryParams.append('event_type', `eq.${params.eventType}`);
+                queryParams.append("event_type", `eq.${params.eventType}`);
             }
             if (params?.eventSource) {
-                queryParams.append('event_source', `eq.${params.eventSource}`);
+                queryParams.append("event_source", `eq.${params.eventSource}`);
             }
             if (params?.limit) {
-                queryParams.append('limit', params.limit.toString());
+                queryParams.append("limit", params.limit.toString());
             }
             if (params?.offset) {
-                queryParams.append('offset', params.offset.toString());
+                queryParams.append("offset", params.offset.toString());
             }
 
             if (queryParams.toString()) {
@@ -83,12 +83,12 @@ export class SupabaseAPIClient {
 
             const logs: LogEntry[] = await supabaseClient.request({
                 url,
-                method: 'GET'
+                method: "GET",
             });
 
             return { data: logs };
         } catch (error) {
-            console.error('Error fetching logs:', error);
+            console.error("Error fetching logs:", error);
             return { error: error as Error };
         }
     }
@@ -111,7 +111,7 @@ export class SupabaseAPIClient {
             const queryParams = new URLSearchParams();
 
             if (params?.select) {
-                queryParams.append('select', params.select);
+                queryParams.append("select", params.select);
             }
 
             if (params?.filters) {
@@ -121,15 +121,15 @@ export class SupabaseAPIClient {
             }
 
             if (params?.limit) {
-                queryParams.append('limit', params.limit.toString());
+                queryParams.append("limit", params.limit.toString());
             }
 
             if (params?.offset) {
-                queryParams.append('offset', params.offset.toString());
+                queryParams.append("offset", params.offset.toString());
             }
 
             if (params?.orderBy) {
-                queryParams.append('order', params.orderBy);
+                queryParams.append("order", params.orderBy);
             }
 
             if (queryParams.toString()) {
@@ -138,7 +138,7 @@ export class SupabaseAPIClient {
 
             const data: T[] = await supabaseClient.request({
                 url,
-                method: 'GET'
+                method: "GET",
             });
 
             return { data };
@@ -156,11 +156,11 @@ export class SupabaseAPIClient {
             const url = `/rest/v1/${table}`;
             const response = await supabaseClient.request({
                 url,
-                method: 'POST',
+                method: "POST",
                 data,
                 headers: {
-                    'Prefer': 'return=representation'
-                }
+                    Prefer: "return=representation",
+                },
             });
 
             return { data: response[0] };
@@ -192,11 +192,11 @@ export class SupabaseAPIClient {
 
             const response = await supabaseClient.request({
                 url,
-                method: 'PATCH',
+                method: "PATCH",
                 data,
                 headers: {
-                    'Prefer': 'return=representation'
-                }
+                    Prefer: "return=representation",
+                },
             });
 
             return { data: response };

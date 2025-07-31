@@ -1,10 +1,10 @@
 /**
  * Logging API Client for Client-side
- * 
+ *
  * Client-side logging client (Minimal Implementation)
  */
 
-import type { APIResult } from '@ba-calderonmorales/clean-api';
+import type { APIResult } from "@ba-calderonmorales/clean-api";
 
 export interface LogEventParams {
     eventType: string;
@@ -22,11 +22,11 @@ export class ClientLoggingAPIClient {
     async logEvent(params: LogEventParams): APIResult<any> {
         try {
             // Simple console logging for now
-            console.log('📱 Client Log:', {
+            console.log("📱 Client Log:", {
                 type: params.eventType,
-                source: params.eventSource || 'client',
+                source: params.eventSource || "client",
                 metadata: params.metadata,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             });
 
             return { data: { success: true } };
@@ -44,14 +44,14 @@ export class ClientLoggingAPIClient {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'user_action',
-            eventSource: 'client',
+            eventType: "user_action",
+            eventSource: "client",
             metadata: {
                 action,
                 userId,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -64,15 +64,15 @@ export class ClientLoggingAPIClient {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'error',
-            eventSource: source || 'client',
+            eventType: "error",
+            eventSource: source || "client",
             metadata: {
                 message: error.message,
                 stack: error.stack,
                 name: error.name,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -86,15 +86,15 @@ export class ClientLoggingAPIClient {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'performance',
-            eventSource: 'client',
+            eventType: "performance",
+            eventSource: "client",
             metadata: {
                 metric,
                 value,
                 unit,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -106,13 +106,13 @@ export class ClientLoggingAPIClient {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'page_view',
-            eventSource: 'client',
+            eventType: "page_view",
+            eventSource: "client",
             metadata: {
                 page,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -125,14 +125,14 @@ export class ClientLoggingAPIClient {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'scene_interaction',
-            eventSource: 'client',
+            eventType: "scene_interaction",
+            eventSource: "client",
             metadata: {
                 interactionType,
                 sceneData,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 }

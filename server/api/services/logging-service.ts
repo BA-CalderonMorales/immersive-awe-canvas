@@ -1,10 +1,10 @@
 /**
  * Logging Service
- * 
+ *
  * Server-side logging service
  */
 
-import type { APIResult } from '@ba-calderonmorales/clean-api';
+import type { APIResult } from "@ba-calderonmorales/clean-api";
 
 export interface LogEventParams {
     eventType: string;
@@ -33,11 +33,11 @@ export class LoggingService {
     async logEvent(params: LogEventParams): APIResult<any> {
         try {
             // Simple console logging for now
-            console.log('📝 Server Log:', {
+            console.log("📝 Server Log:", {
                 type: params.eventType,
-                source: params.eventSource || 'server',
+                source: params.eventSource || "server",
                 metadata: params.metadata,
-                timestamp: new Date().toISOString()
+                timestamp: new Date().toISOString(),
             });
 
             return { data: { success: true } };
@@ -55,14 +55,14 @@ export class LoggingService {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'user_action',
-            eventSource: 'server',
+            eventType: "user_action",
+            eventSource: "server",
             metadata: {
                 action,
                 userId,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -75,15 +75,15 @@ export class LoggingService {
         metadata?: Record<string, unknown>
     ): APIResult<any> {
         return this.logEvent({
-            eventType: 'error',
-            eventSource: source || 'server',
+            eventType: "error",
+            eventSource: source || "server",
             metadata: {
                 message: error.message,
                 stack: error.stack,
                 name: error.name,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 }

@@ -1,15 +1,16 @@
 /**
  * Backgrounds API React Hook
- * 
+ *
  * React hook for background operations using Clean API architecture
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { clientSupabaseAPIClient } from '../clients/supabase-client';
-import type { Database } from '@database/supabase/types';
+import { useQuery } from "@tanstack/react-query";
+import { clientSupabaseAPIClient } from "../clients/supabase-client";
+import type { Database } from "@database/supabase/types";
 
-type Background = Database['public']['Tables']['backgrounds']['Row'];
-type DefaultGeometry = Database['public']['Tables']['default_geometries']['Row'];
+type Background = Database["public"]["Tables"]["backgrounds"]["Row"];
+type DefaultGeometry =
+    Database["public"]["Tables"]["default_geometries"]["Row"];
 
 /**
  * Hook to get all backgrounds with React Query caching
@@ -20,9 +21,10 @@ export const useAPIBackgrounds = (options?: {
     refetchInterval?: number;
 }) => {
     return useQuery<Background[]>({
-        queryKey: ['backgrounds'],
+        queryKey: ["backgrounds"],
         queryFn: async () => {
-            const { data, error } = await clientSupabaseAPIClient.getBackgrounds();
+            const { data, error } =
+                await clientSupabaseAPIClient.getBackgrounds();
             if (error) throw error;
             return data!;
         },
@@ -41,9 +43,10 @@ export const useAPIDefaultGeometries = (options?: {
     refetchInterval?: number;
 }) => {
     return useQuery<DefaultGeometry[]>({
-        queryKey: ['default_geometries'],
+        queryKey: ["default_geometries"],
         queryFn: async () => {
-            const { data, error } = await clientSupabaseAPIClient.getDefaultGeometries();
+            const { data, error } =
+                await clientSupabaseAPIClient.getDefaultGeometries();
             if (error) throw error;
             return data!;
         },

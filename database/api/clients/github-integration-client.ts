@@ -1,14 +1,17 @@
 /**
  * GitHub Integration Client
- * 
+ *
  * Client for GitHub API operations using Clean API architecture
  */
 
-import { API } from '@ba-calderonmorales/clean-api';
-import { githubIntegrationAPI, githubIntegrationClientInstance as configuredClient } from '../config.js';
+import { API } from "@ba-calderonmorales/clean-api";
+import {
+    githubIntegrationAPI,
+    githubIntegrationClientInstance as configuredClient,
+} from "../config.js";
 
 // Create GitHub API bucket
-export const githubAPI = new API('github-integration');
+export const githubAPI = new API("github-integration");
 
 /**
  * GitHub Issue Interface
@@ -19,7 +22,7 @@ export interface GitHubIssue {
     title: string;
     body: string;
     labels?: string[];
-    state?: 'open' | 'closed';
+    state?: "open" | "closed";
     html_url?: string;
     created_at?: string;
     updated_at?: string;
@@ -48,11 +51,16 @@ export class GitHubIntegrationClient {
     /**
      * Create a new GitHub issue
      */
-    async createIssue(issue: Omit<GitHubIssue, 'id' | 'number' | 'state' | 'html_url' | 'created_at' | 'updated_at'>): Promise<GitHubIssue> {
+    async createIssue(
+        issue: Omit<
+            GitHubIssue,
+            "id" | "number" | "state" | "html_url" | "created_at" | "updated_at"
+        >
+    ): Promise<GitHubIssue> {
         const response = await configuredClient.request<GitHubIssue>({
             url: githubIntegrationAPI.routes.createIssue,
-            method: 'POST',
-            data: issue
+            method: "POST",
+            data: issue,
         });
 
         return response;
@@ -62,16 +70,16 @@ export class GitHubIntegrationClient {
      * Get GitHub issues with optional filtering
      */
     async getIssues(filters?: {
-        state?: 'open' | 'closed' | 'all';
+        state?: "open" | "closed" | "all";
         labels?: string;
-        sort?: 'created' | 'updated' | 'comments';
-        direction?: 'asc' | 'desc';
+        sort?: "created" | "updated" | "comments";
+        direction?: "asc" | "desc";
         since?: string;
         page?: number;
         per_page?: number;
     }): Promise<GitHubIssue[]> {
         let url = githubIntegrationAPI.routes.getIssues;
-        
+
         if (filters) {
             const queryParams = new URLSearchParams();
             Object.entries(filters).forEach(([key, value]) => {
@@ -86,7 +94,7 @@ export class GitHubIntegrationClient {
 
         const response = await configuredClient.request<GitHubIssue[]>({
             url,
-            method: 'GET'
+            method: "GET",
         });
 
         return response;
@@ -100,7 +108,7 @@ export class GitHubIntegrationClient {
         per_page?: number;
     }): Promise<GitHubRelease[]> {
         let url = githubIntegrationAPI.routes.getReleases;
-        
+
         if (options) {
             const queryParams = new URLSearchParams();
             Object.entries(options).forEach(([key, value]) => {
@@ -115,7 +123,7 @@ export class GitHubIntegrationClient {
 
         const response = await configuredClient.request<GitHubRelease[]>({
             url,
-            method: 'GET'
+            method: "GET",
         });
 
         return response;
@@ -126,9 +134,9 @@ export class GitHubIntegrationClient {
      */
     async getLatestRelease(): Promise<GitHubRelease> {
         const releases = await this.getReleases({ per_page: 1 });
-        
+
         if (releases.length === 0) {
-            throw new Error('No releases found');
+            throw new Error("No releases found");
         }
 
         return releases[0];
@@ -156,21 +164,21 @@ export class GitHubIntegrationClient {
 
 **Location:** ${bugData.location}
 **Expected Behavior:** ${bugData.expectedBehavior}
-${bugData.actualBehavior ? `**Actual Behavior:** ${bugData.actualBehavior}` : ''}
-${bugData.device && bugData.device.length > 0 ? `**Device(s):** ${bugData.device.join(', ')}` : ''}
-${bugData.frequency ? `**Frequency:** ${bugData.frequency}` : ''}
-${bugData.workaround ? `**Workaround:** ${bugData.workaround}` : ''}
-${bugData.appVersion ? `**App Version:** ${bugData.appVersion}` : ''}
+${bugData.actualBehavior ? `**Actual Behavior:** ${bugData.actualBehavior}` : ""}
+${bugData.device && bugData.device.length > 0 ? `**Device(s):** ${bugData.device.join(", ")}` : ""}
+${bugData.frequency ? `**Frequency:** ${bugData.frequency}` : ""}
+${bugData.workaround ? `**Workaround:** ${bugData.workaround}` : ""}
+${bugData.appVersion ? `**App Version:** ${bugData.appVersion}` : ""}
 
 ---
-${bugData.contactInfo?.canContact ? `**Contact Permission:** Yes` : '**Contact Permission:** No'}
-${bugData.contactInfo?.email ? `**Contact Email:** ${bugData.contactInfo.email}` : ''}
+${bugData.contactInfo?.canContact ? `**Contact Permission:** Yes` : "**Contact Permission:** No"}
+${bugData.contactInfo?.email ? `**Contact Email:** ${bugData.contactInfo.email}` : ""}
         `.trim();
 
         return this.createIssue({
             title: `Bug: ${bugData.title}`,
             body,
-            labels: ['bug-report']
+            labels: ["bug-report"],
         });
     }
 
@@ -181,21 +189,26 @@ ${bugData.contactInfo?.email ? `**Contact Email:** ${bugData.contactInfo.email}`
         title: string;
         description: string;
         useCase?: string;
-        priority?: 'low' | 'medium' | 'high';
+        priority?: "low" | "medium" | "high";
     }): Promise<GitHubIssue> {
         const body = `
 **Feature Request**
 
 ${featureData.description}
 
-${featureData.useCase ? `**Use Case:** ${featureData.useCase}` : ''}
-${featureData.priority ? `**Priority:** ${featureData.priority}` : ''}
+${featureData.useCase ? `**Use Case:** ${featureData.useCase}` : ""}
+${featureData.priority ? `**Priority:** ${featureData.priority}` : ""}
         `.trim();
 
         return this.createIssue({
             title: `Feature: ${featureData.title}`,
             body,
-            labels: ['feature-request', ...(featureData.priority ? [`priority-${featureData.priority}`] : [])]
+            labels: [
+                "feature-request",
+                ...(featureData.priority
+                    ? [`priority-${featureData.priority}`]
+                    : []),
+            ],
         });
     }
 }

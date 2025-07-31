@@ -1,12 +1,12 @@
 /**
  * Shared Logging Utilities
- * 
+ *
  * Common logging operations used by both server and client
  * This eliminates duplicate logging logic
  */
 
-import type { APIResult } from '@ba-calderonmorales/clean-api';
-import type { LogEventParams, LogEntry } from './api-types.js';
+import type { APIResult } from "@ba-calderonmorales/clean-api";
+import type { LogEventParams, LogEntry } from "./api-types.js";
 
 /**
  * Shared Logger Interface
@@ -14,9 +14,21 @@ import type { LogEventParams, LogEntry } from './api-types.js';
  */
 export interface SharedLogger {
     logEvent(params: LogEventParams): Promise<APIResult<LogEntry>>;
-    logUserAction(action: string, userId?: string, metadata?: Record<string, unknown>): Promise<APIResult<LogEntry>>;
-    logError(error: Error, source?: string, metadata?: Record<string, unknown>): Promise<APIResult<LogEntry>>;
-    logPerformance(operationName: string, duration: number, metadata?: Record<string, unknown>): Promise<APIResult<LogEntry>>;
+    logUserAction(
+        action: string,
+        userId?: string,
+        metadata?: Record<string, unknown>
+    ): Promise<APIResult<LogEntry>>;
+    logError(
+        error: Error,
+        source?: string,
+        metadata?: Record<string, unknown>
+    ): Promise<APIResult<LogEntry>>;
+    logPerformance(
+        operationName: string,
+        duration: number,
+        metadata?: Record<string, unknown>
+    ): Promise<APIResult<LogEntry>>;
 }
 
 /**
@@ -24,28 +36,32 @@ export interface SharedLogger {
  * Common logging logic shared between server and client
  */
 export abstract class BaseLogger implements SharedLogger {
-    protected abstract executeLogEvent(params: LogEventParams): Promise<APIResult<LogEntry>>;
+    protected abstract executeLogEvent(
+        params: LogEventParams
+    ): Promise<APIResult<LogEntry>>;
 
     /**
      * Sanitize log data to prevent injection attacks
      */
-    protected sanitizeLogData(data: Record<string, unknown>): Record<string, unknown> {
+    protected sanitizeLogData(
+        data: Record<string, unknown>
+    ): Record<string, unknown> {
         const sanitized: Record<string, unknown> = {};
-        
+
         for (const [key, value] of Object.entries(data)) {
             // Limit key length
             const sanitizedKey = key.slice(0, 50);
-            
+
             // Sanitize value based on type
-            if (typeof value === 'string') {
+            if (typeof value === "string") {
                 sanitized[sanitizedKey] = value.slice(0, 1000); // Limit string length
-            } else if (typeof value === 'number') {
+            } else if (typeof value === "number") {
                 sanitized[sanitizedKey] = isFinite(value) ? value : 0;
-            } else if (typeof value === 'boolean') {
+            } else if (typeof value === "boolean") {
                 sanitized[sanitizedKey] = value;
             } else if (value === null || value === undefined) {
                 sanitized[sanitizedKey] = null;
-            } else if (typeof value === 'object') {
+            } else if (typeof value === "object") {
                 // Recursively sanitize nested objects (max depth 3)
                 sanitized[sanitizedKey] = this.sanitizeNestedObject(value, 3);
             } else {
@@ -53,7 +69,7 @@ export abstract class BaseLogger implements SharedLogger {
                 sanitized[sanitizedKey] = String(value).slice(0, 100);
             }
         }
-        
+
         return sanitized;
     }
 
@@ -63,21 +79,26 @@ export abstract class BaseLogger implements SharedLogger {
         }
 
         if (Array.isArray(obj)) {
-            return obj.slice(0, 10).map(item => this.sanitizeNestedObject(item, maxDepth - 1));
+            return obj
+                .slice(0, 10)
+                .map(item => this.sanitizeNestedObject(item, maxDepth - 1));
         }
 
-        if (typeof obj === 'object') {
+        if (typeof obj === "object") {
             const sanitized: any = {};
             let count = 0;
             for (const [key, value] of Object.entries(obj)) {
                 if (count >= 20) break; // Limit object properties
-                sanitized[key.slice(0, 50)] = this.sanitizeNestedObject(value, maxDepth - 1);
+                sanitized[key.slice(0, 50)] = this.sanitizeNestedObject(
+                    value,
+                    maxDepth - 1
+                );
                 count++;
             }
             return sanitized;
         }
 
-        return typeof obj === 'string' ? obj.slice(0, 100) : obj;
+        return typeof obj === "string" ? obj.slice(0, 100) : obj;
     }
 
     /**
@@ -86,14 +107,16 @@ export abstract class BaseLogger implements SharedLogger {
     async logEvent(params: LogEventParams): Promise<APIResult<LogEntry>> {
         try {
             const sanitizedParams: LogEventParams = {
-                eventType: params.eventType?.slice(0, 100) || 'unknown',
+                eventType: params.eventType?.slice(0, 100) || "unknown",
                 eventSource: params.eventSource?.slice(0, 100),
-                metadata: params.metadata ? this.sanitizeLogData(params.metadata) : undefined
+                metadata: params.metadata
+                    ? this.sanitizeLogData(params.metadata)
+                    : undefined,
             };
 
             return await this.executeLogEvent(sanitizedParams);
         } catch (error) {
-            console.error('Failed to log event:', error);
+            console.error("Failed to log event:", error);
             return { error: error as Error };
         }
     }
@@ -102,19 +125,19 @@ export abstract class BaseLogger implements SharedLogger {
      * Log user action
      */
     async logUserAction(
-        action: string, 
-        userId?: string, 
+        action: string,
+        userId?: string,
         metadata?: Record<string, unknown>
     ): Promise<APIResult<LogEntry>> {
         return this.logEvent({
-            eventType: 'user_action',
-            eventSource: typeof window !== 'undefined' ? 'client' : 'server',
+            eventType: "user_action",
+            eventSource: typeof window !== "undefined" ? "client" : "server",
             metadata: {
                 action: action.slice(0, 100),
                 userId: userId?.slice(0, 50),
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -122,20 +145,21 @@ export abstract class BaseLogger implements SharedLogger {
      * Log error
      */
     async logError(
-        error: Error, 
-        source?: string, 
+        error: Error,
+        source?: string,
         metadata?: Record<string, unknown>
     ): Promise<APIResult<LogEntry>> {
         return this.logEvent({
-            eventType: 'error',
-            eventSource: source || (typeof window !== 'undefined' ? 'client' : 'server'),
+            eventType: "error",
+            eventSource:
+                source || (typeof window !== "undefined" ? "client" : "server"),
             metadata: {
                 message: error.message.slice(0, 500),
                 stack: error.stack?.slice(0, 1000),
                 name: error.name,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -143,19 +167,19 @@ export abstract class BaseLogger implements SharedLogger {
      * Log performance metrics
      */
     async logPerformance(
-        operationName: string, 
-        duration: number, 
+        operationName: string,
+        duration: number,
         metadata?: Record<string, unknown>
     ): Promise<APIResult<LogEntry>> {
         return this.logEvent({
-            eventType: 'performance',
-            eventSource: typeof window !== 'undefined' ? 'client' : 'server',
+            eventType: "performance",
+            eventSource: typeof window !== "undefined" ? "client" : "server",
             metadata: {
                 operation: operationName.slice(0, 100),
                 duration: Math.round(duration),
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 }
@@ -192,8 +216,8 @@ export class PerformanceMonitor {
      * End timing and automatically log performance
      */
     async endAndLog(
-        operationName: string, 
-        logger: SharedLogger, 
+        operationName: string,
+        logger: SharedLogger,
         metadata?: Record<string, unknown>
     ): Promise<number> {
         const duration = this.end(operationName);

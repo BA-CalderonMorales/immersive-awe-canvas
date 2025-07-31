@@ -1,6 +1,6 @@
 /**
  * Shared API Types
- * 
+ *
  * Common types used across both server and client API layers
  * This eliminates duplication and ensures consistency
  */
@@ -45,13 +45,14 @@ export interface LogEventParams {
 }
 
 // Database Types (re-export for convenience)
-export type { Database } from '../database/supabase/types.js';
-import type { Database } from '../database/supabase/types.js';
+export type { Database } from "../database/supabase/types.js";
+import type { Database } from "../database/supabase/types.js";
 
-export type World = Database['public']['Tables']['worlds']['Row'];
-export type Background = Database['public']['Tables']['backgrounds']['Row'];
-export type DefaultGeometry = Database['public']['Tables']['default_geometries']['Row'];
-export type LogEntry = Database['public']['Tables']['logs']['Row'];
+export type World = Database["public"]["Tables"]["worlds"]["Row"];
+export type Background = Database["public"]["Tables"]["backgrounds"]["Row"];
+export type DefaultGeometry =
+    Database["public"]["Tables"]["default_geometries"]["Row"];
+export type LogEntry = Database["public"]["Tables"]["logs"]["Row"];
 
 // API Configuration Types
 export interface APIEndpoints {

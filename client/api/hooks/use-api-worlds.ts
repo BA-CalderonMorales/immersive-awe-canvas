@@ -1,14 +1,14 @@
 /**
  * Worlds API React Hook
- * 
+ *
  * React hook for world operations using Clean API architecture
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { clientSupabaseAPIClient } from '../clients/supabase-client';
-import type { Database } from '@database/supabase/types';
+import { useQuery } from "@tanstack/react-query";
+import { clientSupabaseAPIClient } from "../clients/supabase-client";
+import type { Database } from "@database/supabase/types";
 
-type World = Database['public']['Tables']['worlds']['Row'];
+type World = Database["public"]["Tables"]["worlds"]["Row"];
 
 /**
  * Hook to get all worlds with React Query caching
@@ -19,7 +19,7 @@ export const useAPIWorlds = (options?: {
     refetchInterval?: number;
 }) => {
     return useQuery<World[]>({
-        queryKey: ['worlds'],
+        queryKey: ["worlds"],
         queryFn: async () => {
             const { data, error } = await clientSupabaseAPIClient.getWorlds();
             if (error) throw error;
@@ -34,14 +34,18 @@ export const useAPIWorlds = (options?: {
 /**
  * Hook to get world by slug
  */
-export const useAPIWorldBySlug = (slug: string, options?: {
-    enabled?: boolean;
-    staleTime?: number;
-}) => {
+export const useAPIWorldBySlug = (
+    slug: string,
+    options?: {
+        enabled?: boolean;
+        staleTime?: number;
+    }
+) => {
     return useQuery<World>({
-        queryKey: ['worlds', 'by-slug', slug],
+        queryKey: ["worlds", "by-slug", slug],
         queryFn: async () => {
-            const { data, error } = await clientSupabaseAPIClient.getWorldBySlug(slug);
+            const { data, error } =
+                await clientSupabaseAPIClient.getWorldBySlug(slug);
             if (error) throw error;
             return data!;
         },

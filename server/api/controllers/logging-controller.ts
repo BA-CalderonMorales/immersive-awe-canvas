@@ -1,10 +1,14 @@
 /**
  * Logging Controller
- * 
+ *
  * Handles logging-related API endpoints
  */
 
-import { loggingService, type LogEventParams, type LogQueryParams } from '../services/logging-service';
+import {
+    loggingService,
+    type LogEventParams,
+    type LogQueryParams,
+} from "../services/logging-service";
 
 export class LoggingController {
     private static instance: LoggingController;
@@ -24,23 +28,26 @@ export class LoggingController {
     async logEvent(params: LogEventParams) {
         try {
             const { data, error } = await loggingService.logEvent(params);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                message: 'Event logged successfully'
+                message: "Event logged successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to log event'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to log event",
             };
         }
     }
@@ -51,23 +58,26 @@ export class LoggingController {
     async queryLogs(params?: LogQueryParams) {
         try {
             const { data, error } = await loggingService.queryLogs(params);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to query logs'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to query logs",
             };
         }
     }
@@ -77,12 +87,15 @@ export class LoggingController {
      */
     async getLogsByEventType(eventType: string, limit: number = 50) {
         try {
-            const { data, error } = await loggingService.getLogsByEventType(eventType, limit);
-            
+            const { data, error } = await loggingService.getLogsByEventType(
+                eventType,
+                limit
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
@@ -90,12 +103,15 @@ export class LoggingController {
                 success: true,
                 data,
                 eventType,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get logs by event type'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get logs by event type",
             };
         }
     }
@@ -105,12 +121,15 @@ export class LoggingController {
      */
     async getLogsByEventSource(eventSource: string, limit: number = 50) {
         try {
-            const { data, error } = await loggingService.getLogsByEventSource(eventSource, limit);
-            
+            const { data, error } = await loggingService.getLogsByEventSource(
+                eventSource,
+                limit
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
@@ -118,12 +137,15 @@ export class LoggingController {
                 success: true,
                 data,
                 eventSource,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get logs by event source'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get logs by event source",
             };
         }
     }
@@ -134,23 +156,26 @@ export class LoggingController {
     async getRecentLogs(limit: number = 100) {
         try {
             const { data, error } = await loggingService.getRecentLogs(limit);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get recent logs'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get recent logs",
             };
         }
     }
@@ -158,35 +183,43 @@ export class LoggingController {
     /**
      * Log user action (convenience method)
      */
-    async logUserAction(action: string, userId?: string, metadata?: Record<string, unknown>) {
+    async logUserAction(
+        action: string,
+        userId?: string,
+        metadata?: Record<string, unknown>
+    ) {
         return this.logEvent({
-            eventType: 'user_action',
-            eventSource: 'client',
+            eventType: "user_action",
+            eventSource: "client",
             metadata: {
                 action,
                 userId,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
     /**
      * Log error (convenience method)
      */
-    async logError(error: Error | string, source?: string, metadata?: Record<string, unknown>) {
-        const errorMessage = typeof error === 'string' ? error : error.message;
-        const errorStack = typeof error === 'string' ? undefined : error.stack;
+    async logError(
+        error: Error | string,
+        source?: string,
+        metadata?: Record<string, unknown>
+    ) {
+        const errorMessage = typeof error === "string" ? error : error.message;
+        const errorStack = typeof error === "string" ? undefined : error.stack;
 
         return this.logEvent({
-            eventType: 'error',
-            eventSource: source || 'unknown',
+            eventType: "error",
+            eventSource: source || "unknown",
             metadata: {
                 message: errorMessage,
                 stack: errorStack,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 
@@ -194,21 +227,21 @@ export class LoggingController {
      * Log performance metric (convenience method)
      */
     async logPerformance(
-        metric: string, 
-        value: number, 
-        unit: string = 'ms',
+        metric: string,
+        value: number,
+        unit: string = "ms",
         metadata?: Record<string, unknown>
     ) {
         return this.logEvent({
-            eventType: 'performance',
-            eventSource: 'client',
+            eventType: "performance",
+            eventSource: "client",
             metadata: {
                 metric,
                 value,
                 unit,
                 timestamp: new Date().toISOString(),
-                ...metadata
-            }
+                ...metadata,
+            },
         });
     }
 }

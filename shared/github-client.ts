@@ -1,14 +1,14 @@
 /**
  * Shared GitHub API Client
- * 
+ *
  * Common GitHub API operations used by both server and client
  * This eliminates duplicate GitHub API logic
  */
 
-import { API, FetchClient } from '@ba-calderonmorales/clean-api';
-import type { APIResult } from '@ba-calderonmorales/clean-api';
-import { createGitHubAPI, RETRY_CONFIG, isClient } from './api-config.js';
-import type { VersionInfo, GitHubRelease } from './api-types.js';
+import { API, FetchClient } from "@ba-calderonmorales/clean-api";
+import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { createGitHubAPI, RETRY_CONFIG, isClient } from "./api-config.js";
+import type { VersionInfo, GitHubRelease } from "./api-types.js";
 
 // Enhanced HTTP Client with retries
 class EnhancedGitHubClient extends FetchClient {
@@ -23,7 +23,7 @@ class EnhancedGitHubClient extends FetchClient {
         url,
         method,
         data,
-        headers = {}
+        headers = {},
     }: {
         url: string;
         method: string;
@@ -41,21 +41,28 @@ class EnhancedGitHubClient extends FetchClient {
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    throw new Error(
+                        `HTTP ${response.status}: ${response.statusText}`
+                    );
                 }
 
                 return response.json();
             } catch (error) {
                 lastError = error as Error;
-                
+
                 // Don't retry on client errors (4xx)
-                if (error instanceof Error && error.message.includes('HTTP 4')) {
+                if (
+                    error instanceof Error &&
+                    error.message.includes("HTTP 4")
+                ) {
                     throw error;
                 }
 
                 // Wait before retry (exponential backoff)
                 if (attempt < this.retries) {
-                    await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                    await new Promise(resolve =>
+                        setTimeout(resolve, Math.pow(2, attempt) * 1000)
+                    );
                 }
             }
         }
@@ -76,20 +83,23 @@ export class SharedGitHubClient {
     constructor() {
         this.api = createGitHubAPI();
         this.client = new EnhancedGitHubClient();
-        this.apiInstance = new API(`github-${isClient ? 'client' : 'server'}`);
+        this.apiInstance = new API(`github-${isClient ? "client" : "server"}`);
     }
 
     /**
      * Convert GitHub release to VersionInfo
      */
-    private convertReleaseToVersionInfo(release: GitHubRelease, isLatest: boolean = false): VersionInfo {
+    private convertReleaseToVersionInfo(
+        release: GitHubRelease,
+        isLatest: boolean = false
+    ): VersionInfo {
         return {
             version: release.tag_name,
             name: release.name || release.tag_name,
             publishedAt: new Date(release.published_at).toLocaleDateString(),
             url: release.html_url,
-            description: release.body || 'No description available',
-            isLatest
+            description: release.body || "No description available",
+            isLatest,
         };
     }
 
@@ -101,8 +111,8 @@ export class SharedGitHubClient {
             const url = `${this.api.config.baseUrl}${this.api.routes.latestRelease}`;
             const release: GitHubRelease = await this.client.request({
                 url,
-                method: 'GET',
-                headers: this.api.config.headers
+                method: "GET",
+                headers: this.api.config.headers,
             });
 
             const versionInfo = this.convertReleaseToVersionInfo(release, true);
@@ -120,11 +130,11 @@ export class SharedGitHubClient {
             const url = `${this.api.config.baseUrl}${this.api.routes.releases}?per_page=${limit}`;
             const releases: GitHubRelease[] = await this.client.request({
                 url,
-                method: 'GET',
-                headers: this.api.config.headers
+                method: "GET",
+                headers: this.api.config.headers,
             });
 
-            const versionInfos = releases.map((release, index) => 
+            const versionInfos = releases.map((release, index) =>
                 this.convertReleaseToVersionInfo(release, index === 0)
             );
 
@@ -139,7 +149,7 @@ export class SharedGitHubClient {
      */
     async isVersionLatest(version: string): APIResult<boolean> {
         const { data: latestVersion, error } = await this.getLatestRelease();
-        
+
         if (error) {
             return { error };
         }

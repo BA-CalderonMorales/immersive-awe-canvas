@@ -1,12 +1,12 @@
 /**
  * Version API React Hook
- * 
+ *
  * React hook for version management using Clean API architecture
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { clientVersionAPIClient } from '../clients/version-client';
-import type { VersionInfo } from '../clients/github-client';
+import { useQuery } from "@tanstack/react-query";
+import { clientVersionAPIClient } from "../clients/version-client";
+import type { VersionInfo } from "../clients/github-client";
 
 /**
  * Hook to get current application version
@@ -24,9 +24,10 @@ export const useLatestVersion = (options?: {
     refetchInterval?: number;
 }) => {
     return useQuery<VersionInfo>({
-        queryKey: ['version', 'latest'],
+        queryKey: ["version", "latest"],
         queryFn: async () => {
-            const { data, error } = await clientVersionAPIClient.getLatestVersion();
+            const { data, error } =
+                await clientVersionAPIClient.getLatestVersion();
             if (error) throw error;
             return data!;
         },
@@ -39,14 +40,18 @@ export const useLatestVersion = (options?: {
 /**
  * Hook to get all releases from GitHub
  */
-export const useAllReleases = (limit: number = 10, options?: {
-    enabled?: boolean;
-    staleTime?: number;
-}) => {
+export const useAllReleases = (
+    limit: number = 10,
+    options?: {
+        enabled?: boolean;
+        staleTime?: number;
+    }
+) => {
     return useQuery<VersionInfo[]>({
-        queryKey: ['version', 'releases', limit],
+        queryKey: ["version", "releases", limit],
         queryFn: async () => {
-            const { data, error } = await clientVersionAPIClient.getAllReleases(limit);
+            const { data, error } =
+                await clientVersionAPIClient.getAllReleases(limit);
             if (error) throw error;
             return data!;
         },
@@ -63,7 +68,7 @@ export const useVersionUpdate = (options?: {
     checkInterval?: number;
 }) => {
     return useQuery({
-        queryKey: ['version', 'update-check'],
+        queryKey: ["version", "update-check"],
         queryFn: () => clientVersionAPIClient.getUpdateInfo(),
         staleTime: 15 * 60 * 1000, // 15 minutes
         refetchInterval: options?.checkInterval ?? 60 * 60 * 1000, // 1 hour

@@ -1,6 +1,6 @@
 /**
  * Enhanced GitHub Issue Creation Edge Function using Clean API Architecture
- * 
+ *
  * This example shows how to integrate the clean-api structure with your existing
  * Supabase edge function for creating GitHub issues.
  */
@@ -43,7 +43,11 @@ class EdgeFunctionAPIClient {
     private defaultHeaders: Record<string, string>;
     private retries: number;
 
-    constructor(baseUrl: string, headers: Record<string, string> = {}, retries = 3) {
+    constructor(
+        baseUrl: string,
+        headers: Record<string, string> = {},
+        retries = 3
+    ) {
         this.baseUrl = baseUrl;
         this.defaultHeaders = headers;
         this.retries = retries;
@@ -55,15 +59,17 @@ class EdgeFunctionAPIClient {
         data?: any;
         headers?: Record<string, string>;
     }): Promise<T> {
-        const url = options.url.startsWith('http') ? options.url : `${this.baseUrl}${options.url}`;
-        
+        const url = options.url.startsWith("http")
+            ? options.url
+            : `${this.baseUrl}${options.url}`;
+
         const config = {
             method: options.method,
             headers: {
                 ...this.defaultHeaders,
-                ...options.headers
+                ...options.headers,
             },
-            body: options.data ? JSON.stringify(options.data) : undefined
+            body: options.data ? JSON.stringify(options.data) : undefined,
         };
 
         let lastError: Error | null = null;
@@ -71,27 +77,32 @@ class EdgeFunctionAPIClient {
         for (let attempt = 0; attempt <= this.retries; attempt++) {
             try {
                 const response = await fetch(url, config);
-                
+
                 if (!response.ok) {
                     const errorData = await response.json().catch(() => ({}));
-                    throw new Error(`HTTP ${response.status}: ${errorData.message || response.statusText}`);
+                    throw new Error(
+                        `HTTP ${response.status}: ${errorData.message || response.statusText}`
+                    );
                 }
 
                 const data = await response.json();
                 return data as T;
             } catch (error) {
-                lastError = error instanceof Error ? error : new Error('Unknown error');
-                
+                lastError =
+                    error instanceof Error ? error : new Error("Unknown error");
+
                 if (attempt === this.retries) {
                     break;
                 }
-                
+
                 // Wait before retry with exponential backoff
-                await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+                await new Promise(resolve =>
+                    setTimeout(resolve, Math.pow(2, attempt) * 1000)
+                );
             }
         }
 
-        throw lastError || new Error('Network error after retries');
+        throw lastError || new Error("Network error after retries");
     }
 }
 
@@ -101,15 +112,15 @@ const GITHUB_ACCESS_TOKEN = Deno.env.get("GITHUB_ACCESS_TOKEN");
 
 // Set up Clean API inspired configuration
 const apiBase = new EdgeFunctionAPIBase();
-apiBase.addRoute('githubIssues', `/repos/${GITHUB_REPO}/issues`);
-apiBase.setConfig('maxRequests', 3);
-apiBase.setConfig('windowMs', 300000); // 5 minutes
+apiBase.addRoute("githubIssues", `/repos/${GITHUB_REPO}/issues`);
+apiBase.setConfig("maxRequests", 3);
+apiBase.setConfig("windowMs", 300000); // 5 minutes
 
-const githubClient = new EdgeFunctionAPIClient('https://api.github.com', {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${GITHUB_ACCESS_TOKEN}`,
-    'Accept': 'application/vnd.github.v3+json',
-    'User-Agent': 'Supabase-Edge-Function',
+const githubClient = new EdgeFunctionAPIClient("https://api.github.com", {
+    "Content-Type": "application/json",
+    Authorization: `Bearer ${GITHUB_ACCESS_TOKEN}`,
+    Accept: "application/vnd.github.v3+json",
+    "User-Agent": "Supabase-Edge-Function",
 });
 
 // Rate limiting (simple in-memory implementation)
@@ -117,8 +128,8 @@ const rateLimiter = new Map<string, number[]>();
 
 const isRateLimited = (identifier: string): boolean => {
     const now = Date.now();
-    const maxRequests = apiBase.getConfig('maxRequests');
-    const windowMs = apiBase.getConfig('windowMs');
+    const maxRequests = apiBase.getConfig("maxRequests");
+    const windowMs = apiBase.getConfig("windowMs");
     const requests = rateLimiter.get(identifier) || [];
 
     // Remove expired requests
@@ -153,44 +164,45 @@ interface IssueValidationResult {
 const validateIssueData = (data: any): IssueValidationResult => {
     const errors: string[] = [];
 
-    if (!data || typeof data !== 'object') {
-        return { isValid: false, errors: ['Invalid issue data format'] };
+    if (!data || typeof data !== "object") {
+        return { isValid: false, errors: ["Invalid issue data format"] };
     }
 
     if (!data.issueLocation || data.issueLocation.length < 3) {
-        errors.push('Issue location must be at least 3 characters');
+        errors.push("Issue location must be at least 3 characters");
     }
 
     if (!Array.isArray(data.device) || data.device.length === 0) {
-        errors.push('At least one device must be selected');
+        errors.push("At least one device must be selected");
     }
 
     if (!data.expectedBehavior || data.expectedBehavior.length < 10) {
-        errors.push('Expected behavior must be at least 10 characters');
+        errors.push("Expected behavior must be at least 10 characters");
     }
 
-    if (!['yes', 'no'].includes(data.inUS)) {
+    if (!["yes", "no"].includes(data.inUS)) {
         errors.push('inUS must be either "yes" or "no"');
     }
 
-    if (!['always', 'sometimes', 'rarely'].includes(data.frequency)) {
+    if (!["always", "sometimes", "rarely"].includes(data.frequency)) {
         errors.push('Frequency must be "always", "sometimes", or "rarely"');
     }
 
-    if (!['yes', 'no'].includes(data.canContact)) {
+    if (!["yes", "no"].includes(data.canContact)) {
         errors.push('canContact must be either "yes" or "no"');
     }
 
     return {
         isValid: errors.length === 0,
-        errors
+        errors,
     };
 };
 
 // Security headers
 const getSecurityHeaders = () => ({
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Access-Control-Allow-Headers":
+        "authorization, x-client-info, apikey, content-type",
     "Content-Type": "application/json",
     "X-Content-Type-Options": "nosniff",
     "X-Frame-Options": "DENY",
@@ -214,9 +226,12 @@ serve(async req => {
     // Rate limiting check
     const clientIP = req.headers.get("x-forwarded-for") || "unknown";
     if (isRateLimited(clientIP)) {
-        return sendResponse({
-            error: "Rate limit exceeded. Please try again later.",
-        }, 429);
+        return sendResponse(
+            {
+                error: "Rate limit exceeded. Please try again later.",
+            },
+            429
+        );
     }
 
     const supabaseClient = createClient(
@@ -229,7 +244,10 @@ serve(async req => {
         }
     );
 
-    const logEvent = async (eventType: string, metadata: Record<string, unknown>) => {
+    const logEvent = async (
+        eventType: string,
+        metadata: Record<string, unknown>
+    ) => {
         const sanitizedMetadata = {
             ...metadata,
             clientIP: clientIP.slice(0, 50),
@@ -243,7 +261,8 @@ serve(async req => {
     };
 
     if (!GITHUB_REPO || !GITHUB_ACCESS_TOKEN) {
-        const errorMsg = "Missing GITHUB_REPO or GITHUB_ACCESS_TOKEN environment variables.";
+        const errorMsg =
+            "Missing GITHUB_REPO or GITHUB_ACCESS_TOKEN environment variables.";
         await logEvent("github_issue_submission_error", { error: errorMsg });
         return sendResponse({ error: errorMsg }, 500);
     }
@@ -255,11 +274,16 @@ serve(async req => {
         // Validate using clean-api inspired validation
         const validation = validateIssueData(issueData);
         if (!validation.isValid) {
-            await logEvent("github_issue_validation_error", { errors: validation.errors });
-            return sendResponse({ 
-                error: "Validation failed", 
-                details: validation.errors 
-            }, 400);
+            await logEvent("github_issue_validation_error", {
+                errors: validation.errors,
+            });
+            return sendResponse(
+                {
+                    error: "Validation failed",
+                    details: validation.errors,
+                },
+                400
+            );
         }
 
         // Sanitize input data
@@ -268,13 +292,23 @@ serve(async req => {
             device: Array.isArray(issueData.device)
                 ? issueData.device.slice(0, 10).map(sanitizeInput)
                 : [],
-            inUS: ["yes", "no"].includes(issueData.inUS) ? issueData.inUS : "no",
-            frequency: ["always", "sometimes", "rarely"].includes(issueData.frequency)
-                ? issueData.frequency : "sometimes",
+            inUS: ["yes", "no"].includes(issueData.inUS)
+                ? issueData.inUS
+                : "no",
+            frequency: ["always", "sometimes", "rarely"].includes(
+                issueData.frequency
+            )
+                ? issueData.frequency
+                : "sometimes",
             expectedBehavior: sanitizeInput(issueData.expectedBehavior || ""),
             workaround: sanitizeInput(issueData.workaround || ""),
-            canContact: ["yes", "no"].includes(issueData.canContact) ? issueData.canContact : "no",
-            email: issueData.canContact === "yes" ? sanitizeInput(issueData.email || "") : "",
+            canContact: ["yes", "no"].includes(issueData.canContact)
+                ? issueData.canContact
+                : "no",
+            email:
+                issueData.canContact === "yes"
+                    ? sanitizeInput(issueData.email || "")
+                    : "",
         };
 
         const sanitizedAppVersion = sanitizeInput(appVersion || "unknown");
@@ -305,19 +339,19 @@ ${sanitizedIssueData.workaround || "Not provided."}
         });
 
         // Use clean-api inspired client for GitHub API call
-        const githubIssueUrl = apiBase.getRoute('githubIssues');
+        const githubIssueUrl = apiBase.getRoute("githubIssues");
         if (!githubIssueUrl) {
-            throw new Error('GitHub issues route not configured');
+            throw new Error("GitHub issues route not configured");
         }
 
         const responseData = await githubClient.request<any>({
             url: githubIssueUrl,
-            method: 'POST',
+            method: "POST",
             data: {
                 title: issueTitle,
                 body: issueBody,
                 labels: ["bug-report"],
-            }
+            },
         });
 
         await logEvent("github_issue_submission_success", {
@@ -332,16 +366,19 @@ ${sanitizedIssueData.workaround || "Not provided."}
                 title: responseData.title,
             },
         });
-
     } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "Unknown error";
+        const errorMessage =
+            error instanceof Error ? error.message : "Unknown error";
         await logEvent("github_issue_submission_error", {
             error: errorMessage.slice(0, 500),
         });
-        
-        return sendResponse({
-            error: "An unexpected error occurred.",
-            details: errorMessage.slice(0, 200),
-        }, 500);
+
+        return sendResponse(
+            {
+                error: "An unexpected error occurred.",
+                details: errorMessage.slice(0, 200),
+            },
+            500
+        );
     }
 });

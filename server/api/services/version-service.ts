@@ -1,11 +1,16 @@
 /**
  * Version Service
- * 
+ *
  * Business logic for version-related operations using shared utilities
  */
 
-import { sharedVersionManager, type VersionInfo, type VersionUpdateInfo, type VersionDetails } from '../../../shared/index.js';
-import type { APIResult } from '@ba-calderonmorales/clean-api';
+import {
+    sharedVersionManager,
+    type VersionInfo,
+    type VersionUpdateInfo,
+    type VersionDetails,
+} from "../../../shared/index.js";
+import type { APIResult } from "@ba-calderonmorales/clean-api";
 
 /**
  * Server Version Service

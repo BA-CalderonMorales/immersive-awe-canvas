@@ -1,25 +1,25 @@
 /**
  * Database API Error Handling Utilities
- * 
+ *
  * Centralized error handling for database API operations
  */
 
-import { APIError } from '@ba-calderonmorales/clean-api';
-import { databaseLoggingClient } from '../clients/logging-client.js';
+import { APIError } from "@ba-calderonmorales/clean-api";
+import { databaseLoggingClient } from "../clients/logging-client.js";
 
 /**
  * Error types for database operations
  */
 export enum DatabaseErrorType {
-    VALIDATION_ERROR = 'VALIDATION_ERROR',
-    NETWORK_ERROR = 'NETWORK_ERROR',
-    AUTHENTICATION_ERROR = 'AUTHENTICATION_ERROR',
-    AUTHORIZATION_ERROR = 'AUTHORIZATION_ERROR',
-    NOT_FOUND_ERROR = 'NOT_FOUND_ERROR',
-    CONFLICT_ERROR = 'CONFLICT_ERROR',
-    RATE_LIMIT_ERROR = 'RATE_LIMIT_ERROR',
-    SERVER_ERROR = 'SERVER_ERROR',
-    UNKNOWN_ERROR = 'UNKNOWN_ERROR'
+    VALIDATION_ERROR = "VALIDATION_ERROR",
+    NETWORK_ERROR = "NETWORK_ERROR",
+    AUTHENTICATION_ERROR = "AUTHENTICATION_ERROR",
+    AUTHORIZATION_ERROR = "AUTHORIZATION_ERROR",
+    NOT_FOUND_ERROR = "NOT_FOUND_ERROR",
+    CONFLICT_ERROR = "CONFLICT_ERROR",
+    RATE_LIMIT_ERROR = "RATE_LIMIT_ERROR",
+    SERVER_ERROR = "SERVER_ERROR",
+    UNKNOWN_ERROR = "UNKNOWN_ERROR",
 }
 
 /**
@@ -105,7 +105,7 @@ export async function handleApiError(
         );
     } else {
         databaseError = createDatabaseError(
-            'Unknown error occurred',
+            "Unknown error occurred",
             DatabaseErrorType.UNKNOWN_ERROR,
             500,
             { ...context, rawError: JSON.stringify(error) }
@@ -113,15 +113,12 @@ export async function handleApiError(
     }
 
     // Log the error
-    await databaseLoggingClient.logError(
-        `API operation failed: ${operation}`,
-        {
-            errorType: databaseError.type,
-            status: databaseError.status,
-            message: databaseError.message,
-            context: databaseError.context
-        }
-    );
+    await databaseLoggingClient.logError(`API operation failed: ${operation}`, {
+        errorType: databaseError.type,
+        status: databaseError.status,
+        message: databaseError.message,
+        context: databaseError.context,
+    });
 
     return databaseError;
 }
@@ -137,7 +134,11 @@ export async function withErrorHandling<T>(
     try {
         return await operation();
     } catch (error) {
-        const databaseError = await handleApiError(error, operationName, context);
+        const databaseError = await handleApiError(
+            error,
+            operationName,
+            context
+        );
         throw databaseError;
     }
 }
@@ -162,7 +163,7 @@ export function formatErrorForResponse(error: DatabaseError): ErrorResponse {
         type: error.type,
         status: error.status,
         timestamp: new Date().toISOString(),
-        context: error.context
+        context: error.context,
     };
 }
 
@@ -173,7 +174,7 @@ export function isRetryableError(error: DatabaseError): boolean {
     return [
         DatabaseErrorType.NETWORK_ERROR,
         DatabaseErrorType.RATE_LIMIT_ERROR,
-        DatabaseErrorType.SERVER_ERROR
+        DatabaseErrorType.SERVER_ERROR,
     ].includes(error.type);
 }
 
@@ -199,7 +200,10 @@ export function getRetryDelay(error: DatabaseError, attempt: number): number {
             multiplier = 1;
     }
 
-    const delay = Math.min(baseDelay * multiplier * Math.pow(2, attempt - 1), maxDelay);
+    const delay = Math.min(
+        baseDelay * multiplier * Math.pow(2, attempt - 1),
+        maxDelay
+    );
     return delay;
 }
 
@@ -227,10 +231,10 @@ export function createNotFoundError(
     identifier?: string,
     context?: Record<string, any>
 ): DatabaseError {
-    const message = identifier 
+    const message = identifier
         ? `${resource} with identifier '${identifier}' not found`
         : `${resource} not found`;
-    
+
     return createDatabaseError(
         message,
         DatabaseErrorType.NOT_FOUND_ERROR,
@@ -243,7 +247,7 @@ export function createNotFoundError(
  * Authentication error helper
  */
 export function createAuthenticationError(
-    message = 'Authentication required',
+    message = "Authentication required",
     context?: Record<string, any>
 ): DatabaseError {
     return createDatabaseError(
@@ -258,7 +262,7 @@ export function createAuthenticationError(
  * Authorization error helper
  */
 export function createAuthorizationError(
-    message = 'Insufficient permissions',
+    message = "Insufficient permissions",
     context?: Record<string, any>
 ): DatabaseError {
     return createDatabaseError(
@@ -273,7 +277,7 @@ export function createAuthorizationError(
  * Rate limit error helper
  */
 export function createRateLimitError(
-    message = 'Rate limit exceeded',
+    message = "Rate limit exceeded",
     retryAfter?: number,
     context?: Record<string, any>
 ): DatabaseError {

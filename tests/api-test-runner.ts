@@ -1,25 +1,29 @@
 /**
  * Unified API Testing Module
- * 
+ *
  * Comprehensive testing for both layered architecture and seamless integration
  */
 
 // Server API imports
-import { versionService, loggingService, githubAPIClient } from '../server/api/index.js';
+import {
+    versionService,
+    loggingService,
+    githubAPIClient,
+} from "../server/api/index.js";
 
-// Client API imports  
-import { 
-    clientVersionAPIClient, 
-    clientGitHubAPIClient, 
-    clientLoggingAPIClient 
-} from '../client/api/index.js';
+// Client API imports
+import {
+    clientVersionAPIClient,
+    clientGitHubAPIClient,
+    clientLoggingAPIClient,
+} from "../client/api/index.js";
 
 // Shared utilities imports
-import { 
-    sharedGitHubClient, 
-    sharedVersionManager, 
-    performanceMonitor 
-} from '../shared/index.js';
+import {
+    sharedGitHubClient,
+    sharedVersionManager,
+    performanceMonitor,
+} from "../shared/index.js";
 
 /**
  * Test Results Interface
@@ -47,14 +51,14 @@ export class APITestRunner {
      * Run all API tests
      */
     async runAllTests(): Promise<TestSuite[]> {
-        console.log('🧪 Running Comprehensive API Tests...\n');
+        console.log("🧪 Running Comprehensive API Tests...\n");
 
         const suites = [
             () => this.testServerArchitecture(),
             () => this.testClientArchitecture(),
             () => this.testSharedUtilities(),
             () => this.testSeamlessIntegration(),
-            () => this.testCrossLayerConsistency()
+            () => this.testCrossLayerConsistency(),
         ];
 
         for (const suite of suites) {
@@ -72,7 +76,7 @@ export class APITestRunner {
         const startTime = Date.now();
         const results: TestResult[] = [];
 
-        console.log('🏗️ Testing Server Layered Architecture:');
+        console.log("🏗️ Testing Server Layered Architecture:");
 
         // Test Version Service
         try {
@@ -81,19 +85,22 @@ export class APITestRunner {
             const fullVersion = versionService.getFullVersion();
 
             results.push({
-                name: 'Server Version Service',
+                name: "Server Version Service",
                 passed: !!(appVersion && buildInfo && fullVersion),
-                details: `App: ${appVersion}, Build: ${buildInfo.slice(0, 20)}...`
+                details: `App: ${appVersion}, Build: ${buildInfo.slice(0, 20)}...`,
             });
 
-            console.log('  ✅ Version Service:', appVersion);
+            console.log("  ✅ Version Service:", appVersion);
         } catch (error) {
             results.push({
-                name: 'Server Version Service',
+                name: "Server Version Service",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Version Service failed:', (error as Error).message);
+            console.log(
+                "  ❌ Version Service failed:",
+                (error as Error).message
+            );
         }
 
         // Test GitHub API Client
@@ -101,35 +108,35 @@ export class APITestRunner {
             const { data, error } = await githubAPIClient.getLatestRelease();
             if (data) {
                 results.push({
-                    name: 'Server GitHub API',
+                    name: "Server GitHub API",
                     passed: true,
-                    details: `Latest: ${data.version}`
+                    details: `Latest: ${data.version}`,
                 });
-                console.log('  ✅ GitHub API:', data.version);
+                console.log("  ✅ GitHub API:", data.version);
             } else {
                 results.push({
-                    name: 'Server GitHub API',
+                    name: "Server GitHub API",
                     passed: false,
-                    error: error?.message || 'Unknown error'
+                    error: error?.message || "Unknown error",
                 });
-                console.log('  ❌ GitHub API failed:', error?.message);
+                console.log("  ❌ GitHub API failed:", error?.message);
             }
         } catch (error) {
             results.push({
-                name: 'Server GitHub API',
+                name: "Server GitHub API",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ GitHub API error:', (error as Error).message);
+            console.log("  ❌ GitHub API error:", (error as Error).message);
         }
 
         this.results.push({
-            name: 'Server Architecture',
+            name: "Server Architecture",
             results,
-            duration: Date.now() - startTime
+            duration: Date.now() - startTime,
         });
 
-        console.log('');
+        console.log("");
     }
 
     /**
@@ -139,63 +146,71 @@ export class APITestRunner {
         const startTime = Date.now();
         const results: TestResult[] = [];
 
-        console.log('🖥️ Testing Client API Architecture:');
+        console.log("🖥️ Testing Client API Architecture:");
 
         // Test Client Version API
         try {
             const currentVersion = clientVersionAPIClient.getCurrentVersion();
-            const { data: latestVersion } = await clientVersionAPIClient.getLatestVersion();
+            const { data: latestVersion } =
+                await clientVersionAPIClient.getLatestVersion();
 
             results.push({
-                name: 'Client Version API',
+                name: "Client Version API",
                 passed: !!(currentVersion && latestVersion),
-                details: `Current: ${currentVersion.appVersion}, Latest: ${latestVersion?.version}`
+                details: `Current: ${currentVersion.appVersion}, Latest: ${latestVersion?.version}`,
             });
 
-            console.log('  ✅ Client Version API:', currentVersion.appVersion);
+            console.log("  ✅ Client Version API:", currentVersion.appVersion);
         } catch (error) {
             results.push({
-                name: 'Client Version API',
+                name: "Client Version API",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Client Version API failed:', (error as Error).message);
+            console.log(
+                "  ❌ Client Version API failed:",
+                (error as Error).message
+            );
         }
 
         // Test Client GitHub API
         try {
-            const { data, error } = await clientGitHubAPIClient.getLatestRelease();
+            const { data, error } =
+                await clientGitHubAPIClient.getLatestRelease();
             if (data) {
                 results.push({
-                    name: 'Client GitHub API',
+                    name: "Client GitHub API",
                     passed: true,
-                    details: `Latest: ${data.version}`
+                    details: `Latest: ${data.version}`,
                 });
-                console.log('  ✅ Client GitHub API:', data.version);
+                console.log("  ✅ Client GitHub API:", data.version);
             } else {
                 results.push({
-                    name: 'Client GitHub API',
+                    name: "Client GitHub API",
                     passed: false,
-                    error: error?.message || 'Unknown error'
+                    error: error?.message || "Unknown error",
                 });
-                console.log('  ❌ Client GitHub API failed:', error?.message);
+                console.log("  ❌ Client GitHub API failed:", error?.message);
             }
         } catch (error) {
             results.push({
-                name: 'Client GitHub API',
+                name: "Client GitHub API",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Client GitHub API error:', (error as Error).message);
+            console.log(
+                "  ❌ Client GitHub API error:",
+                (error as Error).message
+            );
         }
 
         this.results.push({
-            name: 'Client Architecture',
+            name: "Client Architecture",
             results,
-            duration: Date.now() - startTime
+            duration: Date.now() - startTime,
         });
 
-        console.log('');
+        console.log("");
     }
 
     /**
@@ -205,33 +220,39 @@ export class APITestRunner {
         const startTime = Date.now();
         const results: TestResult[] = [];
 
-        console.log('🔄 Testing Shared Utilities:');
+        console.log("🔄 Testing Shared Utilities:");
 
         // Test Shared GitHub Client
         try {
             const { data, error } = await sharedGitHubClient.getLatestRelease();
             if (data) {
                 results.push({
-                    name: 'Shared GitHub Client',
+                    name: "Shared GitHub Client",
                     passed: true,
-                    details: `Version: ${data.version}`
+                    details: `Version: ${data.version}`,
                 });
-                console.log('  ✅ Shared GitHub Client:', data.version);
+                console.log("  ✅ Shared GitHub Client:", data.version);
             } else {
                 results.push({
-                    name: 'Shared GitHub Client',
+                    name: "Shared GitHub Client",
                     passed: false,
-                    error: error?.message || 'Unknown error'
+                    error: error?.message || "Unknown error",
                 });
-                console.log('  ❌ Shared GitHub Client failed:', error?.message);
+                console.log(
+                    "  ❌ Shared GitHub Client failed:",
+                    error?.message
+                );
             }
         } catch (error) {
             results.push({
-                name: 'Shared GitHub Client',
+                name: "Shared GitHub Client",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Shared GitHub Client error:', (error as Error).message);
+            console.log(
+                "  ❌ Shared GitHub Client error:",
+                (error as Error).message
+            );
         }
 
         // Test Shared Version Manager
@@ -240,50 +261,59 @@ export class APITestRunner {
             const updateInfo = await sharedVersionManager.getUpdateInfo();
 
             results.push({
-                name: 'Shared Version Manager',
+                name: "Shared Version Manager",
                 passed: !!(currentVersion && updateInfo),
-                details: `Current: ${currentVersion.appVersion}, Update: ${updateInfo.hasUpdate}`
+                details: `Current: ${currentVersion.appVersion}, Update: ${updateInfo.hasUpdate}`,
             });
 
-            console.log('  ✅ Shared Version Manager:', currentVersion.appVersion);
+            console.log(
+                "  ✅ Shared Version Manager:",
+                currentVersion.appVersion
+            );
         } catch (error) {
             results.push({
-                name: 'Shared Version Manager',
+                name: "Shared Version Manager",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Shared Version Manager failed:', (error as Error).message);
+            console.log(
+                "  ❌ Shared Version Manager failed:",
+                (error as Error).message
+            );
         }
 
         // Test Performance Monitor
         try {
-            performanceMonitor.start('test_operation');
+            performanceMonitor.start("test_operation");
             await new Promise(resolve => setTimeout(resolve, 10)); // Small delay
-            const duration = performanceMonitor.end('test_operation');
+            const duration = performanceMonitor.end("test_operation");
 
             results.push({
-                name: 'Performance Monitor',
+                name: "Performance Monitor",
                 passed: duration > 0,
-                details: `Duration: ${duration}ms`
+                details: `Duration: ${duration}ms`,
             });
 
-            console.log('  ✅ Performance Monitor:', `${duration}ms`);
+            console.log("  ✅ Performance Monitor:", `${duration}ms`);
         } catch (error) {
             results.push({
-                name: 'Performance Monitor',
+                name: "Performance Monitor",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Performance Monitor failed:', (error as Error).message);
+            console.log(
+                "  ❌ Performance Monitor failed:",
+                (error as Error).message
+            );
         }
 
         this.results.push({
-            name: 'Shared Utilities',
+            name: "Shared Utilities",
             results,
-            duration: Date.now() - startTime
+            duration: Date.now() - startTime,
         });
 
-        console.log('');
+        console.log("");
     }
 
     /**
@@ -293,61 +323,75 @@ export class APITestRunner {
         const startTime = Date.now();
         const results: TestResult[] = [];
 
-        console.log('🔗 Testing Seamless Integration:');
+        console.log("🔗 Testing Seamless Integration:");
 
         // Test same types across boundaries
         try {
             const serverVersion = await githubAPIClient.getLatestRelease();
-            const clientVersion = await clientGitHubAPIClient.getLatestRelease();
+            const clientVersion =
+                await clientGitHubAPIClient.getLatestRelease();
             const sharedVersion = await sharedGitHubClient.getLatestRelease();
 
-            const sameType = serverVersion.data?.version === clientVersion.data?.version &&
-                            clientVersion.data?.version === sharedVersion.data?.version;
+            const sameType =
+                serverVersion.data?.version === clientVersion.data?.version &&
+                clientVersion.data?.version === sharedVersion.data?.version;
 
             results.push({
-                name: 'Cross-Layer Type Consistency',
+                name: "Cross-Layer Type Consistency",
                 passed: sameType,
-                details: `Server: ${serverVersion.data?.version}, Client: ${clientVersion.data?.version}, Shared: ${sharedVersion.data?.version}`
+                details: `Server: ${serverVersion.data?.version}, Client: ${clientVersion.data?.version}, Shared: ${sharedVersion.data?.version}`,
             });
 
-            console.log('  ✅ Type Consistency:', sameType ? 'Identical results' : 'Mismatch detected');
+            console.log(
+                "  ✅ Type Consistency:",
+                sameType ? "Identical results" : "Mismatch detected"
+            );
         } catch (error) {
             results.push({
-                name: 'Cross-Layer Type Consistency',
+                name: "Cross-Layer Type Consistency",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Type Consistency failed:', (error as Error).message);
+            console.log(
+                "  ❌ Type Consistency failed:",
+                (error as Error).message
+            );
         }
 
         // Test environment detection
         try {
-            const isServer = typeof window === 'undefined';
-            const isClient = typeof window !== 'undefined';
+            const isServer = typeof window === "undefined";
+            const isClient = typeof window !== "undefined";
 
             results.push({
-                name: 'Environment Detection',
+                name: "Environment Detection",
                 passed: isServer !== isClient,
-                details: `Server: ${isServer}, Client: ${isClient}`
+                details: `Server: ${isServer}, Client: ${isClient}`,
             });
 
-            console.log('  ✅ Environment Detection:', isServer ? 'Server' : 'Client');
+            console.log(
+                "  ✅ Environment Detection:",
+                isServer ? "Server" : "Client"
+            );
         } catch (error) {
             results.push({
-                name: 'Environment Detection',
+                name: "Environment Detection",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Environment Detection failed:', (error as Error).message);
+            console.log(
+                "  ❌ Environment Detection failed:",
+                (error as Error).message
+            );
         }
 
         this.results.push({
-            name: 'Seamless Integration',
+            name: "Seamless Integration",
             results,
-            duration: Date.now() - startTime
+            duration: Date.now() - startTime,
         });
 
-        console.log('');
+        console.log("");
     }
 
     /**
@@ -357,48 +401,57 @@ export class APITestRunner {
         const startTime = Date.now();
         const results: TestResult[] = [];
 
-        console.log('⚖️ Testing Cross-Layer Consistency:');
+        console.log("⚖️ Testing Cross-Layer Consistency:");
 
         // Test version consistency
         try {
             const serverCurrentVersion = versionService.getAppVersion();
-            const clientCurrentVersion = clientVersionAPIClient.getCurrentVersion().appVersion;
-            const sharedCurrentVersion = sharedVersionManager.getCurrentVersion().appVersion;
+            const clientCurrentVersion =
+                clientVersionAPIClient.getCurrentVersion().appVersion;
+            const sharedCurrentVersion =
+                sharedVersionManager.getCurrentVersion().appVersion;
 
-            const consistent = serverCurrentVersion === clientCurrentVersion && 
-                             clientCurrentVersion === sharedCurrentVersion;
+            const consistent =
+                serverCurrentVersion === clientCurrentVersion &&
+                clientCurrentVersion === sharedCurrentVersion;
 
             results.push({
-                name: 'Version Consistency',
+                name: "Version Consistency",
                 passed: consistent,
-                details: `Server: ${serverCurrentVersion}, Client: ${clientCurrentVersion}, Shared: ${sharedCurrentVersion}`
+                details: `Server: ${serverCurrentVersion}, Client: ${clientCurrentVersion}, Shared: ${sharedCurrentVersion}`,
             });
 
-            console.log('  ✅ Version Consistency:', consistent ? 'All layers match' : 'Mismatch detected');
+            console.log(
+                "  ✅ Version Consistency:",
+                consistent ? "All layers match" : "Mismatch detected"
+            );
         } catch (error) {
             results.push({
-                name: 'Version Consistency',
+                name: "Version Consistency",
                 passed: false,
-                error: (error as Error).message
+                error: (error as Error).message,
             });
-            console.log('  ❌ Version Consistency failed:', (error as Error).message);
+            console.log(
+                "  ❌ Version Consistency failed:",
+                (error as Error).message
+            );
         }
 
         this.results.push({
-            name: 'Cross-Layer Consistency',
+            name: "Cross-Layer Consistency",
             results,
-            duration: Date.now() - startTime
+            duration: Date.now() - startTime,
         });
 
-        console.log('');
+        console.log("");
     }
 
     /**
      * Print comprehensive test summary
      */
     private printSummary(): void {
-        console.log('📊 Test Summary:');
-        console.log('═══════════════════════════════════════════════════');
+        console.log("📊 Test Summary:");
+        console.log("═══════════════════════════════════════════════════");
 
         let totalTests = 0;
         let totalPassed = 0;
@@ -411,8 +464,10 @@ export class APITestRunner {
             totalPassed += passed;
             totalDuration += suite.duration;
 
-            const status = passed === total ? '✅' : '❌';
-            console.log(`${status} ${suite.name}: ${passed}/${total} (${suite.duration}ms)`);
+            const status = passed === total ? "✅" : "❌";
+            console.log(
+                `${status} ${suite.name}: ${passed}/${total} (${suite.duration}ms)`
+            );
 
             // Show failed tests
             const failed = suite.results.filter(r => !r.passed);
@@ -423,13 +478,19 @@ export class APITestRunner {
             }
         }
 
-        console.log('═══════════════════════════════════════════════════');
-        console.log(`🎯 Overall: ${totalPassed}/${totalTests} tests passed (${totalDuration}ms)`);
-        
+        console.log("═══════════════════════════════════════════════════");
+        console.log(
+            `🎯 Overall: ${totalPassed}/${totalTests} tests passed (${totalDuration}ms)`
+        );
+
         if (totalPassed === totalTests) {
-            console.log('🎉 All tests passed! API architecture is working perfectly.');
+            console.log(
+                "🎉 All tests passed! API architecture is working perfectly."
+            );
         } else {
-            console.log(`⚠️  ${totalTests - totalPassed} tests failed. Review the issues above.`);
+            console.log(
+                `⚠️  ${totalTests - totalPassed} tests failed. Review the issues above.`
+            );
         }
     }
 
@@ -447,11 +508,16 @@ export class APITestRunner {
 export async function runQuickAPITest(): Promise<boolean> {
     const runner = new APITestRunner();
     const results = await runner.runAllTests();
-    
-    const totalTests = results.reduce((sum, suite) => sum + suite.results.length, 0);
-    const passedTests = results.reduce((sum, suite) => 
-        sum + suite.results.filter(r => r.passed).length, 0);
-    
+
+    const totalTests = results.reduce(
+        (sum, suite) => sum + suite.results.length,
+        0
+    );
+    const passedTests = results.reduce(
+        (sum, suite) => sum + suite.results.filter(r => r.passed).length,
+        0
+    );
+
     return passedTests === totalTests;
 }
 

@@ -1,10 +1,14 @@
 /**
  * Scene Controller
- * 
+ *
  * Handles scene-related API endpoints
  */
 
-import { sceneRepository, type SceneEntity, type SceneFilters } from '../repositories/scene-repository';
+import {
+    sceneRepository,
+    type SceneEntity,
+    type SceneFilters,
+} from "../repositories/scene-repository";
 
 export class SceneController {
     private static instance: SceneController;
@@ -21,26 +25,31 @@ export class SceneController {
     /**
      * Create a new scene
      */
-    async createScene(sceneData: Omit<SceneEntity, 'id' | 'created_at' | 'updated_at'>) {
+    async createScene(
+        sceneData: Omit<SceneEntity, "id" | "created_at" | "updated_at">
+    ) {
         try {
             const { data, error } = await sceneRepository.create(sceneData);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                message: 'Scene created successfully'
+                message: "Scene created successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to create scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to create scene",
             };
         }
     }
@@ -51,22 +60,25 @@ export class SceneController {
     async getScene(id: number) {
         try {
             const { data, error } = await sceneRepository.findById(id);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
-                data
+                data,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get scene",
             };
         }
     }
@@ -77,23 +89,26 @@ export class SceneController {
     async getScenes(filters?: SceneFilters) {
         try {
             const { data, error } = await sceneRepository.findMany(filters);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get scenes'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get scenes",
             };
         }
     }
@@ -103,24 +118,28 @@ export class SceneController {
      */
     async getPublicScenes(limit?: number) {
         try {
-            const { data, error } = await sceneRepository.findPublicScenes(limit);
-            
+            const { data, error } =
+                await sceneRepository.findPublicScenes(limit);
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get public scenes'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get public scenes",
             };
         }
     }
@@ -130,12 +149,15 @@ export class SceneController {
      */
     async getUserScenes(userId: string, limit?: number) {
         try {
-            const { data, error } = await sceneRepository.findByUser(userId, limit);
-            
+            const { data, error } = await sceneRepository.findByUser(
+                userId,
+                limit
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
@@ -143,12 +165,15 @@ export class SceneController {
                 success: true,
                 data,
                 userId,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get user scenes'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get user scenes",
             };
         }
     }
@@ -159,23 +184,26 @@ export class SceneController {
     async updateScene(id: number, updates: Partial<SceneEntity>) {
         try {
             const { data, error } = await sceneRepository.update(id, updates);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data: data?.[0],
-                message: 'Scene updated successfully'
+                message: "Scene updated successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to update scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to update scene",
             };
         }
     }
@@ -186,23 +214,26 @@ export class SceneController {
     async deleteScene(id: number) {
         try {
             const { data, error } = await sceneRepository.delete(id);
-            
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data: data?.[0],
-                message: 'Scene deleted successfully'
+                message: "Scene deleted successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to delete scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to delete scene",
             };
         }
     }
@@ -212,24 +243,30 @@ export class SceneController {
      */
     async likeScene(userId: string, sceneId: number) {
         try {
-            const { data, error } = await sceneRepository.likeScene(userId, sceneId);
-            
+            const { data, error } = await sceneRepository.likeScene(
+                userId,
+                sceneId
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                message: 'Scene liked successfully'
+                message: "Scene liked successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to like scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to like scene",
             };
         }
     }
@@ -239,24 +276,30 @@ export class SceneController {
      */
     async unlikeScene(userId: string, sceneId: number) {
         try {
-            const { data, error } = await sceneRepository.unlikeScene(userId, sceneId);
-            
+            const { data, error } = await sceneRepository.unlikeScene(
+                userId,
+                sceneId
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data: data?.[0],
-                message: 'Scene unliked successfully'
+                message: "Scene unliked successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to unlike scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to unlike scene",
             };
         }
     }
@@ -266,24 +309,30 @@ export class SceneController {
      */
     async bookmarkScene(userId: string, sceneId: number) {
         try {
-            const { data, error } = await sceneRepository.bookmarkScene(userId, sceneId);
-            
+            const { data, error } = await sceneRepository.bookmarkScene(
+                userId,
+                sceneId
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data,
-                message: 'Scene bookmarked successfully'
+                message: "Scene bookmarked successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to bookmark scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to bookmark scene",
             };
         }
     }
@@ -293,24 +342,30 @@ export class SceneController {
      */
     async unbookmarkScene(userId: string, sceneId: number) {
         try {
-            const { data, error } = await sceneRepository.unbookmarkScene(userId, sceneId);
-            
+            const { data, error } = await sceneRepository.unbookmarkScene(
+                userId,
+                sceneId
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
             return {
                 success: true,
                 data: data?.[0],
-                message: 'Scene unbookmarked successfully'
+                message: "Scene unbookmarked successfully",
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to unbookmark scene'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to unbookmark scene",
             };
         }
     }
@@ -320,12 +375,15 @@ export class SceneController {
      */
     async getUserLikedScenes(userId: string, limit?: number) {
         try {
-            const { data, error } = await sceneRepository.getUserLikedScenes(userId, limit);
-            
+            const { data, error } = await sceneRepository.getUserLikedScenes(
+                userId,
+                limit
+            );
+
             if (error) {
                 return {
                     success: false,
-                    error: error.message
+                    error: error.message,
                 };
             }
 
@@ -333,12 +391,15 @@ export class SceneController {
                 success: true,
                 data,
                 userId,
-                count: data?.length || 0
+                count: data?.length || 0,
             };
         } catch (error) {
             return {
                 success: false,
-                error: error instanceof Error ? error.message : 'Failed to get user liked scenes'
+                error:
+                    error instanceof Error
+                        ? error.message
+                        : "Failed to get user liked scenes",
             };
         }
     }
