@@ -11,8 +11,8 @@ const ObjectMaterial = ({ material, color }: ObjectMaterialProps) => {
             return (
                 <meshBasicMaterial
                     color={color}
-                    wireframe={material.wireframe}
-                    transparent={material.transparent}
+                    wireframe={material.wireframe || undefined}
+                    transparent={material.transparent || undefined}
                     opacity={material.opacity}
                 />
             );
@@ -22,8 +22,8 @@ const ObjectMaterial = ({ material, color }: ObjectMaterialProps) => {
                     color={color}
                     metalness={material.metalness}
                     roughness={material.roughness}
-                    wireframe={material.wireframe}
-                    transparent={material.transparent}
+                    wireframe={material.wireframe || undefined}
+                    transparent={material.transparent || undefined}
                     opacity={material.opacity}
                 />
             );
@@ -33,8 +33,8 @@ const ObjectMaterial = ({ material, color }: ObjectMaterialProps) => {
                     color={color}
                     metalness={material.metalness}
                     roughness={material.roughness}
-                    wireframe={material.wireframe}
-                    transparent={material.transparent}
+                    wireframe={material.wireframe || undefined}
+                    transparent={material.transparent || undefined}
                     opacity={material.opacity}
                 />
             );

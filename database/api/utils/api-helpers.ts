@@ -5,8 +5,8 @@
  */
 
 import { APIError } from "@ba-calderonmorales/clean-api";
-import { sanitizeString, isValidEmail } from "../../shared/security.js";
-import { databaseLoggingClient } from "../clients/logging-client.js";
+import { sanitizeString, isValidEmail } from "../../shared/security";
+import { databaseLoggingClient } from "../clients/logging-client";
 
 /**
  * Retry configuration interface

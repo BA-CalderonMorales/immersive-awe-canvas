@@ -17,10 +17,17 @@ export function sanitizeString(input: unknown): string {
     }
 
     // Remove HTML tags
-    const sanitizedInput = input.replace(/<[^>]*>?/gm, "");
+    let sanitizedInput = input.replace(/<[^>]*>?/gm, "");
 
     // Remove potential SQL injection characters
-    return sanitizedInput.replace(/['";\\]/g, "");
+    sanitizedInput = sanitizedInput.replace(/['";\\]/g, "");
+
+    // Remove javascript: protocol and other potentially dangerous URLs
+    sanitizedInput = sanitizedInput.replace(/javascript:/gi, "");
+    sanitizedInput = sanitizedInput.replace(/data:/gi, "");
+    sanitizedInput = sanitizedInput.replace(/vbscript:/gi, "");
+
+    return sanitizedInput;
 }
 
 /**
