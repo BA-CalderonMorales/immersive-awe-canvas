@@ -16,5 +16,6 @@ export * from "../database/supabase/types";
 // Server Utilities
 export * from "./logger";
 export * from "./security";
-export * from "./typeguards";
+// Type guards consolidated to @database/shared
+export * from "@database/shared/typeguards";
 export * from "./version";

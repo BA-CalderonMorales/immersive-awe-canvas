@@ -15,5 +15,6 @@ export * from "./logger";
 export * from "./sceneConfigUtils";
 // Security utilities
 export * from "./security";
-export * from "./typeguards";
+// Type guards consolidated to @database/shared
+export * from "@database/shared/typeguards";
 export * from "./version";

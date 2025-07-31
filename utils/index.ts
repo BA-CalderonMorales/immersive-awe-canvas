@@ -6,7 +6,8 @@
  */
 
 export * from "./github-api";
-export * from "./typeguards";
+// Type guards consolidated to @database/shared
+export * from "@database/shared/typeguards";
 // Core utilities
 export * from "./utils";
 export * from "./validation";

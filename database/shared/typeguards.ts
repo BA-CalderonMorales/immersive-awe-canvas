@@ -1,5 +1,11 @@
 import type { Json } from "@database/supabase/types";
-import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
+import type { SceneConfig, SceneThemeConfig } from "@client/types/scene";
+
+/**
+ * Consolidated typeguards for runtime type checking
+ * This module serves as the single source of truth for all type validation
+ * across client, server, and utility modules.
+ */
 
 export function isSceneThemeConfig(
     config: Json | null
@@ -47,9 +53,9 @@ export function isSceneConfig(config: Json | null): config is SceneConfig {
         typeof c.type === "string" &&
         validSceneTypes.includes(c.type) &&
         "day" in c &&
-        isSceneThemeConfig(c.day) &&
+        isSceneThemeConfig(c.day as Json) &&
         "night" in c &&
-        isSceneThemeConfig(c.night)
+        isSceneThemeConfig(c.night as Json)
     );
 }
 
@@ -64,4 +70,16 @@ export const isValidObjectType = (type: unknown): boolean => {
         "jellyTorus",
     ];
     return typeof type === "string" && validTypes.includes(type);
+};
+
+/**
+ * Additional utility type guards for security and validation
+ */
+
+export const isDefined = <T>(value: T | null | undefined): value is T => {
+    return value !== null && value !== undefined;
+};
+
+export const isValidString = (value: unknown): value is string => {
+    return typeof value === "string" && value.length > 0;
 };
