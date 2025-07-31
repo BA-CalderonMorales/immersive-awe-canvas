@@ -103,9 +103,7 @@ describe("Database API Integration", () => {
 
     describe("Validation", () => {
         it("should validate issue data correctly", async () => {
-            const { validateIssueData } = await import(
-                "./utils/validation"
-            );
+            const { validateIssueData } = await import("./utils/validation");
 
             const validData = {
                 issueLocation: "Test location",
@@ -122,9 +120,7 @@ describe("Database API Integration", () => {
         });
 
         it("should catch validation errors", async () => {
-            const { validateIssueData } = await import(
-                "./utils/validation"
-            );
+            const { validateIssueData } = await import("./utils/validation");
 
             const invalidData = {
                 issueLocation: "Te", // Too short
@@ -182,9 +178,7 @@ describe("Database API Integration", () => {
 
     describe("API Helpers", () => {
         it("should sanitize input data", async () => {
-            const { sanitizeInputData } = await import(
-                "./utils/api-helpers"
-            );
+            const { sanitizeInputData } = await import("./utils/api-helpers");
 
             const dirtyData = {
                 name: '<script>alert("hack")</script>John',
@@ -203,9 +197,7 @@ describe("Database API Integration", () => {
         });
 
         it("should build query parameters", async () => {
-            const { buildQueryParams } = await import(
-                "./utils/api-helpers"
-            );
+            const { buildQueryParams } = await import("./utils/api-helpers");
 
             const params = {
                 page: 1,
@@ -229,12 +221,8 @@ describe("Database API Integration", () => {
             const { supabaseEdgeFunctionClient } = await import(
                 "./clients/edge-function-client"
             );
-            const { validateIssueData } = await import(
-                "./utils/validation"
-            );
-            const { sanitizeInputData } = await import(
-                "./utils/api-helpers"
-            );
+            const { validateIssueData } = await import("./utils/validation");
+            const { sanitizeInputData } = await import("./utils/api-helpers");
 
             const issueData = {
                 issueLocation: "Test Component",
