@@ -6,11 +6,15 @@
  * - UI state management hooks
  * - Context providers
  * - Client-side utilities
+ * - Clean API architecture layer
  * - UI types and interfaces
  */
 
 // Main App Component
 export { default as App } from "./App";
+
+// Clean API Layer
+export * from "./api";
 
 // Components
 export * from "./components";

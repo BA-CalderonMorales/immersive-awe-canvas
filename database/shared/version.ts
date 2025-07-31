@@ -4,7 +4,7 @@
  * @description Provides version tracking, compatibility checks, and migration utilities
  */
 
-import { Logger, LogLevel } from './logger';
+import { Logger, LogLevel } from "./logger";
 
 const logger = Logger.getInstance();
 
@@ -12,9 +12,9 @@ const logger = Logger.getInstance();
  * Represents a semantic version
  */
 interface SemanticVersion {
-  major: number;
-  minor: number;
-  patch: number;
+    major: number;
+    minor: number;
+    patch: number;
 }
 
 /**
@@ -23,19 +23,19 @@ interface SemanticVersion {
  * @returns Parsed SemanticVersion or null if invalid
  */
 export function parseVersion(version: string): SemanticVersion | null {
-  const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
-  const match = version.match(versionRegex);
+    const versionRegex = /^(\d+)\.(\d+)\.(\d+)$/;
+    const match = version.match(versionRegex);
 
-  if (!match) {
-    logger.warn('Invalid version format', { version });
-    return null;
-  }
+    if (!match) {
+        logger.warn("Invalid version format", { version });
+        return null;
+    }
 
-  return {
-    major: parseInt(match[1], 10),
-    minor: parseInt(match[2], 10),
-    patch: parseInt(match[3], 10)
-  };
+    return {
+        major: parseInt(match[1], 10),
+        minor: parseInt(match[2], 10),
+        patch: parseInt(match[3], 10),
+    };
 }
 
 /**
@@ -45,22 +45,22 @@ export function parseVersion(version: string): SemanticVersion | null {
  * @returns -1 if v1 < v2, 0 if v1 = v2, 1 if v1 > v2
  */
 export function compareVersions(v1: string, v2: string): number {
-  const version1 = parseVersion(v1);
-  const version2 = parseVersion(v2);
+    const version1 = parseVersion(v1);
+    const version2 = parseVersion(v2);
 
-  if (!version1 || !version2) {
-    throw new Error('Invalid version strings');
-  }
+    if (!version1 || !version2) {
+        throw new Error("Invalid version strings");
+    }
 
-  if (version1.major !== version2.major) {
-    return version1.major - version2.major;
-  }
+    if (version1.major !== version2.major) {
+        return version1.major - version2.major;
+    }
 
-  if (version1.minor !== version2.minor) {
-    return version1.minor - version2.minor;
-  }
+    if (version1.minor !== version2.minor) {
+        return version1.minor - version2.minor;
+    }
 
-  return version1.patch - version2.patch;
+    return version1.patch - version2.patch;
 }
 
 /**
@@ -70,19 +70,19 @@ export function compareVersions(v1: string, v2: string): number {
  * @returns Boolean indicating compatibility
  */
 export function isVersionCompatible(
-  currentVersion: string,
-  minVersion: string
+    currentVersion: string,
+    minVersion: string
 ): boolean {
-  try {
-    return compareVersions(currentVersion, minVersion) >= 0;
-  } catch (error) {
-    logger.error('Version compatibility check failed', {
-      currentVersion,
-      minVersion,
-      error: (error as Error).message
-    });
-    return false;
-  }
+    try {
+        return compareVersions(currentVersion, minVersion) >= 0;
+    } catch (error) {
+        logger.error("Version compatibility check failed", {
+            currentVersion,
+            minVersion,
+            error: (error as Error).message,
+        });
+        return false;
+    }
 }
 
 /**
@@ -92,37 +92,37 @@ export function isVersionCompatible(
  * @returns New version string
  */
 export function bumpVersion(
-  currentVersion: string,
-  bumpType: 'major' | 'minor' | 'patch' = 'patch'
+    currentVersion: string,
+    bumpType: "major" | "minor" | "patch" = "patch"
 ): string {
-  const version = parseVersion(currentVersion);
+    const version = parseVersion(currentVersion);
 
-  if (!version) {
-    throw new Error('Invalid current version');
-  }
+    if (!version) {
+        throw new Error("Invalid current version");
+    }
 
-  switch (bumpType) {
-    case 'major':
-      version.major++;
-      version.minor = 0;
-      version.patch = 0;
-      break;
-    case 'minor':
-      version.minor++;
-      version.patch = 0;
-      break;
-    case 'patch':
-      version.patch++;
-      break;
-  }
+    switch (bumpType) {
+        case "major":
+            version.major++;
+            version.minor = 0;
+            version.patch = 0;
+            break;
+        case "minor":
+            version.minor++;
+            version.patch = 0;
+            break;
+        case "patch":
+            version.patch++;
+            break;
+    }
 
-  return `${version.major}.${version.minor}.${version.patch}`;
+    return `${version.major}.${version.minor}.${version.patch}`;
 }
 
 /**
  * Application version information
  */
 export const VERSION = {
-  current: '1.0.0',
-  minimumCompatible: '0.8.0'
+    current: "1.0.0",
+    minimumCompatible: "0.8.0",
 };

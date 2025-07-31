@@ -4,7 +4,7 @@
  * @description Provides common security utilities and validation functions
  */
 
-import { isDefined, isValidString } from './typeguards';
+import { isDefined, isValidString } from "./typeguards";
 
 /**
  * Sanitize a string by removing potential malicious content
@@ -12,15 +12,15 @@ import { isDefined, isValidString } from './typeguards';
  * @returns Sanitized string
  */
 export function sanitizeString(input: unknown): string {
-  if (!isValidString(input)) {
-    return '';
-  }
+    if (!isValidString(input)) {
+        return "";
+    }
 
-  // Remove HTML tags
-  const sanitizedInput = input.replace(/<[^>]*>?/gm, '');
+    // Remove HTML tags
+    const sanitizedInput = input.replace(/<[^>]*>?/gm, "");
 
-  // Remove potential SQL injection characters
-  return sanitizedInput.replace(/['";\\]/g, '');
+    // Remove potential SQL injection characters
+    return sanitizedInput.replace(/['";\\]/g, "");
 }
 
 /**
@@ -29,12 +29,12 @@ export function sanitizeString(input: unknown): string {
  * @returns Boolean indicating if the email is valid
  */
 export function isValidEmail(email: unknown): boolean {
-  if (!isValidString(email)) {
-    return false;
-  }
+    if (!isValidString(email)) {
+        return false;
+    }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
 }
 
 /**
@@ -43,20 +43,17 @@ export function isValidEmail(email: unknown): boolean {
  * @param visibleChars - Number of characters to leave unmasked at the end
  * @returns Masked data
  */
-export function maskSensitiveData(
-  data: unknown,
-  visibleChars = 4
-): string {
-  if (!isValidString(data)) {
-    return '[INVALID DATA]';
-  }
+export function maskSensitiveData(data: unknown, visibleChars = 4): string {
+    if (!isValidString(data)) {
+        return "[INVALID DATA]";
+    }
 
-  if (data.length <= visibleChars) {
-    return data;
-  }
+    if (data.length <= visibleChars) {
+        return data;
+    }
 
-  const maskedPart = '*'.repeat(data.length - visibleChars);
-  return `${maskedPart}${data.slice(-visibleChars)}`;
+    const maskedPart = "*".repeat(data.length - visibleChars);
+    return `${maskedPart}${data.slice(-visibleChars)}`;
 }
 
 /**
@@ -65,13 +62,14 @@ export function maskSensitiveData(
  * @returns Randomly generated secure string
  */
 export function generateSecureRandomString(length = 32): string {
-  const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const randomValues = new Uint32Array(length);
-  crypto.getRandomValues(randomValues);
+    const charset =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const randomValues = new Uint32Array(length);
+    crypto.getRandomValues(randomValues);
 
-  return Array.from(randomValues)
-    .map((x) => charset[x % charset.length])
-    .join('');
+    return Array.from(randomValues)
+        .map(x => charset[x % charset.length])
+        .join("");
 }
 
 /**
@@ -81,14 +79,14 @@ export function generateSecureRandomString(length = 32): string {
  * @returns Boolean indicating if strings are equal
  */
 export function secureCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
+    if (a.length !== b.length) {
+        return false;
+    }
 
-  let result = 0;
-  for (let i = 0; i < a.length; i++) {
-    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
+    let result = 0;
+    for (let i = 0; i < a.length; i++) {
+        result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+    }
 
-  return result === 0;
+    return result === 0;
 }

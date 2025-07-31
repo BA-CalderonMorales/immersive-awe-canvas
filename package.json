@@ -17,6 +17,11 @@
         "lint:fix": "biome lint --write .",
         "preview": "rsbuild preview",
         "test": "vitest run",
+        "test:api": "npx tsx tests/run-api-tests.ts",
+        "test:api:quick": "npx tsx tests/run-api-tests.ts --quick",
+        "test:api:export": "npx tsx tests/run-api-tests.ts --export",
+        "test:architecture": "npx tsx tests/test-architecture.ts",
+        "test:integration": "npx tsx tests/test-seamless-integration.ts",
         "format": "biome format --write .",
         "format:check": "biome format .",
         "check": "biome check .",
@@ -25,6 +30,7 @@
         "install:all": "bun install --workspaces"
     },
     "dependencies": {
+        "@ba-calderonmorales/clean-api": "0.0.3",
         "@hookform/resolvers": "^3.9.0",
         "@radix-ui/react-accordion": "^1.2.0",
         "@radix-ui/react-alert-dialog": "^1.1.1",

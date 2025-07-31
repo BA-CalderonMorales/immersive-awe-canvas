@@ -13,10 +13,12 @@ Welcome to the documentation for the Immersive AWE Canvas project. This document
 
 ## Quick Links
 
-- [Architecture Overview](/architecture/overview.md)
-- [Module Documentation](/modules/README.md)
-- [API Reference](/api-reference/README.md)
-- [Developer Guides](/guides/README.md)
+- [Architecture Overview](./architecture.md) - System design and architectural principles
+- [Server API Module](./modules/server-api.md) - Layered API architecture documentation
+- [Server API Reference](./api-reference/server-api.md) - Complete API reference
+- [Module Documentation](./modules/README.md) - Individual module guides
+- [API Reference](./api-reference/README.md) - Detailed API documentation
+- [Developer Guides](./guides/README.md) - Development and contribution guides
 
 ## Contributing
 

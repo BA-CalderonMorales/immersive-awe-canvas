@@ -2,12 +2,16 @@
  * Server Module Entry Point
  *
  * This module contains all backend-related code including:
+ * - Clean API layered architecture
  * - Database client and configuration
  * - Data fetching and mutations
  * - Server-side utilities
  * - API integrations
  * - Backend types and schemas
  */
+
+// New Layered API Architecture
+export * from "./api";
 
 // Database Integration
 export * from "../database/supabase/client";
