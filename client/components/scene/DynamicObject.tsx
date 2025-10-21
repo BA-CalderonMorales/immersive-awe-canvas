@@ -1,8 +1,11 @@
 import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
 import CrystallineSpireObject from "./objects/CrystallineSpireObject";
 import DistortionSphereObject from "./objects/DistortionSphereObject";
+import FibonacciSphereObject from "./objects/FibonacciSphereObject";
 import JellyTorusObject from "./objects/JellyTorusObject";
+import MandalaFlowerObject from "./objects/MandalaFlowerObject";
 import MorphingIcosahedronObject from "./objects/MorphingIcosahedronObject";
+import SacredGeometryObject from "./objects/SacredGeometryObject";
 import TorusKnotObject from "./objects/TorusKnotObject";
 import WavyGridObject from "./objects/WavyGridObject";
 import WobbleFieldObject from "./objects/WobbleFieldObject";
@@ -21,6 +24,7 @@ const DynamicObject = ({
     isMotionFrozen,
 }: DynamicObjectProps) => {
     const { mainObjectColor, material } = themeConfig;
+    
     switch (type) {
         case "TorusKnot":
             return (
@@ -78,6 +82,33 @@ const DynamicObject = ({
         case "JellyTorus":
             return (
                 <JellyTorusObject
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "FibonacciSphere":
+            return (
+                <FibonacciSphereObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "SacredGeometry":
+            return (
+                <SacredGeometryObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "MandalaFlower":
+            return (
+                <MandalaFlowerObject
+                    color={mainObjectColor}
+                    materialConfig={material}
                     isLocked={isLocked}
                     isMotionFrozen={isMotionFrozen}
                 />

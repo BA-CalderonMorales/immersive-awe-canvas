@@ -30,11 +30,6 @@ const GizmoControls = ({
     const [meshFound, setMeshFound] = useState(false); // Track when mesh is found to trigger re-render
 
     useEffect(() => {
-        console.log("🔍 DEBUG: GizmoControls useEffect", {
-            enabled,
-            selectedObjectId,
-        });
-
         if (!enabled || !selectedObjectId) {
             selectedMesh.current = null;
             setMeshFound(false);
@@ -45,33 +40,15 @@ const GizmoControls = ({
         }
 
         // Find the selected mesh in the scene
-        let mesh = null;
-        if (selectedObjectId === "main-scene-object") {
-            mesh = scene.getObjectByName("main-scene-object");
-            console.log("🔍 DEBUG: Looking for main-scene-object:", mesh);
-        } else {
-            mesh = scene.getObjectByName(selectedObjectId);
-            console.log(
-                "🔍 DEBUG: Looking for object:",
-                selectedObjectId,
-                mesh
-            );
-        }
+        const mesh = selectedObjectId === "main-scene-object"
+            ? scene.getObjectByName("main-scene-object")
+            : scene.getObjectByName(selectedObjectId);
 
         selectedMesh.current = mesh || null;
-        setMeshFound(!!mesh); // Update state to trigger re-render
+        setMeshFound(!!mesh);
 
         if (transformRef.current && selectedMesh.current) {
-            console.log(
-                "🔍 DEBUG: Attaching gizmo to mesh:",
-                selectedMesh.current
-            );
             transformRef.current.attach(selectedMesh.current);
-        } else {
-            console.log("🔍 DEBUG: Failed to attach gizmo:", {
-                transformRef: !!transformRef.current,
-                selectedMesh: !!selectedMesh.current,
-            });
         }
     }, [enabled, selectedObjectId, scene]);
 
@@ -133,11 +110,10 @@ const GizmoControls = ({
         <TransformControls
             ref={ref => {
                 transformRef.current = ref;
-                console.log("🔍 DEBUG: TransformControls ref callback:", !!ref);
             }}
             object={selectedMesh.current}
             mode={mode}
-            size={isMobile ? 2.0 : isTablet ? 1.6 : 1.2} // Device-specific sizing for optimal interaction
+            size={isMobile ? 2.0 : isTablet ? 1.6 : 1.2}
             space="world"
             rotationSnap={null}
             translationSnap={null}

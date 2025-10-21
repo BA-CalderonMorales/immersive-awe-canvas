@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef, useState } from "react";
-import type { Mesh } from "three";
+import type { Group } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import type { SceneThemeConfig } from "@/types/scene";
 import DynamicMaterial from "../materials/DynamicMaterial";
@@ -18,87 +18,58 @@ const TorusKnotObject = ({
     isLocked,
     isMotionFrozen,
 }: TorusKnotObjectProps) => {
-    const meshRef = useRef<Mesh>(null!);
+    const groupRef = useRef<Group>(null);
     const [isHovered, setIsHovered] = useState(false);
     const { isDragEnabled, actions, selectedObjectId } =
         useSceneObjectsContext();
 
-    const isSelected = selectedObjectId === "main-scene-object";
-    const isBeingManipulated = useRef(false);
+    const isSelected = selectedObjectId === MAIN_OBJECT_NAME;
 
     useFrame(state => {
-        // Don't animate if being manipulated by gizmo
-        if (isBeingManipulated.current) return;
-        if (isMotionFrozen) return;
-
-        if (!isLocked && meshRef.current) {
-            // Smooth, consistent rotation
-            meshRef.current.rotation.x = state.clock.elapsedTime * 0.2;
-            meshRef.current.rotation.y = state.clock.elapsedTime * 0.3;
-        }
+        if (isMotionFrozen || !groupRef.current || isLocked) return;
+        
+        groupRef.current.rotation.x = state.clock.elapsedTime * 0.2;
+        groupRef.current.rotation.y = state.clock.elapsedTime * 0.3;
     });
 
-    const handleClick = () => {
-        actions.selectObject("main-scene-object");
-    };
-
     const handlePointerEnter = () => {
-        if (!isDragEnabled) {
-            setIsHovered(true);
-            document.body.style.cursor = "pointer";
-        } else {
-            document.body.style.cursor = "grab";
-        }
+        setIsHovered(true);
+        document.body.style.cursor = isDragEnabled ? "grab" : "pointer";
     };
 
     const handlePointerLeave = () => {
-        if (!isDragEnabled) {
-            setIsHovered(false);
-        }
+        setIsHovered(false);
         document.body.style.cursor = "auto";
     };
 
-    // Listen for gizmo manipulation
-    const handleObjectChange = () => {
-        isBeingManipulated.current = true;
-        // Reset after a short delay when manipulation stops
-        setTimeout(() => {
-            isBeingManipulated.current = false;
-        }, 100);
-    };
-
     return (
-        <mesh
-            ref={meshRef}
+        <group
+            ref={groupRef}
             name={MAIN_OBJECT_NAME}
-            onClick={handleClick}
+            onClick={() => actions.selectObject(MAIN_OBJECT_NAME)}
             onPointerEnter={handlePointerEnter}
             onPointerLeave={handlePointerLeave}
-            userData={{
-                isMainObject: true,
-                onObjectChange: handleObjectChange,
-            }}
         >
-            <torusKnotGeometry args={[1, 0.3, 128, 16]} />
-            <DynamicMaterial
-                materialConfig={themeConfig.material}
-                color={themeConfig.mainObjectColor}
-            />
+            <mesh>
+                <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+                <DynamicMaterial
+                    materialConfig={themeConfig.material}
+                    color={themeConfig.mainObjectColor}
+                />
+            </mesh>
 
-            {/* Green wireframe overlay when drag mode is enabled (all main objects) */}
-            {isDragEnabled && (
+            {(isDragEnabled || (isHovered && !isSelected)) && (
                 <mesh>
                     <torusKnotGeometry args={[1, 0.3, 128, 16]} />
                     <meshBasicMaterial
                         wireframe
-                        color="#00ff00"
+                        color={isDragEnabled ? "#00ff00" : "#ffff00"}
                         transparent
-                        opacity={0.5}
+                        opacity={isDragEnabled ? 0.5 : 0.3}
                     />
                 </mesh>
             )}
 
-            {/* Selection wireframe overlay (when not in drag mode) */}
             {!isDragEnabled && isSelected && (
                 <mesh>
                     <torusKnotGeometry args={[1, 0.3, 128, 16]} />
@@ -110,20 +81,7 @@ const TorusKnotObject = ({
                     />
                 </mesh>
             )}
-
-            {/* Hover wireframe overlay (when not in drag mode or selected) */}
-            {!isDragEnabled && isHovered && !isSelected && (
-                <mesh>
-                    <torusKnotGeometry args={[1, 0.3, 128, 16]} />
-                    <meshBasicMaterial
-                        wireframe
-                        color="#ffff00"
-                        transparent
-                        opacity={0.3}
-                    />
-                </mesh>
-            )}
-        </mesh>
+        </group>
     );
 };
 

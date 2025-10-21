@@ -3,7 +3,6 @@ import { useRef, useState } from "react";
 import type { Group } from "three";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import type { MaterialConfig } from "@/types/scene";
-import DynamicMaterial from "../materials/DynamicMaterial";
 
 const MAIN_OBJECT_NAME = "main-scene-object";
 
@@ -16,11 +15,10 @@ interface CrystallineSpireObjectProps {
 
 const CrystallineSpireObject = ({
     color,
-    materialConfig,
     isLocked,
     isMotionFrozen,
 }: CrystallineSpireObjectProps) => {
-    const mainGroupRef = useRef<Group>(null!);
+    const mainGroupRef = useRef<Group>(null);
     const [isHovered, setIsHovered] = useState(false);
     const { isDragEnabled } = useSceneObjectsContext();
 
@@ -62,23 +60,27 @@ const CrystallineSpireObject = ({
             onPointerOver={handlePointerEnter}
             onPointerOut={handlePointerLeave}
         >
-            {/* Main crystal - octahedron for perfect symmetry */}
+            {/* Main crystal - octahedron with glass properties */}
             <mesh>
-                <octahedronGeometry args={[1, 2]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.8,
-                        materialType: "standard",
-                    }}
+                <octahedronGeometry args={[1, 3]} />
+                <meshPhysicalMaterial
                     color={color}
+                    metalness={0.1}
+                    roughness={0.05}
+                    transparent
+                    opacity={0.9}
+                    transmission={0.7}
+                    thickness={0.6}
+                    clearcoat={1}
+                    clearcoatRoughness={0.1}
+                    emissive={color}
+                    emissiveIntensity={0.3}
                 />
 
                 {/* Wireframe overlay */}
                 {(isDragEnabled || isHovered) && (
                     <mesh>
-                        <octahedronGeometry args={[1, 2]} />
+                        <octahedronGeometry args={[1, 3]} />
                         <meshBasicMaterial
                             wireframe
                             color="#ffff00"
@@ -89,73 +91,87 @@ const CrystallineSpireObject = ({
                 )}
             </mesh>
 
-            {/* Inner core - tetrahedron for sacred geometry */}
+            {/* Inner core - tetrahedron with energy */}
             <mesh>
-                <tetrahedronGeometry args={[0.6, 1]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.4,
-                        materialType: "standard",
-                    }}
+                <tetrahedronGeometry args={[0.6, 2]} />
+                <meshStandardMaterial
                     color={color}
+                    metalness={0.8}
+                    roughness={0.2}
+                    transparent
+                    opacity={0.6}
+                    emissive={color}
+                    emissiveIntensity={0.6}
                 />
             </mesh>
 
             {/* Outer framework - icosahedron for complexity */}
             <mesh>
                 <icosahedronGeometry args={[1.5, 1]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.2,
-                        materialType: "standard",
-                    }}
+                <meshStandardMaterial
                     color={color}
+                    metalness={0.9}
+                    roughness={0.1}
+                    transparent
+                    opacity={0.3}
+                    wireframe
+                    emissive={color}
+                    emissiveIntensity={0.4}
                 />
             </mesh>
 
-            {/* Connecting rings - Rule of thirds positioning */}
+            {/* Connecting rings with metallic sheen */}
             <mesh rotation={[0, 0, 0]}>
-                <torusGeometry args={[1.2, 0.05, 8, 32]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.7,
-                        materialType: "standard",
-                    }}
+                <torusGeometry args={[1.2, 0.06, 12, 48]} />
+                <meshStandardMaterial
                     color={color}
+                    metalness={1}
+                    roughness={0.1}
+                    transparent
+                    opacity={0.8}
+                    emissive={color}
+                    emissiveIntensity={0.5}
                 />
             </mesh>
 
             <mesh rotation={[Math.PI / 2, 0, 0]}>
-                <torusGeometry args={[1.2, 0.05, 8, 32]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.7,
-                        materialType: "standard",
-                    }}
+                <torusGeometry args={[1.2, 0.06, 12, 48]} />
+                <meshStandardMaterial
                     color={color}
+                    metalness={1}
+                    roughness={0.1}
+                    transparent
+                    opacity={0.8}
+                    emissive={color}
+                    emissiveIntensity={0.5}
                 />
             </mesh>
 
             <mesh rotation={[0, 0, Math.PI / 2]}>
-                <torusGeometry args={[1.2, 0.05, 8, 32]} />
-                <DynamicMaterial
-                    materialConfig={{
-                        ...materialConfig,
-                        transparent: true,
-                        opacity: 0.7,
-                        materialType: "standard",
-                    }}
+                <torusGeometry args={[1.2, 0.06, 12, 48]} />
+                <meshStandardMaterial
                     color={color}
+                    metalness={1}
+                    roughness={0.1}
+                    transparent
+                    opacity={0.8}
+                    emissive={color}
+                    emissiveIntensity={0.5}
                 />
             </mesh>
+            
+            {/* Energy particles at vertices */}
+            {[...Array(8)].map((_, i) => {
+                const angle = (Math.PI * 2 * i) / 8;
+                const x = Math.cos(angle) * 1.2;
+                const z = Math.sin(angle) * 1.2;
+                return (
+                    <mesh key={`vertex-${i}`} position={[x, 0, z]}>
+                        <sphereGeometry args={[0.08, 16, 16]} />
+                        <meshBasicMaterial color={color} transparent opacity={0.8} />
+                    </mesh>
+                );
+            })}
         </group>
     );
 };
