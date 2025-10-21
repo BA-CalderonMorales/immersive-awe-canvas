@@ -1,16 +1,21 @@
 FROM node:20-bookworm
 
-# Install system dependencies
+# Install system dependencies including Git LFS and sudo
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
     && apt-get -y install --no-install-recommends \
     git \
+    git-lfs \
     curl \
     wget \
     ca-certificates \
     build-essential \
     python3 \
     unzip \
+    sudo \
     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+# Allow node user to use sudo without password
+RUN echo "node ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
 # Install Bun globally for all users
 RUN curl -fsSL https://bun.sh/install | bash -s "bun-v1.1.34" \

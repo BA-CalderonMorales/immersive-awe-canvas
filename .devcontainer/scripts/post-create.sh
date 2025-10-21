@@ -1,7 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "Setting up Immersive Awe Canvas development environment..."
+echo "🚀 Setting up Immersive Awe Canvas development environment..."
+
+# Initialize Git LFS
+echo "Initializing Git LFS..."
+git lfs install --skip-smudge || echo "Git LFS initialization failed (non-blocking)"
 
 # Verify installations
 echo "Development environment verification:"
@@ -14,6 +18,7 @@ bun --version
 
 echo "Version control:"
 git --version
+git lfs version
 
 # Set up shell environment
 echo "Setting up shell environment..."
