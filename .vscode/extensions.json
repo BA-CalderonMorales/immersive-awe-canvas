@@ -1,0 +1,21 @@
+{
+    "recommendations": [
+        // TypeScript & React
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "biomejs.biome",
+        // Testing
+        "vitest.explorer",
+        // Three.js & 3D
+        "slevesque.shader",
+        // Git & GitHub
+        "github.vscode-pull-request-github",
+        "github.copilot",
+        "eamodio.gitlens",
+        // Utilities
+        "editorconfig.editorconfig",
+        "bradlc.vscode-tailwindcss",
+        "styled-components.vscode-styled-components",
+        "ms-azuretools.vscode-docker"
+    ]
+}
