@@ -25,19 +25,9 @@ export const useDefaultGeometries = () => {
         data: geometries,
         isLoading,
         isError,
-        error,
     } = useQuery<DefaultGeometry[]>({
         queryKey: ["default_geometries"],
         queryFn: fetchDefaultGeometries,
-    });
-
-    // Debug logging
-    console.log("useDefaultGeometries debug:", {
-        geometries,
-        isLoading,
-        isError,
-        error: error?.message,
-        geometriesLength: geometries?.length,
     });
 
     const currentGeometry = useMemo(() => {
@@ -55,12 +45,6 @@ export const useDefaultGeometries = () => {
                         ? (prevIndex + 1) % geometries.length
                         : (prevIndex - 1 + geometries.length) %
                           geometries.length;
-                console.log(
-                    "Changing geometry from index",
-                    prevIndex,
-                    "to",
-                    newIndex
-                );
                 return newIndex;
             });
         },
@@ -78,12 +62,6 @@ export const useDefaultGeometries = () => {
                 return;
             }
 
-            console.log(
-                "Jumping to geometry index:",
-                targetIndex,
-                "for id:",
-                index
-            );
             setCurrentGeometryIndex(targetIndex);
         },
         [geometries, currentGeometryIndex]

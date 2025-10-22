@@ -37,12 +37,8 @@ const DynamicScene = ({
         }
     }, [isDragging, isDragEnabled]);
     const dynamicSceneConfig = useMemo<SceneConfig>(() => {
-        // CRITICAL FIX: Use editableSceneConfig (user's changes) when available
+        // Use editableSceneConfig (user's changes) when available
         if (editableSceneConfig) {
-            console.log(
-                "🎯 Using editableSceneConfig (user changes):",
-                editableSceneConfig
-            );
             return editableSceneConfig;
         }
 
@@ -75,11 +71,6 @@ const DynamicScene = ({
             (currentBackground.background_config as BackgroundConfig) || {
                 type: "void",
             };
-
-        console.log(
-            "🎯 Using database defaults (no user config):",
-            currentGeometry
-        );
 
         // Create a complete scene config from database defaults
         const sceneConfig: SceneConfig = {

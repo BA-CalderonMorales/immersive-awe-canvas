@@ -175,7 +175,10 @@ export type SceneConfig = {
         | "MorphingIcosahedron"
         | "WavyGrid"
         | "CrystallineSpire"
-        | "JellyTorus";
+        | "JellyTorus"
+        | "FibonacciSphere"
+        | "SacredGeometry"
+        | "MandalaFlower";
     day: SceneThemeConfig;
     night: SceneThemeConfig;
 };
