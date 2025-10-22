@@ -8,6 +8,9 @@ workspaces = true
 # Prefer local registry for faster installs
 cache = "~/.bun/install/cache"
 
+# Use copyfile backend for better compatibility with mounted volumes (Codespaces)
+backend = "copyfile"
+
 [install.scopes]
 # Configure any scoped packages if needed
 

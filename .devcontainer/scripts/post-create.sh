@@ -3,22 +3,27 @@ set -e
 
 echo "🚀 Setting up Immersive Awe Canvas development environment..."
 
-# Initialize Git LFS
-echo "Initializing Git LFS..."
-git lfs install --skip-smudge || echo "Git LFS initialization failed (non-blocking)"
+# Ensure proper ownership of workspace files (important for Codespaces)
+echo ""
+echo "Setting up workspace permissions..."
+sudo chown -R vscode:vscode /workspaces/immersive-awe-canvas 2>/dev/null || echo "⚠️  Could not change ownership (non-blocking)"
 
-# Verify installations
+# Verify environment
+echo ""
 echo "Development environment verification:"
-echo "Node.js environment:"
-node --version
-npm --version
+echo "  Node.js:    $(node --version)"
+echo "  npm:        $(npm --version)"
+echo "  Bun:        $(bun --version)"
+echo "  TypeScript: $(tsc --version)"
+echo "  Git:        $(git --version)"
+echo "  Git LFS:    $(git lfs version 2>/dev/null || echo 'Not installed')"
+echo ""
 
-echo "Bun environment:"
-bun --version
-
-echo "Version control:"
-git --version
-git lfs version
+# Initialize Git LFS
+if command -v git-lfs &> /dev/null; then
+    echo "Initializing Git LFS..."
+    git lfs install --skip-smudge || echo "Git LFS initialization failed (non-blocking)"
+fi
 
 # Set up shell environment
 echo "Setting up shell environment..."
@@ -53,7 +58,7 @@ set_bash_prompt() {
 PROMPT_COMMAND=set_bash_prompt
 EOF
 else
-    echo "Custom PS1 prompt already present in bashrc."
+    echo "✓ Custom PS1 prompt already configured"
 fi
 
 # Add Immersive Awe Canvas development welcome message to bashrc
@@ -62,12 +67,15 @@ if ! grep -q "$WELCOME_MARKER" ~/.bashrc; then
     echo "Adding Immersive Awe Canvas development prompt..."
     # shellcheck disable=SC2016  # Intentionally keep command substitutions and vars literal for later evaluation in interactive shells
     cat >> ~/.bashrc << 'EOF'
+
 # Immersive Awe Canvas Development Welcome
 if [ "$TERM" != "dumb" ] && [ -t 1 ]; then
     echo ""
-    echo "Welcome to Immersive Awe Canvas development!"
+    echo "╔═══════════════════════════════════════════════════════════════╗"
+    echo "║  Welcome to Immersive Awe Canvas development!                ║"
+    echo "╚═══════════════════════════════════════════════════════════════╝"
+    echo ""
     echo "Environment: Node.js $(node --version 2>/dev/null || echo 'N/A') + Bun $(bun --version 2>/dev/null || echo 'N/A')"
-    echo "TypeScript $(tsc --version 2>/dev/null || echo 'N/A')"
     echo ""
     echo "Available commands:"
     echo "  bun run dev             # Start development server (http://localhost:8080)"
@@ -81,29 +89,41 @@ if [ "$TERM" != "dumb" ] && [ -t 1 ]; then
 fi
 EOF
 else
-    echo "Immersive Awe Canvas welcome prompt already present in bashrc."
+    echo "✓ Immersive Awe Canvas welcome prompt already configured"
 fi
 
+# Clean up any existing node_modules to avoid EEXIST errors
+if [ -d "node_modules" ]; then
+    echo ""
+    echo "Cleaning up existing node_modules..."
+    rm -rf node_modules
+fi
+
+# Clean up any stale bun cache if needed
+if [ -d ".bun" ]; then
+    echo "Cleaning up stale bun cache..."
+    rm -rf .bun
+fi
+
+# Ensure .bun-cache directory is writable
+mkdir -p ~/.bun/install/cache
+chmod -R 755 ~/.bun 2>/dev/null || true
+
 # Install project dependencies with Bun
+echo ""
 echo "Installing dependencies with Bun..."
-bun install
+# Use --backend=copyfile to avoid permission issues with hardlinks/symlinks
+BUN_INSTALL_CACHE_DIR=~/.bun/install/cache bun install --backend=copyfile
 
 # Set up git hooks (if using husky)
 if [ -f "package.json" ] && grep -q "husky" package.json; then
     echo "Setting up git hooks..."
-    bun run prepare || true
+    bun run prepare 2>/dev/null || true
 fi
-
-# Build the project to ensure everything works
-echo "Running initial build..."
-bun run build
-
-# Run type checking
-echo "Running type check..."
-bun run typecheck
 
 # Create .env.local if it doesn't exist
 if [ ! -f ".env.local" ]; then
+    echo ""
     echo "Creating .env.local template..."
     cat > .env.local << EOF
 # Local development environment variables
@@ -119,10 +139,23 @@ GITHUB_TOKEN=your_github_token
 # Build Configuration
 VITE_DEPLOY_TARGET=local
 EOF
-    echo "Created .env.local template. Please configure your environment variables."
+    echo "✓ Created .env.local template. Please configure your environment variables."
 fi
 
+# Run type checking
 echo ""
-echo "Development environment setup complete!"
+echo "Running type check..."
+bun run typecheck || echo "⚠️  Type check failed (non-blocking)"
+
+# Build the project to ensure everything works
+echo ""
+echo "Running initial build..."
+bun run build || echo "⚠️  Initial build failed (non-blocking)"
+
+echo ""
+echo "╔═══════════════════════════════════════════════════════════════╗"
+echo "║  Development environment setup complete! ✓                    ║"
+echo "╚═══════════════════════════════════════════════════════════════╝"
+echo ""
 echo "Run 'bun run dev' to start the development server."
 echo ""
