@@ -201,7 +201,7 @@ export function getRetryDelay(error: DatabaseError, attempt: number): number {
     }
 
     const delay = Math.min(
-        baseDelay * multiplier * Math.pow(2, attempt - 1),
+        baseDelay * multiplier * 2 ** (attempt - 1),
         maxDelay
     );
     return delay;
