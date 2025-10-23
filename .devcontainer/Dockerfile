@@ -1,4 +1,4 @@
-FROM node:20-bookworm
+FROM mcr.microsoft.com/devcontainers/javascript-node:20
 
 # Install and configure locales properly
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -32,7 +32,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Create vscode user for better compatibility with VS Code (Codespaces uses UID/GID 1000)
-# The node:20-bookworm image already has a node user with UID 1000, so we'll use that
+# The node:20-noble image already has a node user with UID 1000, so we'll use that
 RUN usermod -l vscode node \
     && groupmod -n vscode node \
     && usermod -d /home/vscode -m vscode \
