@@ -26,6 +26,9 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
 
     const fragmentShader = `
     uniform float time;
+    uniform vec2 sunPosition;
+    uniform float intensity;
+    uniform float speed;
     varying vec2 vUv;
     varying vec3 vWorldPosition;
     
@@ -70,8 +73,8 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
         float height = p.y;
         float distance = length(p);
         
-        // Dynamic sun position with subtle movement
-        vec2 sunPos = vec2(0.12 + sin(t * 0.03) * 0.08, -0.08 + sin(t * 0.05) * 0.04);
+         // Dynamic sun position with subtle movement
+         vec2 sunPos = sunPosition + vec2(sin(t * speed * 3.0) * 0.08, sin(t * speed * 5.0) * 0.04);
         float sunDistance = length(p - sunPos);
         
         // Atmospheric layers
@@ -90,15 +93,14 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
         float sunGlow = exp(-sunDistance * 12.0) * 0.6;
         float sunCorona = exp(-sunDistance * 4.0) * 0.3;
         
-        // Apply sun effects
-        skyColor = mix(skyColor, sunColor, sunMask);
-        skyColor += sunColor * sunGlow;
-        skyColor += horizonTopColor * sunCorona;
+         // Apply sun effects
+         skyColor = mix(skyColor, sunColor, sunMask * intensity);
+         skyColor += sunColor * sunGlow * intensity;
+         skyColor += horizonTopColor * sunCorona * intensity;
         
-        // Atmospheric scattering around sun
-        float scatterAngle = dot(normalize(p), normalize(sunPos));
-        float scattering = pow(max(0.0, scatterAngle), 8.0) * 0.4;
-        skyColor += sunColor * scattering * horizonBlend;
+         // Atmospheric scattering around sun
+         float scattering = pow(max(0.0, scatterAngle), 8.0) * 0.4 * intensity;
+         skyColor += sunColor * scattering * horizonBlend;
         
         // Enhanced cloud simulation with multiple layers
         vec2 cloudUv1 = p * 2.5 + vec2(t * 0.015, sin(t * 0.008) * 0.1);
@@ -152,6 +154,14 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
 
     const uniforms = {
         time: { value: 0 },
+        sunPosition: {
+            value: new THREE.Vector2(
+                config.sunPosition?.[0] || 0.12,
+                config.sunPosition?.[1] || -0.08
+            ),
+        },
+        intensity: { value: config.intensity || 1.0 },
+        speed: { value: config.speed || 0.02 },
     };
 
     useFrame(state => {

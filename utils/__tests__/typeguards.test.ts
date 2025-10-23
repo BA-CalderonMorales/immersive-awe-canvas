@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { isSceneConfig, isValidObjectType } from "@database/shared/typeguards";
+import {
+    isSceneConfig,
+    isBackgroundConfig,
+    isValidObjectType,
+} from "@database/shared/typeguards";
 
 describe("typeguards", () => {
     describe("isSceneConfig", () => {
@@ -42,6 +46,37 @@ describe("typeguards", () => {
             expect(isSceneConfig("string")).toBe(false);
             expect(isSceneConfig(123)).toBe(false);
             expect(isSceneConfig([])).toBe(false);
+        });
+    });
+
+    describe("isBackgroundConfig", () => {
+        it("should return true for valid background config", () => {
+            const validConfig = {
+                type: "color",
+                colorTop: "#ffffff",
+                colorBottom: "#000000",
+            };
+
+            expect(isBackgroundConfig(validConfig)).toBe(true);
+        });
+
+        it("should return false for invalid background config", () => {
+            const invalidConfig = {
+                theme: "invalid",
+            };
+
+            expect(isBackgroundConfig(invalidConfig)).toBe(false);
+        });
+
+        it("should return false for null or undefined", () => {
+            expect(isBackgroundConfig(null)).toBe(false);
+            expect(isBackgroundConfig(undefined)).toBe(false);
+        });
+
+        it("should return false for non-object values", () => {
+            expect(isBackgroundConfig("string")).toBe(false);
+            expect(isBackgroundConfig(123)).toBe(false);
+            expect(isBackgroundConfig([])).toBe(false);
         });
     });
 

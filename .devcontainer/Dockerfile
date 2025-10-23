@@ -31,6 +31,12 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
+# Install uv (Python package manager for terminal-jarvis)
+RUN curl -LsSf https://astral.sh/uv/install.sh | sh && \
+    mv /root/.local/bin/uv /usr/local/bin/uv && \
+    mv /root/.local/bin/uvx /usr/local/bin/uvx && \
+    rm -rf /root/.local
+
 # Create vscode user for better compatibility with VS Code (Codespaces uses UID/GID 1000)
 # The node:20-noble image already has a node user with UID 1000, so we'll use that
 RUN usermod -l vscode node \

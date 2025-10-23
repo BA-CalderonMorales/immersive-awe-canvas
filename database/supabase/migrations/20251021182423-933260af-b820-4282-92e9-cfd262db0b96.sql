@@ -188,31 +188,23 @@ SET
   description = 'Deep space star field with thousands of twinkling stars'
 WHERE name = 'Starry Night';
 
--- Update Sunset Glory with more vibrant gradient colors
-UPDATE public.backgrounds 
-SET 
+-- Update Sunset Glory with proper sunset parameters
+UPDATE public.backgrounds
+SET
   background_config = '{
-    "type": "sunset",
-    "colorTop": "#ff4500",
-    "colorMiddle": "#ff8c00",
-    "colorBottom": "#ffd700",
-    "speed": 0.25,
-    "intensity": 1.4,
-    "noiseScale": 2.5
+    "type": "sunset"
   }'::jsonb,
-  description = 'Vibrant sunset with rich golden-orange gradients'
+  description = 'Beautiful sunset with realistic atmospheric scattering'
 WHERE name = 'Sunset Glory';
 
--- Update Aurora Dreams with more dynamic colors and movement
-UPDATE public.backgrounds 
-SET 
+-- Update Aurora Dreams with proper aurora parameters
+UPDATE public.backgrounds
+SET
   background_config = '{
     "type": "aurora",
     "auroraSpeed": 0.9,
     "auroraIntensity": 1.6,
-    "auroraColors": ["#00ff88", "#7b68ee", "#ff69b4", "#00ced1", "#ffd700"],
-    "noiseScale": 1.8,
-    "opacity": 0.95
+    "auroraColors": ["#00ff88", "#ff4444", "#0088ff", "#aa44ff"]
   }'::jsonb,
   description = 'Mystical aurora with flowing multi-colored light waves'
 WHERE name = 'Aurora Dreams';
@@ -275,9 +267,13 @@ INSERT INTO public.backgrounds (
     "type": "nebula",
     "nebulaSpeed": 0.3,
     "nebulaIntensity": 1.5,
-    "nebulaColors": ["#8b00ff", "#ff1493", "#00bfff"],
-    "noiseScale": 3.0,
-    "opacity": 0.9
+    "gasDensity": 1.2,
+    "dustDensity": 0.8,
+    "stellarWindStrength": 0.6,
+    "nebulaColor1": "#ff6b35",
+    "nebulaColor2": "#f7931e",
+    "nebulaColor3": "#4ecdc4",
+    "starColor": "#ffffff"
   }'::jsonb,
   true,
   7
@@ -297,9 +293,113 @@ INSERT INTO public.backgrounds (
     "type": "gradient",
     "colorTop": "#667eea",
     "colorBottom": "#764ba2",
-    "speed": 0.4,
-    "noiseIntensity": 0.4
+    "speed": 0.4
   }'::jsonb,
   true,
   8
+);
+
+-- Add Sky Canvas background
+INSERT INTO public.backgrounds (
+  name,
+  description,
+  background_config,
+  is_featured,
+  sort_order
+) VALUES (
+  'Sky Canvas',
+  'Realistic sky with dynamic sun and atmospheric scattering',
+  '{
+    "type": "sky",
+    "sunPosition": [120, 25, 80],
+    "atmosphericDensity": 1.2,
+    "lightScattering": 1.5
+  }'::jsonb,
+  true,
+  9
+);
+
+-- Add Mystic Fog background
+INSERT INTO public.backgrounds (
+  name,
+  description,
+  background_config,
+  is_featured,
+  sort_order
+) VALUES (
+  'Mystic Fog',
+  'Atmospheric fog with cloud effects and depth',
+  '{
+    "type": "fog",
+    "color": "#f8fafc",
+    "near": 5,
+    "far": 200,
+    "ambientGlow": 0.3
+  }'::jsonb,
+  true,
+  10
+);
+
+-- Add Stellar Sparkles background
+INSERT INTO public.backgrounds (
+  name,
+  description,
+  background_config,
+  is_featured,
+  sort_order
+) VALUES (
+  'Stellar Sparkles',
+  'Magical sparkles with energy field effects',
+  '{
+    "type": "sparkles",
+    "count": 300,
+    "scale": 25,
+    "size": 3,
+    "speed": 0.2,
+    "opacity": 0.8,
+    "color": "#e6f3ff"
+  }'::jsonb,
+  true,
+  11
+);
+
+-- Add Pure Color background
+INSERT INTO public.backgrounds (
+  name,
+  description,
+  background_config,
+  is_featured,
+  sort_order
+) VALUES (
+  'Pure Color',
+  'Solid color background for minimal environments',
+  '{
+    "type": "color",
+    "color": "#1a1a2e"
+  }'::jsonb,
+  true,
+  12
+);
+
+-- Add Epic Cinematic background
+INSERT INTO public.backgrounds (
+  name,
+  description,
+  background_config,
+  is_featured,
+  sort_order
+) VALUES (
+  'Epic Cinematic',
+  'Dramatic cinematic atmosphere with particles and energy',
+  '{
+    "type": "cinematic",
+    "complexity": 4.0,
+    "brightness": 1.5,
+    "colorPrimary": "#4a90ff",
+    "colorSecondary": "#ff6b6b",
+    "colorAccent": "#ffd93d",
+    "speed": 1.2
+  }'::jsonb,
+  true,
+  13
 );

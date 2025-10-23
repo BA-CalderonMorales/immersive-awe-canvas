@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBackgrounds } from "@/hooks/useBackgrounds";
 import { useDefaultGeometries } from "@/hooks/useDefaultGeometries";
+import { useWorlds } from "@/hooks/useWorlds";
 import { useExperience } from "@/hooks/useExperience";
 import { useExperienceEffects } from "@/hooks/useExperienceEffects";
 import { useHotkeyActions } from "@/hooks/useHotkeyActions";
@@ -58,6 +59,13 @@ const ExperienceLogic = () => {
     } = useBackgrounds();
     const { geometries, currentGeometry, changeGeometry, jumpToGeometry } =
         useDefaultGeometries();
+    const {
+        worlds,
+        worldData,
+        isTransitioning: worldsTransitioning,
+        changeWorld,
+        jumpToWorld,
+    } = useWorlds();
     const { theme, toggleTheme } = useExperience();
 
     // Initialize scene config with unique geometry when background and geometries are first loaded
@@ -120,7 +128,7 @@ const ExperienceLogic = () => {
     // Hotkey callbacks
     const hotkeyCallbacks = {
         toggleTheme,
-        changeWorld: changeBackground,
+        changeWorld: changeWorld,
         changeGeometry,
         openSearch: () => setIsSearchOpen(true),
         goHome: handleGoHome,
@@ -265,13 +273,13 @@ const ExperienceLogic = () => {
 
     return (
         <ExperienceContainer
-            worldData={currentGeometry as any}
+            worldData={worldData}
             editableSceneConfig={editableSceneConfig}
-            isTransitioning={isTransitioning}
+            isTransitioning={isTransitioning || worldsTransitioning}
             currentWorldIndex={0}
             isObjectLocked={isObjectLocked}
             theme={theme}
-            worlds={backgrounds as any[]}
+            worlds={worlds || []}
             isSettingsOpen={isSettingsOpen}
             isUiHidden={isUiHidden}
             showUiHint={showUiHint}
@@ -288,7 +296,7 @@ const ExperienceLogic = () => {
             setIsUiHidden={setIsUiHidden}
             handleChangeBackground={handleChangeBackground}
             handleChangeGeometry={handleChangeGeometry}
-            handleJumpToWorld={() => {}}
+            handleJumpToWorld={jumpToWorld}
             handleCopyCode={handleCopyCode}
             handleGoHome={handleGoHome}
             handleToggleShortcuts={handleToggleShortcuts}

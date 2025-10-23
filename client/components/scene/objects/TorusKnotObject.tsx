@@ -27,7 +27,7 @@ const TorusKnotObject = ({
 
     useFrame(state => {
         if (isMotionFrozen || !groupRef.current || isLocked) return;
-        
+
         groupRef.current.rotation.x = state.clock.elapsedTime * 0.2;
         groupRef.current.rotation.y = state.clock.elapsedTime * 0.3;
     });
@@ -51,7 +51,16 @@ const TorusKnotObject = ({
             onPointerLeave={handlePointerLeave}
         >
             <mesh>
-                <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+                <torusKnotGeometry
+                    args={[
+                        themeConfig.torusKnot?.radius ?? 1,
+                        themeConfig.torusKnot?.tube ?? 0.3,
+                        themeConfig.torusKnot?.tubularSegments ?? 128,
+                        themeConfig.torusKnot?.radialSegments ?? 16,
+                        themeConfig.torusKnot?.p ?? 2,
+                        themeConfig.torusKnot?.q ?? 3,
+                    ]}
+                />
                 <DynamicMaterial
                     materialConfig={themeConfig.material}
                     color={themeConfig.mainObjectColor}
@@ -60,7 +69,16 @@ const TorusKnotObject = ({
 
             {(isDragEnabled || (isHovered && !isSelected)) && (
                 <mesh>
-                    <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+                    <torusKnotGeometry
+                        args={[
+                            themeConfig.torusKnot?.radius ?? 1,
+                            themeConfig.torusKnot?.tube ?? 0.3,
+                            themeConfig.torusKnot?.tubularSegments ?? 128,
+                            themeConfig.torusKnot?.radialSegments ?? 16,
+                            themeConfig.torusKnot?.p ?? 2,
+                            themeConfig.torusKnot?.q ?? 3,
+                        ]}
+                    />
                     <meshBasicMaterial
                         wireframe
                         color={isDragEnabled ? "#00ff00" : "#ffff00"}
@@ -72,7 +90,16 @@ const TorusKnotObject = ({
 
             {!isDragEnabled && isSelected && (
                 <mesh>
-                    <torusKnotGeometry args={[1, 0.3, 128, 16]} />
+                    <torusKnotGeometry
+                        args={[
+                            themeConfig.torusKnot?.radius ?? 1,
+                            themeConfig.torusKnot?.tube ?? 0.3,
+                            themeConfig.torusKnot?.tubularSegments ?? 128,
+                            themeConfig.torusKnot?.radialSegments ?? 16,
+                            themeConfig.torusKnot?.p ?? 2,
+                            themeConfig.torusKnot?.q ?? 3,
+                        ]}
+                    />
                     <meshBasicMaterial
                         wireframe
                         color="#00ff00"

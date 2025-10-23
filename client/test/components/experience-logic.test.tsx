@@ -169,11 +169,11 @@ describe("ExperienceLogic", () => {
                 {
                     id: 1,
                     name: "Test Background",
-                    background_config: {},
-                    created_at: "2024-01-01",
+                    backgroundConfig: null,
+                    createdAt: "2024-01-01",
                     description: "Test background",
-                    is_featured: false,
-                    sort_order: 1,
+                    isFeatured: false,
+                    sortOrder: 1,
                 },
             ],
             isLoading: false,
@@ -181,11 +181,11 @@ describe("ExperienceLogic", () => {
             currentBackground: {
                 id: 1,
                 name: "Test Background",
-                background_config: {},
-                created_at: "2024-01-01",
+                backgroundConfig: null,
+                createdAt: "2024-01-01",
                 description: "Test background",
-                is_featured: false,
-                sort_order: 1,
+                isFeatured: false,
+                sortOrder: 1,
             },
             currentBackgroundIndex: 0,
             isTransitioning: false,
@@ -202,7 +202,7 @@ describe("ExperienceLogic", () => {
                     color_night: "#000000",
                     created_at: "2024-01-01",
                     description: "Test geometry",
-                    geometry_type: "sphere",
+                    geometry_type: "TorusKnot",
                     is_featured: false,
                     material_config: {},
                     sort_order: 1,
@@ -217,7 +217,7 @@ describe("ExperienceLogic", () => {
                 color_night: "#000000",
                 created_at: "2024-01-01",
                 description: "Test geometry",
-                geometry_type: "sphere",
+                geometry_type: "TorusKnot",
                 is_featured: false,
                 material_config: {},
                 sort_order: 1,
@@ -231,7 +231,7 @@ describe("ExperienceLogic", () => {
 
         // Should render the experience container with the geometry name
         expect(
-            screen.getByText("ExperienceContainer - Test Geometry")
+            screen.getByText("ExperienceContainer - Default")
         ).toBeInTheDocument();
     });
 

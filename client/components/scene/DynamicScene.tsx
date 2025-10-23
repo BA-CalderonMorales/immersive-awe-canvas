@@ -4,11 +4,15 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import type { BackgroundConfig, SceneConfig } from "@/types/scene";
+import type { Database } from "@database/supabase/types";
 import DynamicWorld from "./DynamicWorld";
 
+type World = Database["public"]["Tables"]["worlds"]["Row"];
+
 interface DynamicSceneProps {
-    currentBackground: { type: string; [key: string]: unknown };
-    currentGeometry: { type: string; [key: string]: unknown };
+    currentBackground?: { type: string; [key: string]: unknown };
+    currentGeometry?: { type: string; [key: string]: unknown };
+    worldData?: World; // World with scene_config
     editableSceneConfig?: SceneConfig; // User's modified scene config
     theme: "day" | "night";
     isLocked: boolean;
@@ -20,6 +24,7 @@ interface DynamicSceneProps {
 const DynamicScene = ({
     currentBackground,
     currentGeometry,
+    worldData,
     editableSceneConfig,
     theme,
     isLocked,
@@ -40,6 +45,26 @@ const DynamicScene = ({
         // Use editableSceneConfig (user's changes) when available
         if (editableSceneConfig) {
             return editableSceneConfig;
+        }
+
+        // Use world scene_config if available (primary source for world-specific scenes)
+        if (worldData?.scene_config) {
+            try {
+                const worldSceneConfig = worldData.scene_config as SceneConfig;
+                // Ensure it has the required structure
+                if (
+                    worldSceneConfig.type &&
+                    worldSceneConfig.day &&
+                    worldSceneConfig.night
+                ) {
+                    return worldSceneConfig;
+                }
+            } catch (error) {
+                console.warn(
+                    "Invalid world scene_config, falling back to defaults:",
+                    error
+                );
+            }
         }
 
         // Fallback: Create config from database defaults only when no user config exists
@@ -106,7 +131,7 @@ const DynamicScene = ({
         };
 
         return sceneConfig;
-    }, [editableSceneConfig, currentBackground, currentGeometry]);
+    }, [editableSceneConfig, worldData, currentBackground, currentGeometry]);
 
     return (
         <AnimatePresence mode="wait">

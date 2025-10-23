@@ -1,5 +1,9 @@
 import type { Json } from "@database/supabase/types";
-import type { SceneConfig, SceneThemeConfig } from "@client/types/scene";
+import type {
+    SceneConfig,
+    SceneThemeConfig,
+    BackgroundConfig,
+} from "@client/types/scene";
 
 /**
  * Consolidated typeguards for runtime type checking
@@ -30,6 +34,40 @@ export function isSceneThemeConfig(
     );
 }
 
+export function isBackgroundConfig(
+    config: Json | null
+): config is BackgroundConfig {
+    if (
+        config === null ||
+        typeof config !== "object" ||
+        Array.isArray(config)
+    ) {
+        return false;
+    }
+    const c = config as Record<string, unknown>;
+    const validBackgroundTypes = [
+        "sky",
+        "stars",
+        "fog",
+        "sparkles",
+        "color",
+        "environment",
+        "gradient",
+        "noise",
+        "plasma",
+        "void",
+        "aurora",
+        "sunset",
+        "nebula",
+        "cinematic",
+    ];
+    return (
+        "type" in c &&
+        typeof c.type === "string" &&
+        validBackgroundTypes.includes(c.type)
+    );
+}
+
 export function isSceneConfig(config: Json | null): config is SceneConfig {
     if (
         config === null ||
@@ -47,6 +85,9 @@ export function isSceneConfig(config: Json | null): config is SceneConfig {
         "WavyGrid",
         "CrystallineSpire",
         "JellyTorus",
+        "FibonacciSphere",
+        "SacredGeometry",
+        "MandalaFlower",
     ];
     return (
         "type" in c &&

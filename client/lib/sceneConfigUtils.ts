@@ -1,4 +1,5 @@
 import type { Database } from "@database/supabase/types";
+import type { ParsedBackground } from "@database/shared/types";
 import type {
     BackgroundConfig,
     MaterialConfig,
@@ -58,9 +59,12 @@ export const createSceneConfigFromGeometry = (
 
 export const updateSceneConfigBackground = (
     sceneConfig: SceneConfig,
-    background: Background
+    background: Background | ParsedBackground
 ): SceneConfig => {
-    const backgroundConfig = background.background_config as BackgroundConfig;
+    const backgroundConfig =
+        "backgroundConfig" in background
+            ? (background.backgroundConfig as BackgroundConfig)
+            : (background.background_config as BackgroundConfig);
 
     return {
         ...sceneConfig,

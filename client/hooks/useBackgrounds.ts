@@ -2,10 +2,18 @@ import { supabase } from "@database/supabase/client";
 import type { Database } from "@database/supabase/types";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useMemo, useState } from "react";
+import {
+    parseBackgroundRows,
+    parseBackgroundRow,
+} from "@database/shared/config-parsers";
+import type {
+    ParsedBackground,
+    UseBackgroundsReturn,
+} from "@database/shared/types";
 
-type Background = Database["public"]["Tables"]["backgrounds"]["Row"];
+type BackgroundRow = Database["public"]["Tables"]["backgrounds"]["Row"];
 
-const fetchBackgrounds = async (): Promise<Background[]> => {
+const fetchBackgrounds = async (): Promise<ParsedBackground[]> => {
     const { data, error } = await supabase
         .from("backgrounds")
         .select("*")
@@ -14,10 +22,10 @@ const fetchBackgrounds = async (): Promise<Background[]> => {
 
     if (error) throw new Error(error.message);
 
-    return data || [];
+    return parseBackgroundRows(data || []);
 };
 
-export const useBackgrounds = () => {
+export const useBackgrounds = (): UseBackgroundsReturn => {
     const [currentBackgroundIndex, setCurrentBackgroundIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -26,7 +34,7 @@ export const useBackgrounds = () => {
         isLoading,
         isError,
         error,
-    } = useQuery<Background[]>({
+    } = useQuery<ParsedBackground[]>({
         queryKey: ["backgrounds"],
         queryFn: fetchBackgrounds,
     });
@@ -79,25 +87,27 @@ export const useBackgrounds = () => {
 
     const jumpToBackground = useCallback(
         (index: number) => {
-            if (isTransitioning || !backgrounds || backgrounds.length === 0) {
-                return;
-            }
-
-            const targetIndex = backgrounds.findIndex(bg => bg.id === index);
-            if (targetIndex === -1 || targetIndex === currentBackgroundIndex) {
+            if (
+                isTransitioning ||
+                !backgrounds ||
+                backgrounds.length === 0 ||
+                index === currentBackgroundIndex ||
+                index < 0 ||
+                index >= backgrounds.length
+            ) {
                 return;
             }
 
             console.log(
                 "Jumping to background index:",
-                targetIndex,
-                "for id:",
-                index
+                index,
+                "from current index:",
+                currentBackgroundIndex
             );
             setIsTransitioning(true);
 
             setTimeout(() => {
-                setCurrentBackgroundIndex(targetIndex);
+                setCurrentBackgroundIndex(index);
                 setTimeout(() => {
                     setIsTransitioning(false);
                 }, 400);

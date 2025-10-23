@@ -2,10 +2,12 @@ import { supabase } from "@database/supabase/client";
 import type { Database } from "@database/supabase/types";
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { parseWorldRows, parseWorldRow } from "@database/shared/config-parsers";
+import type { ParsedWorld, UseWorldsReturn } from "@database/shared/types";
 
-type World = Database["public"]["Tables"]["worlds"]["Row"];
+type WorldRow = Database["public"]["Tables"]["worlds"]["Row"];
 
-const fetchWorlds = async (): Promise<World[]> => {
+const fetchWorlds = async (): Promise<ParsedWorld[]> => {
     const { data, error } = await supabase
         .from("worlds")
         .select("*")
@@ -14,10 +16,10 @@ const fetchWorlds = async (): Promise<World[]> => {
 
     if (error) throw new Error(error.message);
 
-    return data || [];
+    return parseWorldRows(data || []);
 };
 
-const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
+const fetchWorldBySlug = async (slug: string): Promise<ParsedWorld | null> => {
     const { data, error } = await supabase
         .from("worlds")
         .select("*")
@@ -30,10 +32,10 @@ const fetchWorldBySlug = async (slug: string): Promise<World | null> => {
         throw new Error(error.message);
     }
 
-    return data;
+    return data ? parseWorldRow(data) : null;
 };
 
-export const useWorlds = (initialSlug?: string) => {
+export const useWorlds = (initialSlug?: string): UseWorldsReturn => {
     const [currentWorldIndex, setCurrentWorldIndex] = useState(0);
     const [isTransitioning, setIsTransitioning] = useState(false);
 
@@ -41,12 +43,12 @@ export const useWorlds = (initialSlug?: string) => {
         data: worlds,
         isLoading,
         isError,
-    } = useQuery<World[]>({
+    } = useQuery<ParsedWorld[]>({
         queryKey: ["worlds"],
         queryFn: fetchWorlds,
     });
 
-    const { data: initialWorld } = useQuery<World | null>({
+    const { data: initialWorld } = useQuery<ParsedWorld | null>({
         queryKey: ["world", initialSlug],
         queryFn: () =>
             initialSlug ? fetchWorldBySlug(initialSlug) : Promise.resolve(null),
@@ -165,7 +167,7 @@ export const useWorlds = (initialSlug?: string) => {
 };
 
 export const useWorldBySlug = (slug: string) => {
-    return useQuery<World | null>({
+    return useQuery<ParsedWorld | null>({
         queryKey: ["world", slug],
         queryFn: () => fetchWorldBySlug(slug),
         enabled: !!slug,

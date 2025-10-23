@@ -82,6 +82,9 @@ export type BackgroundConfig = {
     auroraIntensity?: number;
     auroraColors?: string[];
 
+    // Sunset properties
+    intensity?: number;
+
     // Nebula properties
     nebulaSpeed?: number;
     nebulaIntensity?: number;
@@ -158,6 +161,58 @@ export type TorusKnotConfig = {
     radialSegments?: number;
 };
 
+export type WobbleFieldConfig = {
+    torusRadius?: number;
+    torusTube?: number;
+    segments?: number;
+    sphereRadius?: number;
+    ringRadius?: number;
+    ringTube?: number;
+    rotationSpeed?: number;
+    scaleBreathing?: number;
+};
+
+export type DistortionSphereConfig = {
+    radius?: number;
+    widthSegments?: number;
+    heightSegments?: number;
+    distort?: number;
+    speed?: number;
+};
+
+export type MorphingIcosahedronConfig = {
+    radius?: number;
+    detail?: number;
+    morphSpeed?: number;
+    morphIntensity?: number;
+};
+
+export type WavyGridConfig = {
+    width?: number;
+    height?: number;
+    widthSegments?: number;
+    heightSegments?: number;
+    waveSpeed?: number;
+    waveHeight?: number;
+};
+
+export type CrystallineSpireConfig = {
+    height?: number;
+    radius?: number;
+    segments?: number;
+    energyIntensity?: number;
+    crystalCount?: number;
+};
+
+export type JellyTorusConfig = {
+    radius?: number;
+    tube?: number;
+    radialSegments?: number;
+    tubularSegments?: number;
+    jellyIntensity?: number;
+    jellySpeed?: number;
+};
+
 export type SceneThemeConfig = {
     mainObjectColor: string;
     material: MaterialConfig;
@@ -165,6 +220,12 @@ export type SceneThemeConfig = {
     lights: LightConfig[];
     extras?: ExtraConfig[];
     torusKnot?: TorusKnotConfig;
+    wobbleField?: WobbleFieldConfig;
+    distortionSphere?: DistortionSphereConfig;
+    morphingIcosahedron?: MorphingIcosahedronConfig;
+    wavyGrid?: WavyGridConfig;
+    crystallineSpire?: CrystallineSpireConfig;
+    jellyTorus?: JellyTorusConfig;
 };
 
 export type SceneConfig = {
