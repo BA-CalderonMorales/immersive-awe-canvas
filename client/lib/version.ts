@@ -1,5 +1,5 @@
 import { getVersionInfo, type VersionInfo } from "@utils/github-api";
-import { formatInTimeZone } from "date-fns-tz";
+import { formatInTimeZone } from "./dateUtils";
 
 // Re-export types for external use
 export type { VersionInfo } from "@utils/github-api";

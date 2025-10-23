@@ -3,7 +3,7 @@
  * Displays saved scenes with load, edit, delete, and export functionality
  */
 
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow } from "@/lib/dateUtils";
 import {
     Calendar,
     Copy,

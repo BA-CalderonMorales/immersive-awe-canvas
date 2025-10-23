@@ -75,11 +75,11 @@ export const withPerformanceMonitoring = <
  * API call performance monitoring decorator
  */
 export const monitorAPICall = (label: string) => {
-    return function <T extends (...args: any[]) => Promise<any>>(
+    return <T extends (...args: any[]) => Promise<any>>(
         target: any,
         propertyKey: string,
         descriptor: TypedPropertyDescriptor<T>
-    ) {
+    ) => {
         const originalMethod = descriptor.value!;
 
         descriptor.value = withPerformanceMonitoring(
