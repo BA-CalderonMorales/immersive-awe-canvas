@@ -51,10 +51,9 @@ const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProp
             </DialogTrigger>
             <DialogContent className={theme === "day" ? "bg-white" : "bg-gray-900"}>
                 <DialogHeader>
-                    <DialogTitle>Share Your World! 🌍</DialogTitle>
+                    <DialogTitle>Share Your World</DialogTitle>
                     <DialogDescription>
-                        Copy this link to share your 3D creation with friends, family, or
-                        classmates. They'll see exactly what you created!
+                        Copy this link to share your 3D creation. Anyone with the link will see exactly what you created.
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
@@ -73,7 +72,7 @@ const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProp
                             {copied ? (
                                 <>
                                     <Check className="w-4 h-4" />
-                                    Copied!
+                                    Copied
                                 </>
                             ) : (
                                 <>
@@ -83,10 +82,10 @@ const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProp
                             )}
                         </Button>
                     </div>
-                    <div className="text-xs opacity-70 space-y-1">
-                        <p>💡 <strong>Pro Tip:</strong> Your world is saved in the link itself!</p>
-                        <p>🎨 No account needed - just share and create!</p>
-                        <p>📱 Works on phones, tablets, and computers!</p>
+                    <div className="text-xs opacity-70 space-y-1.5 border-t border-slate-200 dark:border-slate-700 pt-3 mt-3">
+                        <p><strong>Pro Tip:</strong> Your world is saved in the link itself</p>
+                        <p>No account needed - just share and create</p>
+                        <p>Works on phones, tablets, and computers</p>
                     </div>
                 </div>
             </DialogContent>

@@ -50,7 +50,7 @@ const EducationalPopover = ({
                     {funFact && (
                         <div className="p-2 rounded bg-purple-500/10 border border-purple-500/20">
                             <p className="text-xs">
-                                <span className="font-semibold">🎯 Fun Fact: </span>
+                                <span className="font-semibold">Fun Fact: </span>
                                 {funFact}
                             </p>
                         </div>

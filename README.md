@@ -2,8 +2,6 @@
 
 A professional 3D canvas experience for exploring and manipulating interactive geometries in your browser. Built with React, Three.js, RSBuild, and modern web technologies using a modular monorepo architecture.
 
-**Live Demo:** [immersive-awe-canvas.lovable.app](https://immersive-awe-canvas.lovable.app)
-
 ## Features
 
 <details>

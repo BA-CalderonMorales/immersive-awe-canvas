@@ -37,8 +37,7 @@ const DynamicObject = ({
         case "WobbleField":
             return (
                 <WobbleFieldObject
-                    color={mainObjectColor}
-                    materialConfig={material}
+                    themeConfig={themeConfig}
                     isLocked={isLocked}
                     isMotionFrozen={isMotionFrozen}
                 />

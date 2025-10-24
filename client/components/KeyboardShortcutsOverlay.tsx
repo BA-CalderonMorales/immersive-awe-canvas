@@ -32,10 +32,7 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
             <Collapsible open={isExpanded} onOpenChange={toggleExpanded}>
                 <CollapsibleTrigger asChild>
                     <div className="flex items-center justify-between p-3 pb-2 cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 transition-colors w-full">
-                        <span className="font-semibold flex items-center gap-2">
-                            <span>🎹</span>
-                            <span>Keyboard Shortcuts</span>
-                        </span>
+                        <span className="font-semibold">Keyboard Shortcuts</span>
                         <div className="flex items-center gap-2">
                             <span className="text-[10px] opacity-50">Press M to toggle</span>
                             <Button
@@ -56,7 +53,7 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
                 <CollapsibleContent className="px-3 pb-3">
                     <div className="space-y-1.5">
                         <div className="text-[10px] opacity-60 mb-2 font-semibold">
-                            🎮 World Navigation
+                            World Navigation
                         </div>
                         <p>
                             <span className="font-bold">N</span> - Next World
@@ -72,7 +69,7 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
                         </p>
                         
                         <div className="text-[10px] opacity-60 mb-2 font-semibold mt-3">
-                            ⚙️ Object Controls
+                            Object Controls
                         </div>
                         <p>
                             <span className="font-bold">.</span> - Freeze/Unfreeze
@@ -84,7 +81,7 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
                         </p>
                         
                         <div className="text-[10px] opacity-60 mb-2 font-semibold mt-3">
-                            🔧 Interface
+                            Interface
                         </div>
                         <p>
                             <span className="font-bold">V</span> - Hide/Show UI
@@ -108,7 +105,7 @@ const KeyboardShortcutsOverlay = ({ theme }: KeyboardShortcutsOverlayProps) => {
                         </p>
                         
                         <div className="text-[9px] opacity-40 mt-3 italic">
-                            💡 Tip: Use your mouse to rotate and zoom!
+                            Tip: Use your mouse to rotate and zoom
                         </div>
                     </div>
                 </CollapsibleContent>

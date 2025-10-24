@@ -104,8 +104,8 @@ const GeometryPresets = ({ onSelectPreset, theme = "night" }: GeometryPresetsPro
                                         <p className="text-xs opacity-80">
                                             {preset.description}
                                         </p>
-                                        <p className="text-xs font-medium text-blue-400">
-                                            💡 {preset.educational}
+                                        <p className="text-xs font-medium text-cyan-400">
+                                            {preset.educational}
                                         </p>
                                     </div>
                                 </TooltipContent>

@@ -140,7 +140,7 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
 
                         {/* Hint */}
                         <p className="text-xs opacity-50 pt-2">
-                            💡 Tip: Use your mouse to rotate and zoom the camera
+                            Tip: Use your mouse to rotate and zoom the camera
                         </p>
                     </div>
                 </motion.div>

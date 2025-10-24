@@ -17,6 +17,46 @@ import LoadingOverlay from "./LoadingOverlay";
 // type DefaultGeometry =
 //     Database["public"]["Tables"]["default_geometries"]["Row"];
 
+// Helper function: Calculate new index for circular navigation
+const calculateNewIndex = (
+    currentIndex: number,
+    totalLength: number,
+    direction: "next" | "prev"
+): number => {
+    if (direction === "next") {
+        return (currentIndex + 1) % totalLength;
+    }
+    return (currentIndex - 1 + totalLength) % totalLength;
+};
+
+// Helper function: Update scene config with background
+const updateSceneConfigWithBackground = (
+    backgrounds: any[] | null,
+    backgroundIndex: number,
+    editableSceneConfig: SceneConfig | null
+): SceneConfig | null => {
+    if (!backgrounds?.[backgroundIndex] || !editableSceneConfig) {
+        return null;
+    }
+
+    const targetBackground = backgrounds[backgroundIndex];
+    return updateSceneConfigBackground(editableSceneConfig, targetBackground);
+};
+
+// Helper function: Update scene config with geometry
+const updateSceneConfigWithGeometry = (
+    geometries: any[] | null,
+    geometryIndex: number,
+    editableSceneConfig: SceneConfig | null
+): SceneConfig | null => {
+    if (!geometries?.[geometryIndex] || !editableSceneConfig) {
+        return null;
+    }
+
+    const targetGeometry = geometries[geometryIndex];
+    return updateSceneConfigGeometry(editableSceneConfig, targetGeometry);
+};
+
 const ExperienceLogic = () => {
     // Basic state - Initialize with default, will be updated when background loads
     const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig>(
@@ -68,23 +108,42 @@ const ExperienceLogic = () => {
     } = useWorlds();
     const { theme, toggleTheme } = useExperience();
 
-    // Initialize scene config with unique geometry when background and geometries are first loaded
+    // Update scene config when world changes - use database configuration
     useEffect(() => {
-        if (currentBackground && geometries && geometries.length > 0) {
-            const defaultGeometryType = getDefaultGeometryForBackground(
-                currentBackground.id,
-                geometries
+        // Early return: Apply world scene config from database if available
+        if (worldData?.sceneConfig) {
+            console.log(
+                "Applying world scene config from database:",
+                worldData.sceneConfig
             );
-
-            // Only update if the geometry type is different to avoid unnecessary re-renders
-            if (editableSceneConfig.type !== defaultGeometryType) {
-                setEditableSceneConfig(prev => ({
-                    ...prev,
-                    type: defaultGeometryType,
-                }));
-            }
+            setEditableSceneConfig(worldData.sceneConfig);
+            setCurrentWorldId(worldData.id);
+            return;
         }
+
+        // Early return: Skip if required data not available
+        if (!currentBackground || !geometries || geometries.length === 0) {
+            return;
+        }
+
+        // Fallback: Initialize scene config with unique geometry
+        const defaultGeometryType = getDefaultGeometryForBackground(
+            currentBackground.id,
+            geometries
+        );
+
+        // Early return: Skip update if geometry type is already correct
+        if (editableSceneConfig.type === defaultGeometryType) {
+            return;
+        }
+
+        setEditableSceneConfig(prev => ({
+            ...prev,
+            type: defaultGeometryType,
+        }));
     }, [
+        worldData?.sceneConfig,
+        worldData?.id,
         currentBackground?.id,
         geometries,
         editableSceneConfig.type,
@@ -146,52 +205,33 @@ const ExperienceLogic = () => {
     // Enhanced handlers that update scene config properly
     const handleChangeBackground = useCallback(
         (direction: "next" | "prev") => {
-            const currentIndex =
-                backgrounds?.findIndex(bg => bg.id === currentBackground?.id) ||
-                0;
-            let newIndex: number;
-
-            if (direction === "next") {
-                newIndex = backgrounds
-                    ? (currentIndex + 1) % backgrounds.length
-                    : 0;
-            } else {
-                newIndex = backgrounds
-                    ? (currentIndex - 1 + backgrounds.length) %
-                      backgrounds.length
-                    : 0;
+            // Early return: Guard against missing backgrounds
+            if (!backgrounds || backgrounds.length === 0) {
+                return;
             }
+
+            const currentIndex =
+                backgrounds.findIndex(bg => bg.id === currentBackground?.id) || 0;
+
+            const newIndex = calculateNewIndex(
+                currentIndex,
+                backgrounds.length,
+                direction
+            );
 
             changeBackground(direction);
 
-            // Update scene config with new background and unique geometry
-            if (backgrounds?.[newIndex] && editableSceneConfig) {
-                const targetBackground = backgrounds[newIndex];
-                let updatedConfig = updateSceneConfigBackground(
-                    editableSceneConfig,
-                    targetBackground
-                );
+            const updatedConfig = updateSceneConfigWithBackground(
+                backgrounds,
+                newIndex,
+                editableSceneConfig
+            );
 
-                // Set unique default geometry for this background
-                const defaultGeometryType = getDefaultGeometryForBackground(
-                    targetBackground.id,
-                    geometries
-                );
-                updatedConfig = {
-                    ...updatedConfig,
-                    type: defaultGeometryType,
-                };
-
+            if (updatedConfig) {
                 setEditableSceneConfig(updatedConfig);
             }
         },
-        [
-            changeBackground,
-            backgrounds,
-            currentBackground,
-            editableSceneConfig,
-            geometries,
-        ]
+        [changeBackground, backgrounds, currentBackground, editableSceneConfig]
     );
 
     const handleChangeGeometry = useCallback(
@@ -204,40 +244,31 @@ const ExperienceLogic = () => {
     const handleJumpToBackground = useCallback(
         (backgroundIndex: number) => {
             jumpToBackground(backgroundIndex);
-            // Update scene config when background changes
-            if (backgrounds?.[backgroundIndex] && editableSceneConfig) {
-                const targetBackground = backgrounds[backgroundIndex];
-                let updatedConfig = updateSceneConfigBackground(
-                    editableSceneConfig,
-                    targetBackground
-                );
 
-                // Set unique default geometry for this background
-                const defaultGeometryType = getDefaultGeometryForBackground(
-                    targetBackground.id,
-                    geometries
-                );
-                updatedConfig = {
-                    ...updatedConfig,
-                    type: defaultGeometryType,
-                };
+            const updatedConfig = updateSceneConfigWithBackground(
+                backgrounds,
+                backgroundIndex,
+                editableSceneConfig
+            );
 
+            if (updatedConfig) {
                 setEditableSceneConfig(updatedConfig);
             }
         },
-        [jumpToBackground, backgrounds, editableSceneConfig, geometries]
+        [jumpToBackground, backgrounds, editableSceneConfig]
     );
 
     const handleJumpToGeometry = useCallback(
         (geometryIndex: number) => {
             jumpToGeometry(geometryIndex);
-            // Update scene config when geometry changes
-            if (geometries?.[geometryIndex] && editableSceneConfig) {
-                const targetGeometry = geometries[geometryIndex];
-                const updatedConfig = updateSceneConfigGeometry(
-                    editableSceneConfig,
-                    targetGeometry
-                );
+
+            const updatedConfig = updateSceneConfigWithGeometry(
+                geometries,
+                geometryIndex,
+                editableSceneConfig
+            );
+
+            if (updatedConfig) {
                 setEditableSceneConfig(updatedConfig);
             }
         },
@@ -257,16 +288,12 @@ const ExperienceLogic = () => {
         handleEntryTransitionEnd,
     });
 
-    // Loading states
-    const backgroundsLoading = !backgrounds;
-    const geometriesLoading = !geometries;
-    const isLoading = backgroundsLoading || geometriesLoading;
-
-    if (isLoading) {
+    // Early return: Loading states
+    if (!backgrounds || !geometries) {
         return <LoadingOverlay message="Loading experience..." theme="night" />;
     }
 
-    // Ensure data is available
+    // Early return: Ensure data is available
     if (!currentGeometry || !currentBackground) {
         return <LoadingOverlay message="Waiting for data..." theme="night" />;
     }
