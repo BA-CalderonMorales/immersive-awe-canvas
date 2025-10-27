@@ -39,15 +39,6 @@ export const useBackgrounds = (): UseBackgroundsReturn => {
         queryFn: fetchBackgrounds,
     });
 
-    // Debug logging
-    console.log("useBackgrounds debug:", {
-        backgrounds,
-        isLoading,
-        isError,
-        error: error?.message,
-        backgroundsLength: backgrounds?.length,
-    });
-
     const currentBackground = useMemo(() => {
         if (!backgrounds || backgrounds.length === 0) return null;
         return backgrounds[currentBackgroundIndex];

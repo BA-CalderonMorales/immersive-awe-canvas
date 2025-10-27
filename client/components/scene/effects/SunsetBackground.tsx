@@ -92,13 +92,14 @@ const SunsetBackground = ({ config }: SunsetBackgroundProps) => {
         float sunMask = 1.0 - smoothstep(0.03, 0.08, sunDistance);
         float sunGlow = exp(-sunDistance * 12.0) * 0.6;
         float sunCorona = exp(-sunDistance * 4.0) * 0.3;
-        
+
          // Apply sun effects
          skyColor = mix(skyColor, sunColor, sunMask * intensity);
          skyColor += sunColor * sunGlow * intensity;
          skyColor += horizonTopColor * sunCorona * intensity;
-        
+
          // Atmospheric scattering around sun
+         float scatterAngle = 1.0 - smoothstep(0.0, 1.0, sunDistance);
          float scattering = pow(max(0.0, scatterAngle), 8.0) * 0.4 * intensity;
          skyColor += sunColor * scattering * horizonBlend;
         

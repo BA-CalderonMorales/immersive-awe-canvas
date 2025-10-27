@@ -1,6 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useRef } from "react";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import type { BackgroundConfig, SceneConfig } from "@/types/scene";
@@ -134,48 +133,41 @@ const DynamicScene = ({
     }, [editableSceneConfig, worldData, currentBackground, currentGeometry]);
 
     return (
-        <AnimatePresence mode="wait">
-            <motion.div
-                key={`${currentBackground?.id}-${currentGeometry?.id}`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="absolute inset-0"
+        <div className="absolute inset-0">
+            <Canvas
+                camera={{ position: [0, 0, 12], fov: 75 }}
+                className="w-full h-full"
+                gl={{
+                    antialias: true,
+                    alpha: true,
+                    powerPreference: "high-performance",
+                    preserveDrawingBuffer: false,
+                }}
+                dpr={[1, 2]}
+                performance={{ min: 0.5 }}
             >
-                <Canvas
-                    camera={{ position: [0, 0, 12], fov: 75 }}
-                    className="w-full h-full"
-                    gl={{
-                        antialias: true,
-                        alpha: true,
-                        powerPreference: "high-performance",
-                    }}
-                    dpr={[1, 2]}
-                    performance={{ min: 0.5 }}
-                >
-                    <OrbitControls
-                        ref={orbitControlsRef}
-                        enabled={!isDragging && !isDragEnabled}
-                        enableZoom={true}
-                        enablePan={false}
-                        enableRotate={!isDragging && !isDragEnabled}
-                        enableDamping={true}
-                        dampingFactor={0.1}
-                        maxDistance={20}
-                        minDistance={2}
-                        makeDefault
-                    />
-                    <DynamicWorld
-                        sceneConfig={dynamicSceneConfig}
-                        isLocked={isLocked}
-                        isDragEnabled={isDragEnabled}
-                        isMotionFrozen={isMotionFrozen}
-                        onDragStateChange={onDragStateChange}
-                    />
-                </Canvas>
-            </motion.div>
-        </AnimatePresence>
+                <OrbitControls
+                    ref={orbitControlsRef}
+                    enabled={!isDragging && !isDragEnabled}
+                    enableZoom={true}
+                    enablePan={false}
+                    enableRotate={!isDragging && !isDragEnabled}
+                    enableDamping={true}
+                    dampingFactor={0.1}
+                    maxDistance={20}
+                    minDistance={2}
+                    makeDefault
+                />
+                <DynamicWorld
+                    key={String(currentGeometry?.id || 'default')}
+                    sceneConfig={dynamicSceneConfig}
+                    isLocked={isLocked}
+                    isDragEnabled={isDragEnabled}
+                    isMotionFrozen={isMotionFrozen}
+                    onDragStateChange={onDragStateChange}
+                />
+            </Canvas>
+        </div>
     );
 };
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Minimal geometric icon representing 3D/immersive canvas -->
+  <rect width="32" height="32" fill="#000000"/>
+  <!-- Abstract 3D cube/geometry -->
+  <path d="M16 8 L24 13 L24 19 L16 24 L8 19 L8 13 Z"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="1.5"
+        stroke-linejoin="miter"/>
+  <path d="M16 8 L16 16"
+        stroke="#ffffff"
+        stroke-width="1.5"/>
+  <path d="M8 13 L16 16 L24 13"
+        stroke="#ffffff"
+        stroke-width="1.5"
+        stroke-linejoin="miter"/>
+</svg>

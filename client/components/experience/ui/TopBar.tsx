@@ -71,15 +71,10 @@ const TopBar = ({
 
     const buttonStyle = { ...uiStyle, ...textStyle };
 
-    const barClasses =
-        theme === "day"
-            ? "bg-white/80 border-b border-gray-200"
-            : "bg-gray-900/80 border-b border-gray-700";
-
     return (
         <div
             style={textStyle}
-            className={`absolute top-0 left-0 w-full p-3 sm:p-4 md:p-5 lg:p-6 pointer-events-none flex justify-between items-start transition-opacity duration-300 backdrop-blur-md shadow-[var(--shadow-elegant)] ${barClasses} ${
+            className={`absolute top-0 left-0 w-full p-4 sm:p-5 md:p-6 pointer-events-none flex justify-between items-start transition-opacity duration-300 ${
                 isTransitioning ? "opacity-0" : "opacity-100"
             } ${isSettingsOpen ? "z-10" : "z-50"}`}
         >
@@ -107,9 +102,13 @@ const TopBar = ({
                 />
             </div>
 
-            {/* Center/Right side: World title */}
+            {/* Center/Right side: World title - minimal treatment */}
             <div className="flex-1 flex justify-center sm:justify-end items-center min-w-0 mx-4 pointer-events-none">
-                <h2 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold h-6 sm:h-8 md:h-9 flex items-center truncate">
+                <h2
+                    className={`text-sm sm:text-base md:text-lg font-semibold tracking-tight h-6 sm:h-8 flex items-center truncate transition-colors duration-200 ${
+                        theme === "day" ? "text-black/[0.9]" : "text-white/[0.95]"
+                    }`}
+                >
                     {worldName}
                 </h2>
             </div>

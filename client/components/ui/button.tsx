@@ -4,28 +4,26 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-current focus-visible:ring-opacity-40 disabled:pointer-events-none disabled:opacity-30 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
                 default:
-                    "bg-primary text-primary-foreground hover:bg-primary/90",
+                    "bg-black/[0.9] dark:bg-white/[0.9] text-white dark:text-black hover:bg-black dark:hover:bg-white hover:scale-[1.02] active:scale-[0.98] border border-black/[0.1] dark:border-white/[0.1]",
                 destructive:
-                    "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                    "bg-red-500/[0.1] text-red-600 dark:text-red-400 hover:bg-red-500/[0.15] border border-red-500/[0.2] hover:scale-[1.02] active:scale-[0.98]",
                 outline:
-                    "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+                    "border border-black/[0.06] dark:border-white/[0.08] bg-transparent hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:scale-[1.02] active:scale-[0.98]",
                 secondary:
-                    "bg-secondary text-secondary-foreground hover:bg-secondary/80",
-                ghost: "hover:bg-accent hover:text-accent-foreground",
-                link: "text-primary underline-offset-4 hover:underline",
-                glass: "backdrop-blur-sm shadow-[var(--shadow-elegant)] border transition-all duration-200",
-                "glass-active":
-                    "backdrop-blur-sm shadow-[var(--shadow-elevated)] border bg-[var(--button-active)] border-[var(--button-active-border)] transition-all duration-200",
+                    "bg-black/[0.04] dark:bg-white/[0.04] hover:bg-black/[0.08] dark:hover:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.08] hover:scale-[1.02] active:scale-[0.98]",
+                ghost: "hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:scale-[1.02] active:scale-[0.98]",
+                link: "underline-offset-4 hover:underline",
+                minimal: "bg-white/[0.08] dark:bg-white/[0.04] hover:bg-white/[0.12] dark:hover:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.08] hover:scale-[1.02] active:scale-[0.98]",
             },
             size: {
                 default: "h-10 px-4 py-2",
-                sm: "h-9 rounded-md px-3",
-                lg: "h-11 rounded-md px-8",
+                sm: "h-9 px-3 text-xs",
+                lg: "h-11 px-6 text-base",
                 icon: "h-10 w-10",
             },
         },

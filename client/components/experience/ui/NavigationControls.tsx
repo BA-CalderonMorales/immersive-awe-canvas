@@ -23,7 +23,7 @@ const NavigationControls = ({
             <div className="absolute left-4 sm:left-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
                 <GlassButton
                     icon={ArrowLeft}
-                    label="Previous Background"
+                    label="Previous Geometry"
                     shortcut="P"
                     onClick={() => onChangeBackground("prev")}
                     theme={theme}
@@ -33,7 +33,7 @@ const NavigationControls = ({
             <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 pointer-events-auto z-10">
                 <GlassButton
                     icon={ArrowRight}
-                    label="Next Background"
+                    label="Next Geometry"
                     shortcut="N"
                     onClick={() => onChangeBackground("next")}
                     theme={theme}

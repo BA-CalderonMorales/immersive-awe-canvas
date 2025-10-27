@@ -154,7 +154,7 @@ const ExperienceContainerContent = ({
                     isTransitioning={isTransitioning}
                     editableSceneConfig={editableSceneConfig}
                     onToggleTheme={toggleTheme}
-                    onChangeBackground={handleChangeBackground}
+                    onChangeBackground={handleChangeGeometry}
                     onCopyCode={handleCopyCode}
                     onUpdateSceneConfig={setEditableSceneConfig}
                     onShowHelp={() => setIsHelpOpen(true)}

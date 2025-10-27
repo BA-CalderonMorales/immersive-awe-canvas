@@ -10,8 +10,8 @@ interface TransitionSplashProps {
 }
 
 const backgrounds = {
-    day: "linear-gradient(135deg, #f4e7d7 0%, #d3ecfd 100%)",
-    night: "linear-gradient(135deg, #18203a 0%, #2b3a64 100%)",
+    day: "rgba(255, 255, 255, 0.98)",
+    night: "rgba(0, 0, 0, 0.98)",
 };
 
 const containerVariants = {
@@ -118,30 +118,45 @@ export default function TransitionSplash({
                 animate="visible"
                 exit="exit"
             >
-                <motion.div variants={iconVariants} className="mb-6">
-                    {type === "app-entry" ? (
-                        <div
-                            className={`w-20 h-20 md:w-24 md:h-24 rounded-full shadow-xl backdrop-blur-sm ${
-                                theme === "day"
-                                    ? "bg-gradient-to-br from-yellow-200/80 to-blue-200/80 border border-blue-200/30"
-                                    : "bg-gradient-to-br from-blue-900/80 to-purple-900/80 border border-blue-400/30"
-                            }`}
-                        />
-                    ) : (
-                        <div
-                            className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${
-                                theme === "day"
-                                    ? "bg-yellow-200/90"
-                                    : "bg-blue-800/90"
-                            }`}
-                        />
-                    )}
+                <motion.div variants={iconVariants} className="mb-8">
+                    <div
+                        className={`relative w-16 h-16 md:w-20 md:h-20 ${
+                            theme === "day"
+                                ? ""
+                                : ""
+                        }`}
+                    >
+                        {/* Minimal spinner */}
+                        <svg
+                            className="w-full h-full animate-spin"
+                            style={{ animationDuration: "2s" }}
+                            viewBox="0 0 50 50"
+                            fill="none"
+                        >
+                            <circle
+                                cx="25"
+                                cy="25"
+                                r="20"
+                                stroke={theme === "day" ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)"}
+                                strokeWidth="1.5"
+                            />
+                            <circle
+                                cx="25"
+                                cy="25"
+                                r="20"
+                                stroke={theme === "day" ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.8)"}
+                                strokeWidth="1.5"
+                                strokeLinecap="round"
+                                strokeDasharray="80 200"
+                            />
+                        </svg>
+                    </div>
                 </motion.div>
 
                 <motion.h2
                     variants={textVariants}
-                    className={`text-center font-medium text-base md:text-lg tracking-wide ${
-                        theme === "day" ? "text-slate-800" : "text-blue-200"
+                    className={`text-center font-medium text-sm md:text-base tracking-tight ${
+                        theme === "day" ? "text-black/[0.7]" : "text-white/[0.7]"
                     }`}
                 >
                     {type === "app-entry"
