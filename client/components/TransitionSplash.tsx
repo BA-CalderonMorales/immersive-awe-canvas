@@ -7,6 +7,7 @@ interface TransitionSplashProps {
     type?: "app-entry" | "world-switch" | "loading";
     onAnimationEnd?: () => void;
     children?: React.ReactNode;
+    message?: string;
 }
 
 const backgrounds = {
@@ -104,6 +105,7 @@ export default function TransitionSplash({
     type = "app-entry",
     onAnimationEnd,
     children,
+    message,
 }: TransitionSplashProps) {
     if (!show) return null;
 
@@ -159,11 +161,11 @@ export default function TransitionSplash({
                         theme === "day" ? "text-black/[0.7]" : "text-white/[0.7]"
                     }`}
                 >
-                    {type === "app-entry"
+                    {message || (type === "app-entry"
                         ? "Initializing..."
                         : type === "world-switch"
                           ? "Switching scene..."
-                          : "Loading..."}
+                          : "Loading...")}
                 </motion.h2>
             </motion.div>
         );
