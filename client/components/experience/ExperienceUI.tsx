@@ -6,7 +6,6 @@ import { logEvent } from "@/lib/logger";
 import type { SceneConfig } from "@/types/scene";
 import BottomBar from "./ui/BottomBar";
 import HiddenUiView from "./ui/HiddenUiView";
-import NavigationControls from "./ui/NavigationControls";
 import TopBar from "./ui/TopBar";
 
 interface ExperienceUIProps {
@@ -132,14 +131,6 @@ const ExperienceUI = ({
                             isTransitioning={false}
                             isMobile={isMobile}
                             isSettingsOpen={isSettingsOpen}
-                        />
-
-                        {/* Background navigation controls */}
-                        <NavigationControls
-                            uiColor={uiColor}
-                            onChangeBackground={onChangeBackground}
-                            isTransitioning={isTransitioning}
-                            theme={theme}
                         />
 
                         {/* Bottom action bar */}

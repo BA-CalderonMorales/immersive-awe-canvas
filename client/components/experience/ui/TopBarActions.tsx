@@ -1,6 +1,5 @@
 import { EyeOff, Moon, Sun } from "lucide-react";
 import GlassButton from "./GlassButton";
-import LikeDialog from "./LikeDialog";
 
 interface TopBarActionsProps {
     uiColor: string;
@@ -33,7 +32,6 @@ const TopBarActions = ({
                 theme={theme}
                 uiColor={uiColor}
             />
-            <LikeDialog theme={theme} uiColor={uiColor} />
         </div>
     );
 };

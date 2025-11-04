@@ -5,7 +5,7 @@ import { useExperienceHotkeys } from "@/hooks/useExperienceHotkeys";
 
 interface ExperienceHotkeysProps {
     toggleTheme: () => void;
-    changeBackground: (direction: "next" | "prev") => void;
+    changeWorld: (direction: "next" | "prev") => void;
     changeGeometry: (direction: "next" | "prev") => void;
     handleGoHome: () => void;
     handleCopyCode: () => void;
@@ -25,7 +25,7 @@ interface ExperienceHotkeysProps {
 
 const ExperienceHotkeys = ({
     toggleTheme,
-    changeBackground,
+    changeWorld,
     changeGeometry,
     handleGoHome,
     handleCopyCode,
@@ -93,7 +93,7 @@ const ExperienceHotkeys = ({
     useExperienceHotkeys({
         callbacks: {
             toggleTheme,
-            changeWorld: changeBackground,
+            changeWorld,
             changeGeometry,
             openSearch: () => setIsSearchOpen(true),
             goHome: handleGoHome,

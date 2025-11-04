@@ -1,3 +1,4 @@
+import type { ThreeEvent } from "@react-three/fiber";
 import { useSceneObjectsContext } from "@/context/SceneObjectsContext";
 import { useExperience } from "@/hooks/useExperience";
 import type { SceneConfig } from "@/types/scene";
@@ -21,11 +22,20 @@ const DynamicWorld = ({
     isMotionFrozen,
     onDragStateChange,
 }: DynamicWorldProps) => {
-    const { isDragEnabled: contextDragEnabled } = useSceneObjectsContext();
+    const { isDragEnabled: contextDragEnabled, actions, selectedObjectId } = useSceneObjectsContext();
     const { theme } = useExperience();
     const actualDragEnabled = dragEnabled || contextDragEnabled;
 
     const themeConfig = theme === "day" ? sceneConfig.day : sceneConfig.night;
+
+    // Handle clicks on empty space to deselect objects
+    const handleBackgroundClick = (e: ThreeEvent<MouseEvent>) => {
+        // Only deselect if we have a selected object and clicked on the background
+        if (selectedObjectId) {
+            e.stopPropagation();
+            actions.selectObject(null);
+        }
+    };
 
     return (
         <>
@@ -33,6 +43,22 @@ const DynamicWorld = ({
                 background={themeConfig.background}
                 extras={themeConfig.extras}
             />
+
+            {/* Invisible background mesh to catch clicks for deselection - behind everything */}
+            <mesh
+                position={[0, 0, -200]}
+                onClick={handleBackgroundClick}
+                renderOrder={-1}
+            >
+                <planeGeometry args={[10000, 10000]} />
+                <meshBasicMaterial
+                    transparent
+                    opacity={0}
+                    depthWrite={false}
+                    depthTest={false}
+                />
+            </mesh>
+
             <DynamicLights lights={themeConfig.lights} />
             <DynamicObject
                 type={sceneConfig.type}

@@ -133,7 +133,7 @@ describe("ExperienceLogic", () => {
 
         render(<ExperienceLogic />);
 
-        expect(screen.getByText("Loading experience...")).toBeInTheDocument();
+        expect(screen.getByText("Loading scene data...")).toBeInTheDocument();
     });
 
     it("should render error state correctly", () => {
@@ -160,7 +160,7 @@ describe("ExperienceLogic", () => {
 
         render(<ExperienceLogic />);
 
-        expect(screen.getByText("Waiting for data...")).toBeInTheDocument();
+        expect(screen.getByText("Loading...")).toBeInTheDocument();
     });
 
     it("should render experience container when data is loaded", () => {

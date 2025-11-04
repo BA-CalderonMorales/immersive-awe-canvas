@@ -111,7 +111,7 @@ const ExperienceLogic = () => {
 
     // Update scene config when world changes - use database configuration
     useEffect(() => {
-        // Early return: Apply world scene config from database if available
+        // Priority 1: Apply world scene config from database if available
         if (worldData?.sceneConfig) {
             console.log(
                 "Applying world scene config from database:",
@@ -122,29 +122,34 @@ const ExperienceLogic = () => {
             return;
         }
 
-        // Early return: Skip if required data not available
-        if (!currentBackground || !geometries || geometries.length === 0) {
-            return;
+        // Priority 2: Only use background/geometry fallback if NO world data exists
+        // This prevents backgrounds from overriding world configs
+        if (!worldData) {
+            // Early return: Skip if required data not available
+            if (!currentBackground || !geometries || geometries.length === 0) {
+                return;
+            }
+
+            // Fallback: Initialize scene config with unique geometry
+            const defaultGeometryType = getDefaultGeometryForBackground(
+                currentBackground.id,
+                geometries
+            );
+
+            // Early return: Skip update if geometry type is already correct
+            if (editableSceneConfig.type === defaultGeometryType) {
+                return;
+            }
+
+            setEditableSceneConfig(prev => ({
+                ...prev,
+                type: defaultGeometryType,
+            }));
         }
-
-        // Fallback: Initialize scene config with unique geometry
-        const defaultGeometryType = getDefaultGeometryForBackground(
-            currentBackground.id,
-            geometries
-        );
-
-        // Early return: Skip update if geometry type is already correct
-        if (editableSceneConfig.type === defaultGeometryType) {
-            return;
-        }
-
-        setEditableSceneConfig(prev => ({
-            ...prev,
-            type: defaultGeometryType,
-        }));
     }, [
         worldData?.sceneConfig,
         worldData?.id,
+        worldData,
         currentBackground?.id,
         geometries,
         editableSceneConfig.type,
@@ -343,7 +348,7 @@ const ExperienceLogic = () => {
             setIsSearchOpen={setIsSearchOpen}
             setIsSettingsOpen={setIsSettingsOpen}
             setIsUiHidden={setIsUiHidden}
-            handleChangeBackground={handleChangeBackground}
+            handleChangeWorld={changeWorld}
             handleChangeGeometry={handleChangeGeometry}
             handleJumpToWorld={jumpToWorld}
             handleCopyCode={handleCopyCode}
