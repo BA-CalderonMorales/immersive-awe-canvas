@@ -5,7 +5,7 @@ interface LoadingOverlayProps {
     theme?: "day" | "night";
 }
 
-const LoadingOverlay = ({ message, theme = "day" }: LoadingOverlayProps) => {
+const LoadingOverlay = ({ message = "Loading...", theme = "day" }: LoadingOverlayProps) => {
     return (
         <TransitionSplash show={true} theme={theme} type="loading">
             <div className="flex flex-col items-center space-y-4">
@@ -17,15 +17,13 @@ const LoadingOverlay = ({ message, theme = "day" }: LoadingOverlayProps) => {
                         borderTopColor: theme === "day" ? "#000000" : "#ffffff",
                     }}
                 />
-                {message && (
-                    <p
-                        className={`text-sm font-medium tracking-wide ${
-                            theme === "day" ? "text-slate-800" : "text-blue-200"
-                        }`}
-                    >
-                        {message}
-                    </p>
-                )}
+                <p
+                    className={`text-sm font-medium tracking-wide ${
+                        theme === "day" ? "text-slate-800" : "text-blue-200"
+                    }`}
+                >
+                    {message}
+                </p>
             </div>
         </TransitionSplash>
     );

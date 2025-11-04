@@ -63,7 +63,7 @@ const InfoButton = ({
         if (isFirstVisit) {
             return {
                 ...baseInstructions,
-                welcome: "Welcome to your journey through immersive worlds!",
+                welcome: "Interactive 3D scene controls and navigation",
             };
         }
 

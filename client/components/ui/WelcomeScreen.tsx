@@ -10,7 +10,7 @@ interface WelcomeScreenProps {
 
 /**
  * First-time user welcome screen
- * Sets expectations and provides a warm, encouraging introduction
+ * Provides an overview of features and controls
  */
 const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
     const [show, setShow] = useState(false);
@@ -72,10 +72,10 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                         {/* Title */}
                         <div className="space-y-2">
                             <h1 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                                Welcome to 3D World Builder!
+                                3D Scene Builder
                             </h1>
                             <p className="text-lg md:text-xl opacity-80">
-                                Create, explore, and share amazing 3D worlds
+                                Create, explore, and share interactive 3D scenes
                             </p>
                         </div>
 
@@ -133,7 +133,7 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                                 onClick={handleContinue}
                                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-lg gap-2 shadow-lg hover:shadow-xl transition-all"
                             >
-                                Let's Create Something Amazing
+                                Get Started
                                 <ArrowRight className="w-5 h-5" />
                             </Button>
                         </motion.div>

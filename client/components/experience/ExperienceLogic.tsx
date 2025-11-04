@@ -88,6 +88,7 @@ const ExperienceLogic = () => {
     const [showWorldTransition, setShowWorldTransition] = useState(false);
     const [showUiHint, setShowUiHint] = useState(false);
     const hintShownRef = useRef(false);
+    const entryTransitionTimerRef = useRef<NodeJS.Timeout | null>(null);
 
     // Hooks
     const {
@@ -275,6 +276,27 @@ const ExperienceLogic = () => {
         [jumpToGeometry, geometries, editableSceneConfig]
     );
 
+    // Auto-dismiss entry transition after data loads
+    useEffect(() => {
+        if (backgrounds && geometries && currentBackground && currentGeometry && showEntryTransition) {
+            // Clear any existing timer
+            if (entryTransitionTimerRef.current) {
+                clearTimeout(entryTransitionTimerRef.current);
+            }
+
+            // Auto-dismiss after 1.5 seconds once data is ready
+            entryTransitionTimerRef.current = setTimeout(() => {
+                setShowEntryTransition(false);
+            }, 1500);
+        }
+
+        return () => {
+            if (entryTransitionTimerRef.current) {
+                clearTimeout(entryTransitionTimerRef.current);
+            }
+        };
+    }, [backgrounds, geometries, currentBackground, currentGeometry, showEntryTransition]);
+
     // Experience effects
     const { handleEntryTransitionEndWithHint } = useExperienceEffects({
         worldData: currentGeometry,
@@ -290,12 +312,12 @@ const ExperienceLogic = () => {
 
     // Early return: Loading states
     if (!backgrounds || !geometries) {
-        return <LoadingOverlay message="Loading experience..." theme="night" />;
+        return <LoadingOverlay message="Loading scene data..." theme="night" />;
     }
 
     // Early return: Ensure data is available
     if (!currentGeometry || !currentBackground) {
-        return <LoadingOverlay message="Waiting for data..." theme="night" />;
+        return <LoadingOverlay message="Loading..." theme="night" />;
     }
 
     return (

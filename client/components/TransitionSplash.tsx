@@ -160,9 +160,9 @@ export default function TransitionSplash({
                     }`}
                 >
                     {type === "app-entry"
-                        ? "Preparing your journey..."
+                        ? "Initializing..."
                         : type === "world-switch"
-                          ? "Traveling to new world..."
+                          ? "Switching scene..."
                           : "Loading..."}
                 </motion.h2>
             </motion.div>
