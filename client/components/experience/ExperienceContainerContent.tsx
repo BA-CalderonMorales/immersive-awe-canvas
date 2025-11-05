@@ -146,6 +146,7 @@ const ExperienceContainerContent = ({
                     onToggleMotion={onToggleMotion}
                     currentBackground={currentBackground}
                     currentGeometry={currentGeometry}
+                    uiColor={uiColor}
                 />
 
                 <ExperienceUI

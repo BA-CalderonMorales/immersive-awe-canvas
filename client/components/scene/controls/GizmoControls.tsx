@@ -30,6 +30,18 @@ const GizmoControls = ({
     const [meshFound, setMeshFound] = useState(false); // Track when mesh is found to trigger re-render
 
     useEffect(() => {
+        // Auto-select main object when drag mode is enabled but nothing selected
+        if (enabled && isDragEnabled && !selectedObjectId) {
+            actions.selectObject("main-scene-object");
+            return;
+        }
+
+        // Auto-deselect when drag mode is disabled and main object was selected
+        if (!isDragEnabled && selectedObjectId === "main-scene-object") {
+            actions.selectObject(null);
+            return;
+        }
+
         if (!enabled || !selectedObjectId) {
             selectedMesh.current = null;
             setMeshFound(false);
@@ -50,7 +62,7 @@ const GizmoControls = ({
         if (transformRef.current && selectedMesh.current) {
             transformRef.current.attach(selectedMesh.current);
         }
-    }, [enabled, selectedObjectId, scene]);
+    }, [enabled, selectedObjectId, scene, isDragEnabled, actions]);
 
     const handleObjectChange = () => {
         if (!selectedMesh.current) return;

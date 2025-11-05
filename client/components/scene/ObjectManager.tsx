@@ -13,7 +13,10 @@ const ObjectManager = ({
     gizmoMode = "translate",
     onDragStateChange,
 }: ObjectManagerProps) => {
-    const { objects, selectedObjectId, actions } = useSceneObjectsContext();
+    const { objects, selectedObjectId, actions, isDragEnabled: contextDragEnabled } = useSceneObjectsContext();
+
+    // Use context drag enabled if prop not provided
+    const actualDragEnabled = isDragEnabled || contextDragEnabled;
 
     return (
         <>
@@ -25,9 +28,10 @@ const ObjectManager = ({
                     onSelect={() => actions.selectObject(object.id)}
                 />
             ))}
-            {/* Show gizmo for any selected object, including on mobile */}
+
+            {/* Show gizmo for selected object OR main object when drag mode is enabled */}
             <GizmoControls
-                enabled={!!selectedObjectId}
+                enabled={!!selectedObjectId || actualDragEnabled}
                 mode={gizmoMode}
                 onDragStateChange={onDragStateChange}
             />

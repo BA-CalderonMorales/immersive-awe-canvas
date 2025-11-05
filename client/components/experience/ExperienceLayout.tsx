@@ -1,13 +1,8 @@
-import {
-    ResizableHandle,
-    ResizablePanel,
-    ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import { SceneObjectsProvider } from "@/context/SceneObjectsContext";
 import { useExperience } from "@/hooks/useExperience";
 import type { SceneConfig } from "@/types/scene";
 import DynamicScene from "../scene/DynamicScene";
-import SceneSettingsPanel from "./SceneSettingsPanel";
+import ThemedSettingsPanel from "./ThemedSettingsPanel";
 
 interface ExperienceLayoutProps {
     editableSceneConfig: SceneConfig;
@@ -23,6 +18,7 @@ interface ExperienceLayoutProps {
     onToggleMotion?: () => void;
     currentBackground?: { type: string; [key: string]: unknown };
     currentGeometry?: { type: string; [key: string]: unknown };
+    uiColor?: string;
 }
 
 const ExperienceLayout = ({
@@ -39,6 +35,7 @@ const ExperienceLayout = ({
     onToggleMotion,
     currentBackground,
     currentGeometry,
+    uiColor = "#ffffff",
 }: ExperienceLayoutProps) => {
     const { theme } = useExperience();
     const themeConfig = editableSceneConfig[theme];
@@ -75,53 +72,39 @@ const ExperienceLayout = ({
             mainObjectColor={mainObjectColor}
             isDragEnabled={isDragEnabled}
         >
-            <ResizablePanelGroup
-                direction="horizontal"
-                className="w-full h-full"
+            <div
+                className="w-full h-full flex"
                 style={{
                     position: "absolute",
                     inset: 0,
                     overflow: "hidden",
                 }}
             >
-                <ResizablePanel>
-                    <div className="w-full h-full relative overflow-hidden">
-                        <DynamicScene
-                            currentBackground={currentBackground}
-                            currentGeometry={currentGeometry}
-                            editableSceneConfig={editableSceneConfig}
-                            theme={theme}
-                            isLocked={_isObjectLocked}
-                            isDragEnabled={isDragEnabled}
-                            isMotionFrozen={isMotionFrozen}
+                {/* Main Scene */}
+                <div className="flex-1 relative overflow-hidden">
+                    <DynamicScene
+                        currentBackground={currentBackground}
+                        currentGeometry={currentGeometry}
+                        editableSceneConfig={editableSceneConfig}
+                        theme={theme}
+                        isLocked={_isObjectLocked}
+                        isDragEnabled={isDragEnabled}
+                        isMotionFrozen={isMotionFrozen}
+                    />
+                </div>
+
+                {/* Settings Panel - High z-index to appear above UI buttons */}
+                {isSettingsOpen && (
+                    <div className="relative z-50">
+                        <ThemedSettingsPanel
+                            sceneConfig={editableSceneConfig}
+                            onUpdate={onUpdateSceneConfig}
+                            onClose={() => {/* Will be handled by parent */}}
+                            uiColor={uiColor}
                         />
                     </div>
-                </ResizablePanel>
-
-                {isSettingsOpen && (
-                    <>
-                        <ResizableHandle withHandle />
-                        <ResizablePanel
-                            defaultSize={25}
-                            minSize={20}
-                            maxSize={40}
-                        >
-                            <SceneSettingsPanel
-                                sceneConfig={editableSceneConfig}
-                                onUpdate={onUpdateSceneConfig}
-                                isMotionFrozen={isMotionFrozen}
-                                onToggleMotion={onToggleMotion}
-                                onJumpToBackground={
-                                    currentBackground ? _index => {} : undefined
-                                }
-                                onJumpToGeometry={
-                                    currentGeometry ? _index => {} : undefined
-                                }
-                            />
-                        </ResizablePanel>
-                    </>
                 )}
-            </ResizablePanelGroup>
+            </div>
         </SceneObjectsProvider>
     );
 };

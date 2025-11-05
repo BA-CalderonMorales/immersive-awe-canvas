@@ -125,13 +125,13 @@ const DragControls = ({
     }, [
         enabled,
         camera,
-        gl,
+        gl.domElement,
         scene,
         actions,
         setIsDragging,
         onDragStart,
-        onDragEnd, // Find all user-added objects
-        objects.forEach,
+        onDragEnd,
+        objects,
     ]);
 
     return null;

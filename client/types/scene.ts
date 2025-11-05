@@ -239,7 +239,14 @@ export type SceneConfig = {
         | "JellyTorus"
         | "FibonacciSphere"
         | "SacredGeometry"
-        | "MandalaFlower";
+        | "MandalaFlower"
+        | "PulsatingOctahedron"
+        | "SpinningDodecahedron"
+        | "PyramidTetrahedron"
+        | "GlowingCone"
+        | "OrbitingCylinder"
+        | "MorphingBox"
+        | "FloatingCapsule";
     day: SceneThemeConfig;
     night: SceneThemeConfig;
 };

@@ -88,6 +88,13 @@ export function isSceneConfig(config: Json | null): config is SceneConfig {
         "FibonacciSphere",
         "SacredGeometry",
         "MandalaFlower",
+        "PulsatingOctahedron",
+        "SpinningDodecahedron",
+        "PyramidTetrahedron",
+        "GlowingCone",
+        "OrbitingCylinder",
+        "MorphingBox",
+        "FloatingCapsule",
     ];
     return (
         "type" in c &&

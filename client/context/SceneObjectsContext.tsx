@@ -30,15 +30,16 @@ export const SceneObjectsProvider = ({
     const sceneObjectsData = useSceneObjects(mainObjectColor);
     const [isDragging, setIsDragging] = useState(false);
 
+    // Use useMemo to ensure context value updates when isDragEnabled changes
+    const contextValue = {
+        ...sceneObjectsData,
+        isDragEnabled,
+        isDragging,
+        setIsDragging,
+    };
+
     return (
-        <SceneObjectsContext.Provider
-            value={{
-                ...sceneObjectsData,
-                isDragEnabled,
-                isDragging,
-                setIsDragging,
-            }}
-        >
+        <SceneObjectsContext.Provider value={contextValue}>
             {children}
         </SceneObjectsContext.Provider>
     );

@@ -2,10 +2,17 @@ import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
 import CrystallineSpireObject from "./objects/CrystallineSpireObject";
 import DistortionSphereObject from "./objects/DistortionSphereObject";
 import FibonacciSphereObject from "./objects/FibonacciSphereObject";
+import FloatingCapsuleObject from "./objects/FloatingCapsuleObject";
+import GlowingConeObject from "./objects/GlowingConeObject";
 import JellyTorusObject from "./objects/JellyTorusObject";
 import MandalaFlowerObject from "./objects/MandalaFlowerObject";
+import MorphingBoxObject from "./objects/MorphingBoxObject";
 import MorphingIcosahedronObject from "./objects/MorphingIcosahedronObject";
+import OrbitingCylinderObject from "./objects/OrbitingCylinderObject";
+import PulsatingOctahedronObject from "./objects/PulsatingOctahedronObject";
+import PyramidTetrahedronObject from "./objects/PyramidTetrahedronObject";
 import SacredGeometryObject from "./objects/SacredGeometryObject";
+import SpinningDodecahedronObject from "./objects/SpinningDodecahedronObject";
 import TorusKnotObject from "./objects/TorusKnotObject";
 import WavyGridObject from "./objects/WavyGridObject";
 import WobbleFieldObject from "./objects/WobbleFieldObject";
@@ -106,6 +113,69 @@ const DynamicObject = ({
         case "MandalaFlower":
             return (
                 <MandalaFlowerObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "PulsatingOctahedron":
+            return (
+                <PulsatingOctahedronObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "SpinningDodecahedron":
+            return (
+                <SpinningDodecahedronObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "PyramidTetrahedron":
+            return (
+                <PyramidTetrahedronObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "GlowingCone":
+            return (
+                <GlowingConeObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "OrbitingCylinder":
+            return (
+                <OrbitingCylinderObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "MorphingBox":
+            return (
+                <MorphingBoxObject
+                    color={mainObjectColor}
+                    materialConfig={material}
+                    isLocked={isLocked}
+                    isMotionFrozen={isMotionFrozen}
+                />
+            );
+        case "FloatingCapsule":
+            return (
+                <FloatingCapsuleObject
                     color={mainObjectColor}
                     materialConfig={material}
                     isLocked={isLocked}
