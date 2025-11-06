@@ -1,6 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
 import type { BackgroundConfig, SceneConfig } from "@/types";
-import LearningTips from "../ui/LearningTips";
 import ExperienceHotkeys from "./ExperienceHotkeys";
 import ExperienceLayout from "./ExperienceLayout";
 import ExperienceTransitions from "./ExperienceTransitions";
@@ -112,7 +111,6 @@ const ExperienceContainerContent = ({
     return (
         <AnimatePresence mode="wait">
             <motion.div
-                key={worldData.slug}
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 1.02 }}
@@ -147,6 +145,7 @@ const ExperienceContainerContent = ({
                     currentBackground={currentBackground}
                     currentGeometry={currentGeometry}
                     uiColor={uiColor}
+                    onCloseSettings={() => setIsSettingsOpen(false)}
                 />
 
                 <ExperienceUI
@@ -190,9 +189,6 @@ const ExperienceContainerContent = ({
                     jumpToWorld={handleJumpToWorld}
                     onToggleDrag={onToggleDrag}
                 />
-
-                {/* Educational tips for learners */}
-                {!isUiHidden && !isMobile && <LearningTips theme={theme} />}
             </motion.div>
         </AnimatePresence>
     );

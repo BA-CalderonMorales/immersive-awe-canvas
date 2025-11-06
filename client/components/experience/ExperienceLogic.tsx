@@ -58,24 +58,8 @@ const updateSceneConfigWithGeometry = (
 };
 
 const ExperienceLogic = () => {
-    // Basic state - Initialize with default, will be updated when background loads
-    const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig>(
-        {
-            type: "TorusKnot",
-            day: {
-                lights: [{ type: "ambient", intensity: 1 }],
-                material: { materialType: "standard" },
-                background: { type: "void" },
-                mainObjectColor: "#ffffff",
-            },
-            night: {
-                lights: [{ type: "ambient", intensity: 0.5 }],
-                material: { materialType: "standard" },
-                background: { type: "void" },
-                mainObjectColor: "#ffffff",
-            },
-        }
-    );
+    // Basic state - Will be set from database world data
+    const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
     const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
     const [isObjectLocked, setIsObjectLocked] = useState(false);
     const [isDragEnabled, setIsDragEnabled] = useState(false);
@@ -109,9 +93,8 @@ const ExperienceLogic = () => {
     } = useWorlds();
     const { theme, toggleTheme } = useExperience();
 
-    // Update scene config when world changes - use database configuration
+    // Update scene config when world changes - ONLY use database configuration
     useEffect(() => {
-        // Priority 1: Apply world scene config from database if available
         if (worldData?.sceneConfig) {
             console.log(
                 "Applying world scene config from database:",
@@ -119,42 +102,8 @@ const ExperienceLogic = () => {
             );
             setEditableSceneConfig(worldData.sceneConfig);
             setCurrentWorldId(worldData.id);
-            return;
         }
-
-        // Priority 2: Only use background/geometry fallback if NO world data exists
-        // This prevents backgrounds from overriding world configs
-        if (!worldData) {
-            // Early return: Skip if required data not available
-            if (!currentBackground || !geometries || geometries.length === 0) {
-                return;
-            }
-
-            // Fallback: Initialize scene config with unique geometry
-            const defaultGeometryType = getDefaultGeometryForBackground(
-                currentBackground.id,
-                geometries
-            );
-
-            // Early return: Skip update if geometry type is already correct
-            if (editableSceneConfig.type === defaultGeometryType) {
-                return;
-            }
-
-            setEditableSceneConfig(prev => ({
-                ...prev,
-                type: defaultGeometryType,
-            }));
-        }
-    }, [
-        worldData?.sceneConfig,
-        worldData?.id,
-        worldData,
-        currentBackground?.id,
-        geometries,
-        editableSceneConfig.type,
-        currentBackground,
-    ]);
+    }, [worldData?.sceneConfig, worldData?.id]);
 
     // Helper functions
     const toggleObjectLock = useCallback(
@@ -242,9 +191,33 @@ const ExperienceLogic = () => {
 
     const handleChangeGeometry = useCallback(
         (direction: "next" | "prev") => {
+            // Early return: Guard against missing geometries
+            if (!geometries || geometries.length === 0) {
+                return;
+            }
+
+            const currentIndex =
+                geometries.findIndex(geo => geo.id === currentGeometry?.id) || 0;
+
+            const newIndex = calculateNewIndex(
+                currentIndex,
+                geometries.length,
+                direction
+            );
+
             changeGeometry(direction);
+
+            const updatedConfig = updateSceneConfigWithGeometry(
+                geometries,
+                newIndex,
+                editableSceneConfig
+            );
+
+            if (updatedConfig) {
+                setEditableSceneConfig(updatedConfig);
+            }
         },
-        [changeGeometry]
+        [changeGeometry, geometries, currentGeometry, editableSceneConfig]
     );
 
     const handleJumpToBackground = useCallback(
@@ -315,14 +288,9 @@ const ExperienceLogic = () => {
         handleEntryTransitionEnd,
     });
 
-    // Early return: Loading states
-    if (!backgrounds || !geometries) {
-        return <LoadingOverlay message="Loading scene data..." theme="night" />;
-    }
-
-    // Early return: Ensure data is available
-    if (!currentGeometry || !currentBackground) {
-        return <LoadingOverlay message="Loading..." theme="night" />;
+    // Early return: Loading world data from database
+    if (!worldData || !editableSceneConfig) {
+        return <LoadingOverlay message="Loading worlds..." theme="night" />;
     }
 
     return (

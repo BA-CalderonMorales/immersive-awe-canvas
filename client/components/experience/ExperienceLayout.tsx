@@ -19,6 +19,7 @@ interface ExperienceLayoutProps {
     currentBackground?: { type: string; [key: string]: unknown };
     currentGeometry?: { type: string; [key: string]: unknown };
     uiColor?: string;
+    onCloseSettings?: () => void;
 }
 
 const ExperienceLayout = ({
@@ -36,6 +37,7 @@ const ExperienceLayout = ({
     currentBackground,
     currentGeometry,
     uiColor = "#ffffff",
+    onCloseSettings,
 }: ExperienceLayoutProps) => {
     const { theme } = useExperience();
     const themeConfig = editableSceneConfig[theme];
@@ -99,7 +101,7 @@ const ExperienceLayout = ({
                         <ThemedSettingsPanel
                             sceneConfig={editableSceneConfig}
                             onUpdate={onUpdateSceneConfig}
-                            onClose={() => {/* Will be handled by parent */}}
+                            onClose={onCloseSettings}
                             uiColor={uiColor}
                         />
                     </div>

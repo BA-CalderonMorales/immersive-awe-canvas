@@ -56,7 +56,7 @@ const ThemedSettingsPanel = ({
                 <h2
                     className={cn(
                         "text-sm font-medium tracking-wide",
-                        isDayTheme ? "text-black/[0.9]" : "text-white/[0.95]"
+                        isDayTheme ? "text-gray-900" : "text-white"
                     )}
                 >
                     Settings
@@ -77,8 +77,20 @@ const ThemedSettingsPanel = ({
                 )}
             </div>
 
-            {/* Content - Scrollable */}
-            <div className="flex-1 overflow-y-auto">
+            {/* Content - Scrollable with minimal custom scrollbar */}
+            <div
+                className={cn(
+                    "flex-1 overflow-y-auto",
+                    // Custom minimal scrollbar styling
+                    "[&::-webkit-scrollbar]:w-1.5",
+                    "[&::-webkit-scrollbar-track]:bg-transparent",
+                    isDayTheme
+                        ? "[&::-webkit-scrollbar-thumb]:bg-black/[0.08] hover:[&::-webkit-scrollbar-thumb]:bg-black/[0.12]"
+                        : "[&::-webkit-scrollbar-thumb]:bg-white/[0.08] hover:[&::-webkit-scrollbar-thumb]:bg-white/[0.12]",
+                    "[&::-webkit-scrollbar-thumb]:rounded-full",
+                    "[&::-webkit-scrollbar-thumb]:transition-colors"
+                )}
+            >
                 <div className="px-5 py-4 space-y-1">
                     {/* Main Object Section */}
                     <div className="space-y-1">
@@ -89,12 +101,12 @@ const ThemedSettingsPanel = ({
                                 "py-2.5 px-3 rounded-md",
                                 "transition-all duration-200",
                                 isDayTheme
-                                    ? "hover:bg-white/[0.06] text-black/[0.85]"
-                                    : "hover:bg-white/[0.03] text-white/[0.9]",
+                                    ? "hover:bg-gray-100/80 text-gray-900"
+                                    : "hover:bg-white/[0.08] text-white",
                                 expandedSection === "main" && [
                                     isDayTheme
-                                        ? "bg-white/[0.04]"
-                                        : "bg-white/[0.02]"
+                                        ? "bg-gray-100/60"
+                                        : "bg-white/[0.05]"
                                 ]
                             )}
                         >
@@ -104,7 +116,7 @@ const ThemedSettingsPanel = ({
                             <ChevronDown
                                 className={cn(
                                     "w-4 h-4 transition-transform duration-200",
-                                    isDayTheme ? "text-black/[0.5]" : "text-white/[0.5]",
+                                    isDayTheme ? "text-gray-600" : "text-gray-400",
                                     expandedSection === "main" && "rotate-180"
                                 )}
                                 strokeWidth={1.5}
@@ -139,12 +151,12 @@ const ThemedSettingsPanel = ({
                                         "py-2.5 px-3 rounded-md",
                                         "transition-all duration-200",
                                         isDayTheme
-                                            ? "hover:bg-white/[0.06] text-black/[0.85]"
-                                            : "hover:bg-white/[0.03] text-white/[0.9]",
+                                            ? "hover:bg-gray-100/80 text-gray-900"
+                                            : "hover:bg-white/[0.08] text-white",
                                         expandedSection === "selected" && [
                                             isDayTheme
-                                                ? "bg-white/[0.04]"
-                                                : "bg-white/[0.02]"
+                                                ? "bg-gray-100/60"
+                                                : "bg-white/[0.05]"
                                         ]
                                     )}
                                 >
@@ -154,7 +166,7 @@ const ThemedSettingsPanel = ({
                                     <ChevronDown
                                         className={cn(
                                             "w-4 h-4 transition-transform duration-200",
-                                            isDayTheme ? "text-black/[0.5]" : "text-white/[0.5]",
+                                            isDayTheme ? "text-gray-600" : "text-gray-400",
                                             expandedSection === "selected" && "rotate-180"
                                         )}
                                         strokeWidth={1.5}
@@ -165,7 +177,7 @@ const ThemedSettingsPanel = ({
                                         <p
                                             className={cn(
                                                 "text-xs",
-                                                isDayTheme ? "text-black/[0.5]" : "text-white/[0.5]"
+                                                isDayTheme ? "text-gray-600" : "text-gray-400"
                                             )}
                                         >
                                             Object controls will appear here
@@ -189,7 +201,7 @@ const ThemedSettingsPanel = ({
                             <span
                                 className={cn(
                                     "text-xs",
-                                    isDayTheme ? "text-black/[0.5]" : "text-white/[0.5]"
+                                    isDayTheme ? "text-gray-600" : "text-gray-400"
                                 )}
                             >
                                 Type
@@ -197,7 +209,7 @@ const ThemedSettingsPanel = ({
                             <span
                                 className={cn(
                                     "text-xs font-mono",
-                                    isDayTheme ? "text-black/[0.7]" : "text-white/[0.7]"
+                                    isDayTheme ? "text-gray-900" : "text-white"
                                 )}
                             >
                                 {sceneConfig.type}
@@ -207,7 +219,7 @@ const ThemedSettingsPanel = ({
                             <span
                                 className={cn(
                                     "text-xs",
-                                    isDayTheme ? "text-black/[0.5]" : "text-white/[0.5]"
+                                    isDayTheme ? "text-gray-600" : "text-gray-400"
                                 )}
                             >
                                 Theme
@@ -215,7 +227,7 @@ const ThemedSettingsPanel = ({
                             <span
                                 className={cn(
                                     "text-xs font-mono",
-                                    isDayTheme ? "text-black/[0.7]" : "text-white/[0.7]"
+                                    isDayTheme ? "text-gray-900" : "text-white"
                                 )}
                             >
                                 {theme === "day" ? "Day" : "Night"}
@@ -235,7 +247,7 @@ const ThemedSettingsPanel = ({
                 <p
                     className={cn(
                         "text-xs text-center",
-                        isDayTheme ? "text-black/[0.4]" : "text-white/[0.4]"
+                        isDayTheme ? "text-gray-500" : "text-gray-500"
                     )}
                 >
                     Immersive Awe Canvas

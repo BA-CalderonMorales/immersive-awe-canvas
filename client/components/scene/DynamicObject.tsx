@@ -1,18 +1,16 @@
+import { useExperience } from "@/hooks/useExperience";
 import type { SceneConfig, SceneThemeConfig } from "@/types/scene";
+import { GeometryRegistry } from "./objects/GeometryRegistry";
+import type { GeometryRenderConfig } from "./objects/GeometryContract";
+
+// Legacy component imports - for backward compatibility with old worlds
 import CrystallineSpireObject from "./objects/CrystallineSpireObject";
 import DistortionSphereObject from "./objects/DistortionSphereObject";
 import FibonacciSphereObject from "./objects/FibonacciSphereObject";
-import FloatingCapsuleObject from "./objects/FloatingCapsuleObject";
-import GlowingConeObject from "./objects/GlowingConeObject";
 import JellyTorusObject from "./objects/JellyTorusObject";
 import MandalaFlowerObject from "./objects/MandalaFlowerObject";
-import MorphingBoxObject from "./objects/MorphingBoxObject";
 import MorphingIcosahedronObject from "./objects/MorphingIcosahedronObject";
-import OrbitingCylinderObject from "./objects/OrbitingCylinderObject";
-import PulsatingOctahedronObject from "./objects/PulsatingOctahedronObject";
-import PyramidTetrahedronObject from "./objects/PyramidTetrahedronObject";
 import SacredGeometryObject from "./objects/SacredGeometryObject";
-import SpinningDodecahedronObject from "./objects/SpinningDodecahedronObject";
 import TorusKnotObject from "./objects/TorusKnotObject";
 import WavyGridObject from "./objects/WavyGridObject";
 import WobbleFieldObject from "./objects/WobbleFieldObject";
@@ -30,8 +28,57 @@ const DynamicObject = ({
     isLocked,
     isMotionFrozen,
 }: DynamicObjectProps) => {
+    const { theme } = useExperience();
     const { mainObjectColor, material } = themeConfig;
 
+    // Transform SceneThemeConfig to GeometryRenderConfig for new registry geometries
+    const geometryConfig: GeometryRenderConfig = {
+        mainObjectColor: themeConfig.mainObjectColor,
+        material: {
+            materialType: themeConfig.material.materialType || "standard",
+            metalness: themeConfig.material.metalness,
+            roughness: themeConfig.material.roughness,
+            emissive: themeConfig.material.emissive,
+            emissiveIntensity: themeConfig.material.emissiveIntensity,
+            clearcoat: themeConfig.material.clearcoat,
+            clearcoatRoughness: themeConfig.material.clearcoatRoughness,
+            ior: themeConfig.material.ior,
+        },
+        lights: themeConfig.lights.map(light => ({
+            type: light.type,
+            intensity: light.intensity,
+            position: light.position,
+            color: light.color,
+            groundColor: light.groundColor,
+        })),
+        background: {
+            type: themeConfig.background.type,
+            ...themeConfig.background,
+        },
+    };
+
+    const sceneConfig: SceneConfig = {
+        type,
+        day: themeConfig,
+        night: themeConfig,
+    };
+
+    // Try to render using GeometryRegistry first (for new geometries)
+    const registryElement = GeometryRegistry.render(type, {
+        theme,
+        sceneConfig,
+        config: geometryConfig,
+        isLocked,
+        isMotionFrozen,
+    });
+
+    // If registry has this geometry, use it
+    if (registryElement) {
+        return registryElement;
+    }
+
+    // Fallback: Use legacy components for old geometry types
+    // This ensures backward compatibility while allowing gradual migration
     switch (type) {
         case "TorusKnot":
             return (
@@ -119,70 +166,8 @@ const DynamicObject = ({
                     isMotionFrozen={isMotionFrozen}
                 />
             );
-        case "PulsatingOctahedron":
-            return (
-                <PulsatingOctahedronObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "SpinningDodecahedron":
-            return (
-                <SpinningDodecahedronObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "PyramidTetrahedron":
-            return (
-                <PyramidTetrahedronObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "GlowingCone":
-            return (
-                <GlowingConeObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "OrbitingCylinder":
-            return (
-                <OrbitingCylinderObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "MorphingBox":
-            return (
-                <MorphingBoxObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
-        case "FloatingCapsule":
-            return (
-                <FloatingCapsuleObject
-                    color={mainObjectColor}
-                    materialConfig={material}
-                    isLocked={isLocked}
-                    isMotionFrozen={isMotionFrozen}
-                />
-            );
         default:
+            console.error(`Unknown geometry type: ${type}`);
             return null;
     }
 };

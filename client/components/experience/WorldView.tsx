@@ -29,7 +29,6 @@ const WorldView = ({
 
     return (
         <div
-            key={worldIndex}
             className={`w-full h-full transition-all duration-1000 ${isTransitioning ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}
             style={{
                 position: "absolute",

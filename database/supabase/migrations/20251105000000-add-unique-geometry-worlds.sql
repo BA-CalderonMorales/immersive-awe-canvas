@@ -7,10 +7,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Crystal Heart',
   'A crystalline octahedron pulsating with cosmic energy',
@@ -67,8 +66,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#FF1493',
   '#9400D3',
-  true,
-  100
+  true
 );
 
 -- 2. Cosmic Dodecahedron - Spinning dodecahedron in space
@@ -77,10 +75,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Cosmic Dodecahedron',
   'A twelve-faced polyhedron spinning through the cosmos',
@@ -134,8 +131,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#00CED1',
   '#FF6347',
-  true,
-  101
+  true
 );
 
 -- 3. Mystic Pyramid - Tetrahedron with ancient energy
@@ -144,10 +140,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Mystic Pyramid',
   'An ancient pyramid radiating mystical power',
@@ -197,8 +192,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#FFD700',
   '#4169E1',
-  true,
-  102
+  true
 );
 
 -- 4. Vortex Cone - Glowing cone creating energy vortex
@@ -207,10 +201,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Vortex Cone',
   'A spinning cone generating a powerful energy vortex',
@@ -260,8 +253,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#32CD32',
   '#FF00FF',
-  true,
-  103
+  true
 );
 
 -- 5. Orbital Pillar - Cylinder in perpetual orbit
@@ -270,10 +262,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Orbital Pillar',
   'A cylindrical pillar in eternal cosmic orbit',
@@ -327,8 +318,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#FF8C00',
   '#1E90FF',
-  true,
-  104
+  true
 );
 
 -- 6. Tesseract Cube - Morphing box transcending dimensions
@@ -337,10 +327,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Tesseract Cube',
   'A hypercube morphing through dimensional space',
@@ -395,8 +384,7 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#8B008B',
   '#00FFFF',
-  true,
-  105
+  true
 );
 
 -- 7. Cosmic Pod - Floating capsule drifting through space
@@ -405,10 +393,9 @@ INSERT INTO public.worlds (
   description,
   slug,
   scene_config,
-  ui_color_day,
-  ui_color_night,
-  is_featured,
-  sort_order
+  ui_day_color,
+  ui_night_color,
+  is_featured
 ) VALUES (
   'Cosmic Pod',
   'A mysterious capsule floating through the cosmos',
@@ -467,6 +454,5 @@ INSERT INTO public.worlds (
   }'::jsonb,
   '#FF69B4',
   '#20B2AA',
-  true,
-  106
+  true
 );

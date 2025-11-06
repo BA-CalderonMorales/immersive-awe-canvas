@@ -61,6 +61,7 @@ const DynamicWorld = ({
 
             <DynamicLights lights={themeConfig.lights} />
             <DynamicObject
+                key={sceneConfig.type}
                 type={sceneConfig.type}
                 themeConfig={themeConfig}
                 isLocked={isLocked}

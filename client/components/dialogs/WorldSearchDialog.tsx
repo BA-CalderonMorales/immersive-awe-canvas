@@ -30,11 +30,9 @@ const WorldSearchDialog = ({
     const navigate = useNavigate();
 
     const handleSelectWorld = (world: World, index: number) => {
-        if (world.slug) {
-            navigate(`/experience/${world.slug}`);
-        } else {
-            onSelectWorld(index);
-        }
+        // Always use onSelectWorld callback - no need to navigate to slug
+        // since routing was simplified to just /experience
+        onSelectWorld(index);
         onOpenChange(false);
     };
 
