@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import type * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const PulsatingOctahedronComponent = ({
     config,
@@ -40,7 +43,8 @@ const PulsatingOctahedronComponent = ({
         timeRef.current += delta * animationSpeed;
 
         // Pulsating scale animation
-        const pulseScale = 1 + Math.sin(timeRef.current * 2) * animationAmplitude;
+        const pulseScale =
+            1 + Math.sin(timeRef.current * 2) * animationAmplitude;
         meshRef.current.scale.setScalar(scale * pulseScale);
 
         // Gentle rotation
@@ -93,7 +97,7 @@ export const PulsatingOctahedronGeometry: GeometryRenderer = {
         return <PulsatingOctahedronComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

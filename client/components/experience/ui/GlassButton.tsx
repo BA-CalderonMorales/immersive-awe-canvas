@@ -53,20 +53,20 @@ const GlassButton = ({
                             : "border border-white/[0.08]",
 
                         // Text color
-                        isDayTheme
-                            ? "text-black/[0.9]"
-                            : "text-white/[0.95]",
+                        isDayTheme ? "text-black/[0.9]" : "text-white/[0.95]",
 
                         // Active state
                         active && [
                             isDayTheme
                                 ? "bg-white/[0.16] border-black/[0.12]"
-                                : "bg-white/[0.12] border-white/[0.16]"
+                                : "bg-white/[0.12] border-white/[0.16]",
                         ],
 
                         // Focus ring - minimal accent
                         "focus-visible:outline-none focus-visible:ring-1",
-                        active ? "" : "focus-visible:ring-current focus-visible:ring-opacity-40",
+                        active
+                            ? ""
+                            : "focus-visible:ring-current focus-visible:ring-opacity-40",
 
                         // Micro-interactions
                         "hover:scale-[1.02] active:scale-[0.98]",
@@ -83,10 +83,7 @@ const GlassButton = ({
                         }),
                     }}
                 >
-                    <Icon
-                        className="w-4 h-4"
-                        strokeWidth={1.5}
-                    />
+                    <Icon className="w-4 h-4" strokeWidth={1.5} />
                 </button>
             </TooltipTrigger>
             <TooltipContent
@@ -101,12 +98,14 @@ const GlassButton = ({
                 <div className="flex items-center gap-2">
                     <span>{label}</span>
                     {shortcut && (
-                        <kbd className={cn(
-                            "px-1.5 py-0.5 rounded text-[10px] font-mono",
-                            isDayTheme
-                                ? "bg-white/[0.15] text-white/[0.7]"
-                                : "bg-black/[0.15] text-black/[0.7]"
-                        )}>
+                        <kbd
+                            className={cn(
+                                "px-1.5 py-0.5 rounded text-[10px] font-mono",
+                                isDayTheme
+                                    ? "bg-white/[0.15] text-white/[0.7]"
+                                    : "bg-black/[0.15] text-black/[0.7]"
+                            )}
+                        >
                             {shortcut}
                         </kbd>
                     )}

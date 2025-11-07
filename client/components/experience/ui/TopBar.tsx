@@ -106,7 +106,9 @@ const TopBar = ({
             <div className="flex-1 flex justify-center sm:justify-end items-center min-w-0 mx-4 pointer-events-none">
                 <h2
                     className={`text-sm sm:text-base md:text-lg font-semibold tracking-tight h-6 sm:h-8 flex items-center truncate transition-colors duration-200 ${
-                        theme === "day" ? "text-black/[0.9]" : "text-white/[0.95]"
+                        theme === "day"
+                            ? "text-black/[0.9]"
+                            : "text-white/[0.95]"
                     }`}
                 >
                     {worldName}

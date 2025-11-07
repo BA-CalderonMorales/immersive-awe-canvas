@@ -18,7 +18,8 @@ const buttonVariants = cva(
                     "bg-black/[0.04] dark:bg-white/[0.04] hover:bg-black/[0.08] dark:hover:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.08] hover:scale-[1.02] active:scale-[0.98]",
                 ghost: "hover:bg-black/[0.04] dark:hover:bg-white/[0.04] hover:scale-[1.02] active:scale-[0.98]",
                 link: "underline-offset-4 hover:underline",
-                minimal: "bg-white/[0.08] dark:bg-white/[0.04] hover:bg-white/[0.12] dark:hover:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.08] hover:scale-[1.02] active:scale-[0.98]",
+                minimal:
+                    "bg-white/[0.08] dark:bg-white/[0.04] hover:bg-white/[0.12] dark:hover:bg-white/[0.08] border border-black/[0.06] dark:border-white/[0.08] hover:scale-[1.02] active:scale-[0.98]",
             },
             size: {
                 default: "h-10 px-4 py-2",

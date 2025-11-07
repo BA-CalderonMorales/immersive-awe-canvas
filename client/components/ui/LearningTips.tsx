@@ -9,27 +9,33 @@ interface LearningTipsProps {
 const tips = [
     {
         title: "Golden Ratio",
-        content: "The Fibonacci Sphere uses the golden ratio (1.618...) - the same pattern found in sunflowers, pinecones, and galaxies.",
+        content:
+            "The Fibonacci Sphere uses the golden ratio (1.618...) - the same pattern found in sunflowers, pinecones, and galaxies.",
     },
     {
         title: "Platonic Solids",
-        content: "Sacred Geometry shows the 5 Platonic solids - perfect shapes that ancient Greeks believed were the building blocks of the universe.",
+        content:
+            "Sacred Geometry shows the 5 Platonic solids - perfect shapes that ancient Greeks believed were the building blocks of the universe.",
     },
     {
         title: "Topology",
-        content: "A torus knot is a special loop that wraps around a donut shape. Mathematicians study these to understand how space works.",
+        content:
+            "A torus knot is a special loop that wraps around a donut shape. Mathematicians study these to understand how space works.",
     },
     {
         title: "Sine Waves",
-        content: "The wavy grid uses sine waves - the same math that creates sound, light, and ocean waves.",
+        content:
+            "The wavy grid uses sine waves - the same math that creates sound, light, and ocean waves.",
     },
     {
         title: "3D Rotation",
-        content: "Objects rotate around X, Y, and Z axes. Try moving the camera to see all three dimensions.",
+        content:
+            "Objects rotate around X, Y, and Z axes. Try moving the camera to see all three dimensions.",
     },
     {
         title: "Materials",
-        content: "Different materials (metallic, rough, transparent) change how light bounces off objects - just like in real life.",
+        content:
+            "Different materials (metallic, rough, transparent) change how light bounces off objects - just like in real life.",
     },
 ];
 
@@ -70,12 +76,16 @@ const LearningTips = ({ theme = "night" }: LearningTipsProps) => {
         >
             <div className="p-4 space-y-3">
                 <div className="flex items-start gap-3">
-                    <div className={`w-1 h-12 rounded-full flex-shrink-0 ${indicatorClass}`} />
+                    <div
+                        className={`w-1 h-12 rounded-full flex-shrink-0 ${indicatorClass}`}
+                    />
                     <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <Lightbulb className="w-4 h-4 text-amber-500" />
-                                <h4 className="font-semibold text-sm tracking-tight">{tip.title}</h4>
+                                <h4 className="font-semibold text-sm tracking-tight">
+                                    {tip.title}
+                                </h4>
                             </div>
                             <Button
                                 variant="ghost"
@@ -87,7 +97,9 @@ const LearningTips = ({ theme = "night" }: LearningTipsProps) => {
                                 <X className="w-3 h-3 opacity-50 hover:opacity-100 transition-opacity" />
                             </Button>
                         </div>
-                        <p className="text-xs opacity-80 leading-relaxed">{tip.content}</p>
+                        <p className="text-xs opacity-80 leading-relaxed">
+                            {tip.content}
+                        </p>
                     </div>
                 </div>
                 <div className="flex gap-1.5 justify-center pt-1">

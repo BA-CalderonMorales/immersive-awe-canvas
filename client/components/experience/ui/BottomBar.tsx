@@ -39,9 +39,7 @@ const BottomBar = ({
     onToggleDrag,
 }: BottomBarProps) => {
     return (
-        <div
-            className="fixed bottom-0 left-0 right-0 w-full py-4 px-4 sm:px-6 md:px-8 pointer-events-none flex items-center justify-between z-30"
-        >
+        <div className="fixed bottom-0 left-0 right-0 w-full py-4 px-4 sm:px-6 md:px-8 pointer-events-none flex items-center justify-between z-30">
             {/* Left side: Copy, Search, Drag Toggle */}
             <div className="flex gap-2 pointer-events-auto">
                 <GlassButton

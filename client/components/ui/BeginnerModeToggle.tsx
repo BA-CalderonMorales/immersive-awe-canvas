@@ -19,10 +19,13 @@ interface BeginnerModeToggleProps {
  * - Limits advanced options
  * - Provides encouraging feedback
  */
-const BeginnerModeToggle = ({ onToggle, theme = "night" }: BeginnerModeToggleProps) => {
+const BeginnerModeToggle = ({
+    onToggle,
+    theme = "night",
+}: BeginnerModeToggleProps) => {
     const [isBeginnerMode, setIsBeginnerMode] = useState(() => {
         // Check if this is likely a first-time visitor
-        const visited = localStorage.getItem('visited-before');
+        const visited = localStorage.getItem("visited-before");
         return !visited;
     });
 
@@ -30,9 +33,9 @@ const BeginnerModeToggle = ({ onToggle, theme = "night" }: BeginnerModeTogglePro
         const newValue = !isBeginnerMode;
         setIsBeginnerMode(newValue);
         onToggle(newValue);
-        
+
         if (!newValue) {
-            localStorage.setItem('visited-before', 'true');
+            localStorage.setItem("visited-before", "true");
         }
     };
 
@@ -45,20 +48,24 @@ const BeginnerModeToggle = ({ onToggle, theme = "night" }: BeginnerModeTogglePro
                         size="sm"
                         onClick={handleToggle}
                         className={`gap-2 ${
-                            isBeginnerMode 
-                                ? "bg-purple-600 hover:bg-purple-700" 
+                            isBeginnerMode
+                                ? "bg-purple-600 hover:bg-purple-700"
                                 : ""
                         }`}
                     >
                         {isBeginnerMode ? (
                             <>
                                 <Baby className="w-4 h-4" />
-                                <span className="hidden sm:inline">Beginner Mode</span>
+                                <span className="hidden sm:inline">
+                                    Beginner Mode
+                                </span>
                             </>
                         ) : (
                             <>
                                 <GraduationCap className="w-4 h-4" />
-                                <span className="hidden sm:inline">Advanced Mode</span>
+                                <span className="hidden sm:inline">
+                                    Advanced Mode
+                                </span>
                             </>
                         )}
                     </Button>
@@ -66,19 +73,19 @@ const BeginnerModeToggle = ({ onToggle, theme = "night" }: BeginnerModeTogglePro
                 <TooltipContent side="bottom">
                     <div className="space-y-1">
                         <p className="font-semibold">
-                            {isBeginnerMode ? "Beginner Mode Active" : "Advanced Mode Active"}
+                            {isBeginnerMode
+                                ? "Beginner Mode Active"
+                                : "Advanced Mode Active"}
                         </p>
                         <p className="text-xs">
-                            {isBeginnerMode 
+                            {isBeginnerMode
                                 ? "Simplified interface with helpful tips and labels"
-                                : "Full control with all advanced settings"
-                            }
+                                : "Full control with all advanced settings"}
                         </p>
                         <p className="text-[10px] opacity-70">
-                            {isBeginnerMode 
+                            {isBeginnerMode
                                 ? "Perfect for learning! Click to unlock advanced features."
-                                : "You're a pro! Click to simplify the interface."
-                            }
+                                : "You're a pro! Click to simplify the interface."}
                         </p>
                     </div>
                 </TooltipContent>

@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const FloatingCapsuleComponent = ({
     config,
@@ -43,8 +46,10 @@ const FloatingCapsuleComponent = ({
 
         if (groupRef.current) {
             // Floating motion
-            groupRef.current.position.y = Math.sin(timeRef.current) * floatAmplitude;
-            groupRef.current.position.x = Math.cos(timeRef.current * 0.7) * (floatAmplitude * 0.5);
+            groupRef.current.position.y =
+                Math.sin(timeRef.current) * floatAmplitude;
+            groupRef.current.position.x =
+                Math.cos(timeRef.current * 0.7) * (floatAmplitude * 0.5);
 
             // Gentle rotation
             groupRef.current.rotation.y += delta * 0.3 * animationSpeed;
@@ -83,7 +88,9 @@ const FloatingCapsuleComponent = ({
                     <meshPhysicalMaterial
                         {...materialProps}
                         clearcoat={materialConfig.clearcoat ?? 0.7}
-                        clearcoatRoughness={materialConfig.clearcoatRoughness ?? 0.2}
+                        clearcoatRoughness={
+                            materialConfig.clearcoatRoughness ?? 0.2
+                        }
                         transmission={materialConfig.transmission ?? 0.5}
                         thickness={materialConfig.thickness ?? 0.8}
                     />
@@ -128,7 +135,7 @@ export const FloatingCapsuleGeometry: GeometryRenderer = {
         return <FloatingCapsuleComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

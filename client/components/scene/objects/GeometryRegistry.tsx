@@ -89,7 +89,9 @@ class GeometryRegistryClass {
         this.renderers.set(type, renderer);
 
         if (this.config.verbose) {
-            console.log(`✓ Registered geometry: ${type} (${renderer.metadata.name})`);
+            console.log(
+                `✓ Registered geometry: ${type} (${renderer.metadata.name})`
+            );
         }
 
         return { success: true, message: `Registered ${type}` };
@@ -100,7 +102,10 @@ class GeometryRegistryClass {
      */
     unregister(type: string): RegistryResult {
         if (!this.renderers.has(type)) {
-            return { success: false, message: `Geometry type "${type}" not found` };
+            return {
+                success: false,
+                message: `Geometry type "${type}" not found`,
+            };
         }
 
         this.renderers.delete(type);
@@ -174,23 +179,24 @@ class GeometryRegistryClass {
      * Render a geometry by type
      * This is the main method used by components
      */
-    render(
-        type: string,
-        props: GeometryComponentProps
-    ): JSX.Element | null {
+    render(type: string, props: GeometryComponentProps): JSX.Element | null {
         let renderer = this.get(type);
 
         // Fallback to default if not found
         if (!renderer && this.config.fallbackType) {
             if (this.config.verbose) {
-                console.warn(`Using fallback geometry: ${this.config.fallbackType}`);
+                console.warn(
+                    `Using fallback geometry: ${this.config.fallbackType}`
+                );
             }
             renderer = this.get(this.config.fallbackType);
         }
 
         if (!renderer) {
             if (this.config.verbose) {
-                console.error(`No renderer or fallback found for type: ${type}`);
+                console.error(
+                    `No renderer or fallback found for type: ${type}`
+                );
             }
             return null;
         }
@@ -200,7 +206,9 @@ class GeometryRegistryClass {
             const error = renderer.validate(props.config);
             if (error) {
                 if (this.config.strict) {
-                    throw new Error(`Configuration validation failed: ${error}`);
+                    throw new Error(
+                        `Configuration validation failed: ${error}`
+                    );
                 }
                 if (this.config.verbose) {
                     console.warn(`Configuration validation warning: ${error}`);
@@ -222,9 +230,7 @@ class GeometryRegistryClass {
      * Bulk register multiple geometries
      */
     registerMany(geometries: GeometryRenderer[]): RegistryResult[] {
-        return geometries.map(renderer =>
-            this.register({ renderer })
-        );
+        return geometries.map(renderer => this.register({ renderer }));
     }
 
     /**
@@ -242,7 +248,9 @@ class GeometryRegistryClass {
      */
     getStats() {
         const metadata = this.getAllMetadata();
-        const categories = new Set(metadata.map(m => m.category).filter(Boolean));
+        const categories = new Set(
+            metadata.map(m => m.category).filter(Boolean)
+        );
         const tags = new Set(metadata.flatMap(m => m.tags || []));
 
         return {
@@ -267,12 +275,9 @@ interface GeometryRendererComponentProps extends GeometryComponentProps {
     onError?: (error: Error) => void;
 }
 
-export const GeometryRendererComponent: React.FC<GeometryRendererComponentProps> = ({
-    type,
-    fallback = null,
-    onError,
-    ...props
-}) => {
+export const GeometryRendererComponent: React.FC<
+    GeometryRendererComponentProps
+> = ({ type, fallback = null, onError, ...props }) => {
     const [renderError, setRenderError] = useState<Error | null>(null);
 
     useEffect(() => {
@@ -303,7 +308,9 @@ export const GeometryRendererComponent: React.FC<GeometryRendererComponentProps>
  * Hook for accessing geometry metadata
  */
 export function useGeometryMetadata(type?: string) {
-    const [metadata, setMetadata] = useState<GeometryMetadata | GeometryMetadata[] | null>(null);
+    const [metadata, setMetadata] = useState<
+        GeometryMetadata | GeometryMetadata[] | null
+    >(null);
 
     useEffect(() => {
         if (type) {

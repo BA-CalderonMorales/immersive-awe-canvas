@@ -123,9 +123,7 @@ export default function TransitionSplash({
                 <motion.div variants={iconVariants} className="mb-8">
                     <div
                         className={`relative w-16 h-16 md:w-20 md:h-20 ${
-                            theme === "day"
-                                ? ""
-                                : ""
+                            theme === "day" ? "" : ""
                         }`}
                     >
                         {/* Minimal spinner */}
@@ -139,14 +137,22 @@ export default function TransitionSplash({
                                 cx="25"
                                 cy="25"
                                 r="20"
-                                stroke={theme === "day" ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.08)"}
+                                stroke={
+                                    theme === "day"
+                                        ? "rgba(0,0,0,0.08)"
+                                        : "rgba(255,255,255,0.08)"
+                                }
                                 strokeWidth="1.5"
                             />
                             <circle
                                 cx="25"
                                 cy="25"
                                 r="20"
-                                stroke={theme === "day" ? "rgba(0,0,0,0.8)" : "rgba(255,255,255,0.8)"}
+                                stroke={
+                                    theme === "day"
+                                        ? "rgba(0,0,0,0.8)"
+                                        : "rgba(255,255,255,0.8)"
+                                }
                                 strokeWidth="1.5"
                                 strokeLinecap="round"
                                 strokeDasharray="80 200"
@@ -158,14 +164,17 @@ export default function TransitionSplash({
                 <motion.h2
                     variants={textVariants}
                     className={`text-center font-medium text-sm md:text-base tracking-tight ${
-                        theme === "day" ? "text-black/[0.7]" : "text-white/[0.7]"
+                        theme === "day"
+                            ? "text-black/[0.7]"
+                            : "text-white/[0.7]"
                     }`}
                 >
-                    {message || (type === "app-entry"
-                        ? "Initializing..."
-                        : type === "world-switch"
-                          ? "Switching scene..."
-                          : "Loading...")}
+                    {message ||
+                        (type === "app-entry"
+                            ? "Initializing..."
+                            : type === "world-switch"
+                              ? "Switching scene..."
+                              : "Loading...")}
                 </motion.h2>
             </motion.div>
         );

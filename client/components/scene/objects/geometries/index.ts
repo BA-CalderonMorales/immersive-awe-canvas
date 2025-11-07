@@ -49,7 +49,9 @@ export function registerAllGeometries(): void {
 
     // Minimal logging in development only
     if (import.meta.env.DEV) {
-        console.log(`Geometry Registry: ${geometries.length} new geometries registered`);
+        console.log(
+            `Geometry Registry: ${geometries.length} new geometries registered`
+        );
     }
 }
 

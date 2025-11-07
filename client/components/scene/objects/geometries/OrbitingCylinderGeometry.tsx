@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const OrbitingCylinderComponent = ({
     config,
@@ -76,7 +79,9 @@ const OrbitingCylinderComponent = ({
                     <meshPhysicalMaterial
                         {...materialProps}
                         clearcoat={materialConfig.clearcoat ?? 0.9}
-                        clearcoatRoughness={materialConfig.clearcoatRoughness ?? 0.05}
+                        clearcoatRoughness={
+                            materialConfig.clearcoatRoughness ?? 0.05
+                        }
                     />
                 ) : (
                     <meshStandardMaterial {...materialProps} />
@@ -85,7 +90,9 @@ const OrbitingCylinderComponent = ({
 
             {/* Orbit path indicator */}
             <mesh rotation={[Math.PI / 2, 0, 0]}>
-                <ringGeometry args={[orbitRadius - 0.05, orbitRadius + 0.05, 64]} />
+                <ringGeometry
+                    args={[orbitRadius - 0.05, orbitRadius + 0.05, 64]}
+                />
                 <meshBasicMaterial
                     color={materialConfig.emissive ?? mainObjectColor}
                     transparent
@@ -115,7 +122,7 @@ export const OrbitingCylinderGeometry: GeometryRenderer = {
         return <OrbitingCylinderComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

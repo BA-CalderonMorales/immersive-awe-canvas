@@ -62,10 +62,7 @@ const PyramidTetrahedronObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <tetrahedronGeometry args={[2.5, 0]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

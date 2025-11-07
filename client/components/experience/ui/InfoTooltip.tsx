@@ -169,12 +169,38 @@ const InfoTooltip = ({
 
                         {/* Additional helpful tips */}
                         <div className="pt-2 mt-2 border-t border-gray-200/30 dark:border-gray-700/30">
-                            <p className="text-xs font-semibold mb-2 opacity-70">Quick Tips:</p>
+                            <p className="text-xs font-semibold mb-2 opacity-70">
+                                Quick Tips:
+                            </p>
                             <div className="space-y-1.5 text-xs opacity-80">
-                                <p>• Press <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">N/P</kbd> to switch worlds</p>
-                                <p>• Press <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">Space</kbd> to toggle day/night</p>
-                                <p>• Press <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">E</kbd> for settings panel</p>
-                                <p>• Press <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">H</kbd> for full help guide</p>
+                                <p>
+                                    • Press{" "}
+                                    <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">
+                                        N/P
+                                    </kbd>{" "}
+                                    to switch worlds
+                                </p>
+                                <p>
+                                    • Press{" "}
+                                    <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">
+                                        Space
+                                    </kbd>{" "}
+                                    to toggle day/night
+                                </p>
+                                <p>
+                                    • Press{" "}
+                                    <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">
+                                        E
+                                    </kbd>{" "}
+                                    for settings panel
+                                </p>
+                                <p>
+                                    • Press{" "}
+                                    <kbd className="px-1 py-0.5 bg-gray-200/50 dark:bg-gray-700/50 rounded">
+                                        H
+                                    </kbd>{" "}
+                                    for full help guide
+                                </p>
                                 <p>• Drag to rotate • Scroll to zoom</p>
                             </div>
                         </div>

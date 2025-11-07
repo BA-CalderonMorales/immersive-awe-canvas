@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const PyramidTetrahedronComponent = ({
     config,
@@ -79,7 +82,9 @@ const PyramidTetrahedronComponent = ({
                     <meshPhysicalMaterial
                         {...materialProps}
                         clearcoat={materialConfig.clearcoat ?? 0.8}
-                        clearcoatRoughness={materialConfig.clearcoatRoughness ?? 0.1}
+                        clearcoatRoughness={
+                            materialConfig.clearcoatRoughness ?? 0.1
+                        }
                     />
                 ) : (
                     <meshStandardMaterial {...materialProps} />
@@ -118,7 +123,7 @@ export const PyramidTetrahedronGeometry: GeometryRenderer = {
         return <PyramidTetrahedronComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

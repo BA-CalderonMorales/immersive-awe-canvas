@@ -64,10 +64,7 @@ const FloatingCapsuleObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <capsuleGeometry args={[1, 2, 16, 32]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

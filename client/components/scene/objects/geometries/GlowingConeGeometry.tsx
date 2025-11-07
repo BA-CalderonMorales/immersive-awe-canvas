@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const GlowingConeComponent = ({
     config,
@@ -90,21 +93,29 @@ const GlowingConeComponent = ({
             </mesh>
 
             {/* Vortex trail effect */}
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
                 <mesh
                     key={i}
-                    ref={(el) => {
+                    ref={el => {
                         if (el) trailRefs.current[i - 1] = el;
                     }}
-                    scale={[scale * (1 + i * 0.1), scale * (1 + i * 0.1), scale * (1 + i * 0.1)]}
+                    scale={[
+                        scale * (1 + i * 0.1),
+                        scale * (1 + i * 0.1),
+                        scale * (1 + i * 0.1),
+                    ]}
                 >
-                    <coneGeometry args={[1, 2, radialSegments, heightSegments]} />
+                    <coneGeometry
+                        args={[1, 2, radialSegments, heightSegments]}
+                    />
                     <meshStandardMaterial
                         color={materialConfig.emissive ?? mainObjectColor}
                         transparent
                         opacity={0.3 - i * 0.1}
                         emissive={materialConfig.emissive ?? mainObjectColor}
-                        emissiveIntensity={(materialConfig.emissiveIntensity ?? 0.6) * 0.5}
+                        emissiveIntensity={
+                            (materialConfig.emissiveIntensity ?? 0.6) * 0.5
+                        }
                     />
                 </mesh>
             ))}
@@ -130,7 +141,7 @@ export const GlowingConeGeometry: GeometryRenderer = {
         return <GlowingConeComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

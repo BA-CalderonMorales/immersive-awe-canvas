@@ -10,7 +10,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import type * as THREE from "three";
-import type { GeometryComponentProps, GeometryRenderer } from "../GeometryContract";
+import type {
+    GeometryComponentProps,
+    GeometryRenderer,
+} from "../GeometryContract";
 
 const MorphingBoxComponent = ({
     config,
@@ -44,7 +47,11 @@ const MorphingBoxComponent = ({
             const morphX = 1 + Math.sin(timeRef.current * 2) * morphAmplitude;
             const morphY = 1 + Math.cos(timeRef.current * 2.3) * morphAmplitude;
             const morphZ = 1 + Math.sin(timeRef.current * 1.7) * morphAmplitude;
-            meshRef.current.scale.set(morphX * scale, morphY * scale, morphZ * scale);
+            meshRef.current.scale.set(
+                morphX * scale,
+                morphY * scale,
+                morphZ * scale
+            );
 
             // Multi-dimensional rotation
             meshRef.current.rotation.x += delta * 0.5;
@@ -78,12 +85,7 @@ const MorphingBoxComponent = ({
     return (
         <group>
             {/* Outer box */}
-            <mesh
-                ref={meshRef}
-                onClick={onClick}
-                castShadow
-                receiveShadow
-            >
+            <mesh ref={meshRef} onClick={onClick} castShadow receiveShadow>
                 <boxGeometry args={[1, 1, 1]} />
                 {materialConfig.materialType === "physical" ? (
                     <meshPhysicalMaterial
@@ -142,7 +144,7 @@ export const MorphingBoxGeometry: GeometryRenderer = {
         return <MorphingBoxComponent {...props} />;
     },
 
-    validate: (config) => {
+    validate: config => {
         if (!config.mainObjectColor) {
             return "mainObjectColor is required";
         }

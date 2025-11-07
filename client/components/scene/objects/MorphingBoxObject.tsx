@@ -66,10 +66,7 @@ const MorphingBoxObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <boxGeometry args={[2, 2, 2, 8, 8, 8]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

@@ -27,12 +27,12 @@ const SacredGeometryObject = ({
         if (isMotionFrozen) return;
         if (!isLocked && groupRef.current) {
             const time = state.clock.elapsedTime;
-            
+
             // Multiple rotation axes for complex motion
             groupRef.current.rotation.x = time * 0.15;
             groupRef.current.rotation.y = time * 0.234;
             groupRef.current.rotation.z = time * 0.1;
-            
+
             // Gentle levitation
             groupRef.current.position.y = Math.sin(time * 0.7) * 0.15;
         }
@@ -118,7 +118,10 @@ const SacredGeometryObject = ({
 
             {/* Connecting vertices - energetic pathways with depth */}
             {Array.from({ length: 6 }, (_, i) => (
-                <mesh key={`sacred-ring-${i}`} rotation={[0, (Math.PI * 2 * i) / 6, 0]}>
+                <mesh
+                    key={`sacred-ring-${i}`}
+                    rotation={[0, (Math.PI * 2 * i) / 6, 0]}
+                >
                     <torusGeometry args={[1.6, 0.02, 16, 64]} />
                     <meshStandardMaterial
                         color={color}
@@ -131,15 +134,11 @@ const SacredGeometryObject = ({
                     />
                 </mesh>
             ))}
-            
+
             {/* Additional depth layers */}
             <mesh rotation={[Math.PI / 4, Math.PI / 4, 0]}>
                 <torusGeometry args={[1.3, 0.015, 16, 64]} />
-                <meshBasicMaterial
-                    color={color}
-                    transparent
-                    opacity={0.2}
-                />
+                <meshBasicMaterial color={color} transparent opacity={0.2} />
             </mesh>
         </group>
     );

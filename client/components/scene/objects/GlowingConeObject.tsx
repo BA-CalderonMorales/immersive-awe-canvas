@@ -62,10 +62,7 @@ const GlowingConeObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <coneGeometry args={[1.5, 3, 32]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

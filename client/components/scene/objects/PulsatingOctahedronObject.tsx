@@ -63,10 +63,7 @@ const PulsatingOctahedronObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <octahedronGeometry args={[2, 0]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

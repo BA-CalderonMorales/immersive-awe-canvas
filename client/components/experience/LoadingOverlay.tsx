@@ -5,7 +5,10 @@ interface LoadingOverlayProps {
     theme?: "day" | "night";
 }
 
-const LoadingOverlay = ({ message = "Loading...", theme = "day" }: LoadingOverlayProps) => {
+const LoadingOverlay = ({
+    message = "Loading...",
+    theme = "day",
+}: LoadingOverlayProps) => {
     return (
         <TransitionSplash
             show={true}

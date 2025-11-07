@@ -65,10 +65,7 @@ const SpinningDodecahedronObject = ({
             userData={{ objectId: MAIN_OBJECT_NAME }}
         >
             <dodecahedronGeometry args={[2, 0]} />
-            <DynamicMaterial
-                color={color}
-                materialConfig={materialConfig}
-            />
+            <DynamicMaterial color={color} materialConfig={materialConfig} />
         </mesh>
     );
 };

@@ -22,7 +22,11 @@ const DynamicWorld = ({
     isMotionFrozen,
     onDragStateChange,
 }: DynamicWorldProps) => {
-    const { isDragEnabled: contextDragEnabled, actions, selectedObjectId } = useSceneObjectsContext();
+    const {
+        isDragEnabled: contextDragEnabled,
+        actions,
+        selectedObjectId,
+    } = useSceneObjectsContext();
     const { theme } = useExperience();
     const actualDragEnabled = dragEnabled || contextDragEnabled;
 
@@ -32,7 +36,7 @@ const DynamicWorld = ({
         type: sceneConfig.type,
         theme,
         hasLights: themeConfig.lights?.length,
-        mainColor: themeConfig.mainObjectColor
+        mainColor: themeConfig.mainObjectColor,
     });
 
     // Handle clicks on empty space to deselect objects

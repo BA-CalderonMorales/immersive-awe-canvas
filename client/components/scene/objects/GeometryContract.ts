@@ -21,7 +21,16 @@ export interface GeometryRenderConfig {
 
     /** Material configuration from database */
     material: {
-        materialType: "standard" | "physical" | "basic" | "shader" | "toon" | "lambert" | "phong" | "normal" | "matcap";
+        materialType:
+            | "standard"
+            | "physical"
+            | "basic"
+            | "shader"
+            | "toon"
+            | "lambert"
+            | "phong"
+            | "normal"
+            | "matcap";
         metalness?: number;
         roughness?: number;
         emissive?: string;

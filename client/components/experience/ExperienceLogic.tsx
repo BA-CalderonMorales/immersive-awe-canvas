@@ -59,7 +59,8 @@ const updateSceneConfigWithGeometry = (
 
 const ExperienceLogic = () => {
     // Basic state - Will be set from database world data
-    const [editableSceneConfig, setEditableSceneConfig] = useState<SceneConfig | null>(null);
+    const [editableSceneConfig, setEditableSceneConfig] =
+        useState<SceneConfig | null>(null);
     const [currentWorldId, setCurrentWorldId] = useState<number | null>(null);
     const [isObjectLocked, setIsObjectLocked] = useState(false);
     const [isDragEnabled, setIsDragEnabled] = useState(false);
@@ -166,7 +167,8 @@ const ExperienceLogic = () => {
             }
 
             const currentIndex =
-                backgrounds.findIndex(bg => bg.id === currentBackground?.id) || 0;
+                backgrounds.findIndex(bg => bg.id === currentBackground?.id) ||
+                0;
 
             const newIndex = calculateNewIndex(
                 currentIndex,
@@ -197,7 +199,8 @@ const ExperienceLogic = () => {
             }
 
             const currentIndex =
-                geometries.findIndex(geo => geo.id === currentGeometry?.id) || 0;
+                geometries.findIndex(geo => geo.id === currentGeometry?.id) ||
+                0;
 
             const newIndex = calculateNewIndex(
                 currentIndex,
@@ -256,7 +259,13 @@ const ExperienceLogic = () => {
 
     // Auto-dismiss entry transition after data loads
     useEffect(() => {
-        if (backgrounds && geometries && currentBackground && currentGeometry && showEntryTransition) {
+        if (
+            backgrounds &&
+            geometries &&
+            currentBackground &&
+            currentGeometry &&
+            showEntryTransition
+        ) {
             // Clear any existing timer
             if (entryTransitionTimerRef.current) {
                 clearTimeout(entryTransitionTimerRef.current);
@@ -273,7 +282,13 @@ const ExperienceLogic = () => {
                 clearTimeout(entryTransitionTimerRef.current);
             }
         };
-    }, [backgrounds, geometries, currentBackground, currentGeometry, showEntryTransition]);
+    }, [
+        backgrounds,
+        geometries,
+        currentBackground,
+        currentGeometry,
+        showEntryTransition,
+    ]);
 
     // Experience effects
     // DISABLED: This was overwriting world configs with default_geometries data

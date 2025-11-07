@@ -21,7 +21,9 @@ const MinimalSettingsPanel = ({
     const { objects, selectedObjectId } = useSceneObjectsContext();
     const selectedObject = objects.find(obj => obj.id === selectedObjectId);
     const { theme } = useExperience();
-    const [expandedSection, setExpandedSection] = useState<string | null>("main");
+    const [expandedSection, setExpandedSection] = useState<string | null>(
+        "main"
+    );
 
     const toggleSection = (section: string) => {
         setExpandedSection(expandedSection === section ? null : section);
@@ -44,10 +46,14 @@ const MinimalSettingsPanel = ({
             }}
         >
             {/* Header */}
-            <div className={`flex items-center justify-between px-6 py-4 border-b ${border}`}>
+            <div
+                className={`flex items-center justify-between px-6 py-4 border-b ${border}`}
+            >
                 <div className="flex items-center gap-2">
                     <Sliders className={`w-4 h-4 ${textSecondary}`} />
-                    <h2 className={`text-sm font-medium ${textPrimary}`}>Settings</h2>
+                    <h2 className={`text-sm font-medium ${textPrimary}`}>
+                        Settings
+                    </h2>
                 </div>
                 {onClose && (
                     <Button
@@ -70,12 +76,16 @@ const MinimalSettingsPanel = ({
                             onClick={() => toggleSection("main")}
                             className={`w-full flex items-center justify-between py-2 px-3 rounded-md ${hoverBg} transition-colors`}
                         >
-                            <span className={`text-sm font-medium ${textPrimary}`}>
+                            <span
+                                className={`text-sm font-medium ${textPrimary}`}
+                            >
                                 Main Object
                             </span>
                             <ChevronDown
                                 className={`w-4 h-4 ${textSecondary} transition-transform ${
-                                    expandedSection === "main" ? "rotate-180" : ""
+                                    expandedSection === "main"
+                                        ? "rotate-180"
+                                        : ""
                                 }`}
                             />
                         </button>
@@ -99,19 +109,25 @@ const MinimalSettingsPanel = ({
                                     onClick={() => toggleSection("selected")}
                                     className={`w-full flex items-center justify-between py-2 px-3 rounded-md ${hoverBg} transition-colors`}
                                 >
-                                    <span className={`text-sm font-medium ${textPrimary}`}>
+                                    <span
+                                        className={`text-sm font-medium ${textPrimary}`}
+                                    >
                                         Selected Object
                                     </span>
                                     <ChevronDown
                                         className={`w-4 h-4 ${textSecondary} transition-transform ${
-                                            expandedSection === "selected" ? "rotate-180" : ""
+                                            expandedSection === "selected"
+                                                ? "rotate-180"
+                                                : ""
                                         }`}
                                     />
                                 </button>
                                 {expandedSection === "selected" && (
                                     <div className="pl-3 pr-2 py-2 space-y-3">
                                         <div className="space-y-2">
-                                            <p className={`text-xs ${textSecondary}`}>
+                                            <p
+                                                className={`text-xs ${textSecondary}`}
+                                            >
                                                 Object controls will appear here
                                             </p>
                                         </div>
