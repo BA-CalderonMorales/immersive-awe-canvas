@@ -159,7 +159,7 @@ const DynamicScene = ({
                     makeDefault
                 />
                 <DynamicWorld
-                    key={String(currentGeometry?.id || 'default')}
+                    key={dynamicSceneConfig.type}
                     sceneConfig={dynamicSceneConfig}
                     isLocked={isLocked}
                     isDragEnabled={isDragEnabled}

@@ -31,6 +31,8 @@ const DynamicObject = ({
     const { theme } = useExperience();
     const { mainObjectColor, material } = themeConfig;
 
+    console.log("🎨 DynamicObject RENDER:", { type, theme, mainObjectColor });
+
     // Transform SceneThemeConfig to GeometryRenderConfig for new registry geometries
     const geometryConfig: GeometryRenderConfig = {
         mainObjectColor: themeConfig.mainObjectColor,
@@ -74,8 +76,11 @@ const DynamicObject = ({
 
     // If registry has this geometry, use it
     if (registryElement) {
+        console.log("✅ GeometryRegistry rendering:", type);
         return registryElement;
     }
+
+    console.log("⚠️ Using legacy component for:", type);
 
     // Fallback: Use legacy components for old geometry types
     // This ensures backward compatibility while allowing gradual migration

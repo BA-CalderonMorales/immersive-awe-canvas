@@ -28,6 +28,13 @@ const DynamicWorld = ({
 
     const themeConfig = theme === "day" ? sceneConfig.day : sceneConfig.night;
 
+    console.log("🌍 DynamicWorld RENDER:", {
+        type: sceneConfig.type,
+        theme,
+        hasLights: themeConfig.lights?.length,
+        mainColor: themeConfig.mainObjectColor
+    });
+
     // Handle clicks on empty space to deselect objects
     const handleBackgroundClick = (e: ThreeEvent<MouseEvent>) => {
         // Only deselect if we have a selected object and clicked on the background

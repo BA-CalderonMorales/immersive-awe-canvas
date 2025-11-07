@@ -276,6 +276,20 @@ const ExperienceLogic = () => {
     }, [backgrounds, geometries, currentBackground, currentGeometry, showEntryTransition]);
 
     // Experience effects
+    // DISABLED: This was overwriting world configs with default_geometries data
+    // We now use worldData.sceneConfig directly from the worlds table
+    const handleEntryTransitionEndWithHint = () => {
+        handleEntryTransitionEnd();
+        if (!hintShownRef.current) {
+            hintShownRef.current = true;
+            setShowUiHint(true);
+            setTimeout(() => {
+                setShowUiHint(false);
+            }, 4000);
+        }
+    };
+
+    /* COMMENTED OUT - This hook was causing state race condition
     const { handleEntryTransitionEndWithHint } = useExperienceEffects({
         worldData: currentGeometry,
         currentWorldId,
@@ -287,6 +301,7 @@ const ExperienceLogic = () => {
         setShowUiHint,
         handleEntryTransitionEnd,
     });
+    */
 
     // Early return: Loading world data from database
     if (!worldData || !editableSceneConfig) {
