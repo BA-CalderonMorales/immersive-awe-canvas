@@ -54,7 +54,7 @@ async function testNewGeometries() {
         const config = data.material_config as Record<string, unknown>;
         if (config?.materialType) {
             console.log(
-                `  Material type: ${config.materialType} | Metalness: ${config.metalness} | Transmission: ${config.transmission || "N/A"}`,
+                `  Material type: ${config.materialType} | Metalness: ${config.metalness} | Transmission: ${config.transmission || "N/A"}`
             );
         }
     }
@@ -100,7 +100,11 @@ async function testEnhancedGeometries() {
 async function testNewBackgrounds() {
     console.log("\nTesting new background entries...");
 
-    const newBackgrounds = ["Plasma Storm", "Nebula Cloud", "Ethereal Gradient"];
+    const newBackgrounds = [
+        "Plasma Storm",
+        "Nebula Cloud",
+        "Ethereal Gradient",
+    ];
 
     for (const backgroundName of newBackgrounds) {
         const { data, error } = await supabase
@@ -184,7 +188,7 @@ async function testMaterialConfigValidation() {
         // Validate required fields
         if (!config?.materialType) {
             console.warn(
-                `⚠ ${geometry.name}: Missing materialType in material_config`,
+                `⚠ ${geometry.name}: Missing materialType in material_config`
             );
             continue;
         }
@@ -196,16 +200,16 @@ async function testMaterialConfigValidation() {
 
             if (!hasTransmission && !hasClearcoat) {
                 console.warn(
-                    `⚠ ${geometry.name}: Physical material lacks transmission or clearcoat`,
+                    `⚠ ${geometry.name}: Physical material lacks transmission or clearcoat`
                 );
             } else {
                 console.log(
-                    `✓ ${geometry.name}: Valid physical material config`,
+                    `✓ ${geometry.name}: Valid physical material config`
                 );
             }
         } else {
             console.log(
-                `✓ ${geometry.name}: Valid ${config.materialType} material config`,
+                `✓ ${geometry.name}: Valid ${config.materialType} material config`
             );
         }
     }

@@ -1,89 +1,71 @@
 {
-  "name": "Immersive Awe Canvas Development",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "context": "."
-  },
-  "remoteUser": "vscode",
-  "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
-  ],
-  // Port forwarding
-  "forwardPorts": [
-    8080,
-    54321
-  ],
-  "portsAttributes": {
-    "8080": {
-      "label": "Application",
-      "onAutoForward": "notify"
+    "name": "Immersive Awe Canvas Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
     },
-    "54321": {
-      "label": "Supabase",
-      "onAutoForward": "silent"
-    }
-  },
-  // Container environment variables
-  "containerEnv": {
-    "NODE_ENV": "development",
-    "VITE_GIT_COMMIT_HASH": "dev",
-    "LANG": "en_US.UTF-8",
-    "LC_ALL": "en_US.UTF-8",
-    "LC_CTYPE": "en_US.UTF-8",
-    "LC_COLLATE": "en_US.UTF-8",
-    "LC_MESSAGES": "en_US.UTF-8"
-  },
-  // Lifecycle scripts
-  "postCreateCommand": [
-    "bash",
-    ".devcontainer/scripts/post-create.sh"
-  ],
-  "postStartCommand": [
-    "bash",
-    ".devcontainer/scripts/post-start.sh"
-  ],
-  // VS Code customizations
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        // TypeScript & React
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "biomejs.biome",
-        // Testing
-        "vitest.explorer",
-        // Three.js & 3D
-        "slevesque.shader",
-        // Git & GitHub
-        "github.vscode-pull-request-github",
-        "github.copilot",
-        "github.copilot-chat",
-        // Utilities
-        "editorconfig.editorconfig",
-        "bradlc.vscode-tailwindcss",
-        "styled-components.vscode-styled-components"
-      ],
-      "settings": {
-        "editor.formatOnSave": true,
-        "editor.codeActionsOnSave": {
-          "quickfix.biome": "explicit",
-          "source.organizeImports.biome": "explicit"
+    "remoteUser": "vscode",
+    "mounts": [
+        "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    ],
+    "forwardPorts": [8080, 54321],
+    "portsAttributes": {
+        "8080": {
+            "label": "Application",
+            "onAutoForward": "notify"
         },
-        "typescript.tsdk": "node_modules/typescript/lib",
-        "typescript.enablePromptUseWorkspaceTsdk": true,
-        "files.watcherExclude": {
-          "**/node_modules/**": true,
-          "**/dist/**": true,
-          "**/.git/**": true
-        },
-        "search.exclude": {
-          "**/node_modules": true,
-          "**/dist": true,
-          "**/bun.lockb": true
+        "54321": {
+            "label": "Supabase",
+            "onAutoForward": "silent"
         }
-      }
-    }
-  },
-  "shutdownAction": "stopContainer",
-  "waitFor": "postCreateCommand"
+    },
+    "containerEnv": {
+        "NODE_ENV": "development",
+        "VITE_GIT_COMMIT_HASH": "dev",
+        "LANG": "en_US.UTF-8",
+        "LC_ALL": "en_US.UTF-8",
+        "LC_CTYPE": "en_US.UTF-8",
+        "LC_COLLATE": "en_US.UTF-8",
+        "LC_MESSAGES": "en_US.UTF-8"
+    },
+    "postCreateCommand": ["bash", ".devcontainer/scripts/post-create.sh"],
+    "postStartCommand": ["bash", ".devcontainer/scripts/post-start.sh"],
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "dbaeumer.vscode-eslint",
+                "esbenp.prettier-vscode",
+                "biomejs.biome",
+                "vitest.explorer",
+                "slevesque.shader",
+                "github.vscode-pull-request-github",
+                "github.copilot",
+                "github.copilot-chat",
+                "editorconfig.editorconfig",
+                "bradlc.vscode-tailwindcss",
+                "styled-components.vscode-styled-components"
+            ],
+            "settings": {
+                "editor.formatOnSave": true,
+                "editor.codeActionsOnSave": {
+                    "quickfix.biome": "explicit",
+                    "source.organizeImports.biome": "explicit"
+                },
+                "typescript.tsdk": "node_modules/typescript/lib",
+                "typescript.enablePromptUseWorkspaceTsdk": true,
+                "files.watcherExclude": {
+                    "**/node_modules/**": true,
+                    "**/dist/**": true,
+                    "**/.git/**": true
+                },
+                "search.exclude": {
+                    "**/node_modules": true,
+                    "**/dist": true,
+                    "**/bun.lockb": true
+                }
+            }
+        }
+    },
+    "shutdownAction": "stopContainer",
+    "waitFor": "postCreateCommand"
 }

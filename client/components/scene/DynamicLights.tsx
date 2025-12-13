@@ -39,7 +39,9 @@ const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {
                     case "ambient":
                         return <ambientLight key={key} {...props} />;
                     case "directional":
-                        return <directionalLight key={key} {...props} castShadow />;
+                        return (
+                            <directionalLight key={key} {...props} castShadow />
+                        );
                     case "point":
                         return <pointLight key={key} {...props} />;
                     case "hemisphere":
@@ -48,7 +50,7 @@ const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {
                         return null;
                 }
             })}
-            
+
             {/* Enhanced atmospheric lighting */}
             <pointLight
                 ref={rimLightRef}
@@ -65,7 +67,7 @@ const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {
                 decay={2}
                 color="#e24a90"
             />
-            
+
             {/* Subtle fill light from below */}
             <pointLight
                 position={[0, -5, 0]}
@@ -73,7 +75,7 @@ const DynamicLights = ({ lights }: { lights: LightConfig[] }) => {
                 distance={15}
                 color="#ffffff"
             />
-            
+
             {/* Dramatic spot for depth */}
             <spotLight
                 ref={spotRef}

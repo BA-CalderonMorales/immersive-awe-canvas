@@ -9,32 +9,38 @@ interface LearningTipsProps {
 const tips = [
     {
         title: "Golden Ratio",
-        content: "The Fibonacci Sphere uses the golden ratio (1.618...) - the same pattern found in sunflowers, pinecones, and galaxies!",
+        content:
+            "The Fibonacci Sphere uses the golden ratio (1.618...) - the same pattern found in sunflowers, pinecones, and galaxies!",
         emoji: "🌻",
     },
     {
         title: "Platonic Solids",
-        content: "Sacred Geometry shows the 5 Platonic solids - perfect shapes that ancient Greeks believed were the building blocks of the universe!",
+        content:
+            "Sacred Geometry shows the 5 Platonic solids - perfect shapes that ancient Greeks believed were the building blocks of the universe!",
         emoji: "⭐",
     },
     {
         title: "Topology",
-        content: "A torus knot is a special loop that wraps around a donut shape. Mathematicians study these to understand how space works!",
+        content:
+            "A torus knot is a special loop that wraps around a donut shape. Mathematicians study these to understand how space works!",
         emoji: "🍩",
     },
     {
         title: "Sine Waves",
-        content: "The wavy grid uses sine waves - the same math that creates sound, light, and ocean waves!",
+        content:
+            "The wavy grid uses sine waves - the same math that creates sound, light, and ocean waves!",
         emoji: "🌊",
     },
     {
         title: "3D Rotation",
-        content: "Objects rotate around X, Y, and Z axes. Try moving the camera to see all three dimensions!",
+        content:
+            "Objects rotate around X, Y, and Z axes. Try moving the camera to see all three dimensions!",
         emoji: "🔄",
     },
     {
         title: "Materials",
-        content: "Different materials (metallic, rough, transparent) change how light bounces off objects - just like in real life!",
+        content:
+            "Different materials (metallic, rough, transparent) change how light bounces off objects - just like in real life!",
         emoji: "✨",
     },
 ];
@@ -45,7 +51,7 @@ const LearningTips = ({ theme = "night" }: LearningTipsProps) => {
 
     useEffect(() => {
         if (dismissed) return;
-        
+
         const interval = setInterval(() => {
             setCurrentTip(prev => (prev + 1) % tips.length);
         }, 15000); // Change tip every 15 seconds
@@ -61,9 +67,10 @@ const LearningTips = ({ theme = "night" }: LearningTipsProps) => {
         <div
             className={`fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:w-80 z-40 
                 rounded-lg shadow-xl p-4 backdrop-blur-sm animate-fade-in
-                ${theme === "day" 
-                    ? "bg-blue-50/95 border border-blue-200" 
-                    : "bg-indigo-900/95 border border-indigo-700"
+                ${
+                    theme === "day"
+                        ? "bg-blue-50/95 border border-blue-200"
+                        : "bg-indigo-900/95 border border-indigo-700"
                 }`}
         >
             <div className="flex items-start gap-3">
@@ -91,8 +98,8 @@ const LearningTips = ({ theme = "night" }: LearningTipsProps) => {
                         type="button"
                         onClick={() => setCurrentTip(idx)}
                         className={`w-1.5 h-1.5 rounded-full transition-all ${
-                            idx === currentTip 
-                                ? "bg-white w-4" 
+                            idx === currentTip
+                                ? "bg-white w-4"
                                 : "bg-white/30 hover:bg-white/50"
                         }`}
                         aria-label={`View tip ${idx + 1}`}

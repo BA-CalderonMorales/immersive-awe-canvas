@@ -16,14 +16,14 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
     const [show, setShow] = useState(false);
 
     useEffect(() => {
-        const hasSeenWelcome = localStorage.getItem('seen-welcome');
+        const hasSeenWelcome = localStorage.getItem("seen-welcome");
         if (!hasSeenWelcome) {
             setShow(true);
         }
     }, []);
 
     const handleContinue = () => {
-        localStorage.setItem('seen-welcome', 'true');
+        localStorage.setItem("seen-welcome", "true");
         setShow(false);
         setTimeout(onComplete, 300);
     };
@@ -37,9 +37,7 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 className={`fixed inset-0 z-[9999] flex items-center justify-center p-4 backdrop-blur-md ${
-                    theme === "day" 
-                        ? "bg-white/90" 
-                        : "bg-black/90"
+                    theme === "day" ? "bg-white/90" : "bg-black/90"
                 }`}
             >
                 <motion.div
@@ -55,14 +53,14 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                     <div className="text-center space-y-6">
                         {/* Animated Icon */}
                         <motion.div
-                            animate={{ 
+                            animate={{
                                 rotate: [0, 10, -10, 0],
-                                scale: [1, 1.1, 1]
+                                scale: [1, 1.1, 1],
                             }}
-                            transition={{ 
+                            transition={{
                                 duration: 2,
                                 repeat: Number.POSITIVE_INFINITY,
-                                repeatType: "reverse"
+                                repeatType: "reverse",
                             }}
                             className="inline-block"
                         >
@@ -88,9 +86,12 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                                 className="p-4 rounded-lg bg-white/10 backdrop-blur-sm"
                             >
                                 <Sparkles className="w-8 h-8 mx-auto mb-2 text-yellow-400" />
-                                <h3 className="font-semibold mb-1">Learn by Doing</h3>
+                                <h3 className="font-semibold mb-1">
+                                    Learn by Doing
+                                </h3>
                                 <p className="text-sm opacity-70">
-                                    Discover math, geometry, and 3D concepts through play
+                                    Discover math, geometry, and 3D concepts
+                                    through play
                                 </p>
                             </motion.div>
 
@@ -101,7 +102,9 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                                 className="p-4 rounded-lg bg-white/10 backdrop-blur-sm"
                             >
                                 <Heart className="w-8 h-8 mx-auto mb-2 text-red-400" />
-                                <h3 className="font-semibold mb-1">Share Your Creations</h3>
+                                <h3 className="font-semibold mb-1">
+                                    Share Your Creations
+                                </h3>
                                 <p className="text-sm opacity-70">
                                     Send worlds to friends with a simple link
                                 </p>
@@ -114,7 +117,9 @@ const WelcomeScreen = ({ onComplete, theme = "night" }: WelcomeScreenProps) => {
                                 className="p-4 rounded-lg bg-white/10 backdrop-blur-sm"
                             >
                                 <Rocket className="w-8 h-8 mx-auto mb-2 text-blue-400" />
-                                <h3 className="font-semibold mb-1">No Limits</h3>
+                                <h3 className="font-semibold mb-1">
+                                    No Limits
+                                </h3>
                                 <p className="text-sm opacity-70">
                                     Free forever. No account required.
                                 </p>

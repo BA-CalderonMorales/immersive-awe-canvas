@@ -45,11 +45,11 @@ const FibonacciSphereObject = ({
         if (isMotionFrozen) return;
         if (!isLocked && groupRef.current) {
             const time = state.clock.elapsedTime;
-            
+
             // Phi-based rotation for natural harmony
             groupRef.current.rotation.y = time * 0.382;
             groupRef.current.rotation.x = Math.sin(time * 0.618) * 0.2;
-            
+
             // Subtle breathing
             const scale = 1 + Math.sin(time * 0.5) * 0.03;
             groupRef.current.scale.setScalar(scale);
@@ -78,12 +78,17 @@ const FibonacciSphereObject = ({
 
             {/* Fibonacci point field with distance-based opacity */}
             {points.map((point, i) => {
-                const distance = Math.sqrt(point.x * point.x + point.y * point.y + point.z * point.z);
+                const distance = Math.sqrt(
+                    point.x * point.x + point.y * point.y + point.z * point.z
+                );
                 const size = 0.015 + (1 - distance / 2) * 0.015;
                 const opacity = 0.5 + (1 - distance / 2) * 0.4;
-                
+
                 return (
-                    <mesh key={`fib-point-${i}-${point.x}-${point.y}`} position={point}>
+                    <mesh
+                        key={`fib-point-${i}-${point.x}-${point.y}`}
+                        position={point}
+                    >
                         <sphereGeometry args={[size, 8, 8]} />
                         <meshStandardMaterial
                             color={color}
@@ -111,7 +116,7 @@ const FibonacciSphereObject = ({
                     roughness={0.1}
                 />
             </mesh>
-            
+
             <mesh rotation={[0, 0, Math.PI / 2]}>
                 <torusGeometry args={[2.5, 0.01, 16, 100]} />
                 <meshStandardMaterial
@@ -122,15 +127,11 @@ const FibonacciSphereObject = ({
                     opacity={0.3}
                 />
             </mesh>
-            
+
             {/* Inner glow sphere */}
             <mesh>
                 <sphereGeometry args={[0.6, 32, 32]} />
-                <meshBasicMaterial
-                    color={color}
-                    transparent
-                    opacity={0.15}
-                />
+                <meshBasicMaterial color={color} transparent opacity={0.15} />
             </mesh>
         </group>
     );

@@ -24,7 +24,7 @@ const DynamicObject = ({
     isMotionFrozen,
 }: DynamicObjectProps) => {
     const { mainObjectColor, material } = themeConfig;
-    
+
     switch (type) {
         case "TorusKnot":
             return (

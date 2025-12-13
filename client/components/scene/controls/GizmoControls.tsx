@@ -40,9 +40,10 @@ const GizmoControls = ({
         }
 
         // Find the selected mesh in the scene
-        const mesh = selectedObjectId === "main-scene-object"
-            ? scene.getObjectByName("main-scene-object")
-            : scene.getObjectByName(selectedObjectId);
+        const mesh =
+            selectedObjectId === "main-scene-object"
+                ? scene.getObjectByName("main-scene-object")
+                : scene.getObjectByName(selectedObjectId);
 
         selectedMesh.current = mesh || null;
         setMeshFound(!!mesh);

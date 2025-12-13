@@ -28,14 +28,14 @@ const MandalaFlowerObject = ({
         const petals = [];
         const numPetals = 21; // Fibonacci number
         const goldenAngle = Math.PI * 2 * (1 - 1 / PHI);
-        
+
         for (let i = 0; i < numPetals; i++) {
             const angle = i * goldenAngle;
             const radius = Math.sqrt(i / numPetals) * 2;
             const x = Math.cos(angle) * radius;
             const y = Math.sin(angle) * radius;
             const scale = 1 - (i / numPetals) * 0.5;
-            
+
             petals.push({
                 id: `petal-${i}`,
                 position: [x, y, 0] as [number, number, number],
@@ -51,14 +51,14 @@ const MandalaFlowerObject = ({
         if (isMotionFrozen) return;
         if (!isLocked && groupRef.current) {
             const time = state.clock.elapsedTime;
-            
+
             // Slow, mesmerizing rotation
             groupRef.current.rotation.z = time * 0.1;
-            
+
             // Gentle 3D tilt
             groupRef.current.rotation.x = Math.sin(time * 0.3) * 0.2;
             groupRef.current.rotation.y = Math.cos(time * 0.25) * 0.2;
-            
+
             // Breathing effect
             const breathe = 1 + Math.sin(time * 0.5) * 0.05;
             groupRef.current.scale.setScalar(breathe);
@@ -98,7 +98,11 @@ const MandalaFlowerObject = ({
 
             {/* Petals in Fibonacci spiral with gradient opacity */}
             {petalData.map(petal => (
-                <group key={petal.id} position={petal.position} rotation={petal.rotation}>
+                <group
+                    key={petal.id}
+                    position={petal.position}
+                    rotation={petal.rotation}
+                >
                     <mesh scale={[petal.scale, petal.scale, petal.scale]}>
                         <boxGeometry args={[0.4, 0.8, 0.08]} />
                         <meshPhysicalMaterial
@@ -114,7 +118,13 @@ const MandalaFlowerObject = ({
                         />
                     </mesh>
                     {/* Petal highlights */}
-                    <mesh scale={[petal.scale * 0.9, petal.scale * 0.9, petal.scale * 0.9]}>
+                    <mesh
+                        scale={[
+                            petal.scale * 0.9,
+                            petal.scale * 0.9,
+                            petal.scale * 0.9,
+                        ]}
+                    >
                         <boxGeometry args={[0.35, 0.7, 0.06]} />
                         <meshBasicMaterial
                             color={color}
@@ -176,7 +186,7 @@ const MandalaFlowerObject = ({
                     </group>
                 );
             })}
-            
+
             {/* Ambient glow sphere */}
             <mesh>
                 <sphereGeometry args={[3, 32, 32]} />

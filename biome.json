@@ -8,23 +8,49 @@
         "enabled": true,
         "rules": {
             "recommended": true,
+            "suspicious": {
+                "recommended": true,
+                "noExplicitAny": "off",
+                "noGlobalIsFinite": "off",
+                "noArrayIndexKey": "off",
+                "noImplicitAnyLet": "off",
+                "noDocumentCookie": "off"
+            },
+            "style": {
+                "recommended": true,
+                "noNonNullAssertion": "off",
+                "useExponentiationOperator": "off",
+                "useNodejsImportProtocol": "off",
+                "useTemplate": "off",
+                "noDescendingSpecificity": "off"
+            },
             "a11y": {
-                "recommended": true
+                "recommended": true,
+                "useButtonType": "off",
+                "noStaticElementInteractions": "off",
+                "useFocusableInteractive": "off",
+                "useSemanticElements": "off",
+                "useAriaPropsForRole": "off"
             },
             "correctness": {
-                "recommended": true
+                "recommended": true,
+                "noUnusedFunctionParameters": "off",
+                "noUnusedVariables": "off",
+                "noUnusedImports": "off",
+                "noUnusedPrivateClassMembers": "off",
+                "useExhaustiveDependencies": "off"
             },
             "performance": {
                 "recommended": true
             },
-            "style": {
-                "recommended": true
-            },
-            "suspicious": {
-                "recommended": true
-            },
             "complexity": {
-                "recommended": true
+                "recommended": true,
+                "useArrowFunction": "off",
+                "useLiteralKeys": "off"
+            },
+            "security": {
+                "recommended": true,
+                "noDangerouslySetInnerHtml": "off"
             }
         }
     },

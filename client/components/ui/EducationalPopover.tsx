@@ -34,7 +34,7 @@ const EducationalPopover = ({
                     <GraduationCap className="w-3 h-3 opacity-50 hover:opacity-100 transition-opacity" />
                 </div>
             </PopoverTrigger>
-            <PopoverContent 
+            <PopoverContent
                 className={`w-80 ${theme === "day" ? "bg-white" : "bg-gray-900"}`}
                 side="right"
             >
@@ -42,15 +42,21 @@ const EducationalPopover = ({
                     <div className="flex items-start gap-2">
                         <BookOpen className="w-4 h-4 mt-1 text-blue-400" />
                         <div className="flex-1">
-                            <h4 className="font-semibold text-sm mb-1">{concept}</h4>
-                            <p className="text-xs opacity-80 leading-relaxed">{explanation}</p>
+                            <h4 className="font-semibold text-sm mb-1">
+                                {concept}
+                            </h4>
+                            <p className="text-xs opacity-80 leading-relaxed">
+                                {explanation}
+                            </p>
                         </div>
                     </div>
 
                     {funFact && (
                         <div className="p-2 rounded bg-purple-500/10 border border-purple-500/20">
                             <p className="text-xs">
-                                <span className="font-semibold">🎯 Fun Fact: </span>
+                                <span className="font-semibold">
+                                    🎯 Fun Fact:{" "}
+                                </span>
                                 {funFact}
                             </p>
                         </div>
@@ -58,7 +64,9 @@ const EducationalPopover = ({
 
                     {relatedConcepts && relatedConcepts.length > 0 && (
                         <div className="pt-2 border-t border-gray-700">
-                            <p className="text-[10px] opacity-60 mb-1">Related Concepts:</p>
+                            <p className="text-[10px] opacity-60 mb-1">
+                                Related Concepts:
+                            </p>
                             <div className="flex flex-wrap gap-1">
                                 {relatedConcepts.map(related => (
                                     <span

@@ -17,7 +17,10 @@ interface ShareWorldButtonProps {
     theme?: "day" | "night";
 }
 
-const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProps) => {
+const ShareWorldButton = ({
+    sceneConfig,
+    theme = "night",
+}: ShareWorldButtonProps) => {
     const [copied, setCopied] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -49,12 +52,15 @@ const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProp
                     Share World
                 </Button>
             </DialogTrigger>
-            <DialogContent className={theme === "day" ? "bg-white" : "bg-gray-900"}>
+            <DialogContent
+                className={theme === "day" ? "bg-white" : "bg-gray-900"}
+            >
                 <DialogHeader>
                     <DialogTitle>Share Your World! 🌍</DialogTitle>
                     <DialogDescription>
-                        Copy this link to share your 3D creation with friends, family, or
-                        classmates. They'll see exactly what you created!
+                        Copy this link to share your 3D creation with friends,
+                        family, or classmates. They'll see exactly what you
+                        created!
                     </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
@@ -84,7 +90,10 @@ const ShareWorldButton = ({ sceneConfig, theme = "night" }: ShareWorldButtonProp
                         </Button>
                     </div>
                     <div className="text-xs opacity-70 space-y-1">
-                        <p>💡 <strong>Pro Tip:</strong> Your world is saved in the link itself!</p>
+                        <p>
+                            💡 <strong>Pro Tip:</strong> Your world is saved in
+                            the link itself!
+                        </p>
                         <p>🎨 No account needed - just share and create!</p>
                         <p>📱 Works on phones, tablets, and computers!</p>
                     </div>

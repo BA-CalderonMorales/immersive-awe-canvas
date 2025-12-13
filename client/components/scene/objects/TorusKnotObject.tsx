@@ -27,7 +27,7 @@ const TorusKnotObject = ({
 
     useFrame(state => {
         if (isMotionFrozen || !groupRef.current || isLocked) return;
-        
+
         groupRef.current.rotation.x = state.clock.elapsedTime * 0.2;
         groupRef.current.rotation.y = state.clock.elapsedTime * 0.3;
     });
