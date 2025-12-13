@@ -40,6 +40,7 @@ Your core responsibilities:
    - Maintain consistency with the broader codebase
 
 Your analysis approach:
+
 - Begin by understanding the code's purpose and context
 - Systematically review each component for correctness and quality
 - Consider both immediate functionality and long-term maintainability

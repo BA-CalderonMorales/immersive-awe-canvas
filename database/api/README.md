@@ -28,18 +28,21 @@ database/
 ## 🚀 Key Features
 
 ### Clean API Architecture
+
 - **API Buckets**: Organized endpoints by functionality (`edge-functions`, `supabase-rest`, `github`)
 - **Configuration Management**: Centralized API configuration with `APIBase`
 - **Swappable Clients**: Easy to test and customize with `APIClient` interface
 - **Type Safety**: Full TypeScript support with comprehensive interfaces
 
 ### Enhanced Error Handling
+
 - **Structured Errors**: Consistent error types and handling
 - **Automatic Logging**: All errors are logged to the database
 - **Retry Mechanisms**: Built-in retry logic with exponential backoff
 - **Validation**: Input validation for all API operations
 
 ### Security & Reliability
+
 - **Input Sanitization**: All inputs are sanitized before processing
 - **Rate Limiting**: Built-in rate limiting for API calls
 - **Security Headers**: Proper security headers for all responses
@@ -367,6 +370,7 @@ expect(result).toEqual(expectedResult);
 ### Built-in Performance Monitoring
 
 All API calls are automatically monitored for:
+
 - **Response Time**: How long each API call takes
 - **Success Rate**: Percentage of successful vs failed calls
 - **Error Types**: Categorization of different error types
@@ -472,7 +476,8 @@ To migrate existing code to use the integrated system:
 3. **Wrap operations** with error handling utilities
 4. **Update imports** to use the centralized database API exports
 
-### Before:
+### Before
+
 ```typescript
 const response = await fetch('/api/logs', {
     method: 'POST',
@@ -480,7 +485,8 @@ const response = await fetch('/api/logs', {
 });
 ```
 
-### After:
+### After
+
 ```typescript
 import { supabaseRestClient } from './database/api/index.js';
 

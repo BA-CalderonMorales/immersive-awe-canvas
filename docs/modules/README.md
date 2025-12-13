@@ -9,6 +9,7 @@ This directory contains detailed documentation for individual project modules.
 ## Overview
 
 Each module document provides:
+
 - Architecture overview and design principles
 - Detailed usage examples and patterns
 - Configuration and setup instructions

@@ -11,11 +11,13 @@ The Server API module implements a clean, layered architecture for backend opera
 Controllers handle HTTP request/response cycles and input validation.
 
 **Key Classes:**
+
 - `VersionController`: Manages version-related endpoints
 - `LoggingController`: Handles logging and event tracking endpoints  
 - `SceneController`: Manages scene-related operations
 
 **Example Usage:**
+
 ```typescript
 import { versionController } from '@server/api';
 
@@ -29,10 +31,12 @@ console.log(version.data.fullVersion); // "v1.0.0 (07-31-2025-00:30:56-CDT-dev)"
 Services contain business logic and orchestrate between different layers.
 
 **Key Classes:**
+
 - `VersionService`: Version management and GitHub integration
 - `LoggingService`: Structured logging and event tracking
 
 **Example Usage:**
+
 ```typescript
 import { versionService, loggingService } from '@server/api';
 
@@ -52,6 +56,7 @@ await loggingService.logEvent({
 Repositories manage data access and database operations.
 
 **Key Classes:**
+
 - `LogRepository`: Database operations for logs
 - `SceneRepository`: Database operations for scenes
 
@@ -60,10 +65,12 @@ Repositories manage data access and database operations.
 Clients handle external API communication using the Clean API architecture.
 
 **Key Classes:**
+
 - `GitHubAPIClient`: GitHub API integration for releases and version info
 - `SupabaseAPIClient`: Direct Supabase REST API communication
 
 **Example Usage:**
+
 ```typescript
 import { githubAPIClient } from '@server/api';
 
@@ -94,6 +101,7 @@ import { githubAPI, supabaseAPI, githubClient, supabaseClient } from '@server/ap
 ## Usage Patterns
 
 ### 1. Simple Version Check
+
 ```typescript
 import { versionController } from '@server/api';
 
@@ -102,6 +110,7 @@ const versionInfo = await versionController.getCurrentVersion();
 ```
 
 ### 2. Event Logging
+
 ```typescript
 import { loggingService } from '@server/api';
 
@@ -112,6 +121,7 @@ await loggingService.logUserAction('scene_created', 'user123', {
 ```
 
 ### 3. GitHub Integration
+
 ```typescript
 import { versionService } from '@server/api';
 

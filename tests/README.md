@@ -5,6 +5,7 @@ A comprehensive testing module that unifies and validates both the layered archi
 ## 🎯 Purpose
 
 This module combines the functionality of both previous test files:
+
 - **test-architecture.ts** - Server layered architecture testing
 - **test-seamless-integration.ts** - Cross-layer integration testing
 
@@ -12,7 +13,7 @@ Into a single, comprehensive testing system that validates the entire API ecosys
 
 ## 🏗️ Architecture
 
-```
+```text
 tests/
 ├── index.ts                       # Module exports
 ├── api-test-runner.ts             # Main unified test runner class
@@ -26,31 +27,41 @@ tests/
 ## 🧪 Test Suites
 
 ### 1. **Server Architecture** 🏗️
+
 Tests the server-side layered API components:
+
 - Version Service (`getAppVersion`, `getBuildInfo`, `getFullVersion`)
 - GitHub API Client (server-side)
 - Logging Service (server-side)
 
 ### 2. **Client Architecture** 🖥️
+
 Tests the client-side API layer:
+
 - Client Version API Client
 - Client GitHub API Client  
 - Client Logging API Client
 
 ### 3. **Shared Utilities** 🔄
+
 Tests the shared cross-layer utilities:
+
 - Shared GitHub Client
 - Shared Version Manager
 - Performance Monitor
 
 ### 4. **Seamless Integration** 🔗
+
 Tests server/client interface consistency:
+
 - Cross-layer type consistency
 - Environment detection
 - Same method signatures and results
 
 ### 5. **Cross-Layer Consistency** ⚖️
+
 Tests data consistency across all layers:
+
 - Version consistency between server/client/shared
 - Configuration consistency
 - Error handling consistency
@@ -141,7 +152,7 @@ interface TestSuite {
 
 ### Sample Output
 
-```
+```text
 🧪 Running Comprehensive API Tests...
 
 🏗️ Testing Server Layered Architecture:
@@ -179,27 +190,31 @@ interface TestSuite {
 ## 🔧 Configuration Options
 
 ### Test Execution
+
 - `timeout`: Maximum time per test (default: 30s)
 - `retries`: Number of retry attempts (default: 1)
 - `parallel`: Run tests in parallel (default: false)
 
 ### Test Selection
+
 - `enabledSuites`: Which test suites to run
 - `skipSlowTests`: Skip performance-intensive tests
 
 ### Output
+
 - `verbose`: Detailed output (default: true)
 - `exportResults`: Export to JSON file
 - `outputFormat`: console, json, or xml
 
 ### API Settings
+
 - `mockExternalCalls`: Mock GitHub API calls for offline testing
 - `testDataPath`: Path to test data files
 
 ## 🎯 Key Differences from Original Files
 
 | Feature | **test-architecture.ts** | **test-seamless-integration.ts** | **New Unified Module** |
-|---------|---------------------------|-----------------------------------|-------------------------|
+| ------- | ------------------------- | --------------------------------- | ----------------------- |
 | **Scope** | Server-only testing | Shared utilities only | **Complete ecosystem** |
 | **Structure** | Simple function | Simple function | **Class-based with suites** |
 | **Results** | Console output only | Console output only | **Structured results + export** |
@@ -221,7 +236,8 @@ interface TestSuite {
 
 ## 🔄 Migration Path
 
-### From test-architecture.ts:
+### From test-architecture.ts
+
 ```typescript
 // Old approach
 import { versionService, loggingService, githubAPIClient } from './server/api';
@@ -233,7 +249,8 @@ const runner = new APITestRunner();
 await runner.runAllTests(); // Includes server architecture + more
 ```
 
-### From test-seamless-integration.ts:
+### From test-seamless-integration.ts
+
 ```typescript
 // Old approach
 import { sharedGitHubClient, sharedVersionManager } from './shared';

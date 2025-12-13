@@ -1127,6 +1127,7 @@ const applyDiscount = (price: number, discountRate: number): number => {
 
 - Each commit should represent a complete, working change
 - Use conventional commits format:
+
     ```
     feat: add payment validation
     fix: correct date formatting in payment processor
@@ -1135,6 +1136,7 @@ const applyDiscount = (price: number, discountRate: number): number => {
     chore: update dependencies
     breaking: major API change
     ```
+
 - Include test changes with feature changes in the same commit
 
 ### Semantic Versioning
@@ -1513,7 +1515,7 @@ Utilize the full spectrum of Three.js geometries:
 
 ### Scene-Specific Guidelines
 
-#### Current Scene Analysis & Improvements Needed:
+#### Current Scene Analysis & Improvements Needed
 
 1. **Genesis Torus**: ✅ Good baseline - complex geometry, interesting materials
 2. **Distortion Sphere**: ⚠️ Too simple - needs more visual complexity
@@ -1566,16 +1568,18 @@ This document should guide all scene development decisions to ensure we create t
 ### Major Accomplishments
 
 #### 1. **WebGL Shader Compilation Issues - RESOLVED**
+
 - **Problem**: Multiple shader compilation errors in background effects causing Three.js warnings
 - **Root Cause**: ShaderLibrary template string interpolation not working in production builds
 - **Solution**: Inlined all GLSL shader functions directly into shader code
-- **Files Fixed**: 
+- **Files Fixed**:
   - `EnhancedGeometryShader.tsx`
-  - `EnhancedAuroraBackground.tsx` 
+  - `EnhancedAuroraBackground.tsx`
   - `VolumetricLighting.tsx`
 - **Result**: All WebGL compilation errors eliminated
 
 #### 2. **Background Visual Enhancement - COMPLETED**
+
 - **New Component**: `CinematicBackground.tsx` - A spectacular atmospheric background with:
   - Dynamic particle systems (2000+ particles)
   - Complex noise-based atmospheric rendering
@@ -1588,15 +1592,17 @@ This document should guide all scene development decisions to ensure we create t
 - **Impact**: Significantly improved visual appeal and immersiveness
 
 #### 3. **Critical Test Fix - useWorlds Hook Navigation**
+
 - **Problem**: Race condition in `useWorlds` hook causing navigation tests to fail
 - **Root Cause**: `useEffect` dependency array included `currentWorldIndex`, causing it to reset after `jumpToWorld()` calls
-- **Solution**: 
+- **Solution**:
   - Removed `currentWorldIndex` from `useEffect` dependencies
   - Added condition to only reset index when still in initial state
   - Enhanced test reliability with proper timer handling
 - **Result**: All 57 tests passing, including previously failing navigation tests
 
 #### 4. **Code Quality & Formatting**
+
 - **Biome Integration**: Successfully applied Biome formatting rules
 - **Style Consistency**: All code now follows consistent formatting standards
 - **Quality Assurance**: Format checks passing with zero violations
@@ -1604,6 +1610,7 @@ This document should guide all scene development decisions to ensure we create t
 ### Technical Details
 
 #### Shader Compilation Fix Strategy
+
 The WebGL shader compilation issue required a fundamental change in how we handle shader code:
 
 ```typescript
@@ -1625,6 +1632,7 @@ const fragmentShader = `
 This ensures all shader functions are available at compile time regardless of build environment.
 
 #### useWorlds Hook Race Condition
+
 The navigation bug was subtle but critical:
 
 ```typescript
@@ -1646,7 +1654,9 @@ useEffect(() => {
 ```
 
 #### CinematicBackground Architecture
+
 The new cinematic background uses advanced GLSL techniques:
+
 - **Fractal Noise**: Multi-octave noise for atmospheric depth
 - **HSV Color Space**: Dynamic color mixing in HSV for better control
 - **Particle Physics**: WebGL point sprites with animated movement
@@ -1654,6 +1664,7 @@ The new cinematic background uses advanced GLSL techniques:
 - **Performance Optimization**: Efficient shader operations for 60fps
 
 ### Files Modified
+
 1. `client/hooks/useWorlds.ts` - Fixed race condition
 2. `client/hooks/__tests__/useWorlds.test.ts` - Enhanced test reliability
 3. `client/components/scene/effects/CinematicBackground.tsx` - New spectacular background
@@ -1663,6 +1674,7 @@ The new cinematic background uses advanced GLSL techniques:
 7. Multiple shader components - Fixed WebGL compilation issues
 
 ### Commits Made
+
 1. `feat: fix WebGL shader compilation and enhance background effects` - Major fixes and enhancements
 2. `fix: resolve useWorlds hook navigation test race condition` - Critical test fix
 3. `style: apply Biome formatting to useWorlds hook` - Code formatting compliance
@@ -1670,17 +1682,20 @@ The new cinematic background uses advanced GLSL techniques:
 ### Development Insights
 
 #### Lessons Learned
+
 1. **Template Strings in Shaders**: Build-time template interpolation can fail in production - prefer inline GLSL
 2. **useEffect Dependencies**: Be very careful with dependency arrays, especially when state updates can trigger unwanted re-runs
 3. **Test Timing**: Race conditions in hooks require careful test design with proper state verification
 
 #### Best Practices Reinforced
+
 1. **TDD Approach**: All fixes were driven by failing tests first
 2. **Incremental Changes**: Each fix was isolated and tested independently
 3. **Documentation**: All changes documented for future reference
 4. **Quality Gates**: Format checks and linting maintained throughout
 
 ### Next Session Priorities
+
 1. **Performance Monitoring**: Add PerformanceMonitor component usage tracking
 2. **Background Expansion**: Create more cinematic background variants
 3. **Shader Library**: Consider creating a proper shader library system
@@ -1688,12 +1703,14 @@ The new cinematic background uses advanced GLSL techniques:
 5. **User Experience**: Gather feedback on new visual enhancements
 
 ### Technical Debt Addressed
+
 - ✅ WebGL shader compilation warnings eliminated
 - ✅ Test suite reliability improved (100% pass rate)
 - ✅ Code formatting standardized
 - ✅ Race condition in navigation fixed
 
 ### Outstanding Items
+
 - 🔄 VS Code Biome integration (low priority)
 - 🔄 Remaining 145 Biome linting issues (gradual resolution)
 - 🔄 Mobile performance testing for new effects

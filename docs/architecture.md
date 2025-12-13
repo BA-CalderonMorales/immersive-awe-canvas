@@ -53,12 +53,14 @@ The database module serves as the single source of truth for all database-relate
 The server module implements a clean, layered architecture using the `@ba-calderonmorales/clean-api` package:
 
 #### Layer Structure
+
 1. **Controllers**: Handle HTTP requests/responses and input validation
 2. **Services**: Contain business logic and orchestrate between layers  
 3. **Repositories**: Manage data access and database operations
 4. **Clients**: Handle external API communication (GitHub, Supabase REST API)
 
 #### Key Features
+
 - **Clean API Integration**: Leverages clean-api package for consistent API patterns
 - **Singleton Pattern**: Controllers and services use singleton instances for efficiency
 - **Error Handling**: Consistent error handling across all layers
@@ -66,6 +68,7 @@ The server module implements a clean, layered architecture using the `@ba-calder
 - **Separation of Concerns**: Clear boundaries between different responsibilities
 
 #### Available Services
+
 - **VersionService**: Manages application versioning and GitHub release information
 - **LoggingService**: Handles structured application logging and event tracking
 - **SceneService**: Manages scene-related operations (future implementation)

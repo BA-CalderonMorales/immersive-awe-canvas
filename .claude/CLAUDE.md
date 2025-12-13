@@ -13,7 +13,7 @@
 
 **ABSOLUTE RULE**: ALL operations MUST be concurrent/parallel in a single message:
 
-### 🔴 MANDATORY CONCURRENT PATTERNS:
+### 🔴 MANDATORY CONCURRENT PATTERNS
 
 1. **TodoWrite**: ALWAYS batch ALL todos in ONE call (5-10+ todos minimum)
 2. **Task tool**: ALWAYS spawn ALL agents in ONE message with full instructions
@@ -55,7 +55,7 @@ Message 6: Bash("npm install")
 // This is 6x slower and breaks coordination!
 ```
 
-### 🎯 CONCURRENT EXECUTION CHECKLIST:
+### 🎯 CONCURRENT EXECUTION CHECKLIST
 
 Before sending ANY message, ask yourself:
 
@@ -73,7 +73,7 @@ If ANY answer is "No", you MUST combine operations into a single message!
 
 **ABSOLUTE RULE**: Claude Code performs ALL actual work:
 
-### ✅ Claude Code ALWAYS Handles:
+### ✅ Claude Code ALWAYS Handles
 
 - 🔧 **ALL file operations** (Read, Write, Edit, MultiEdit, Glob, Grep)
 - 💻 **ALL code generation** and programming tasks
@@ -86,7 +86,7 @@ If ANY answer is "No", you MUST combine operations into a single message!
 - 🧪 **ALL testing** and validation
 - 🔧 **ALL debugging** and troubleshooting
 
-### 🧠 Claude Flow MCP Tools ONLY Handle:
+### 🧠 Claude Flow MCP Tools ONLY Handle
 
 - 🎯 **Coordination only** - Planning Claude Code's actions
 - 💾 **Memory management** - Storing decisions and context
@@ -95,7 +95,7 @@ If ANY answer is "No", you MUST combine operations into a single message!
 - 🐝 **Swarm orchestration** - Coordinating multiple Claude Code instances
 - 🔗 **GitHub integration** - Advanced repository coordination
 
-### 🚨 CRITICAL SEPARATION OF CONCERNS:
+### 🚨 CRITICAL SEPARATION OF CONCERNS
 
 **❌ MCP Tools NEVER:**
 
@@ -115,11 +115,11 @@ If ANY answer is "No", you MUST combine operations into a single message!
 - Orchestrate workflows
 - Provide intelligence insights
 
-### ⚠️ Key Principle:
+### ⚠️ Key Principle
 
 **MCP tools coordinate, Claude Code executes.** Think of MCP tools as the "brain" that plans and coordinates, while Claude Code is the "hands" that do all the actual work.
 
-### 🔄 WORKFLOW EXECUTION PATTERN:
+### 🔄 WORKFLOW EXECUTION PATTERN
 
 **✅ CORRECT Workflow:**
 
@@ -139,7 +139,7 @@ If ANY answer is "No", you MUST combine operations into a single message!
 4. **Claude Code**: Sequential Task calls (DON'T DO THIS)
 5. **Claude Code**: Individual TodoWrite calls (DON'T DO THIS)
 
-### 🚨 REMEMBER:
+### 🚨 REMEMBER
 
 - **MCP tools** = Coordination, planning, memory, intelligence
 - **Claude Code** = All actual execution, coding, file operations
@@ -270,13 +270,13 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 
 ## Available MCP Tools for Coordination
 
-### Coordination Tools:
+### Coordination Tools
 
 - `mcp__claude-flow__swarm_init` - Set up coordination topology for Claude Code
 - `mcp__claude-flow__agent_spawn` - Create cognitive patterns to guide Claude Code
 - `mcp__claude-flow__task_orchestrate` - Break down and coordinate complex tasks
 
-### Monitoring Tools:
+### Monitoring Tools
 
 - `mcp__claude-flow__swarm_status` - Monitor coordination effectiveness
 - `mcp__claude-flow__agent_list` - View active cognitive patterns
@@ -284,14 +284,14 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 - `mcp__claude-flow__task_status` - Check workflow progress
 - `mcp__claude-flow__task_results` - Review coordination outcomes
 
-### Memory & Neural Tools:
+### Memory & Neural Tools
 
 - `mcp__claude-flow__memory_usage` - Persistent memory across sessions
 - `mcp__claude-flow__neural_status` - Neural pattern effectiveness
 - `mcp__claude-flow__neural_train` - Improve coordination patterns
 - `mcp__claude-flow__neural_patterns` - Analyze thinking approaches
 
-### GitHub Integration Tools (NEW!):
+### GitHub Integration Tools (NEW!)
 
 - `mcp__claude-flow__github_swarm` - Create specialized GitHub management swarms
 - `mcp__claude-flow__repo_analyze` - Deep repository analysis with AI
@@ -299,7 +299,7 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 - `mcp__claude-flow__issue_triage` - Intelligent issue classification
 - `mcp__claude-flow__code_review` - Automated code review with swarms
 
-### System Tools:
+### System Tools
 
 - `mcp__claude-flow__benchmark_run` - Measure coordination efficiency
 - `mcp__claude-flow__features_detect` - Available capabilities
@@ -399,7 +399,7 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 
 ## Best Practices for Coordination
 
-### ✅ DO:
+### ✅ DO
 
 - Use MCP tools to coordinate Claude Code's approach to complex tasks
 - Let the swarm break down problems into manageable pieces
@@ -408,7 +408,7 @@ Once configured, Claude Flow MCP tools enhance Claude Code's coordination:
 - Train neural patterns for better coordination over time
 - Leverage GitHub tools for repository management
 
-### ❌ DON'T:
+### ❌ DON'T
 
 - Expect agents to write code (Claude Code does all implementation)
 - Use MCP tools for file operations (use Claude Code's native tools)
@@ -769,7 +769,7 @@ Dependencies: ↳ X deps | Actionable: ▶
   Bash("cd test-app && npm test")
 ```
 
-### 🚫 NEVER DO THIS (Sequential = WRONG):
+### 🚫 NEVER DO THIS (Sequential = WRONG)
 
 ```javascript
 // ❌ WRONG: Multiple messages, one operation each
@@ -897,9 +897,9 @@ Claude Flow extends the base coordination with:
 
 ## Support
 
-- Documentation: https://github.com/ruvnet/claude-flow
-- Issues: https://github.com/ruvnet/claude-flow/issues
-- Examples: https://github.com/ruvnet/claude-flow/tree/main/examples
+- Documentation: <https://github.com/ruvnet/claude-flow>
+- Issues: <https://github.com/ruvnet/claude-flow/issues>
+- Examples: <https://github.com/ruvnet/claude-flow/tree/main/examples>
 
 ---
 

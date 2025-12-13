@@ -33,11 +33,13 @@ memory/agents/
 This memory system supports both individual Claude Code sessions and Claude Flow swarm orchestration:
 
 ### Individual Sessions
+
 - Claude Code reads MEMORY.md for development guidelines
 - Session-specific data goes to `memory/sessions/`
 - Persistent decisions and learnings are documented in MEMORY.md
 
 ### Swarm Operations  
+
 - Claude Flow coordinates multiple agents using the shared memory system
 - Each swarm instance gets isolated coordination data
 - Agents share knowledge through the memory/agents/shared/ directory

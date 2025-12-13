@@ -9,9 +9,11 @@ Handles version-related operations and GitHub integration.
 #### Methods
 
 ##### `getVersion()`
+
 Returns current application version information.
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -24,9 +26,11 @@ Returns current application version information.
 ```
 
 ##### `getDynamicVersion()`
+
 Fetches latest version information from GitHub.
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -42,12 +46,15 @@ Fetches latest version information from GitHub.
 ```
 
 ##### `getReleases(limit?: number)`
+
 Fetches multiple releases from GitHub.
 
 **Parameters:**
+
 - `limit` (optional): Number of releases to fetch (default: 10)
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -56,9 +63,11 @@ Fetches multiple releases from GitHub.
 ```
 
 ##### `checkLatestVersion()`
+
 Checks if current version matches latest GitHub release.
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -70,9 +79,11 @@ Checks if current version matches latest GitHub release.
 ```
 
 ##### `clearCache()`
+
 Clears version information cache.
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -89,9 +100,11 @@ Handles application logging and event tracking.
 #### Methods
 
 ##### `logEvent(params: LogEventParams)`
+
 Logs an application event.
 
 **Parameters:**
+
 ```typescript
 interface LogEventParams {
     eventType: string;           // Required: Type of event
@@ -101,6 +114,7 @@ interface LogEventParams {
 ```
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -110,9 +124,11 @@ interface LogEventParams {
 ```
 
 ##### `queryLogs(params?: LogQueryParams)`
+
 Queries logs with optional filtering.
 
 **Parameters:**
+
 ```typescript
 interface LogQueryParams {
     eventType?: string;
@@ -125,6 +141,7 @@ interface LogQueryParams {
 ```
 
 **Returns:**
+
 ```typescript
 {
     success: true,
@@ -133,23 +150,29 @@ interface LogQueryParams {
 ```
 
 ##### `getLogsByEventType(eventType: string, limit?: number)`
+
 Gets logs filtered by event type.
 
 **Parameters:**
+
 - `eventType`: The event type to filter by
 - `limit` (optional): Number of logs to return (default: 50)
 
 ##### `getLogsByEventSource(eventSource: string, limit?: number)`
+
 Gets logs filtered by event source.
 
 **Parameters:**
+
 - `eventSource`: The event source to filter by  
 - `limit` (optional): Number of logs to return (default: 50)
 
 ##### `getRecentLogs(limit?: number)`
+
 Gets most recent logs.
 
 **Parameters:**
+
 - `limit` (optional): Number of logs to return (default: 100)
 
 ---
@@ -163,24 +186,31 @@ Business logic for version management.
 #### Methods
 
 ##### `getAppVersion(): string`
+
 Returns the current application version.
 
 ##### `getBuildInfo(): string`
+
 Returns build information including timestamp and commit hash.
 
 ##### `getFullVersion(): string`
+
 Returns formatted full version string.
 
 ##### `getDynamicVersionInfo(): Promise<VersionInfo>`
+
 Gets latest version from GitHub with caching.
 
 ##### `getAllReleases(limit?: number): APIResult<VersionInfo[]>`
+
 Gets all releases from GitHub.
 
 ##### `clearVersionCache(): void`
+
 Clears the version information cache.
 
 ##### `isCurrentVersionLatest(): Promise<boolean>`
+
 Checks if current version matches latest GitHub release.
 
 ---
@@ -192,21 +222,27 @@ Business logic for application logging.
 #### Methods
 
 ##### `logEvent(params: LogEventParams): APIResult<any>`
+
 Logs an event with automatic sanitization.
 
 ##### `queryLogs(params?: LogQueryParams): APIResult<any[]>`
+
 Queries logs with filtering options.
 
 ##### `logApplicationStartup(metadata?: Record<string, unknown>): APIResult<any>`
+
 Logs application startup event.
 
 ##### `logUserAction(action: string, userId?: string, metadata?: Record<string, unknown>): APIResult<any>`
+
 Logs user action event.
 
 ##### `logError(error: Error | string, source?: string, metadata?: Record<string, unknown>): APIResult<any>`
+
 Logs error event.
 
 ##### `logPerformance(metric: string, value: number, unit?: string, metadata?: Record<string, unknown>): APIResult<any>`
+
 Logs performance metric.
 
 ---
@@ -220,9 +256,11 @@ Handles GitHub API communication.
 #### Methods
 
 ##### `getLatestRelease(): APIResult<VersionInfo>`
+
 Fetches latest release from GitHub.
 
 ##### `getReleases(limit?: number): APIResult<VersionInfo[]>`
+
 Fetches multiple releases from GitHub.
 
 ---
@@ -234,18 +272,23 @@ Handles Supabase database communication.
 #### Methods
 
 ##### `insertLog(logData: LogInsertData): APIResult<LogEntry>`
+
 Inserts a log entry into the database.
 
 ##### `getLogs(params?: LogQueryParams): APIResult<LogEntry[]>`
+
 Queries logs from the database.
 
 ##### `query<T>(table: string, params?: QueryParams): APIResult<T[]>`
+
 Generic query method for any Supabase table.
 
 ##### `insert<T>(table: string, data: any): APIResult<T>`
+
 Generic insert method for any Supabase table.
 
 ##### `update<T>(table: string, data: any, filters: Record<string, string>): APIResult<T[]>`
+
 Generic update method for any Supabase table.
 
 ---
@@ -253,6 +296,7 @@ Generic update method for any Supabase table.
 ## Types and Interfaces
 
 ### VersionInfo
+
 ```typescript
 interface VersionInfo {
     version: string;            // "v4.0.2"
@@ -265,6 +309,7 @@ interface VersionInfo {
 ```
 
 ### LogEventParams
+
 ```typescript
 interface LogEventParams {
     eventType: string;                      // Required event type
@@ -274,6 +319,7 @@ interface LogEventParams {
 ```
 
 ### LogQueryParams
+
 ```typescript
 interface LogQueryParams {
     eventType?: string;         // Filter by event type
@@ -286,6 +332,7 @@ interface LogQueryParams {
 ```
 
 ### APIResult<T>
+
 ```typescript
 type APIResult<T> = Promise<{ data?: T; error?: Error }>;
 ```
@@ -295,6 +342,7 @@ type APIResult<T> = Promise<{ data?: T; error?: Error }>;
 ## Usage Examples
 
 ### Getting Version Information
+
 ```typescript
 import { versionController } from '@server/api';
 
@@ -309,6 +357,7 @@ const updateCheck = await versionController.checkLatestVersion();
 ```
 
 ### Logging Events
+
 ```typescript
 import { loggingController } from '@server/api';
 
@@ -328,6 +377,7 @@ const recentLogs = await loggingController.getRecentLogs(50);
 ```
 
 ### Direct Service Usage
+
 ```typescript
 import { versionService, loggingService } from '@server/api';
 

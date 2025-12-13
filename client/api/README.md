@@ -33,6 +33,7 @@ import { createAPIMigration } from '@client/api';
 ### Data Fetching Hooks
 
 #### `useAPIWorlds()`
+
 Replaces the existing `useWorlds` hook with better error handling:
 
 ```typescript
@@ -53,6 +54,7 @@ const MyComponent = () => {
 ```
 
 #### `useAPIBackgrounds()`
+
 Fetch backgrounds with React Query caching:
 
 ```typescript
@@ -72,6 +74,7 @@ const BackgroundSelector = () => {
 ```
 
 #### `useLatestVersion()`
+
 Get latest version from GitHub with caching:
 
 ```typescript
@@ -99,6 +102,7 @@ const VersionChecker = () => {
 ### Logging Hooks
 
 #### `useAPILogging()`
+
 Comprehensive logging with automatic error handling:
 
 ```typescript
@@ -228,6 +232,7 @@ await migration.logging.logEvent({
 ### Before and After Examples
 
 #### Old Way (Before Clean API)
+
 ```typescript
 // Scattered imports and manual error handling
 import { useWorlds } from '@/hooks/useWorlds';
@@ -257,6 +262,7 @@ const OldComponent = () => {
 ```
 
 #### New Way (With Clean API)
+
 ```typescript
 // Centralized imports with consistent patterns
 import { useAPIWorlds, useLatestVersion, useAPILogging } from '@client/api';

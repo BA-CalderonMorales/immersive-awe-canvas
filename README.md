@@ -212,7 +212,7 @@ npm run build
 
 This project uses a **modular monorepo architecture** with clear separation of concerns across multiple workspaces:
 
-#### Client Workspace (`client/`)
+### Client Workspace (`client/`)
 
 Frontend React application with modern architecture:
 
@@ -255,7 +255,7 @@ Shared utilities across all workspaces:
 <details>
 <summary><strong>Directory Structure</strong></summary>
 
-```
+```text
 immersive-awe-canvas/
 ├── client/                    # Frontend React application
 │   ├── components/           # React components organized by feature

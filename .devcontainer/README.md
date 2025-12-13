@@ -17,6 +17,7 @@ This dev container is configured for developing the Immersive Awe Canvas applica
 Inspired by the terminal-jarvis dev container setup:
 
 ### 1. Dockerfile
+
 - Uses official `node:20-bookworm` base image
 - Installs and configures locales properly
 - Creates `vscode` user with sudo access
@@ -24,6 +25,7 @@ Inspired by the terminal-jarvis dev container setup:
 - Sets up all environment variables
 
 ### 2. devcontainer.json
+
 - Direct Dockerfile build (no docker-compose)
 - Proper locale environment variables
 - Lifecycle scripts (postCreateCommand, postStartCommand)
@@ -33,7 +35,9 @@ Inspired by the terminal-jarvis dev container setup:
 ### 3. Setup Scripts
 
 #### `post-create.sh`
+
 Runs once when container is first created:
+
 - Verifies all tools are installed
 - Installs project dependencies with Bun
 - Sets up custom bash prompt
@@ -42,12 +46,15 @@ Runs once when container is first created:
 - Creates `.env.local` template
 
 #### `post-start.sh`
+
 Runs each time the container starts:
+
 - Shows environment info
 - Displays git status and recent commits
 - Lists available commands
 
 #### `setup-dev-environment.sh`
+
 Manual setup script for troubleshooting or re-running setup
 
 ## Rebuild Instructions
@@ -55,17 +62,21 @@ Manual setup script for troubleshooting or re-running setup
 If you experience issues with the dev container:
 
 ### Option 1: Rebuild Container (Recommended)
+
 1. Press `F1` or `Ctrl+Shift+P`
 2. Run: `Dev Containers: Rebuild Container`
 3. Wait for the build and post-create script to complete
 
 ### Option 2: Rebuild Without Cache
+
 1. Press `F1` or `Ctrl+Shift+P`
 2. Run: `Dev Containers: Rebuild Container Without Cache`
 3. This will force a clean rebuild
 
 ### Option 3: Manual Setup
+
 If the container is already running but setup didn't complete:
+
 ```bash
 bash .devcontainer/scripts/setup-dev-environment.sh
 ```
@@ -73,18 +84,22 @@ bash .devcontainer/scripts/setup-dev-environment.sh
 ## Troubleshooting
 
 ### Issue: "bun: command not found"
+
 **Root Cause**: Container didn't build properly or wrong base image
 **Solution**: Rebuild container without cache
 
 ### Issue: Locale warnings
+
 **Root Cause**: Locale not configured in container
 **Solution**: Already fixed in Dockerfile with proper locale-gen setup
 
 ### Issue: Permission errors
+
 **Root Cause**: User mismatch between host and container
 **Solution**: Using `vscode` user (UID 1001) for compatibility
 
 ### Issue: Dependencies not installed
+
 **Root Cause**: post-create script didn't run
 **Solution**: Run `bash .devcontainer/scripts/setup-dev-environment.sh` manually
 
