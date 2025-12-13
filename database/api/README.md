@@ -81,14 +81,14 @@ const issueData = {
 const result = await supabaseEdgeFunctionClient.createGithubIssue(issueData, '1.0.0');
 
 // Log an event to the database
-await databaseLoggingClient.logInfo('User completed tutorial', { 
-    userId: 'user123', 
-    duration: 300 
+await databaseLoggingClient.logInfo('User completed tutorial', {
+    userId: 'user123',
+    duration: 300
 });
 
 // Get logs with filtering
-const logs = await supabaseRestClient.getLogs({ 
-    event_type: 'user_action' 
+const logs = await supabaseRestClient.getLogs({
+    event_type: 'user_action'
 });
 ```
 
@@ -126,8 +126,8 @@ const log = await supabaseRestClient.createLog({
 });
 
 // Get logs with filtering
-const logs = await supabaseRestClient.getLogs({ 
-    event_type: 'error' 
+const logs = await supabaseRestClient.getLogs({
+    event_type: 'error'
 });
 
 // Analytics data
@@ -144,30 +144,30 @@ Centralized logging with automatic database persistence:
 import { databaseLoggingClient } from './database/api/index.js';
 
 // Different log levels
-await databaseLoggingClient.logError('Something went wrong', { 
-    userId: 'user123', 
-    error: 'Connection timeout' 
+await databaseLoggingClient.logError('Something went wrong', {
+    userId: 'user123',
+    error: 'Connection timeout'
 });
 
-await databaseLoggingClient.logWarning('Performance issue detected', { 
-    loadTime: 5000 
+await databaseLoggingClient.logWarning('Performance issue detected', {
+    loadTime: 5000
 });
 
-await databaseLoggingClient.logInfo('User logged in', { 
-    userId: 'user123' 
+await databaseLoggingClient.logInfo('User logged in', {
+    userId: 'user123'
 });
 
-await databaseLoggingClient.logDebug('Debug info', { 
-    state: currentState 
+await databaseLoggingClient.logDebug('Debug info', {
+    state: currentState
 });
 
 // API call logging
 await databaseLoggingClient.logApiCall(
-    'POST', 
-    '/api/users', 
-    requestData, 
-    responseData, 
-    duration, 
+    'POST',
+    '/api/users',
+    requestData,
+    responseData,
+    duration,
     success
 );
 ```
@@ -207,10 +207,10 @@ const bugReport = await githubIntegrationClient.createBugReport({
 ### Input Validation
 
 ```typescript
-import { 
-    validateIssueData, 
-    validateLogEntry, 
-    validateGitHubIssueData 
+import {
+    validateIssueData,
+    validateLogEntry,
+    validateGitHubIssueData
 } from './database/api/index.js';
 
 // Validate issue data
@@ -224,10 +224,10 @@ if (!validation.isValid) {
 ### Error Handling
 
 ```typescript
-import { 
-    withErrorHandling, 
-    DatabaseErrorType, 
-    type DatabaseError 
+import {
+    withErrorHandling,
+    DatabaseErrorType,
+    type DatabaseError
 } from './database/api/index.js';
 
 try {
@@ -238,7 +238,7 @@ try {
     );
 } catch (error) {
     const dbError = error as DatabaseError;
-    
+
     switch (dbError.type) {
         case DatabaseErrorType.VALIDATION_ERROR:
             // Handle validation error
@@ -259,10 +259,10 @@ import { withRetry } from './database/api/index.js';
 
 const result = await withRetry(
     () => unstableApiCall(),
-    { 
-        maxAttempts: 3, 
-        delay: 1000, 
-        backoffFactor: 2 
+    {
+        maxAttempts: 3,
+        delay: 1000,
+        backoffFactor: 2
     }
 );
 ```
@@ -284,10 +284,10 @@ GITHUB_ACCESS_TOKEN=your-github-token
 ### Custom Configuration
 
 ```typescript
-import { 
-    supabaseEdgeFunctionAPI, 
-    supabaseRestAPI, 
-    githubIntegrationAPI 
+import {
+    supabaseEdgeFunctionAPI,
+    supabaseRestAPI,
+    githubIntegrationAPI
 } from './database/api/config.js';
 
 // Add custom routes
@@ -387,7 +387,7 @@ const performanceMetrics = await supabaseRestClient.getLogs({
 });
 
 // Analyze API performance
-const apiCalls = performanceMetrics.filter(log => 
+const apiCalls = performanceMetrics.filter(log =>
     log.metadata?.duration && log.metadata?.success !== undefined
 );
 ```
@@ -400,23 +400,23 @@ Your existing client API can seamlessly use the database API:
 
 ```typescript
 // client/api/clients/database-client.ts
-import { 
+import {
     supabaseEdgeFunctionClient,
-    databaseLoggingClient 
+    databaseLoggingClient
 } from '../../../database/api/index.js';
 
 export class ClientDatabaseAPI {
     async reportIssue(issueData: IssueData) {
         try {
             const result = await supabaseEdgeFunctionClient.createGithubIssue(
-                issueData, 
+                issueData,
                 process.env.APP_VERSION
             );
-            
+
             await databaseLoggingClient.logInfo('Issue reported successfully', {
                 issueUrl: result.data?.issue?.html_url
             });
-            
+
             return result;
         } catch (error) {
             await databaseLoggingClient.logError('Failed to report issue', {
@@ -435,10 +435,10 @@ Your server can use the same API layer:
 
 ```typescript
 // server/api/database.ts
-import { 
+import {
     supabaseRestClient,
     databaseLoggingClient,
-    withErrorHandling 
+    withErrorHandling
 } from '../../database/api/index.js';
 
 export async function getServerLogs(filters: any) {

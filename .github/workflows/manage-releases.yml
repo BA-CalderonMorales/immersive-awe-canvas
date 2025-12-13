@@ -62,10 +62,10 @@ jobs:
                     if [ "$tag" = "$FROM_TAG" ]; then
                       found_start=true
                     fi
-                    
+
                     if [ "$found_start" = true ] && [ -n "$tag" ]; then
                       echo "🎯 Will delete: $tag"
-                      
+
                       # Delete the release if it exists
                       if gh release view "$tag" >/dev/null 2>&1; then
                         echo "  Deleting release: $tag"
@@ -73,7 +73,7 @@ jobs:
                       else
                         echo "  ℹ️ No release found for $tag"
                       fi
-                      
+
                       # Delete the tag
                       echo "  Deleting local tag: $tag"
                       git tag -d "$tag" || echo "  Failed to delete local tag $tag"

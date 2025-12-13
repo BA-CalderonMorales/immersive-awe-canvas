@@ -30,7 +30,7 @@ The server and client API layers have been unified through shared utilities, eli
 /shared/
 ├── api-types.ts        # Common types for both layers
 ├── api-config.ts       # Centralized configuration
-├── github-client.ts    # Unified GitHub API operations  
+├── github-client.ts    # Unified GitHub API operations
 ├── version-manager.ts  # Shared version management
 ├── logging-utils.ts    # Common logging abstractions
 └── index.ts           # Single import point
@@ -64,7 +64,7 @@ export class GitHubAPIClient {
 **Before**: Duplicate GitHub logic and types
 
 ```typescript
-// Old client approach - REMOVED  
+// Old client approach - REMOVED
 export interface VersionInfo { ... } // Duplicate definition
 // Custom GitHub implementation...
 ```
@@ -154,7 +154,7 @@ import { sharedVersionManager } from '@shared';
 const version = await sharedVersionManager.getLatestVersion();
 
 // Client code - SAME INTERFACE
-import { sharedVersionManager } from '@shared'; 
+import { sharedVersionManager } from '@shared';
 const version = await sharedVersionManager.getLatestVersion();
 ```
 
@@ -177,7 +177,7 @@ await clientLoggingAPIClient.logUserAction('login', userId);
 import { githubAPIClient } from '@server/api';
 const releases = await githubAPIClient.getReleases(10);
 
-// Client GitHub calls - SAME INTERFACE  
+// Client GitHub calls - SAME INTERFACE
 import { clientGitHubAPIClient } from '@client/api';
 const releases = await clientGitHubAPIClient.getReleases(10);
 ```

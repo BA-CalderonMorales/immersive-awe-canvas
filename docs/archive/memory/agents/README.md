@@ -9,7 +9,7 @@ This directory stores consolidated agent memory, development guidelines, workflo
 ```
 memory/agents/
 ├── MEMORY.md               # Comprehensive development guidelines and session history
-├── RULES.md                # Repository workflow rules and commit standards  
+├── RULES.md                # Repository workflow rules and commit standards
 ├── README.md               # This file - explains the memory system
 ├── shared/                 # Cross-agent shared resources (when needed)
 │   ├── common_knowledge.md # Shared knowledge across agents
@@ -38,7 +38,7 @@ This memory system supports both individual Claude Code sessions and Claude Flow
 - Session-specific data goes to `memory/sessions/`
 - Persistent decisions and learnings are documented in MEMORY.md
 
-### Swarm Operations  
+### Swarm Operations
 
 - Claude Flow coordinates multiple agents using the shared memory system
 - Each swarm instance gets isolated coordination data

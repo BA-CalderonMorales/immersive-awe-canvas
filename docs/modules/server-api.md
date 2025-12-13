@@ -13,7 +13,7 @@ Controllers handle HTTP request/response cycles and input validation.
 **Key Classes:**
 
 - `VersionController`: Manages version-related endpoints
-- `LoggingController`: Handles logging and event tracking endpoints  
+- `LoggingController`: Handles logging and event tracking endpoints
 - `SceneController`: Manages scene-related operations
 
 **Example Usage:**
@@ -144,7 +144,7 @@ All API methods return consistent error structures:
     message?: string
 }
 
-// Error response  
+// Error response
 {
     success: false,
     error: string
@@ -157,7 +157,7 @@ This architecture leverages the `@ba-calderonmorales/clean-api` package for:
 
 - **Consistent API patterns**: Standardized request/response handling
 - **Type safety**: Full TypeScript support with proper interfaces
-- **Flexible clients**: Easy to swap HTTP clients or add new endpoints  
+- **Flexible clients**: Easy to swap HTTP clients or add new endpoints
 - **Error handling**: Consistent error patterns across all API calls
 
 ## Development Guidelines

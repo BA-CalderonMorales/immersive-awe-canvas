@@ -23,7 +23,7 @@ Each API reference includes:
 - [VersionController](./server-api.md#versioncontroller) - Version management endpoints
 - [LoggingController](./server-api.md#loggingcontroller) - Event logging endpoints
 
-### Services  
+### Services
 
 - [VersionService](./server-api.md#versionservice) - Version business logic
 - [LoggingService](./server-api.md#loggingservice) - Logging business logic

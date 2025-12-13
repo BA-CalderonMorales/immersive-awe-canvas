@@ -55,7 +55,7 @@ The server module implements a clean, layered architecture using the `@ba-calder
 #### Layer Structure
 
 1. **Controllers**: Handle HTTP requests/responses and input validation
-2. **Services**: Contain business logic and orchestrate between layers  
+2. **Services**: Contain business logic and orchestrate between layers
 3. **Repositories**: Manage data access and database operations
 4. **Clients**: Handle external API communication (GitHub, Supabase REST API)
 

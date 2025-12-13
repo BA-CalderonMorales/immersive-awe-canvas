@@ -62,7 +62,7 @@ import { useAPIBackgrounds } from '@client/api';
 
 const BackgroundSelector = () => {
     const { data: backgrounds, isLoading } = useAPIBackgrounds();
-    
+
     return (
         <select>
             {backgrounds?.map(bg => (
@@ -86,7 +86,7 @@ const VersionChecker = () => {
         refetchInterval: 30 * 60 * 1000 // Check every 30 minutes
     });
 
-    const hasUpdate = latestVersion && 
+    const hasUpdate = latestVersion &&
         latestVersion.version !== `v${currentVersion.appVersion}`;
 
     return (
@@ -115,7 +115,7 @@ const InteractiveComponent = () => {
         try {
             // Your logic here
             await someOperation();
-            
+
             // Log successful user action
             await logUserAction('button_clicked', 'user123', {
                 buttonId: 'main-cta',
@@ -241,7 +241,7 @@ import { fetchLatestRelease } from '@utils/github-api';
 
 const OldComponent = () => {
     const { data: worlds, isLoading } = useWorlds();
-    
+
     useEffect(() => {
         // Manual API calls with inconsistent error handling
         fetchLatestRelease().then(version => {
@@ -249,14 +249,14 @@ const OldComponent = () => {
         }).catch(error => {
             console.error('Version fetch failed:', error);
         });
-        
+
         // Manual logging
         logEvent({
             eventType: 'component_mounted',
             eventSource: 'OldComponent'
         });
     }, []);
-    
+
     return <div>{worlds?.length} worlds</div>;
 };
 ```
@@ -271,14 +271,14 @@ const NewComponent = () => {
     const { data: worlds, isLoading, error } = useAPIWorlds();
     const { data: version } = useLatestVersion();
     const { logUserAction, logError } = useAPILogging();
-    
+
     // Automatic error handling
     useEffect(() => {
         if (error) {
             logError(error, 'NewComponent', { section: 'worlds' });
         }
     }, [error, logError]);
-    
+
     // Enhanced logging
     useEffect(() => {
         logUserAction('component_mounted', undefined, {
@@ -287,7 +287,7 @@ const NewComponent = () => {
             latestVersion: version?.version
         });
     }, [worlds, version, logUserAction]);
-    
+
     return <div>{worlds?.length} worlds (Latest: {version?.version})</div>;
 };
 ```
@@ -316,11 +316,11 @@ await timer.logPerformance({ success: true });
 // Component render monitoring
 const ComponentWithMonitoring = () => {
     const renderTimer = measureComponentRender('ComponentWithMonitoring');
-    
+
     useEffect(() => {
         renderTimer.log({ propsCount: Object.keys(props).length });
     }, []);
-    
+
     return <div>Monitored component</div>;
 };
 ```
@@ -334,7 +334,7 @@ import { useErrorLogging } from '@client/api';
 
 const ComponentWithErrorHandling = () => {
     const { logError } = useErrorLogging();
-    
+
     const handleOperation = async () => {
         try {
             await riskyOperation();
@@ -344,12 +344,12 @@ const ComponentWithErrorHandling = () => {
                 operation: 'riskyOperation',
                 timestamp: new Date().toISOString()
             });
-            
+
             // Handle error in UI
             setErrorState(error.message);
         }
     };
-    
+
     return <button onClick={handleOperation}>Safe Operation</button>;
 };
 ```
@@ -367,7 +367,7 @@ const serverBaseUrl = isDev ? 'http://localhost:3001' : 'https://api.yourapp.com
 import { ClientAPIClient } from '@client/api';
 
 const customClient = new ClientAPIClient(
-    'https://custom-api.com', 
+    'https://custom-api.com',
     { 'Authorization': 'Bearer token' },
     3 // retry count
 );

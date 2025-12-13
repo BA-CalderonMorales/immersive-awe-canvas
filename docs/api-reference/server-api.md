@@ -164,7 +164,7 @@ Gets logs filtered by event source.
 
 **Parameters:**
 
-- `eventSource`: The event source to filter by  
+- `eventSource`: The event source to filter by
 - `limit` (optional): Number of logs to return (default: 50)
 
 ##### `getRecentLogs(limit?: number)`
@@ -349,7 +349,7 @@ import { versionController } from '@server/api';
 // Get current version
 const current = await versionController.getVersion();
 
-// Get latest from GitHub  
+// Get latest from GitHub
 const latest = await versionController.getDynamicVersion();
 
 // Check for updates

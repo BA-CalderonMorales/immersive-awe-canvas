@@ -39,7 +39,7 @@ Tests the server-side layered API components:
 Tests the client-side API layer:
 
 - Client Version API Client
-- Client GitHub API Client  
+- Client GitHub API Client
 - Client Logging API Client
 
 ### 3. **Shared Utilities** 🔄
@@ -73,7 +73,7 @@ Tests data consistency across all layers:
 ```bash
 # Using npm/bun scripts (recommended)
 npm run test:api                   # Run all comprehensive tests
-npm run test:api:quick            # Quick validation only  
+npm run test:api:quick            # Quick validation only
 npm run test:api:export           # Export results to JSON
 npm run test:architecture         # Run legacy architecture test only
 npm run test:integration          # Run legacy integration test only
@@ -101,7 +101,7 @@ const results = await runner.runAllTests();
 // Access detailed results
 for (const suite of results) {
     console.log(`${suite.name}: ${suite.results.length} tests, ${suite.duration}ms`);
-    
+
     const failed = suite.results.filter(r => !r.passed);
     if (failed.length > 0) {
         console.log('Failed tests:', failed.map(f => f.name));
@@ -243,7 +243,7 @@ interface TestSuite {
 import { versionService, loggingService, githubAPIClient } from './server/api';
 await testArchitecture();
 
-// New approach  
+// New approach
 import { APITestRunner } from './tests';
 const runner = new APITestRunner();
 await runner.runAllTests(); // Includes server architecture + more

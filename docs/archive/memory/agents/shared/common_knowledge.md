@@ -34,7 +34,7 @@ This file contains knowledge and insights that should be shared across all agent
 - Use `precision mediump float;` declarations for compatibility
 - Test shaders across different devices and contexts
 
-##### React Hook Patterns  
+##### React Hook Patterns
 
 - Be careful with useEffect dependency arrays - avoid state that causes unwanted re-runs
 - Use functional state updates for async operations (setTimeout, promises)
@@ -76,7 +76,7 @@ This file contains knowledge and insights that should be shared across all agent
 ### Swarm Roles
 
 - **Coordinator**: Overall project oversight and task distribution
-- **Researcher**: Investigate solutions, gather requirements, analyze problems  
+- **Researcher**: Investigate solutions, gather requirements, analyze problems
 - **Coder**: Implement features following TDD practices
 - **Tester**: Focus on test quality, coverage, and reliability
 - **Reviewer**: Code review, architecture decisions, refactoring opportunities
