@@ -1,0 +1,19 @@
+# Markdownlint Configuration
+# This file configures markdown linting rules for the project
+
+# MD013: Line length - Disabled because many lines exceed 80 chars (code examples, links, etc.)
+# MD024: No duplicate headings - Disabled for CHANGELOG.md (same sections per release) and API docs (same method sections)
+# MD033: No inline HTML - Disabled to allow <details>/<summary> collapsible sections in documentation
+# MD036: No emphasis as heading - Disabled for special formatting in agent documentation
+# MD040: Fenced code language - Disabled because many code blocks are plain text, directory trees, or output samples
+# MD041: First line heading - Disabled as some files intentionally start with frontmatter or context
+
+default: true
+
+# Disable rules that don't fit our documentation style
+MD013: false  # line-length
+MD024: false  # no-duplicate-heading
+MD033: false  # no-inline-html
+MD036: false  # no-emphasis-as-heading
+MD040: false  # fenced-code-language
+MD041: false  # first-line-heading
