@@ -14,6 +14,8 @@ jobs:
               env:
                   DEFAULT_BRANCH: main
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  # JavaScript/TypeScript validation handled by Biome
+                  # Only enable linters for non-JS/TS file types
                   VALIDATE_CSS: true
                   VALIDATE_MARKDOWN: true
                   VALIDATE_YAML: true
