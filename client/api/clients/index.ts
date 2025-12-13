@@ -5,6 +5,6 @@
  */
 
 export * from "./github-client.js";
+export * from "./logging-client.js";
 export * from "./supabase-client.js";
 export * from "./version-client.js";
-export * from "./logging-client.js";

@@ -10,16 +10,15 @@
  * - Backend types and schemas
  */
 
-// New Layered API Architecture
-export * from "./api";
+// Type guards consolidated to @database/shared
+export * from "@database/shared/typeguards";
 
 // Database Integration
 export * from "../database/supabase/client";
 export * from "../database/supabase/types";
-
+// New Layered API Architecture
+export * from "./api";
 // Server Utilities
 export * from "./logger";
 export * from "./security";
-// Type guards consolidated to @database/shared
-export * from "@database/shared/typeguards";
 export * from "./version";

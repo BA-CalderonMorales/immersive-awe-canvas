@@ -5,9 +5,9 @@
  */
 
 import {
-    loggingService,
     type LogEventParams,
     type LogQueryParams,
+    loggingService,
 } from "../services/logging-service";
 
 export class LoggingController {

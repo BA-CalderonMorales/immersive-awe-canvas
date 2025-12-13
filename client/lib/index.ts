@@ -8,6 +8,8 @@
  * - Utility functions
  */
 
+// Type guards consolidated to @database/shared
+export * from "@database/shared/typeguards";
 // Client-specific utilities
 export * from "./keyboardUtils";
 // Logging utilities
@@ -15,6 +17,4 @@ export * from "./logger";
 export * from "./sceneConfigUtils";
 // Security utilities
 export * from "./security";
-// Type guards consolidated to @database/shared
-export * from "@database/shared/typeguards";
 export * from "./version";

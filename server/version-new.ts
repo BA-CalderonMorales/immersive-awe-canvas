@@ -5,7 +5,7 @@
  */
 
 // Re-export everything from the new API layer for backward compatibility
-export { versionService, versionController } from "./api";
+export { versionController, versionService } from "./api";
 export type { VersionInfo } from "./api/clients/github-client";
 
 // Legacy exports for backward compatibility

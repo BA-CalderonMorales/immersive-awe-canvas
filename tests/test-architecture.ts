@@ -4,7 +4,7 @@
  * This demonstrates that the new layered architecture is working
  */
 
-import { versionService, loggingService, githubAPIClient } from "../server/api";
+import { githubAPIClient, loggingService, versionService } from "../server/api";
 
 async function testArchitecture() {
     console.log("🧪 Testing Clean API Architecture...\n");

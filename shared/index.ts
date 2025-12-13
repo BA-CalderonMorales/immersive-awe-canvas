@@ -5,28 +5,25 @@
  * This eliminates redundancy and ensures seamless integration
  */
 
-// Core types
-export * from "./api-types.js";
-
-// Configuration
-export * from "./api-config.js";
-
-// Shared clients
-export * from "./github-client.js";
-export * from "./version-manager.js";
-export * from "./logging-utils.js";
-
+export type {
+    APIClient,
+    APIRequest,
+    APIResponse,
+    APIResult,
+    HTTPMethod,
+} from "@ba-calderonmorales/clean-api";
 // Re-export Clean API core for consistency
 export {
     API,
     APIBase,
-    FetchClient,
     APIError,
+    FetchClient,
 } from "@ba-calderonmorales/clean-api";
-export type {
-    APIClient,
-    HTTPMethod,
-    APIRequest,
-    APIResponse,
-    APIResult,
-} from "@ba-calderonmorales/clean-api";
+// Configuration
+export * from "./api-config.js";
+// Core types
+export * from "./api-types.js";
+// Shared clients
+export * from "./github-client.js";
+export * from "./logging-utils.js";
+export * from "./version-manager.js";

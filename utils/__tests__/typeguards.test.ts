@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
 import { isSceneConfig, isValidObjectType } from "@database/shared/typeguards";
+import { describe, expect, it } from "vitest";
 
 describe("typeguards", () => {
     describe("isSceneConfig", () => {

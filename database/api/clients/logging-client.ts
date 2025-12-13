@@ -5,11 +5,11 @@
  */
 
 import { API } from "@ba-calderonmorales/clean-api";
-import {
-    databaseLoggingAPI,
-    supabaseRestClient as configuredClient,
-} from "../config.js";
 import { Logger, LogLevel } from "../../shared/logger.js";
+import {
+    supabaseRestClient as configuredClient,
+    databaseLoggingAPI,
+} from "../config.js";
 
 // Create Logging API bucket
 export const loggingAPI = new API("database-logging");

@@ -4,9 +4,9 @@
  * React hook for world operations using Clean API architecture
  */
 
+import type { Database } from "@database/supabase/types";
 import { useQuery } from "@tanstack/react-query";
 import { clientSupabaseAPIClient } from "../clients/supabase-client";
-import type { Database } from "@database/supabase/types";
 
 type World = Database["public"]["Tables"]["worlds"]["Row"];
 

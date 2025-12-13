@@ -5,8 +5,8 @@
  */
 
 import { useQuery } from "@tanstack/react-query";
-import { clientVersionAPIClient } from "../clients/version-client";
 import type { VersionInfo } from "../clients/github-client";
+import { clientVersionAPIClient } from "../clients/version-client";
 
 /**
  * Hook to get current application version

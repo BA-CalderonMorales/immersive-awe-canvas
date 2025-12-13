@@ -4,9 +4,9 @@
  * React hook for background operations using Clean API architecture
  */
 
+import type { Database } from "@database/supabase/types";
 import { useQuery } from "@tanstack/react-query";
 import { clientSupabaseAPIClient } from "../clients/supabase-client";
-import type { Database } from "@database/supabase/types";
 
 type Background = Database["public"]["Tables"]["backgrounds"]["Row"];
 type DefaultGeometry =

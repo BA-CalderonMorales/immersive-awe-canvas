@@ -4,8 +4,8 @@
  * Central configuration for all API clients and services
  */
 
-import { APIBase, FetchClient } from "@ba-calderonmorales/clean-api";
 import type { APIClient } from "@ba-calderonmorales/clean-api";
+import { APIBase, FetchClient } from "@ba-calderonmorales/clean-api";
 
 // API Base Configurations
 export const githubAPI = new APIBase();

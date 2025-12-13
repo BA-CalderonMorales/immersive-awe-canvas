@@ -6,8 +6,8 @@
 
 import { API } from "@ba-calderonmorales/clean-api";
 import {
-    supabaseEdgeFunctionAPI,
     supabaseEdgeFunctionClient as configuredClient,
+    supabaseEdgeFunctionAPI,
 } from "../config.js";
 
 // Create Edge Function API bucket

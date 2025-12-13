@@ -4,8 +4,8 @@
  * Validation functions specific to database API operations
  */
 
-import { isValidString, isDefined } from "../../shared/typeguards.js";
 import { isValidEmail } from "../../shared/security.js";
+import { isDefined, isValidString } from "../../shared/typeguards.js";
 
 /**
  * Validation result interface

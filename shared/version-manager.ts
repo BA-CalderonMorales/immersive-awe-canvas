@@ -5,13 +5,13 @@
  * This eliminates duplicate version handling code
  */
 
-import { sharedGitHubClient } from "./github-client.js";
+import type { APIResult } from "@ba-calderonmorales/clean-api";
 import type {
+    VersionDetails,
     VersionInfo,
     VersionUpdateInfo,
-    VersionDetails,
 } from "./api-types.js";
-import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { sharedGitHubClient } from "./github-client.js";
 
 // Package version (should be dynamically imported in real implementation)
 const PACKAGE_VERSION = "1.0.0";

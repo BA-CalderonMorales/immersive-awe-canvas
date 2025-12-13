@@ -5,7 +5,7 @@
  */
 
 import { APIError } from "@ba-calderonmorales/clean-api";
-import { sanitizeString, isValidEmail } from "../../shared/security";
+import { isValidEmail, sanitizeString } from "../../shared/security";
 import { databaseLoggingClient } from "../clients/logging-client";
 
 /**

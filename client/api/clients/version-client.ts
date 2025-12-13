@@ -4,13 +4,13 @@
  * Client-side version operations using shared utilities
  */
 
+import type { APIResult } from "@ba-calderonmorales/clean-api";
 import {
     sharedVersionManager,
+    type VersionDetails,
     type VersionInfo,
     type VersionUpdateInfo,
-    type VersionDetails,
 } from "../../../shared/index.js";
-import type { APIResult } from "@ba-calderonmorales/clean-api";
 
 /**
  * Client-side Version API Client

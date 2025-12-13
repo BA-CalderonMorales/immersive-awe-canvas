@@ -4,8 +4,8 @@
  * Handles all Supabase database communication using Clean API architecture
  */
 
-import { API } from "@ba-calderonmorales/clean-api";
 import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { API } from "@ba-calderonmorales/clean-api";
 import { supabaseAPI, supabaseClient } from "../config";
 
 // Supabase API bucket

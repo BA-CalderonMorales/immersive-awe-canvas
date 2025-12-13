@@ -5,9 +5,9 @@
  * that can be used across both client and server modules.
  */
 
-export * from "./github-api";
 // Type guards consolidated to @database/shared
 export * from "@database/shared/typeguards";
+export * from "./github-api";
 // Core utilities
 export * from "./utils";
 export * from "./validation";

@@ -6,8 +6,8 @@
 
 import { API } from "@ba-calderonmorales/clean-api";
 import {
-    githubIntegrationAPI,
     githubIntegrationClientInstance as configuredClient,
+    githubIntegrationAPI,
 } from "../config.js";
 
 // Create GitHub API bucket

@@ -5,11 +5,11 @@
  */
 
 import {
-    versionController,
     loggingController,
-    sceneController,
-    versionService,
     loggingService,
+    sceneController,
+    versionController,
+    versionService,
 } from "./index";
 
 /**

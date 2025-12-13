@@ -4,8 +4,8 @@
  * Configuration for database-related API calls and services
  */
 
-import { APIBase, FetchClient } from "@ba-calderonmorales/clean-api";
 import type { APIClient } from "@ba-calderonmorales/clean-api";
+import { APIBase, FetchClient } from "@ba-calderonmorales/clean-api";
 
 // API Base Configurations for Database Operations
 export const supabaseEdgeFunctionAPI = new APIBase();

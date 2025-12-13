@@ -4,8 +4,8 @@
  * Server-side GitHub API client that leverages shared utilities
  */
 
-import { sharedGitHubClient, type VersionInfo } from "../../../shared/index.js";
 import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { sharedGitHubClient, type VersionInfo } from "../../../shared/index.js";
 
 /**
  * Server GitHub API Client

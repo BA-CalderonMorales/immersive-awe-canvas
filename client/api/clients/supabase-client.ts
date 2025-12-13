@@ -4,8 +4,8 @@
  * Handles Supabase operations using both the Supabase client and Clean API patterns
  */
 
-import { API } from "@ba-calderonmorales/clean-api";
 import type { APIResult } from "@ba-calderonmorales/clean-api";
+import { API } from "@ba-calderonmorales/clean-api";
 import { supabase } from "@database/supabase/client";
 import type { Database, Json } from "@database/supabase/types";
 

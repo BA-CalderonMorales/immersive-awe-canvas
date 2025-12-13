@@ -2,7 +2,7 @@
  * Test the new layered API architecture
  */
 
-import { versionController, loggingController } from "./api";
+import { loggingController, versionController } from "./api";
 
 async function testAPI() {
     console.log("Testing Version Controller...");

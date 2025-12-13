@@ -5,10 +5,10 @@
  * This eliminates duplicate GitHub API logic
  */
 
-import { API, FetchClient } from "@ba-calderonmorales/clean-api";
 import type { APIResult } from "@ba-calderonmorales/clean-api";
-import { createGitHubAPI, RETRY_CONFIG, isClient } from "./api-config.js";
-import type { VersionInfo, GitHubRelease } from "./api-types.js";
+import { API, FetchClient } from "@ba-calderonmorales/clean-api";
+import { createGitHubAPI, isClient, RETRY_CONFIG } from "./api-config.js";
+import type { GitHubRelease, VersionInfo } from "./api-types.js";
 
 // Enhanced HTTP Client with retries
 class EnhancedGitHubClient extends FetchClient {

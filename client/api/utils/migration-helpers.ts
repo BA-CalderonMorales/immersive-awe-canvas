@@ -4,9 +4,9 @@
  * Utilities to help migrate from existing patterns to the new Clean API architecture
  */
 
+import { clientLoggingAPIClient } from "../clients/logging-client";
 import { clientSupabaseAPIClient } from "../clients/supabase-client";
 import { clientVersionAPIClient } from "../clients/version-client";
-import { clientLoggingAPIClient } from "../clients/logging-client";
 
 /**
  * Migration utility to replace existing useWorlds hook

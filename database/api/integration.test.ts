@@ -4,7 +4,7 @@
  * This test verifies that the clean-api integration is working correctly
  */
 
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock the clean-api package
 vi.mock("@ba-calderonmorales/clean-api", () => ({

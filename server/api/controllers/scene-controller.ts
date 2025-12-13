@@ -5,9 +5,9 @@
  */
 
 import {
-    sceneRepository,
     type SceneEntity,
     type SceneFilters,
+    sceneRepository,
 } from "../repositories/scene-repository";
 
 export class SceneController {

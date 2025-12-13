@@ -1,5 +1,5 @@
-import type { Json } from "@database/supabase/types";
 import type { SceneConfig, SceneThemeConfig } from "@client/types/scene";
+import type { Json } from "@database/supabase/types";
 
 /**
  * Consolidated typeguards for runtime type checking

@@ -6,27 +6,27 @@
  */
 
 import {
-    // Core API classes
-    supabaseEdgeFunctionClient,
-    supabaseRestClient,
+    type DatabaseError,
+    DatabaseErrorType,
     databaseLoggingClient,
+    type GitHubIssue,
     githubIntegrationClient,
     // Types and interfaces
     type IssueData,
     type LogEntry,
-    type GitHubIssue,
+    logApiOperation,
+    sanitizeInputData,
+    // Core API classes
+    supabaseEdgeFunctionClient,
+    supabaseRestClient,
+    validateGitHubIssueData,
     // Validation utilities
     validateIssueData,
     validateLogEntry,
-    validateGitHubIssueData,
     // Error handling
     withErrorHandling,
-    DatabaseErrorType,
-    type DatabaseError,
     // API helpers
     withRetry,
-    sanitizeInputData,
-    logApiOperation,
 } from "../index.js";
 
 /**

@@ -3,9 +3,9 @@
  */
 
 import {
-    clientVersionAPIClient,
     clientGitHubAPIClient,
     clientLoggingAPIClient,
+    clientVersionAPIClient,
     createAPIMigration,
 } from "./index";
 

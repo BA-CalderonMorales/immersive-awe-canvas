@@ -4,25 +4,24 @@
  * Comprehensive testing for both layered architecture and seamless integration
  */
 
-// Server API imports
-import {
-    versionService,
-    loggingService,
-    githubAPIClient,
-} from "../server/api/index.js";
-
 // Client API imports
 import {
-    clientVersionAPIClient,
     clientGitHubAPIClient,
     clientLoggingAPIClient,
+    clientVersionAPIClient,
 } from "../client/api/index.js";
+// Server API imports
+import {
+    githubAPIClient,
+    loggingService,
+    versionService,
+} from "../server/api/index.js";
 
 // Shared utilities imports
 import {
+    performanceMonitor,
     sharedGitHubClient,
     sharedVersionManager,
-    performanceMonitor,
 } from "../shared/index.js";
 
 /**

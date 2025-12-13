@@ -6,7 +6,7 @@
  */
 
 import type { APIResult } from "@ba-calderonmorales/clean-api";
-import type { LogEventParams, LogEntry } from "./api-types.js";
+import type { LogEntry, LogEventParams } from "./api-types.js";
 
 /**
  * Shared Logger Interface

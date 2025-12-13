@@ -6,8 +6,8 @@
 
 import { API } from "@ba-calderonmorales/clean-api";
 import {
-    supabaseRestAPI,
     supabaseRestClient as configuredClient,
+    supabaseRestAPI,
 } from "../config.js";
 
 // Create REST API bucket

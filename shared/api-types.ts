@@ -46,6 +46,7 @@ export interface LogEventParams {
 
 // Database Types (re-export for convenience)
 export type { Database } from "../database/supabase/types.js";
+
 import type { Database } from "../database/supabase/types.js";
 
 export type World = Database["public"]["Tables"]["worlds"]["Row"];
