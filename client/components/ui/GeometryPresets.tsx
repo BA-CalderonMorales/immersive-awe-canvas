@@ -64,11 +64,16 @@ const presets = [
     },
 ];
 
-const GeometryPresets = ({ onSelectPreset, theme = "night" }: GeometryPresetsProps) => {
+const GeometryPresets = ({
+    onSelectPreset,
+    theme = "night",
+}: GeometryPresetsProps) => {
     return (
         <TooltipProvider>
             <div className="space-y-3">
-                <h3 className="text-sm font-semibold opacity-70">Quick Start Shapes</h3>
+                <h3 className="text-sm font-semibold opacity-70">
+                    Quick Start Shapes
+                </h3>
                 <div className="grid grid-cols-2 gap-2">
                     {presets.map(preset => {
                         const Icon = preset.icon;
@@ -82,7 +87,9 @@ const GeometryPresets = ({ onSelectPreset, theme = "night" }: GeometryPresetsPro
                                                 ? "hover:bg-gray-100"
                                                 : "hover:bg-gray-800"
                                         }`}
-                                        onClick={() => onSelectPreset(preset.type)}
+                                        onClick={() =>
+                                            onSelectPreset(preset.type)
+                                        }
                                     >
                                         <Icon className="w-6 h-6" />
                                         <div className="text-center">
@@ -100,7 +107,9 @@ const GeometryPresets = ({ onSelectPreset, theme = "night" }: GeometryPresetsPro
                                     className="max-w-[250px] p-3"
                                 >
                                     <div className="space-y-2">
-                                        <p className="font-semibold">{preset.name}</p>
+                                        <p className="font-semibold">
+                                            {preset.name}
+                                        </p>
                                         <p className="text-xs opacity-80">
                                             {preset.description}
                                         </p>

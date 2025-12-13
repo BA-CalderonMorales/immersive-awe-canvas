@@ -159,7 +159,7 @@ const CrystallineSpireObject = ({
                     emissiveIntensity={0.5}
                 />
             </mesh>
-            
+
             {/* Energy particles at vertices */}
             {[...Array(8)].map((_, i) => {
                 const angle = (Math.PI * 2 * i) / 8;
@@ -168,7 +168,11 @@ const CrystallineSpireObject = ({
                 return (
                     <mesh key={`vertex-${i}`} position={[x, 0, z]}>
                         <sphereGeometry args={[0.08, 16, 16]} />
-                        <meshBasicMaterial color={color} transparent opacity={0.8} />
+                        <meshBasicMaterial
+                            color={color}
+                            transparent
+                            opacity={0.8}
+                        />
                     </mesh>
                 );
             })}
