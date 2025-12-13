@@ -8,7 +8,6 @@
     "mounts": [
         "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
     ],
-    // Port forwarding
     "forwardPorts": [8080, 54321],
     "portsAttributes": {
         "8080": {
@@ -20,7 +19,6 @@
             "onAutoForward": "silent"
         }
     },
-    // Container environment variables
     "containerEnv": {
         "NODE_ENV": "development",
         "VITE_GIT_COMMIT_HASH": "dev",
@@ -30,26 +28,19 @@
         "LC_COLLATE": "en_US.UTF-8",
         "LC_MESSAGES": "en_US.UTF-8"
     },
-    // Lifecycle scripts
     "postCreateCommand": ["bash", ".devcontainer/scripts/post-create.sh"],
     "postStartCommand": ["bash", ".devcontainer/scripts/post-start.sh"],
-    // VS Code customizations
     "customizations": {
         "vscode": {
             "extensions": [
-                // TypeScript & React
                 "dbaeumer.vscode-eslint",
                 "esbenp.prettier-vscode",
                 "biomejs.biome",
-                // Testing
                 "vitest.explorer",
-                // Three.js & 3D
                 "slevesque.shader",
-                // Git & GitHub
                 "github.vscode-pull-request-github",
                 "github.copilot",
                 "github.copilot-chat",
-                // Utilities
                 "editorconfig.editorconfig",
                 "bradlc.vscode-tailwindcss",
                 "styled-components.vscode-styled-components"
