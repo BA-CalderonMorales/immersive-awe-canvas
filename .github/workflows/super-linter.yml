@@ -14,10 +14,6 @@ jobs:
               env:
                   DEFAULT_BRANCH: main
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VALIDATE_JAVASCRIPT_ES: false  # Disable ESLint for JS
-                  VALIDATE_TYPESCRIPT_ES: false  # Disable ESLint for TS
-                  VALIDATE_JSX: false             # Disable ESLint for JSX
-                  VALIDATE_TSX: false             # Disable ESLint for TSX
                   VALIDATE_CSS: true
                   VALIDATE_MARKDOWN: true
                   VALIDATE_YAML: true
